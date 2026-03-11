@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hazardpulse"
+version = "0.1.0"
+description = "Unified natural hazard prediction from coherence field theory"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [
+    { name = "Josh Philbrick", email = "josh@coherenceenergylabs.com" },
+]
+keywords = [
+    "earthquake prediction",
+    "hurricane prediction",
+    "tornado prediction",
+    "natural hazards",
+    "coherence field",
+    "Helmholtz PDE",
+    "geophysics",
+    "meteorology",
+    "seismology",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+viz = ["matplotlib>=3.7"]
+dev = ["pytest>=7.0", "ruff>=0.1"]
+all = ["hazardpulse[viz,dev]"]
+
+[project.scripts]
+hazardpulse = "hazardpulse.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Jphilbrick10/hazardpulse"
+Documentation = "https://github.com/Jphilbrick10/hazardpulse/tree/main/docs"
+Repository = "https://github.com/Jphilbrick10/hazardpulse"
+Issues = "https://github.com/Jphilbrick10/hazardpulse/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hazardpulse"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
