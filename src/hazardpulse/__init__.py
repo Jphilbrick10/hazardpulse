@@ -3,9 +3,9 @@
 Three prediction systems derived from the Helmholtz coherence PDE:
     D * nabla^2(tau_c) - Gamma * tau_c + S = 0
 
-- Earthquake: AUC 0.894 on 1,051 M6+ events (beats ETAS by +0.144)
-- Hurricane RI: AUC 0.976 standard, 0.994 short-term (beats deep learning by +0.046)
-- Tornado: AUC 0.973 formation, 0.999 EF4+ severity (beats SPC by +0.073)
+- Earthquake: AUC 0.733 [0.704, 0.750] on 980 mainshocks (beats rate-only by +0.137)
+- Hurricane RI: AUC 0.967 [0.955, 0.977] on NA best-track (beats persistence by +0.027)
+- Tornado formation: AUC 0.644 [0.623, 0.658] day-ahead (no same-day data)
 """
 
 __version__ = "0.1.0"

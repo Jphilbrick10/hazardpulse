@@ -22,8 +22,9 @@ keywords:
 abstract: >-
   Three natural hazard prediction systems derived from a single partial
   differential equation (Helmholtz coherence PDE). Earthquake prediction
-  (AUC 0.894 on 1,051 M6+ events, exceeding ETAS by +0.144), hurricane
-  rapid intensification (AUC 0.976, exceeding deep learning by +0.046),
-  and tornado formation and severity (AUC 0.973 formation, 0.999 EF4+).
+  (AUC 0.733 on 980 mainshocks, exceeding rate-only baseline by +0.137),
+  hurricane rapid intensification (AUC 0.967 on IBTrACS best-track),
+  and tornado formation (AUC 0.644 day-ahead with no same-day data).
   All models are pure Python + NumPy with every algorithm implemented
-  from scratch.
+  from scratch. Honest methodology: temporal train/test splits, bootstrap
+  confidence intervals, fair baselines on the same test set.

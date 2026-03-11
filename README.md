@@ -11,21 +11,17 @@ All models are pure Python + NumPy. Every algorithm — logistic regression, gra
 
 ## Results
 
-| Model | AUC | Test N | Best Published | Margin |
-|---|---|---|---|---|
-| Hurricane RI 30kt/12h | **0.994** | All NA TCs | Deep learning: 0.90-0.93 | +0.064 |
-| Hurricane RI 35kt/24h (extreme) | **0.993** | All NA TCs | — | — |
-| Tornado EF4+ severity | **0.999** | 40,060 tornadoes | No comparable | — |
-| Tornado EF3+ severity | **0.986** | 40,060 tornadoes | — | — |
-| Hurricane RI 30kt/24h (standard) | **0.976** | All NA TCs | SHIPS-RII: 0.82-0.87 | +0.106 |
-| Tornado formation | **0.973** | 40,060 tornadoes | SPC Day 1: ~0.90 | +0.073 |
-| Hurricane RI 30kt/48h (2-day) | **0.941** | All NA TCs | — | — |
-| Tornado EF2+ severity | **0.935** | 40,060 tornadoes | — | — |
-| Earthquake M6+ global | **0.894** | 1,051 M6+ events | ETAS: 0.60-0.75 | +0.144 |
-| Earthquake M6.5+ | **0.900** | 323 M6.5+ events | — | — |
-| Earthquake M7.0+ | **0.881** | 110 M7.0+ events | — | — |
+| Model | AUC | 95% CI | Test Set | Baseline | Margin |
+|---|---|---|---|---|---|
+| Hurricane RI (Config C, full) | **0.967** | [0.955, 0.977] | NA storms 2015+ | Persistence: 0.940 | +0.027 |
+| Hurricane RI (Config A, met only) | **0.956** | [0.937, 0.971] | NA storms 2015+ | Wind+Lat: 0.868 | +0.088 |
+| Tornado severity EF4+ | 0.987 | [0.984, 0.992] | 20 EF4+ tornadoes | — | **unreliable (n=20)** |
+| Tornado severity EF3+ | **0.917** | [0.901, 0.934] | 166 EF3+ tornadoes | — | — |
+| Tornado severity EF2+ | **0.851** | [0.843, 0.860] | 932 EF2+ tornadoes | — | — |
+| Earthquake M6+ global | **0.733** | [0.704, 0.750] | 980 mainshocks (2015-2023) | Rate-only: 0.597 | +0.137 |
+| Tornado formation (day-ahead) | **0.644** | [0.623, 0.658] | 23,912 cell-days | Climatology: 0.500 | +0.144 |
 
-All models use strict temporal train/test splits. Earthquake: train 2000-2014, test 2015-2023. Hurricane: train pre-2015, test 2015+. Tornado: train 1990-2015, test 2016-2023. No data leakage. No cherry-picking.
+All models use strict temporal train/test splits. No data leakage. No test-set peeking for ensemble selection or calibration. Bootstrap confidence intervals on every claim.
 
 ---
 
@@ -69,7 +65,7 @@ hazardpulse hurricane evaluate --basin NA --threshold 30kt/24h
 ### Tornado formation + severity
 ```bash
 hazardpulse tornado evaluate --mode formation
-hazardpulse tornado evaluate --mode severity --threshold EF4+
+hazardpulse tornado evaluate --mode severity --threshold EF3+
 ```
 
 ### Python API
@@ -78,36 +74,42 @@ from hazardpulse.earthquake import model as eq_model
 
 # Train and evaluate on USGS catalog
 results = eq_model.train_and_evaluate(
-    train_years=(2000, 2014),
+    train_years=(2005, 2014),
     test_years=(2015, 2023),
     min_magnitude=6.0
 )
-print(f"Test AUC: {results['test_auc']:.3f}")  # 0.894
+print(f"Test AUC: {results['test_auc']:.3f}")  # 0.733
 ```
 
 ---
 
 ## How It Works
 
-### Earthquake (AUC = 0.894)
+### Earthquake (AUC = 0.733 [0.704, 0.750])
 
-60 features extracted from the M4+ USGS catalog for each potential M6+ location. Key signals: **seismic moment release rate** (energy accumulation accelerating), **b-value trend** (Gutenberg-Richter distribution shifting), **rate acceleration** (seismicity increasing at an increasing rate), **Coulomb stress proxy** (nearby M5+ events loading the fault). 5-model ensemble: L2 logistic + 3 gradient boosted tree depths + random subspace GBM → stacked meta-learner. Tested on 1,051 M6+ events with same-location controls. Bootstrap 95% CI: [0.880, 0.907]. Brier Skill Score: 0.462. Stable across all 2-year test blocks (0.877-0.917).
+62 features extracted from the M4+ USGS catalog for each potential M6+ location. Key signals: **maximum magnitude in 6-month window** (r=0.30), **90-day event counts** (r=0.27), **Coulomb stress proxy × rate** (r=0.27), **b-value trends** (Gutenberg-Richter distribution shifting). 5-model ensemble: L2 logistic + 3 gradient boosted tree depths + random subspace GBM → weighted average (selected by temporal CV). Tested on 980 M6+ mainshocks (Gardner-Knopoff aftershock declustering) with same-location controls only. Block bootstrap 95% CI: [0.704, 0.750]. Brier Skill Score: 0.102. Stable across all 2-year test blocks (0.688-0.752).
 
-[Full methodology →](docs/earthquake.md)
+### Hurricane Rapid Intensification (AUC = 0.967 [0.955, 0.977])
 
-### Hurricane Rapid Intensification (AUC = 0.976)
+Three feature configurations tested via ablation:
+- **Config A** (15 standard meteorological features): AUC 0.956 — just intensity, change rates, latitude, translational speed
+- **Config B** (+climatological SST/shear estimates): AUC 0.966 — parametric functions of lat/lon/month, NOT actual observations
+- **Config C** (full + interactions): AUC 0.967 — wind², lat×MPI_deficit, prior RI history
 
-78 features from IBTrACS best-track data. Ocean heat content proxies, Carnot thermodynamic efficiency, RMW contraction rate, intensification persistence, and physics-motivated interactions (wind², lat×MPI_deficit). 4-model ensemble: L2 logistic + gradient boosted stumps + bagged logistic → meta-learner. The key insight from coherence theory: WISHE feedback saturation is encoded explicitly as wind² (intensification probability drops nonlinearly at high wind speeds), while deep learning must discover this from data.
+Fair baselines on the same test set: persistence (AUC 0.940), wind+latitude logistic (AUC 0.868). Cross-basin generalization: NA→WP AUC 0.939, WP→NA AUC 0.949.
 
-[Full methodology →](docs/hurricane.md)
+**Important caveat**: This uses IBTrACS best-track data (post-season reanalysis), not real-time operational data. Comparison to SHIPS-RII or other operational models requires evaluation on real-time data, which has NOT been done.
 
-### Tornado Formation + Severity (AUC = 0.973 / 0.999)
+### Tornado Formation (AUC = 0.644 [0.623, 0.658])
 
-**Formation**: 113 features predicting which 2° grid cells produce tornadoes on which days. The breakthrough: synoptic-scale coherence propagation — tornado outbreaks are frontal events, so tornadoes in nearby cells signal an approaching front. ERA5 environmental proxies (CAPE, shear, SRH), diurnal cycle, topographic features, multi-day outbreak dynamics. 5-model ensemble. Beats SPC Day 1 outlook by +0.073 AUC and +0.259 Brier Skill Score — without using any atmospheric model data.
+67 features predicting which 2° grid cells produce tornadoes on which days, using **only information available the day before** (all lookbacks start at d_off ≥ 1). No same-day atmospheric data. No post-event features. Key signals: tornado counts in nearby cells from previous days (synoptic propagation), seasonal/climatological rates, topographic encoding.
 
-**Severity**: Once formed, L ~ W^0.97 coherence scaling (path length scales with width) across 40,060 real SPC tornadoes. EF4+ prediction at 0.999 AUC. Near-perfect discrimination.
+- **Continuation** (nearby tornadoes yesterday): AUC 0.680 — real signal from outbreak propagation
+- **Initiation** (no recent nearby activity): AUC 0.578 — much harder without atmospheric model data
 
-[Full methodology →](docs/tornado.md)
+This is the weakest model because tornado prediction fundamentally requires real-time atmospheric data (CAPE, wind shear, helicity) which we don't currently ingest. The model demonstrates that historical tornado patterns carry modest predictive signal, but cannot compete with NWP-based systems like SPC Day 1 outlooks without atmospheric inputs.
+
+**Severity** (post-event nowcasting, NOT real-time): EF2+ AUC 0.851, EF3+ AUC 0.917. Uses width from damage surveys — these numbers describe post-event analysis capability only.
 
 ---
 
@@ -121,10 +123,12 @@ cd hazardpulse
 pip install -e ".[viz]"
 
 # Reproduce all figures and AUC numbers
-python scripts/regenerate_all_figures.py
+python legacy/earthquake_model_v7_honest.py
+python legacy/hurricane_ri_model_v4_honest.py
+python legacy/tornado_model_v5_honest.py
 ```
 
-The scripts download data directly from USGS, IBTrACS, and SPC (free, no API key needed). First run takes ~10-15 minutes to fetch and cache the catalogs.
+The scripts download data directly from USGS, IBTrACS, and SPC (free, no API key needed). First run takes ~15-30 minutes to fetch catalogs and train models.
 
 **If you get a different AUC number, [open an issue](https://github.com/Jphilbrick10/hazardpulse/issues/new?template=replication_report.yml)**. Reproducibility is non-negotiable.
 
@@ -136,12 +140,11 @@ We're building a public prediction platform at **hazardpulse.io** with:
 
 - **Real-time earthquake risk map** — USGS data feed, predictions every 6 hours, 3° global grid
 - **Hurricane RI tracker** — NHC advisory data, RI probability for every active tropical cyclone
-- **Tornado risk grid** — SPC data + NWS alerts, daily formation predictions during severe weather
+- **Tornado risk grid** — atmospheric model data integration for genuine day-ahead prediction
 - **Public prediction ledger** — Every prediction SHA-256 hashed and timestamped before events occur
 - **Running accuracy scores** — AUC, Brier Score, reliability diagrams updated live
-- **Head-to-head comparisons** — Our predictions vs USGS ETAS, NHC SHIPS-RII, SPC Day 1 outlooks
 
-No hiding. No cherry-picking. Every prediction logged, every outcome tracked. If the coherence field is real, the predictions will speak for themselves.
+No hiding. No cherry-picking. Every prediction logged, every outcome tracked.
 
 [Platform architecture →](docs/live_platform.md)
 
@@ -156,33 +159,32 @@ All data is freely available from US government agencies:
 | Earthquake catalog | USGS | [earthquake.usgs.gov](https://earthquake.usgs.gov/fdsnws/event/1/) | Real-time (1 min) |
 | Tropical cyclone tracks | NOAA/NCEI | [IBTrACS](https://www.ncei.noaa.gov/products/international-best-track-archive) | Seasonal |
 | Tornado reports | SPC/NOAA | [spc.noaa.gov](https://www.spc.noaa.gov/wcm/) | Daily |
-| NHC advisories | NHC/NOAA | [nhc.noaa.gov](https://www.nhc.noaa.gov/gis/) | 6-hourly |
-| NWS alerts | NWS | [api.weather.gov](https://api.weather.gov/alerts) | Real-time |
 
 ---
 
 ## Honest Caveats
 
-We believe in transparency. Read [docs/caveats.md](docs/caveats.md) for the full list. Key limitations:
+We believe in transparency. Key limitations:
 
-1. **Hurricane models use best-track data** (retrospective), not real-time intensity estimates which carry ~10 kt uncertainty. Published comparisons use different test periods.
-2. **Tornado formation predicts outbreak continuation** better than outbreak initiation — knowing tornadoes occurred nearby in the past 1-3 days is the strongest signal.
-3. **Earthquake negative sampling** uses geographic negatives (random M4-M5 locations), which may slightly overstate real-world performance.
-4. **All models are retrospective**. True validation requires prospective real-time testing with timestamped predictions — which is exactly what the live platform will provide.
+1. **Hurricane models use best-track data** (retrospective reanalysis), not real-time intensity estimates which carry ~10 kt uncertainty. No comparison to operational models (SHIPS-RII, etc.) is claimed — that requires evaluation on real-time data.
+2. **Tornado formation AUC 0.644 is modest.** Without real-time atmospheric data (CAPE, shear, helicity from NWP models), the model relies on historical tornado patterns and seasonal climatology. Direct comparison to SPC Day 1 outlooks requires evaluating both systems on the same grid/period, which has not been done.
+3. **Tornado severity uses post-event data** (damage survey widths). These are nowcasting metrics, not real-time predictions.
+4. **Earthquake negatives are same-location controls** (same zone, different time). This is more honest than geographic negatives but may still understate the difficulty of real-world deployment.
+5. **EF4+ tornado severity** has only 20 test events — the AUC (0.987) is statistically unreliable.
+6. **All models are retrospective**. True validation requires prospective real-time testing with timestamped predictions — which is exactly what the live platform will provide.
+7. **"Climatological estimates"** in hurricane Config B are parametric functions of lat/lon/month — they are NOT actual SST, ocean heat content, or wind shear observations.
 
 ---
 
 ## The Unified Framework
 
-The fact that one equation — with different physical parameters — produces state-of-the-art predictions across three completely different natural hazards is not something that happens by accident.
+The fact that one equation — with different physical parameters — produces useful predictions across three completely different natural hazards is noteworthy:
 
-- Earthquakes: Solid earth, tectonic plates, years of stress accumulation
-- Hurricanes: Tropical ocean-atmosphere, days of thermodynamic feedback
-- Tornadoes: Mesoscale convective storms, hours of severe weather dynamics
+- Earthquakes: Solid earth, tectonic plates, years of stress accumulation → AUC 0.733
+- Hurricanes: Tropical ocean-atmosphere, days of thermodynamic feedback → AUC 0.967
+- Tornadoes: Mesoscale convective storms, hours of severe weather dynamics → AUC 0.644
 
-Either the Helmholtz coherence field is capturing something real about how energy organizes in nature, or we've gotten extraordinarily lucky three times in a row on thousands of events each.
-
-We think it's the first one.
+The hurricane model is genuinely strong. The earthquake model extracts real signal beyond seismicity rates. The tornado model needs atmospheric data to compete with operational systems. We report what the numbers say, not what we wish they said.
 
 ---
 

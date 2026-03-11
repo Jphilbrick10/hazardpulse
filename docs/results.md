@@ -208,22 +208,27 @@ All three hazards are governed by the same PDE but with fundamentally different 
 
 ## 5. Summary of Significant Results
 
-### Prediction Performance — Latest Models (March 2026)
+### Prediction Performance — HONEST Models (March 2026)
 
-1. **Hurricane RI 30kt/12h: AUC = 0.994** (v3, 78 features, 4-model ensemble)
-2. **Hurricane RI 35kt/24h extreme: AUC = 0.993** (v3)
-3. **Tornado EF4+ severity: AUC = 0.999** (v4, width + outbreak + 113 features)
-4. **Tornado EF3+ severity: AUC = 0.986** (v4)
-5. **Hurricane RI 30kt/24h standard: AUC = 0.976** (v3, meta-learner ensemble)
-6. **Tornado formation: AUC = 0.973** (v4, 5-model ensemble, BSS +0.459 vs climatology)
-7. **Hurricane RI 30kt/48h 2-day: AUC = 0.941** (v3)
-8. **Tornado EF2+ severity: AUC = 0.935** (v4)
-9. **Earthquake v6 all M6+ global: AUC = 0.894** (v6, 60 features, 5-model ensemble, 95% CI: 0.880-0.907)
-10. **Earthquake v6 M6.5+: AUC = 0.900** (v6)
-11. **Earthquake v6 M7.0+: AUC = 0.881** (v6)
-12. **Tohoku M9.1 focused: AUC = 0.861** (v1, case study)
-13. **Chile M8.8 composite: AUC = 0.832** (v1, case study)
-14. **Sumatra M9.1 focused: AUC = 0.746** (v1, case study)
+**Audited results — all methodology issues fixed:**
+
+1. **Hurricane RI Config C (full): AUC = 0.967** [0.955, 0.977] (v4-honest, IBTrACS best-track, NA storms 2015+)
+2. **Hurricane RI Config A (met only): AUC = 0.956** [0.937, 0.971] (v4-honest, 15 standard features)
+3. **Tornado severity EF3+: AUC = 0.917** [0.901, 0.934] (v5-honest, post-event nowcasting, n=166)
+4. **Tornado severity EF2+: AUC = 0.851** [0.843, 0.860] (v5-honest, post-event nowcasting, n=932)
+5. **Earthquake M6+ global: AUC = 0.733** [0.704, 0.750] (v7-honest, 980 mainshocks, same-location controls only)
+6. **Tornado formation (day-ahead): AUC = 0.644** [0.623, 0.658] (v5-honest, no same-day data, 67 features)
+
+**Baselines on the same test sets:**
+- Hurricane persistence (dw_6h only): AUC = 0.940
+- Hurricane wind+lat logistic: AUC = 0.868
+- Earthquake rate-only: AUC = 0.597
+- Tornado climatology: AUC = 0.500
+
+**Prior inflated results (v3/v4/v6) had critical methodology issues:**
+- Earthquake v6 (AUC 0.894): geographic negatives too easy, ensemble selected on test set, no aftershock declustering
+- Hurricane v3 (AUC 0.976): apples-to-oranges comparisons to operational models
+- Tornado v4 (AUC 0.973): same-day data leakage, post-event features, circular ERA5 proxies
 
 ### Statistical Significance
 - Chile b-value change: p < 0.0001
@@ -319,11 +324,9 @@ Tornado width prediction is **nowcasting**, not forecasting — width is measure
 | Pattern Informatics | Statistical | 5-10 years | AUC ~0.60-0.65 |
 | M8/MSc algorithm | Pattern | 5-10 years | Hit rate ~60%, FAR ~80% |
 | OEF-Italy (operational) | ETAS-based | 1 week | AUC ~0.65-0.70 |
-| **Our v6: all M6+ global** | **60-feature ensemble** | **12 months** | **AUC = 0.894 (95% CI: 0.880-0.907)** |
-| **Our v6: M6.5+** | **60-feature ensemble** | **12 months** | **AUC = 0.900** |
-| **Our v6: M7.0+** | **60-feature ensemble** | **12 months** | **AUC = 0.881** |
+| **Our v7-honest: all M6+ global** | **62-feature ensemble** | **12 months** | **AUC = 0.733 (95% CI: 0.704-0.750)** |
 
-**Assessment**: v6 achieves AUC = 0.894 on 1,051 test M6+ events (2015-2023), exceeding ETAS by +0.14-0.29 AUC. Brier Skill Score = 0.462. Temporally stable across all 2-year test blocks (0.877-0.917). Key features: seismic moment release rate, b-value trend, rate acceleration, Coulomb stress proxy, spatial concentration. 5-model ensemble (logistic + 3 GBMs at depth 1/2/3 + random subspace GBM → meta-learner).
+**Assessment**: v7-honest achieves AUC = 0.733 on 980 mainshocks (2015-2023) with same-location controls only, Gardner-Knopoff aftershock declustering, and temporal CV for ensemble selection. Beats rate-only baseline (AUC 0.597) by +0.137. Brier Skill Score = 0.102. Temporally stable (0.688-0.752 across 2-year blocks). Top features: max magnitude in 6 months (r=0.30), 90-day event counts (r=0.27), Coulomb stress proxy (r=0.27). Prior v6 (AUC 0.894) was inflated by geographic negatives and test-set ensemble selection.
 
 ### Hurricane RI Prediction
 
@@ -334,12 +337,10 @@ Tornado width prediction is **nowcasting**, not forecasting — width is measure
 | HWRF (dynamical) | Numerical model | 0.80-0.85 | Tallapragada 2016 |
 | ML ensemble methods | Machine learning | 0.88-0.92 | Various 2018-2023 |
 | Deep learning (CNN) | Deep learning | 0.90-0.93 | Combinido et al. 2018 |
-| **Our v3: 30kt/12h** | **4-model ensemble** | **0.994** | **This work (v3)** |
-| **Our v3: 35kt/24h extreme** | **4-model ensemble** | **0.993** | **This work (v3)** |
-| **Our v3: 30kt/24h standard** | **4-model ensemble** | **0.976** | **This work (v3)** |
-| **Our v3: 30kt/48h 2-day** | **4-model ensemble** | **0.941** | **This work (v3)** |
+| **Our v4-honest: Config C (full)** | **Ensemble** | **0.967 [0.955, 0.977]** | **This work (v4-honest)** |
+| **Our v4-honest: Config A (met only)** | **Ensemble** | **0.956 [0.937, 0.971]** | **This work (v4-honest)** |
 
-**Assessment**: v3 with 78 features (ocean heat content proxy, Carnot efficiency, RMW contraction rate, intensification persistence, compound interaction terms) and 4-model ensemble stacking **exceeds all published approaches by a wide margin**. AUC = 0.976 for standard RI beats deep learning (0.90-0.93) by +0.05-0.08 while remaining fully interpretable. Short-term (12h) and extreme RI (35kt/24h) both exceed 0.99. Near the inherent predictability ceiling with 6-hourly best-track data.
+**Assessment**: v4-honest achieves AUC = 0.967 on IBTrACS best-track for NA basin (storms 2015+). Ablation shows Config A (15 met features) at 0.956, demonstrating most signal comes from standard intensity/change/latitude features. Persistence baseline (dw_6h alone) gives AUC 0.940 — so our model adds +0.027 beyond simple persistence. Cross-basin generalization: NA→WP 0.939, WP→NA 0.949. **IMPORTANT**: Direct comparison to SHIPS-RII or other operational models has NOT been done — that requires evaluation on real-time data, not best-track reanalysis. Prior v3 claims were misleading in this regard.
 
 ### Tornado Prediction
 
@@ -350,31 +351,31 @@ Tornado width prediction is **nowcasting**, not forecasting — width is measure
 | Warn-on-Forecast (WoF) | Ensemble NWP | 0-60 min | ~0.80 |
 | SPC Day 1 Outlook | Convective outlook | 12-36 hours | ~0.85-0.90 |
 | Climatology baseline | Historical frequency | Seasonal | 0.827 |
-| **Our v4: formation** | **113-feature ensemble** | **1-3 days** | **0.973 (95% CI: 0.971-0.975)** |
-| **Our v4: EF2+ severity** | **Width + context** | **Real-time** | **0.935** |
-| **Our v4: EF3+ severity** | **Width + context** | **Real-time** | **0.986** |
-| **Our v4: EF4+ severity** | **Width + context** | **Real-time** | **0.999** |
+| **Our v5-honest: formation** | **67-feature ensemble** | **1 day ahead** | **0.644 [0.623, 0.658]** |
+| **Our v5-honest: EF2+ severity** | **Post-event** | **Nowcast** | **0.851 [0.843, 0.860]** |
+| **Our v5-honest: EF3+ severity** | **Post-event** | **Nowcast** | **0.917 [0.901, 0.934]** |
 
-**Assessment**: v4 formation model (AUC=0.973, BSS=+0.459) beats SPC Day 1 outlook estimates by +0.073 AUC using 113 features across 16 categories: multi-scale spatial propagation, ERA5 environmental proxies (CAPE, shear, SRH, moisture), synoptic pattern recognition (dryline, cold front, squall line detection), diurnal cycle, multi-day outbreak dynamics, topographic proxies, and width-lifetime coherence scaling. 5-model ensemble (logistic + GBM stumps + GBT depth-3 + bagged logistic + KNN → meta-learner). EF4+ at 0.999 is essentially perfect discrimination. Cross-validation stable across 4 temporal blocks (0.960-0.985).
+**Assessment**: v5-honest formation model (AUC=0.644) uses ZERO same-day data (all lookbacks d_off≥1), no post-event features, no circular proxies. This is modest — continuation AUC 0.680, initiation AUC 0.578. The model captures outbreak propagation patterns but cannot compete with NWP-based systems without actual atmospheric data (CAPE, shear, helicity). Prior v4 (AUC 0.973) was critically inflated by same-day data leakage and circular features. Severity models use post-event damage survey widths — these are nowcasting, not real-time prediction. Direct comparison to SPC Day 1 outlooks has NOT been done on the same grid/period.
 
 ---
 
 ## 8. Critical Caveats and Honest Assessment
 
-### What IS significant:
-- Hurricane RI v3 (AUC = 0.976) exceeds all published methods including deep learning, with fully interpretable features
-- Tornado formation v4 (AUC = 0.973) beats SPC outlooks using tornado occurrence data alone — no NWP atmospheric model required
-- Earthquake v6 (AUC = 0.894) exceeds ETAS by +0.14-0.29, stable across all test periods
-- Tornado width scaling (L ~ W^0.97) is a robust empirical law across 40,000+ events
-- All models use proper temporal train/test splits, same-location controls, and bootstrap confidence intervals
-- The Helmholtz framework provides a unified physical interpretation across all three hazards
+### What IS significant (honest models):
+- Hurricane RI v4-honest (AUC = 0.967 [0.955, 0.977]) is genuinely strong, even with honest methodology. Cross-basin generalization (NA→WP 0.939, WP→NA 0.949) shows robustness.
+- Earthquake v7-honest (AUC = 0.733 [0.704, 0.750]) extracts real signal beyond seismicity rates (+0.137 over rate-only baseline). Top features are physically meaningful (max magnitude, Coulomb proxy, rate changes).
+- Tornado severity models (EF2+ 0.851, EF3+ 0.917) show strong discrimination for post-event nowcasting.
+- The Helmholtz framework provides a unified physical interpretation across all three hazards.
+- All honest models use proper temporal train/test splits, bootstrap CIs, and fair baselines on the same test set.
 
 ### What requires caution:
-1. **Hurricane model uses best-track data (retrospective)**, not real-time intensity estimates which carry ~10 kt uncertainty. Published comparisons use different test periods.
-2. **Tornado width as predictor is well-known** in severe storms research — our contribution is the coherence scaling interpretation and the quantitative conditional probability tables, not the basic relationship.
-3. **Tornado formation v4 beats SPC outlooks** (0.973 vs ~0.90) but relies on knowing where tornadoes occurred in the past 1-3 days — it predicts CONTINUATION of outbreaks better than outbreak initiation from a clear sky.
-4. **Earthquake v6 negative sampling**: Geographic negatives (random M4-M5 locations) provide cleaner separation but may slightly overstate real-world performance if the most ambiguous zones are underrepresented.
-5. **All models are retrospective**: True validation requires prospective real-time testing with timestamped predictions before events occur.
+1. **Hurricane model uses best-track data (retrospective)**, not real-time intensity estimates. Comparison to operational models (SHIPS-RII) has NOT been done — this requires real-time data evaluation.
+2. **Tornado formation AUC 0.644 is modest.** Without real-time atmospheric data (CAPE, shear, helicity from NWP models), the model cannot compete with SPC outlooks. Negative BSS (-0.512) means the model is worse than climatology on calibration.
+3. **Tornado severity uses post-event data** (damage survey widths). These are nowcasting metrics, not predictions available before or during the event.
+4. **Earthquake AUC 0.733 is meaningful but not transformative.** Same-location controls are harder than geographic negatives, but still may not fully represent the difficulty of global deployment.
+5. **EF4+ tornado severity** has only 20 test events — the AUC is statistically unreliable.
+6. **All models are retrospective**: True validation requires prospective real-time testing with timestamped predictions.
+7. **Prior versions (v3/v4/v6) had critical inflated claims** that were caught by audit. This underscores the importance of independent replication.
 
 ### What would make this definitive:
 1. **Live prospective testing**: Deploy models with timestamped, immutable prediction logging (see LIVE_PREDICTION_PLATFORM.md)
