@@ -29,7 +29,7 @@
     "description": "Probabilistic tornado formation forecasts for active severe convection zones worldwide using composite STP/SCP indices with full provenance chain.",
     "license": "https://hazardpulse.io/legal/disclaimer/",
     "creator": { "@type": "Organization", "name": "Coherence Energy Labs", "url": "https://coherenceenergylabs.com" },
-    "temporalCoverage": "2026-03-13/2026-03-14",
+    "temporalCoverage": "2026-03-22/2026-03-23",
     "spatialCoverage": { "@type": "Place", "name": "Global severe convection zones" },
     "variableMeasured": "Probability of tornado formation in 24 h"
   }
@@ -110,7 +110,7 @@
         <!-- Worker injects personalized severe weather threat content here based on IP geolocation -->
       </section>
 
-      <!-- ═══ WORLD MAP ═══ -->
+      <!-- WORLD MAP -->
       <section class="section" aria-labelledby="worldmap-heading">
         <h2 id="worldmap-heading">Global tornado activity map</h2>
         <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Active and monitored severe convection zones worldwide. Hover a marker for details.</p>
@@ -474,7 +474,7 @@
   </g>
 
   <!-- Tectonic plate boundaries -->
-  <g class="tectonic-overlays" style="display:none" aria-label="Tectonic plate boundaries">
+  <g class="tectonic-overlays" aria-label="Tectonic plate boundaries">
     <polyline class="tectonic-line" points="0.0,101.3 53.3,93.3 106.7,85.3 133.3,106.7 160.0,133.3 173.3,154.7 200.0,186.7 213.3,200.0 240.0,200.0 266.7,213.3 280.0,226.7 266.7,253.3 261.3,293.3 280.0,346.7 293.3,386.7 298.7,400.0"/>
     <polyline class="tectonic-line" points="506.7,333.3 520.0,320.0 546.7,320.0 560.0,306.7 573.3,293.3 586.7,272.0 600.0,253.3 613.3,213.3 626.7,200.0 640.0,173.3 653.3,146.7 666.7,133.3 672.0,120.0"/>
     <polyline class="tectonic-line" points="720.0,226.7 733.3,253.3 746.7,266.7 760.0,253.3 773.3,240.0 786.7,226.7 800.0,213.3 813.3,200.0 826.7,186.7 840.0,173.3 853.3,160.0 858.7,146.7"/>
@@ -483,7 +483,7 @@
   </g>
 
   <!-- Hurricane basins -->
-  <g class="hurricane-basins" style="display:none" aria-label="Tropical cyclone basins">
+  <g class="hurricane-basins" aria-label="Tropical cyclone basins">
     <ellipse class="basin-outline" cx="333.3" cy="181.3" rx="93.3" ry="40.0"/>
     <text class="grid-label" x="333.3" y="229.3" text-anchor="middle" font-size="7" opacity="0.4">Atlantic</text>
     <ellipse class="basin-outline" cx="173.3" cy="200.0" rx="53.3" ry="26.7"/>
@@ -510,10 +510,48 @@
     <text class="grid-label" x="720.0" y="177.3" text-anchor="middle" font-size="6" opacity="0.4">Bangladesh</text>
   </g>
 
-  <!-- Hazard markers: populated dynamically from /data/live-tornadoes.json -->
-  <g class="hazard-markers" id="live-markers">
-    <!-- Dynamic markers inserted by JavaScript below -->
-    <!-- Markers dynamically inserted by updateMapMarkers() -->
+  <!-- Hazard markers (page-specific, inserted per page) -->
+  <g class="hazard-markers">
+    <a href="#storm-1" aria-label="Storm 147095 - 9.4% (Low)">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="264.7" cy="148.4" r="6"/>
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-2" cx="264.7" cy="148.4" r="6"/>
+      <circle class="hz-marker hz-marker-to" cx="264.7" cy="148.4" r="4.5" filter="url(#glow-to)"/>
+      <g class="map-tooltip">
+        <rect class="tooltip-bg" x="274.7" y="130.4" width="90" height="22" rx="3"/>
+        <text class="tooltip-text" x="276.7" y="140.4">Storm 147095</text>
+        <text class="tooltip-sub" x="276.7" y="149.4">9.4% · Rank #1</text>
+      </g>
+    </a>
+    <a href="#storm-2" aria-label="Storm 147106 - 8.6% (Low)">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="258.0" cy="141.4" r="4"/>
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-2" cx="258.0" cy="141.4" r="4"/>
+      <circle class="hz-marker hz-marker-to" cx="258.0" cy="141.4" r="3.0" filter="url(#glow-to)"/>
+      <g class="map-tooltip">
+        <rect class="tooltip-bg" x="268.0" y="123.4" width="90" height="22" rx="3"/>
+        <text class="tooltip-text" x="270.0" y="133.4">Storm 147106</text>
+        <text class="tooltip-sub" x="270.0" y="142.4">8.6% · Rank #2</text>
+      </g>
+    </a>
+    <a href="#storm-3" aria-label="Storm 147115 - 8.2% (Low)">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="256.7" cy="141.5" r="4"/>
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-2" cx="256.7" cy="141.5" r="4"/>
+      <circle class="hz-marker hz-marker-to" cx="256.7" cy="141.5" r="3.0" filter="url(#glow-to)"/>
+      <g class="map-tooltip">
+        <rect class="tooltip-bg" x="266.7" y="123.5" width="90" height="22" rx="3"/>
+        <text class="tooltip-text" x="268.7" y="133.5">Storm 147115</text>
+        <text class="tooltip-sub" x="268.7" y="142.5">8.2% · Rank #3</text>
+      </g>
+    </a>
+    <a href="#storm-4" aria-label="Storm 147118 - 7.6% (Low)">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="237.6" cy="116.6" r="4"/>
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-2" cx="237.6" cy="116.6" r="4"/>
+      <circle class="hz-marker hz-marker-to" cx="237.6" cy="116.6" r="3.0" filter="url(#glow-to)"/>
+      <g class="map-tooltip">
+        <rect class="tooltip-bg" x="247.6" y="98.6" width="90" height="22" rx="3"/>
+        <text class="tooltip-text" x="249.6" y="108.6">Storm 147118</text>
+        <text class="tooltip-sub" x="249.6" y="117.6">7.6% · Rank #4</text>
+      </g>
+    </a>
   </g>
 
   <!-- User location marker (positioned by Worker CSS vars) -->
@@ -531,84 +569,146 @@
         </div>
       </section>
 
-      <!-- ═══ LIVE DISCLAIMER BANNER ═══ -->
-      <section class="section" id="live-disclaimer" style="display:none;">
+      <!-- DISCLAIMER BANNER -->
+      <section class="section">
         <div class="card" style="background:var(--warn-bg,#fff8e1);border-left:4px solid var(--warn,#c98a12);padding:12px 16px;">
           <strong>Research Only</strong> --
-          <span id="disclaimer-text"></span>
+          RESEARCH ONLY. NOT an operational warning system. Does NOT replace NWS tornado warnings. Always follow official NWS guidance. See weather.gov for official alerts.
         </div>
       </section>
 
-      <!-- ═══ LIVE STATUS BAR ═══ -->
-      <section class="section" id="live-status" style="display:none;">
+      <!-- STATUS BAR -->
+
+      <section class="section">
         <div class="grid">
           <div class="card col-4">
-            <div class="kv"><span>Last update</span><strong id="status-updated">--</strong></div>
+            <div class="kv"><span>Last update</span><strong>Sun, 22 Mar 2026 05:40:17 UTC</strong></div>
           </div>
           <div class="card col-4">
-            <div class="kv"><span>Scoring model</span><strong id="status-model">--</strong></div>
+            <div class="kv"><span>Scoring model</span><strong>Analytic coherence model (physics-only, no ML)</strong></div>
           </div>
           <div class="card col-4">
-            <div class="kv"><span>Active storms</span><strong id="status-count">--</strong></div>
+            <div class="kv"><span>Active storms</span><strong>4 storms</strong></div>
           </div>
         </div>
       </section>
 
-      <!-- ═══ NO STORMS MESSAGE ═══ -->
-      <section class="section" id="no-storms" style="display:none;">
-        <div class="card" style="text-align:center;padding:48px 24px;">
-          <h3 style="color:var(--text-secondary);">No active severe weather</h3>
-          <p class="muted">No ProbSevere storm objects detected at last scan. Check back during active convective weather.</p>
-        </div>
-      </section>
+      <!-- STORMS -->
 
-      <!-- ═══ TOP STORMS RANKED TABLE (populated by JS) ═══ -->
-      <section class="section" id="storms-section" style="display:none;" aria-labelledby="systems-heading">
+      <section class="section" aria-labelledby="systems-heading">
         <h2 id="systems-heading">Active storms by tornado probability</h2>
-        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">ProbSevere storm objects scored with coherence field analysis. Ranked by estimated tornado probability.</p>
+        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">ProbSevere storm objects scored with coherence field analysis. Ranked by estimated tornado probability. Click any row to expand details.</p>
 
-        <div style="overflow-x:auto;">
-          <table class="ranked-table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Storm ID</th>
-                <th>Location</th>
-                <th>P(tornado)</th>
-                <th>Risk</th>
-                <th>CAPE</th>
-                <th>SRH 0-1km</th>
-                <th>MaxLLAz</th>
-              </tr>
-            </thead>
-            <tbody id="storms-tbody"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ═══ TOP STORM DEEP DIVE (populated by JS) ═══ -->
-      <section class="section" id="top-storm-dive" style="display:none;" aria-labelledby="focus-heading">
-        <h2 id="focus-heading">Top storm -- coherence diagnostics</h2>
-        <div id="top-storm-content"></div>
-      </section>
-
-      <!-- ═══ LOADING / ERROR STATE ═══ -->
-      <section class="section" id="loading-state">
-        <div class="card" style="text-align:center;padding:48px 24px;">
-          <p class="muted">Loading live tornado data...</p>
-        </div>
-      </section>
-
-      <!-- Static fallback for no-JS environments -->
-      <noscript>
-        <section class="section">
-          <div class="card" style="text-align:center;padding:48px 24px;">
-            <h3>JavaScript required</h3>
-            <p class="muted">Enable JavaScript to view live tornado scoring data.</p>
+        <details class="event-row-details" id="storm-1">
+          <summary class="event-row">
+            <span class="rank-badge rank-1">1</span> <strong>147095</strong> 34.36, -80.73 <strong style="color:#1976d2">9.4%</strong> <span class="chip" style="background:#1976d2;color:#fff;font-size:11px;padding:2px 8px;">Low</span> CAPE: 143 | SRH: 147 | MaxLLAz: 0.0030
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>ProbSevere score</span><strong>0</strong></div>
+            <div class="kv"><span>PS tornado score</span><strong>0</strong></div>
+            <div class="kv"><span>Effective bulk shear</span><strong>31 kt</strong></div>
+            <div class="kv"><span>MESH</span><strong>0.0 in</strong></div>
+            <div class="kv"><span>Flash rate</span><strong>0 /min</strong></div>
+            <div class="kv"><span>Track length</span><strong>2 time steps</strong></div>
+            <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
+            <div class="kv"><span>Valid time</span><strong>2026-03-22 05:30:37 UTC</strong></div>
+            <div class="kv"><span>Motion</span><strong>9.4 E, -4.0 S m/s</strong></div>
           </div>
-        </section>
-      </noscript>
-      <!-- ═══ EVIDENCE AND REPLAY ═══ -->
+        </details>
+        <details class="event-row-details" id="storm-2">
+          <summary class="event-row">
+            <span class="rank-badge">2</span> <strong>147106</strong> 36.98, -83.25 <strong style="color:#1976d2">8.6%</strong> <span class="chip" style="background:#1976d2;color:#fff;font-size:11px;padding:2px 8px;">Low</span> CAPE: 100 | SRH: 127 | MaxLLAz: 0.0030
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>ProbSevere score</span><strong>0</strong></div>
+            <div class="kv"><span>PS tornado score</span><strong>0</strong></div>
+            <div class="kv"><span>Effective bulk shear</span><strong>15 kt</strong></div>
+            <div class="kv"><span>MESH</span><strong>0.1 in</strong></div>
+            <div class="kv"><span>Flash rate</span><strong>0 /min</strong></div>
+            <div class="kv"><span>Track length</span><strong>2 time steps</strong></div>
+            <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
+            <div class="kv"><span>Valid time</span><strong>2026-03-22 05:30:37 UTC</strong></div>
+            <div class="kv"><span>Motion</span><strong>9.4 E, -4.0 S m/s</strong></div>
+          </div>
+        </details>
+        <details class="event-row-details" id="storm-3">
+          <summary class="event-row">
+            <span class="rank-badge">3</span> <strong>147115</strong> 36.94, -83.74 <strong style="color:#1976d2">8.2%</strong> <span class="chip" style="background:#1976d2;color:#fff;font-size:11px;padding:2px 8px;">Low</span> CAPE: 134 | SRH: 118 | MaxLLAz: 0.0020
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>ProbSevere score</span><strong>0</strong></div>
+            <div class="kv"><span>PS tornado score</span><strong>0</strong></div>
+            <div class="kv"><span>Effective bulk shear</span><strong>18 kt</strong></div>
+            <div class="kv"><span>MESH</span><strong>0.1 in</strong></div>
+            <div class="kv"><span>Flash rate</span><strong>0 /min</strong></div>
+            <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
+            <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
+            <div class="kv"><span>Valid time</span><strong>2026-03-22 05:30:37 UTC</strong></div>
+            <div class="kv"><span>Motion</span><strong>9.4 E, -4.0 S m/s</strong></div>
+          </div>
+        </details>
+        <details class="event-row-details" id="storm-4">
+          <summary class="event-row">
+            <span class="rank-badge">4</span> <strong>147118</strong> 46.28, -90.91 <strong style="color:#1976d2">7.6%</strong> <span class="chip" style="background:#1976d2;color:#fff;font-size:11px;padding:2px 8px;">Low</span> CAPE: 0 | SRH: 0 | MaxLLAz: 0.0020
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>ProbSevere score</span><strong>0</strong></div>
+            <div class="kv"><span>PS tornado score</span><strong>0</strong></div>
+            <div class="kv"><span>Effective bulk shear</span><strong>0 kt</strong></div>
+            <div class="kv"><span>MESH</span><strong>0.0 in</strong></div>
+            <div class="kv"><span>Flash rate</span><strong>0 /min</strong></div>
+            <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
+            <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
+            <div class="kv"><span>Valid time</span><strong>2026-03-22 05:30:37 UTC</strong></div>
+            <div class="kv"><span>Motion</span><strong>9.4 E, -4.0 S m/s</strong></div>
+          </div>
+        </details>
+      </section>
+
+      <!-- TOP STORM DEEP DIVE -->
+      <section class="section" aria-labelledby="focus-heading">
+        <h2 id="focus-heading">Top storm -- coherence diagnostics</h2>
+        <div class="grid">
+          <div class="card col-6 hazard-to">
+            <h3>Storm 147095 -- Coherence fields</h3>
+            <div class="metric" style="color:#1976d2">9.4%</div>
+            <div class="metric-label">Tornado probability</div>
+            <div class="kv"><span>tau</span><strong>0.0000</strong></div>
+            <div class="kv"><span>grad_tau</span><strong>0.0000</strong></div>
+            <div class="kv"><span>torsion</span><strong>0.0000</strong></div>
+            <div class="kv"><span>alignment</span><strong>0.0000</strong></div>
+            <div class="kv"><span>S_field</span><strong>0.0000</strong></div>
+            <div class="kv"><span>Gamma_field</span><strong>0.1500</strong></div>
+            <div class="kv"><span>S / Gamma</span><strong>0.0000</strong></div>
+            <div class="kv"><span>Da (Damkohler)</span><strong>10.2784</strong></div>
+            <div class="kv"><span>E_coh</span><strong>0.0000</strong></div>
+            <div class="kv"><span>Singularity count</span><strong>1.0000</strong></div>
+          </div>
+          <div class="card col-6 hazard-to">
+            <h3>Singularity analysis</h3>
+            <div class="kv"><span>Conditions met</span><strong>1 / 5</strong></div>
+            <div class="kv"><span>s_over_gamma</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>high_gradient</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>high_torsion</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>positive_alignment</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>high_damkohler</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+          </div>
+        </div>
+        <div class="grid" style="margin-top:var(--s-md);">
+          <div class="card col-12 hazard-to">
+            <h3>Storm parameters</h3>
+            <div class="kv"><span>Location</span><strong>34.3600, -80.7311</strong></div>
+            <div class="kv"><span>CAPE</span><strong>143 J/kg</strong></div>
+            <div class="kv"><span>0-1km SRH</span><strong>147 m^2/s^2</strong></div>
+            <div class="kv"><span>Eff. bulk shear</span><strong>31 kt</strong></div>
+            <div class="kv"><span>MaxLLAz</span><strong>0.0030 /s</strong></div>
+            <div class="kv"><span>Valid time</span><strong>2026-03-22 05:30:37 UTC</strong></div>
+            <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EVIDENCE AND REPLAY -->
       <section class="section" aria-labelledby="evidence-heading">
         <h2 id="evidence-heading">Evidence and replay</h2>
         <div class="grid">
@@ -625,7 +725,7 @@
           <div class="card col-4">
             <h3>Replay any forecast</h3>
             <p class="muted">Download the input data and re-run any past forecast yourself. Same data in, same result out - guaranteed.</p>
-            <a href="/data/replay/to_fcst_20260313_0300.json" class="btn btn-secondary" style="margin-top:8px;">Download replay</a>
+            <a href="/data/replay/to_fcst_20260322_0300.json" class="btn btn-secondary" style="margin-top:8px;">Download replay</a>
           </div>
         </div>
       </section>
@@ -662,336 +762,9 @@
         Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
         with stated uncertainty - they are not certainties.
       </p>
-      <p class="footer-build">Built with Coherence Lang · Minimal client-side JS · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
+      <p class="footer-build">Built with Coherence Lang · Zero client-side JavaScript · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
     </div>
   </footer>
 
-  <script>
-  (function() {
-    'use strict';
-
-    var DATA_URL = '/data/live-tornadoes.json';
-
-    var RISK_COLORS = {
-      very_high: '#d32f2f',
-      high: '#e65100',
-      moderate: '#f9a825',
-      low: '#1976d2',
-      minimal: '#757575'
-    };
-
-    var RISK_LABELS = {
-      very_high: 'Very High',
-      high: 'High',
-      moderate: 'Moderate',
-      low: 'Low',
-      minimal: 'Minimal'
-    };
-
-    function esc(s) {
-      var d = document.createElement('div');
-      d.textContent = s;
-      return d.innerHTML;
-    }
-
-    function formatTime(ts) {
-      if (!ts) return '--';
-      // Handle "20260322_040039 UTC" format from the pipeline
-      var m = String(ts).match(/^(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})\s*UTC$/);
-      if (m) {
-        return m[1] + '-' + m[2] + '-' + m[3] + ' ' + m[4] + ':' + m[5] + ':' + m[6] + ' UTC';
-      }
-      // Handle ISO 8601 format
-      try {
-        var d = new Date(ts);
-        if (!isNaN(d.getTime())) {
-          return d.toUTCString().replace('GMT', 'UTC');
-        }
-      } catch(e) { /* fall through */ }
-      return String(ts);
-    }
-
-    function pct(p) {
-      return (p * 100).toFixed(1) + '%';
-    }
-
-    // Convert lat/lon to SVG coordinates for the 960x480 equirectangular world map
-    function latLonToSVG(lat, lon) {
-      // The SVG uses a simple equirectangular projection: x = (lon+180)/360 * 960, y = (90-lat)/180 * 480
-      var x = ((lon + 180) / 360) * 960;
-      var y = ((90 - lat) / 180) * 480;
-      return { x: x, y: y };
-    }
-
-    function updateMapMarkers(storms) {
-      var markersGroup = document.querySelector('.hazard-markers');
-      if (!markersGroup) return;
-
-      // Clear old static markers
-      markersGroup.innerHTML = '';
-
-      var limit = Math.min(storms.length, 20);
-      for (var i = 0; i < limit; i++) {
-        var s = storms[i];
-        var rank = i + 1;
-        var pos = latLonToSVG(s.lat, s.lon);
-        var riskLabel = RISK_LABELS[s.risk_band] || s.risk_band;
-        var label = 'Storm ' + s.storm_id + ' - ' + pct(s.tornado_probability) + ' (' + riskLabel + ')';
-
-        // Size the marker by rank: #1 is largest
-        var baseR = rank === 1 ? 4.5 : 3;
-
-        var a = document.createElementNS('http://www.w3.org/2000/svg', 'a');
-        a.setAttribute('href', '#cell-' + rank);
-        a.setAttribute('aria-label', label);
-
-        // Pulse rings
-        for (var p = 1; p <= 2; p++) {
-          var pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          pulse.setAttribute('class', 'hz-pulse hz-pulse-to hz-pulse-delay-' + p);
-          pulse.setAttribute('cx', pos.x.toFixed(1));
-          pulse.setAttribute('cy', pos.y.toFixed(1));
-          pulse.setAttribute('r', (baseR + 1).toFixed(0));
-          a.appendChild(pulse);
-        }
-
-        // Main marker
-        var marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        marker.setAttribute('class', 'hz-marker hz-marker-to');
-        marker.setAttribute('cx', pos.x.toFixed(1));
-        marker.setAttribute('cy', pos.y.toFixed(1));
-        marker.setAttribute('r', baseR.toFixed(1));
-        marker.setAttribute('filter', 'url(#glow-to)');
-        a.appendChild(marker);
-
-        // Tooltip group
-        var tipG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        tipG.setAttribute('class', 'map-tooltip');
-
-        var tipBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        tipBg.setAttribute('class', 'tooltip-bg');
-        tipBg.setAttribute('x', (pos.x + 10).toFixed(1));
-        tipBg.setAttribute('y', (pos.y - 18).toFixed(1));
-        tipBg.setAttribute('width', '90');
-        tipBg.setAttribute('height', '22');
-        tipBg.setAttribute('rx', '3');
-        tipG.appendChild(tipBg);
-
-        var tipText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        tipText.setAttribute('class', 'tooltip-text');
-        tipText.setAttribute('x', (pos.x + 12).toFixed(1));
-        tipText.setAttribute('y', (pos.y - 8).toFixed(1));
-        tipText.textContent = 'Storm ' + s.storm_id;
-        tipG.appendChild(tipText);
-
-        var tipSub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        tipSub.setAttribute('class', 'tooltip-sub');
-        tipSub.setAttribute('x', (pos.x + 12).toFixed(1));
-        tipSub.setAttribute('y', (pos.y + 1).toFixed(1));
-        tipSub.textContent = pct(s.tornado_probability) + ' \u00B7 Rank #' + rank;
-        tipG.appendChild(tipSub);
-
-        a.appendChild(tipG);
-        markersGroup.appendChild(a);
-      }
-    }
-
-    function addClickHandlers() {
-      var rows = document.querySelectorAll('.event-row');
-      for (var r = 0; r < rows.length; r++) {
-        rows[r].style.cursor = 'pointer';
-        rows[r].addEventListener('click', function() {
-          var detail = this.nextElementSibling;
-          if (detail && detail.classList.contains('event-detail')) {
-            var isOpen = detail.style.maxHeight && detail.style.maxHeight !== '0px';
-            if (isOpen) {
-              detail.style.maxHeight = '0px';
-              detail.style.opacity = '0';
-              detail.style.padding = '0';
-            } else {
-              detail.style.maxHeight = '600px';
-              detail.style.opacity = '1';
-              detail.style.padding = '12px 10px';
-            }
-          }
-        });
-      }
-    }
-
-    function renderStorms(data) {
-      var loadEl = document.getElementById('loading-state');
-      if (loadEl) loadEl.style.display = 'none';
-
-      // Disclaimer banner
-      var discEl = document.getElementById('live-disclaimer');
-      var discText = document.getElementById('disclaimer-text');
-      if (discEl && discText && data.disclaimer) {
-        discText.textContent = data.disclaimer;
-        discEl.style.display = '';
-      }
-
-      // Status bar
-      var statusEl = document.getElementById('live-status');
-      if (statusEl) {
-        statusEl.style.display = '';
-        var upd = document.getElementById('status-updated');
-        var mdl = document.getElementById('status-model');
-        var cnt = document.getElementById('status-count');
-        if (upd) upd.textContent = formatTime(data.updated_at);
-        if (mdl) mdl.textContent = data.scoring_tier_label || data.model_version || '--';
-        if (cnt) cnt.textContent = (data.n_active_storms || 0) + ' storms';
-      }
-
-      var storms = data.storms || [];
-
-      if (storms.length === 0) {
-        var noEl = document.getElementById('no-storms');
-        if (noEl) noEl.style.display = '';
-        return;
-      }
-
-      // Update map markers with actual storm positions
-      updateMapMarkers(storms);
-
-      // Storm table
-      var secEl = document.getElementById('storms-section');
-      var tbody = document.getElementById('storms-tbody');
-      if (secEl && tbody) {
-        secEl.style.display = '';
-        var html = '';
-        var limit = Math.min(storms.length, 20);
-        for (var i = 0; i < limit; i++) {
-          var s = storms[i];
-          var rank = i + 1;
-          var riskColor = RISK_COLORS[s.risk_band] || '#757575';
-          var riskLabel = RISK_LABELS[s.risk_band] || s.risk_band;
-          var rankClass = rank === 1 ? ' rank-1' : '';
-          html += '<tr id="cell-' + rank + '" class="event-row" tabindex="0" role="button" aria-expanded="false" aria-label="Storm ' + esc(String(s.storm_id)) + ' - click to expand details">' +
-            '<td><span class="rank-badge' + rankClass + '">' + rank + '</span></td>' +
-            '<td><strong>' + esc(String(s.storm_id)) + '</strong></td>' +
-            '<td>' + s.lat.toFixed(2) + ', ' + s.lon.toFixed(2) + '</td>' +
-            '<td><strong style="color:' + riskColor + '">' + pct(s.tornado_probability) + '</strong></td>' +
-            '<td><span class="chip" style="background:' + riskColor + ';color:#fff;font-size:11px;padding:2px 8px;">' + esc(riskLabel) + '</span></td>' +
-            '<td>' + (s.mucape || 0).toFixed(0) + '</td>' +
-            '<td>' + (s.srh01 || 0).toFixed(0) + '</td>' +
-            '<td>' + (s.maxllaz || 0).toFixed(4) + '</td>' +
-            '</tr>';
-          // Detail row (hidden by default via CSS max-height:0)
-          html += '<tr class="event-detail" aria-hidden="true"><td colspan="8">' +
-            '<div class="kv"><span>ProbSevere score</span><strong>' + (s.ps || 0).toFixed(0) + '</strong></div>' +
-            '<div class="kv"><span>PS tornado score</span><strong>' + (s.ps_tor || 0).toFixed(0) + '</strong></div>' +
-            '<div class="kv"><span>Effective bulk shear</span><strong>' + (s.ebshear || 0).toFixed(0) + ' kt</strong></div>' +
-            '<div class="kv"><span>MESH</span><strong>' + (s.mesh || 0).toFixed(1) + ' in</strong></div>' +
-            '<div class="kv"><span>Flash rate</span><strong>' + (s.flash_rate || 0).toFixed(0) + ' /min</strong></div>' +
-            '<div class="kv"><span>Track length</span><strong>' + (s.track_length || 0) + ' time steps</strong></div>' +
-            '<div class="kv"><span>Scoring tier</span><strong>' + esc(s.scoring_tier || '--') + '</strong></div>' +
-            '<div class="kv"><span>Valid time</span><strong>' + formatTime(s.valid_time) + '</strong></div>' +
-            '<div class="kv"><span>Motion</span><strong>' + (s.motion_east || 0).toFixed(1) + ' E, ' + (s.motion_south || 0).toFixed(1) + ' S m/s</strong></div>' +
-            '</td></tr>';
-        }
-        tbody.innerHTML = html;
-
-        // Attach click and keyboard handlers
-        addClickHandlers();
-      }
-
-      // Top storm deep dive (coherence diagnostics)
-      var diveEl = document.getElementById('top-storm-dive');
-      var diveContent = document.getElementById('top-storm-content');
-      if (diveEl && diveContent && storms.length > 0) {
-        var top = storms[0];
-        var coh = top.coherence_diagnostics || {};
-        var hasCoherence = Object.keys(coh).length > 0;
-
-        if (hasCoherence) {
-          diveEl.style.display = '';
-          var ch = '';
-          ch += '<div class="grid">';
-          ch += '<div class="card col-6 hazard-to">';
-          ch += '<h3>Storm ' + esc(String(top.storm_id)) + ' -- Coherence fields</h3>';
-          ch += '<div class="metric" style="color:' + (RISK_COLORS[top.risk_band] || '#757575') + '">' + pct(top.tornado_probability) + '</div>';
-          ch += '<div class="metric-label">Tornado probability</div>';
-
-          // Use correct key casing matching the JSON data
-          var cohKeys = [
-            { key: 'tau', label: 'tau' },
-            { key: 'grad_tau', label: 'grad_tau' },
-            { key: 'torsion', label: 'torsion' },
-            { key: 'alignment', label: 'alignment' },
-            { key: 'S_field', label: 'S_field' },
-            { key: 'Gamma_field', label: 'Gamma_field' },
-            { key: 'S_over_Gamma', label: 'S / Gamma' },
-            { key: 'Da', label: 'Da (Damkohler)' },
-            { key: 'E_coh', label: 'E_coh' },
-            { key: 'singularity_count', label: 'Singularity count' }
-          ];
-          for (var k = 0; k < cohKeys.length; k++) {
-            var ck = cohKeys[k];
-            var val = coh[ck.key];
-            if (val !== undefined && val !== null) {
-              ch += '<div class="kv"><span>' + esc(ck.label) + '</span><strong>' + Number(val).toFixed(4) + '</strong></div>';
-            }
-          }
-          ch += '</div>';
-
-          ch += '<div class="card col-6 hazard-to">';
-          ch += '<h3>Singularity analysis</h3>';
-          var sing = coh.singularity_detail || {};
-          var singCount = coh.singularity_conditions_met || 0;
-          ch += '<div class="kv"><span>Conditions met</span><strong>' + singCount + ' / 5</strong></div>';
-          var singKeys = ['s_over_gamma', 'high_gradient', 'high_torsion', 'positive_alignment', 'high_damkohler'];
-          for (var j = 0; j < singKeys.length; j++) {
-            var sk = singKeys[j];
-            var sv = sing[sk];
-            if (sv !== undefined) {
-              var chip = sv ? '<span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span>' :
-                              '<span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span>';
-              ch += '<div class="kv"><span>' + esc(sk) + '</span>' + chip + '</div>';
-            }
-          }
-          ch += '</div>';
-          ch += '</div>';
-
-          ch += '<div class="grid" style="margin-top:var(--s-md);">';
-          ch += '<div class="card col-12 hazard-to">';
-          ch += '<h3>Storm parameters</h3>';
-          ch += '<div class="kv"><span>Location</span><strong>' + top.lat.toFixed(4) + ', ' + top.lon.toFixed(4) + '</strong></div>';
-          ch += '<div class="kv"><span>CAPE</span><strong>' + (top.mucape || 0).toFixed(0) + ' J/kg</strong></div>';
-          ch += '<div class="kv"><span>0-1km SRH</span><strong>' + (top.srh01 || 0).toFixed(0) + ' m^2/s^2</strong></div>';
-          ch += '<div class="kv"><span>Eff. bulk shear</span><strong>' + (top.ebshear || 0).toFixed(0) + ' kt</strong></div>';
-          ch += '<div class="kv"><span>MaxLLAz</span><strong>' + (top.maxllaz || 0).toFixed(4) + ' /s</strong></div>';
-          ch += '<div class="kv"><span>Valid time</span><strong>' + esc(formatTime(top.valid_time)) + '</strong></div>';
-          ch += '<div class="kv"><span>Model version</span><strong>' + esc(top.model_version || '--') + '</strong></div>';
-          ch += '</div>';
-          ch += '</div>';
-
-          diveContent.innerHTML = ch;
-        }
-      }
-    }
-
-    function renderError(msg) {
-      var loadEl = document.getElementById('loading-state');
-      if (loadEl) {
-        loadEl.innerHTML = '<div class="card" style="text-align:center;padding:48px 24px;">' +
-          '<h3 style="color:var(--text-secondary);">Unable to load live data</h3>' +
-          '<p class="muted">' + esc(msg) + '</p>' +
-          '<p class="muted">The static map above still shows monitored tornado zones.</p>' +
-          '</div>';
-      }
-    }
-
-    // Fetch and render
-    fetch(DATA_URL)
-      .then(function(r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .then(renderStorms)
-      .catch(function(e) {
-        renderError('Could not fetch live-tornadoes.json: ' + e.message);
-      });
-  })();
-  </script>
 </body>
 </html>

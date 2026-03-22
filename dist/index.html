@@ -116,7 +116,7 @@
         <!-- Worker injects personalized content here based on IP geolocation -->
       </section>
 
-      <!-- ═══ WORLD MAP ═══ -->
+      <!-- WORLD MAP -->
       <section class="section" aria-labelledby="worldmap-heading">
         <h2 id="worldmap-heading">Global hazard map</h2>
         <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Active hazard zones across the world. Hover a marker for details. Click to see full analysis.</p>
@@ -516,10 +516,48 @@
     <text class="grid-label" x="720.0" y="177.3" text-anchor="middle" font-size="6" opacity="0.4">Bangladesh</text>
   </g>
 
-
-  <!-- Hazard markers — dynamically populated from live JSON data -->
-  <g class="hazard-markers" id="live-markers">
-    <!-- Populated by JavaScript from /data/live-pulse.json, /data/live-tornadoes.json, /data/live-storms.json -->
+  <!-- Hazard markers (page-specific, inserted per page) -->
+  <g class="hazard-markers">
+    <a href="/live/hurricane/" aria-label="Hurricane Alice - 37.2% RI · Category 1">
+      <circle class="hz-pulse hz-pulse-hu hz-pulse-delay-1" cx="308.0" cy="187.2" r="6"/>
+      <circle class="hz-pulse hz-pulse-hu hz-pulse-delay-2" cx="308.0" cy="187.2" r="6"/>
+      <circle class="hz-marker hz-marker-hu" cx="308.0" cy="187.2" r="5" filter="url(#glow-hu)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="318.0" y="169.2" width="100" height="22" rx="3"/>
+        <text class="tooltip-text" x="320.0" y="179.2">Hurricane Alice</text>
+        <text class="tooltip-sub" x="320.0" y="188.2">37.2% RI · Category 1</text></g>
+    </a>
+    <a href="/live/tornado/" aria-label="Storm 147095 - 9.4% · Low">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="264.7" cy="148.4" r="5"/>
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-2" cx="264.7" cy="148.4" r="5"/>
+      <circle class="hz-marker hz-marker-to" cx="264.7" cy="148.4" r="4" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="274.7" y="130.4" width="100" height="22" rx="3"/>
+        <text class="tooltip-text" x="276.7" y="140.4">Storm 147095</text>
+        <text class="tooltip-sub" x="276.7" y="149.4">9.4% · Low</text></g>
+    </a>
+    <a href="/live/tornado/" aria-label="Storm 147106 - 8.6% · Low">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="258.0" cy="141.4" r="5"/>
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-2" cx="258.0" cy="141.4" r="5"/>
+      <circle class="hz-marker hz-marker-to" cx="258.0" cy="141.4" r="4" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="268.0" y="123.4" width="100" height="22" rx="3"/>
+        <text class="tooltip-text" x="270.0" y="133.4">Storm 147106</text>
+        <text class="tooltip-sub" x="270.0" y="142.4">8.6% · Low</text></g>
+    </a>
+    <a href="/live/tornado/" aria-label="Storm 147115 - 8.2% · Low">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="256.7" cy="141.5" r="4"/>
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-2" cx="256.7" cy="141.5" r="4"/>
+      <circle class="hz-marker hz-marker-to" cx="256.7" cy="141.5" r="3" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="266.7" y="123.5" width="100" height="22" rx="3"/>
+        <text class="tooltip-text" x="268.7" y="133.5">Storm 147115</text>
+        <text class="tooltip-sub" x="268.7" y="142.5">8.2% · Low</text></g>
+    </a>
+    <a href="/live/tornado/" aria-label="Storm 147118 - 7.6% · Low">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="237.6" cy="116.6" r="4"/>
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-2" cx="237.6" cy="116.6" r="4"/>
+      <circle class="hz-marker hz-marker-to" cx="237.6" cy="116.6" r="3" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="247.6" y="98.6" width="100" height="22" rx="3"/>
+        <text class="tooltip-text" x="249.6" y="108.6">Storm 147118</text>
+        <text class="tooltip-sub" x="249.6" y="117.6">7.6% · Low</text></g>
+    </a>
   </g>
 
   <!-- User location marker (positioned by Worker CSS vars) -->
@@ -539,72 +577,54 @@
         </div>
       </section>
 
-      <!-- ═══ TOP 3 GLOBAL HAZARDS ═══ -->
+      <!-- TOP 3 GLOBAL HAZARDS -->
       <section class="section" aria-labelledby="pulse-heading">
         <h2 id="pulse-heading">Highest risk right now</h2>
         <p class="muted" style="margin-top:-8px;margin-bottom:16px;">The three highest-risk hazards we're tracking globally, ranked by probability. Updated every 3 hours.</p>
 
-        <noscript>
-          <div class="card" style="border-left:4px solid var(--warn);margin-bottom:16px;">
-            <p><strong>JavaScript is required</strong> to display live hazard data. Visit the individual hazard pages for current status:</p>
-            <ul>
-              <li><a href="/live/earthquake/">Earthquake monitor</a></li>
-              <li><a href="/live/hurricane/">Hurricane monitor</a></li>
-              <li><a href="/live/tornado/">Tornado monitor</a></li>
-            </ul>
-          </div>
-        </noscript>
-
-        <div id="hazard-cards-loading" class="card" style="text-align:center;padding:32px;">
-          <p class="muted">Loading live hazard data...</p>
-        </div>
-
-        <div id="hazard-cards-error" class="card" style="display:none;border-left:4px solid var(--warn);padding:16px;">
-          <p><strong>Live data temporarily unavailable.</strong> See individual hazard pages for current status:</p>
-          <div style="display:flex;gap:12px;margin-top:8px;">
-            <a href="/live/earthquake/" class="btn btn-secondary">Earthquake</a>
-            <a href="/live/hurricane/" class="btn btn-secondary">Hurricane</a>
-            <a href="/live/tornado/" class="btn btn-secondary">Tornado</a>
-          </div>
-        </div>
-
-        <div id="hazard-cards" class="grid" style="display:none;">
-          <!-- Dynamically populated -->
+        <div class="grid">
+          <a href="/live/hurricane/" class="card card-link card-secondary hazard-hu" aria-label="Hurricane - 37.2% probability" style="border-left:4px solid var(--hu, #0fa878);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span class="rank-badge rank-1">1</span><h3 style="margin:0;">Hurricane</h3><span class="chip warn" style="margin-left:auto;">Elevated</span></div><div class="metric">37.2% probability</div><div class="metric-label">of RI in 24 hours</div><div class="kv"><span>Confidence</span><strong>31.0% – 43.5%</strong></div><div class="kv"><span>Trend</span><strong style="color:var(--bad)">↑ +2.4%</strong></div><div class="kv"><span>Storm</span><strong>Hurricane Alice (Category 1, 75 kt)</strong></div><div class="kv"><span>Location</span><strong>19.8°N, 64.5°W</strong></div><div data-depth="technical"><div class="kv"><span>Model</span><strong>hurricane_ri_v8_1</strong></div></div><div class="chip-row"><span class="chip good">Checks passed</span></div><span class="card-cta">Full detail →</span></a>
+          <a href="/live/earthquake/" class="card card-link card-secondary hazard-eq" aria-label="Earthquake - 27.4% probability" style="border-left:4px solid var(--eq, #3b7dff);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span class="rank-badge">2</span><h3 style="margin:0;">Earthquake</h3><span class="chip warn" style="margin-left:auto;">Guarded</span></div><div class="metric">27.4% probability</div><div class="metric-label">of M6.0+ in 30 days</div><div class="kv"><span>Confidence</span><strong>21.2% – 33.0%</strong></div><div class="kv"><span>Trend</span><strong style="color:var(--bad)">↑ +1.9%</strong></div><div class="kv"><span>Forecast</span><strong>eq_fcst_20260313_0300</strong></div><div class="chip-row"><span class="chip good">Checks passed</span></div><span class="card-cta">Full detail →</span></a>
+          <a href="/live/tornado/" class="card card-link card-secondary hazard-to" aria-label="Tornado - 9.4% probability" style="border-left:4px solid var(--to, #c98a12);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span class="rank-badge">3</span><h3 style="margin:0;">Tornado</h3><span class="chip good" style="margin-left:auto;">Low</span></div><div class="metric">9.4% probability</div><div class="metric-label">of formation in 24 hours</div><div class="kv"><span>Confidence</span><strong>14.8% – 22.9%</strong></div><div class="kv"><span>Trend</span><strong style="color:var(--good)">↓ 2.1%</strong></div><div class="kv"><span>Active storms</span><strong>4 tracked</strong></div><div class="kv"><span>Scoring</span><strong>Analytic coherence model (physics-only, no ML)</strong></div><div data-depth="technical"><div class="kv"><span>Model</span><strong>tornado_storm_v1_0</strong></div></div><div class="chip-row"><span class="chip good">Checks passed</span></div><span class="card-cta">Full detail →</span></a>
         </div>
       </section>
 
-      <!-- ═══ WHAT CHANGED & SYSTEM HEALTH ═══ -->
+      <!-- WHAT CHANGED & SYSTEM HEALTH -->
       <section class="section" aria-labelledby="why-heading">
         <div class="grid">
           <div class="col-8">
             <h2 id="why-heading">What changed and why</h2>
             <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Plain-language summary of what's driving the numbers since last update.</p>
-            <div class="card" id="what-changed-card">
-              <div data-depth="simple" id="what-changed-simple">
-                <p class="muted">Loading...</p>
+            <div class="card">
+              <div data-depth="simple">
+                <div class="kv"><span>Hurricane (↑+2.4%)</span><strong>Hurricane Alice (Category 1) with 37.2% RI probability. Risk band: Elevated.</strong></div>
+                <div class="kv"><span>Earthquake (↑+1.9%)</span><strong>Probability at 27.4%. Risk band: Guarded.</strong></div>
+                <div class="kv"><span>Tornado (↓2.1%)</span><strong>4 active storms tracked. Risk band: Low. Probability 9.4%.</strong></div>
               </div>
-              <div data-depth="technical" id="what-changed-technical">
-                <p class="muted">Loading...</p>
+              <div data-depth="technical">
+                <div class="kv"><span>Hurricane (↑+2.4%)</span><strong>hurricane_ri_v8_1. RI prob 37.2%. SST 28.7°C, shear 10 kt.</strong></div>
+                <div class="kv"><span>Earthquake (↑+1.9%)</span><strong>Forecast eq_fcst_20260313_0300. Prob 27.4% [21.2%, 33.0%].</strong></div>
+                <div class="kv"><span>Tornado (↓2.1%)</span><strong>tornado_storm_v1_0. 4 storms. Prob 9.4%</strong></div>
               </div>
             </div>
           </div>
           <div class="col-4">
             <h2>System health</h2>
             <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Is HazardPulse working properly?</p>
-            <div class="card" id="system-health-card">
-              <div class="kv"><span>Last update</span><strong id="health-last-update">--</strong></div>
-              <div class="kv"><span>Active storms</span><strong id="health-active-storms">--</strong></div>
-              <div class="kv"><span>Hazard types</span><strong id="health-hazard-types">--</strong></div>
-              <div class="kv"><span>Gate status</span><strong id="health-gate-status">--</strong></div>
+            <div class="card">
+              <div class="kv"><span>Last update</span><strong>Sun, 22 Mar 2026 05:40:17 UTC</strong></div>
+              <div class="kv"><span>Active storms</span><strong>5 tracked globally</strong></div>
+              <div class="kv"><span>Hazard types</span><strong>3 hazard types monitored</strong></div>
+              <div class="kv"><span>Gate status</span><strong style="color:var(--good)">All gates passed</strong></div>
               <div data-depth="technical">
-                <div class="kv"><span>Data sources</span><strong id="health-data-sources">--</strong></div>
+                <div class="kv"><span>Data sources</span><strong>tornado_storm_v1_0</strong></div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ═══ HOW IT WORKS ═══ -->
+      <!-- HOW IT WORKS -->
       <section class="section" aria-labelledby="how-heading">
         <h2 id="how-heading">How it works</h2>
         <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Four steps between raw data and the numbers you see above.</p>
@@ -648,7 +668,7 @@
         </div>
       </section>
 
-      <!-- ═══ DON'T TAKE OUR WORD ═══ -->
+      <!-- DON'T TAKE OUR WORD -->
       <section class="section" aria-labelledby="verify-heading">
         <h2 id="verify-heading">Don't take our word for it</h2>
         <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Every claim on this site can be checked.</p>
@@ -702,390 +722,9 @@
         Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
         with stated uncertainty - they are not certainties.
       </p>
-      <p class="footer-build">Built with Coherence Lang · Live data from JSON feeds · Geolocation by Cloudflare Edge</p>
+      <p class="footer-build">Built with Coherence Lang · Zero client-side JavaScript · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
     </div>
   </footer>
 
-  <script>
-  (function() {
-    'use strict';
-
-    var RISK_LABELS = {
-      critical: 'Critical', very_high: 'Very High', high: 'High',
-      elevated: 'Elevated', guarded: 'Guarded', moderate: 'Moderate',
-      low: 'Low', minimal: 'Minimal'
-    };
-
-    var RISK_STYLE = {
-      critical: 'bad', very_high: 'bad', high: 'bad',
-      elevated: 'warn', guarded: 'warn', moderate: 'warn',
-      low: 'good', minimal: 'good'
-    };
-
-    var HAZARD_META = {
-      eq: {
-        label: 'Earthquake', color: 'var(--eq, #3b7dff)', dotClass: 'eq',
-        markerClass: 'hz-marker-eq', pulseClass: 'hz-pulse-eq', filter: 'url(#glow-eq)',
-        link: '/live/earthquake/', unit: 'M6.0+ in 30 days'
-      },
-      hu: {
-        label: 'Hurricane', color: 'var(--hu, #0fa878)', dotClass: 'hu',
-        markerClass: 'hz-marker-hu', pulseClass: 'hz-pulse-hu', filter: 'url(#glow-hu)',
-        link: '/live/hurricane/', unit: 'RI in 24 hours'
-      },
-      to: {
-        label: 'Tornado', color: 'var(--to, #c98a12)', dotClass: 'to',
-        markerClass: 'hz-marker-to', pulseClass: 'hz-pulse-to', filter: 'url(#glow-to)',
-        link: '/live/tornado/', unit: 'formation in 24 hours'
-      }
-    };
-
-    function esc(s) {
-      var d = document.createElement('div');
-      d.textContent = s;
-      return d.innerHTML;
-    }
-
-    function pct(p) {
-      return (p * 100).toFixed(1) + '%';
-    }
-
-    function timeAgo(isoStr) {
-      if (!isoStr) return '--';
-      try {
-        var then = new Date(isoStr).getTime();
-        var now = Date.now();
-        var diffMs = now - then;
-        if (diffMs < 0) return 'just now';
-        var mins = Math.floor(diffMs / 60000);
-        if (mins < 1) return 'just now';
-        if (mins < 60) return mins + ' minute' + (mins === 1 ? '' : 's') + ' ago';
-        var hrs = Math.floor(mins / 60);
-        if (hrs < 24) return hrs + ' hour' + (hrs === 1 ? '' : 's') + ' ago';
-        var days = Math.floor(hrs / 24);
-        return days + ' day' + (days === 1 ? '' : 's') + ' ago';
-      } catch(e) { return '--'; }
-    }
-
-    function formatTimestamp(isoStr) {
-      if (!isoStr) return '--';
-      try {
-        var d = new Date(isoStr);
-        if (!isNaN(d.getTime())) {
-          return d.toUTCString().replace('GMT', 'UTC');
-        }
-      } catch(e) { /* fall through */ }
-      return String(isoStr);
-    }
-
-    function latLonToSVG(lat, lon) {
-      var x = ((lon + 180) / 360) * 960;
-      var y = ((90 - lat) / 180) * 480;
-      return { x: x, y: y };
-    }
-
-    function createSVGMarker(markersGroup, lat, lon, hazardType, label, sublabel, linkHref, rank) {
-      var meta = HAZARD_META[hazardType];
-      if (!meta) return;
-      var pos = latLonToSVG(lat, lon);
-      var baseR = rank === 1 ? 5 : rank <= 3 ? 4 : 3;
-
-      var a = document.createElementNS('http://www.w3.org/2000/svg', 'a');
-      a.setAttribute('href', linkHref);
-      a.setAttribute('aria-label', label + ' - ' + sublabel);
-
-      // Hit area
-      var hit = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      hit.setAttribute('class', 'hz-hit');
-      hit.setAttribute('cx', pos.x.toFixed(1));
-      hit.setAttribute('cy', pos.y.toFixed(1));
-      hit.setAttribute('r', '16');
-      hit.setAttribute('fill', 'transparent');
-      a.appendChild(hit);
-
-      // Pulse rings
-      for (var p = 1; p <= 2; p++) {
-        var pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        pulse.setAttribute('class', 'hz-pulse ' + meta.pulseClass + ' hz-pulse-delay-' + p);
-        pulse.setAttribute('cx', pos.x.toFixed(1));
-        pulse.setAttribute('cy', pos.y.toFixed(1));
-        pulse.setAttribute('r', (baseR + 1).toFixed(0));
-        a.appendChild(pulse);
-      }
-
-      // Main marker
-      var marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      marker.setAttribute('class', 'hz-marker ' + meta.markerClass);
-      marker.setAttribute('cx', pos.x.toFixed(1));
-      marker.setAttribute('cy', pos.y.toFixed(1));
-      marker.setAttribute('r', baseR.toFixed(1));
-      marker.setAttribute('filter', meta.filter);
-      a.appendChild(marker);
-
-      // Tooltip
-      var tipG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      tipG.setAttribute('class', 'map-tooltip');
-
-      var tipBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      tipBg.setAttribute('class', 'tooltip-bg');
-      tipBg.setAttribute('x', (pos.x + 10).toFixed(1));
-      tipBg.setAttribute('y', (pos.y - 18).toFixed(1));
-      tipBg.setAttribute('width', '100');
-      tipBg.setAttribute('height', '22');
-      tipBg.setAttribute('rx', '3');
-      tipG.appendChild(tipBg);
-
-      var tipText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      tipText.setAttribute('class', 'tooltip-text');
-      tipText.setAttribute('x', (pos.x + 12).toFixed(1));
-      tipText.setAttribute('y', (pos.y - 8).toFixed(1));
-      tipText.textContent = label;
-      tipG.appendChild(tipText);
-
-      var tipSub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      tipSub.setAttribute('class', 'tooltip-sub');
-      tipSub.setAttribute('x', (pos.x + 12).toFixed(1));
-      tipSub.setAttribute('y', (pos.y + 1).toFixed(1));
-      tipSub.textContent = sublabel;
-      tipG.appendChild(tipSub);
-
-      a.appendChild(tipG);
-      markersGroup.appendChild(a);
-    }
-
-    // ─── Render map markers from all three data sources ───
-    function renderMap(pulse, tornadoes, hurricanes) {
-      var markersGroup = document.getElementById('live-markers');
-      if (!markersGroup) return;
-      markersGroup.innerHTML = '';
-
-      var markerRank = 0;
-
-      // Hurricane storm markers
-      var huStorms = (hurricanes && hurricanes.storms) || [];
-      for (var h = 0; h < huStorms.length; h++) {
-        markerRank++;
-        var hs = huStorms[h];
-        var huName = hs.storm_name || ('Storm ' + hs.storm_id);
-        var huSub = pct(hs.ri_probability || 0) + ' RI \u00B7 ' + (hs.category || '');
-        createSVGMarker(markersGroup, hs.lat, hs.lon, 'hu', huName, huSub, '/live/hurricane/', markerRank);
-      }
-
-      // Tornado storm markers
-      var toStorms = (tornadoes && tornadoes.storms) || [];
-      var toLimit = Math.min(toStorms.length, 10);
-      for (var t = 0; t < toLimit; t++) {
-        markerRank++;
-        var ts = toStorms[t];
-        var toSub = pct(ts.tornado_probability || 0) + ' \u00B7 ' + (RISK_LABELS[ts.risk_band] || ts.risk_band || '');
-        createSVGMarker(markersGroup, ts.lat, ts.lon, 'to', 'Storm ' + ts.storm_id, toSub, '/live/tornado/', markerRank);
-      }
-
-      // Earthquake — no individual lat/lon events in live-pulse.json, so skip map markers for EQ
-      // (EQ data would need a separate live-earthquakes.json feed with individual events)
-    }
-
-    // ─── Render hazard cards ───
-    function renderHazardCards(pulse, tornadoes, hurricanes) {
-      var loadingEl = document.getElementById('hazard-cards-loading');
-      var cardsEl = document.getElementById('hazard-cards');
-      if (loadingEl) loadingEl.style.display = 'none';
-      if (cardsEl) cardsEl.style.display = '';
-
-      // Sort hazards by probability descending
-      var hazards = (pulse.hazards || []).slice().sort(function(a, b) {
-        return (b.probability || 0) - (a.probability || 0);
-      });
-
-      var html = '';
-      for (var i = 0; i < hazards.length; i++) {
-        var hz = hazards[i];
-        var meta = HAZARD_META[hz.key];
-        if (!meta) continue;
-        var rank = i + 1;
-        var prob = pct(hz.probability || 0);
-        var riskLabel = RISK_LABELS[hz.risk_band] || hz.risk_band || '';
-        var riskStyle = RISK_STYLE[hz.risk_band] || 'warn';
-        var delta = hz.delta || 0;
-        var deltaSign = delta >= 0 ? '+' : '';
-        var deltaColor = delta > 0 ? 'var(--bad)' : 'var(--good)';
-        var deltaArrow = delta > 0 ? '\u2191' : delta < 0 ? '\u2193' : '\u2192';
-        var confLo = hz.conf_lo ? pct(hz.conf_lo) : '--';
-        var confHi = hz.conf_hi ? pct(hz.conf_hi) : '--';
-        var modelVer = hz.model_version || '';
-        var gateStatus = hz.gate_status || '--';
-        var gateChip = gateStatus === 'pass' ? 'good' : 'warn';
-
-        // Build additional info based on hazard type
-        var extraInfo = '';
-        if (hz.key === 'hu' && hurricanes && hurricanes.storms && hurricanes.storms.length > 0) {
-          var storm = hurricanes.storms[0];
-          var stormName = storm.storm_name || 'Active storm';
-          extraInfo += '<div class="kv"><span>Storm</span><strong>' + esc(stormName) + ' (' + esc(storm.category || '--') + ', ' + (storm.vmax_kt || '--') + ' kt)</strong></div>';
-          extraInfo += '<div class="kv"><span>Location</span><strong>' + (storm.lat || '--') + '\u00B0N, ' + Math.abs(storm.lon || 0) + '\u00B0W</strong></div>';
-          if (storm.sst_c) extraInfo += '<div class="kv"><span>SST</span><strong>' + storm.sst_c + '\u00B0C</strong></div>';
-          if (storm.shear_kt !== undefined) extraInfo += '<div class="kv"><span>Shear</span><strong>' + storm.shear_kt + ' kt</strong></div>';
-        }
-        if (hz.key === 'to' && tornadoes) {
-          var nStorms = tornadoes.n_active_storms || 0;
-          extraInfo += '<div class="kv"><span>Active storms</span><strong>' + nStorms + ' tracked</strong></div>';
-          if (tornadoes.scoring_tier_label) {
-            extraInfo += '<div class="kv"><span>Scoring</span><strong>' + esc(tornadoes.scoring_tier_label) + '</strong></div>';
-          }
-        }
-        if (hz.key === 'eq') {
-          extraInfo += '<div class="kv"><span>Forecast</span><strong>' + esc(hz.forecast_id || '--') + '</strong></div>';
-        }
-
-        html += '<a href="' + meta.link + '" class="card card-link card-secondary hazard-' + hz.key + '" '
-          + 'aria-label="' + esc(meta.label) + ' - ' + prob + ' probability" '
-          + 'style="border-left:4px solid ' + meta.color + ';">'
-          + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">'
-          + '<span class="rank-badge' + (rank === 1 ? ' rank-1' : '') + '">' + rank + '</span>'
-          + '<h3 style="margin:0;">' + esc(meta.label) + '</h3>'
-          + '<span class="chip ' + riskStyle + '" style="margin-left:auto;">' + esc(riskLabel) + '</span>'
-          + '</div>'
-          + '<div class="metric">' + prob + ' probability</div>'
-          + '<div class="metric-label">of ' + meta.unit + '</div>'
-          + '<div class="kv"><span>Confidence</span><strong>' + confLo + ' \u2013 ' + confHi + '</strong></div>'
-          + '<div class="kv"><span>Trend</span><strong style="color:' + deltaColor + '">' + deltaArrow + ' ' + deltaSign + pct(Math.abs(delta)) + '</strong></div>'
-          + extraInfo
-          + (modelVer ? '<div data-depth="technical"><div class="kv"><span>Model</span><strong>' + esc(modelVer) + '</strong></div></div>' : '')
-          + '<div class="chip-row">'
-          + '<span class="chip ' + gateChip + '">' + (gateStatus === 'pass' ? 'Checks passed' : esc(gateStatus)) + '</span>'
-          + '</div>'
-          + '<span class="card-cta">Full detail \u2192</span>'
-          + '</a>';
-      }
-      cardsEl.innerHTML = html;
-    }
-
-    // ─── Render "What changed" section ───
-    function renderWhatChanged(pulse, tornadoes, hurricanes) {
-      var simpleEl = document.getElementById('what-changed-simple');
-      var techEl = document.getElementById('what-changed-technical');
-      if (!simpleEl || !techEl) return;
-
-      var hazards = pulse.hazards || [];
-      var simpleHTML = '';
-      var techHTML = '';
-
-      for (var i = 0; i < hazards.length; i++) {
-        var hz = hazards[i];
-        var meta = HAZARD_META[hz.key];
-        if (!meta) continue;
-        var delta = hz.delta || 0;
-        var deltaSign = delta >= 0 ? '+' : '';
-        var deltaArrow = delta > 0 ? '\u2191' : delta < 0 ? '\u2193' : '\u2192';
-        var riskLabel = RISK_LABELS[hz.risk_band] || hz.risk_band || '';
-        var deltaStr = deltaArrow + deltaSign + pct(Math.abs(delta));
-
-        if (hz.key === 'hu' && hurricanes && hurricanes.storms && hurricanes.storms.length > 0) {
-          var s = hurricanes.storms[0];
-          simpleHTML += '<div class="kv"><span>' + esc(meta.label) + ' (' + deltaStr + ')</span>'
-            + '<strong>' + esc(s.storm_name || 'Active storm') + ' (' + esc(s.category || '--') + ') '
-            + 'with ' + pct(hz.probability) + ' RI probability. Risk band: ' + esc(riskLabel) + '.</strong></div>';
-          techHTML += '<div class="kv"><span>' + esc(meta.label) + ' (' + deltaStr + ')</span>'
-            + '<strong>' + esc(hz.model_version || '--') + '. RI prob ' + pct(hz.probability)
-            + '. SST ' + (s.sst_c || '--') + '\u00B0C, shear ' + (s.shear_kt || '--') + ' kt.'
-            + (s.model_scores ? ' GBT d3: ' + (s.model_scores.gbt_d3 || '--') + ', bagged: ' + (s.model_scores.bagged || '--') : '')
-            + '</strong></div>';
-        } else if (hz.key === 'to') {
-          var nStorms = (tornadoes && tornadoes.n_active_storms) || (hz.n_active_storms || 0);
-          simpleHTML += '<div class="kv"><span>' + esc(meta.label) + ' (' + deltaStr + ')</span>'
-            + '<strong>' + nStorms + ' active storm' + (nStorms !== 1 ? 's' : '') + ' tracked. '
-            + 'Risk band: ' + esc(riskLabel) + '. Probability ' + pct(hz.probability) + '.</strong></div>';
-          techHTML += '<div class="kv"><span>' + esc(meta.label) + ' (' + deltaStr + ')</span>'
-            + '<strong>' + esc(hz.model_version || '--') + '. '
-            + nStorms + ' storms. Prob ' + pct(hz.probability)
-            + (hz.coherence_score !== undefined ? '. Coherence score: ' + hz.coherence_score.toFixed(4) : '')
-            + '</strong></div>';
-        } else if (hz.key === 'eq') {
-          simpleHTML += '<div class="kv"><span>' + esc(meta.label) + ' (' + deltaStr + ')</span>'
-            + '<strong>Probability at ' + pct(hz.probability) + '. Risk band: ' + esc(riskLabel) + '.</strong></div>';
-          techHTML += '<div class="kv"><span>' + esc(meta.label) + ' (' + deltaStr + ')</span>'
-            + '<strong>Forecast ' + esc(hz.forecast_id || '--') + '. Prob ' + pct(hz.probability)
-            + ' [' + pct(hz.conf_lo || 0) + ', ' + pct(hz.conf_hi || 0) + '].</strong></div>';
-        }
-      }
-
-      simpleEl.innerHTML = simpleHTML || '<p class="muted">No recent changes.</p>';
-      techEl.innerHTML = techHTML || '<p class="muted">No recent changes.</p>';
-    }
-
-    // ─── Render system health ───
-    function renderHealth(pulse, tornadoes, hurricanes) {
-      var updEl = document.getElementById('health-last-update');
-      var stormsEl = document.getElementById('health-active-storms');
-      var typesEl = document.getElementById('health-hazard-types');
-      var gateEl = document.getElementById('health-gate-status');
-      var srcEl = document.getElementById('health-data-sources');
-
-      if (updEl) updEl.textContent = timeAgo(pulse.updated_at);
-
-      // Count total active storms
-      var totalStorms = 0;
-      var hazards = pulse.hazards || [];
-      for (var i = 0; i < hazards.length; i++) {
-        if (hazards[i].n_active_storms) totalStorms += hazards[i].n_active_storms;
-      }
-      if (stormsEl) stormsEl.textContent = totalStorms + ' tracked globally';
-      if (typesEl) typesEl.textContent = hazards.length + ' hazard types monitored';
-
-      // Gate status
-      var allPass = true;
-      for (var j = 0; j < hazards.length; j++) {
-        if (hazards[j].gate_status !== 'pass') allPass = false;
-      }
-      if (gateEl) {
-        gateEl.textContent = allPass ? 'All gates passed' : 'Some gates degraded';
-        gateEl.style.color = allPass ? 'var(--good)' : 'var(--warn)';
-      }
-
-      if (srcEl) {
-        var sources = [];
-        if (tornadoes && tornadoes.model_version) sources.push(tornadoes.model_version);
-        if (hurricanes && hurricanes.model_version) sources.push(hurricanes.model_version);
-        srcEl.textContent = sources.length > 0 ? sources.join(', ') : '--';
-      }
-    }
-
-    // ─── Show error state ───
-    function showError() {
-      var loadingEl = document.getElementById('hazard-cards-loading');
-      var errorEl = document.getElementById('hazard-cards-error');
-      if (loadingEl) loadingEl.style.display = 'none';
-      if (errorEl) errorEl.style.display = '';
-    }
-
-    // ─── Main data fetch ───
-    Promise.all([
-      fetch('/data/live-pulse.json').then(function(r) {
-        if (!r.ok) throw new Error('pulse: ' + r.status);
-        return r.json();
-      }),
-      fetch('/data/live-tornadoes.json').then(function(r) {
-        if (!r.ok) throw new Error('tornadoes: ' + r.status);
-        return r.json();
-      }),
-      fetch('/data/live-storms.json').then(function(r) {
-        if (!r.ok) throw new Error('storms: ' + r.status);
-        return r.json();
-      })
-    ]).then(function(results) {
-      var pulse = results[0];
-      var tornadoes = results[1];
-      var hurricanes = results[2];
-      renderHazardCards(pulse, tornadoes, hurricanes);
-      renderMap(pulse, tornadoes, hurricanes);
-      renderWhatChanged(pulse, tornadoes, hurricanes);
-      renderHealth(pulse, tornadoes, hurricanes);
-    }).catch(function(err) {
-      console.error('HazardPulse data load failed:', err);
-      showError();
-    });
-
-  })();
-  </script>
 </body>
 </html>
