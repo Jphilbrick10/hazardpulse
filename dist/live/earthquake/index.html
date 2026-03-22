@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Earthquake Monitor - HazardPulse</title>
-  <meta name="description" content="Global earthquake probability forecasts for the world's highest-risk seismic zones. 30-day M6.0+ likelihood ranked by evidence-weighted models.">
+  <meta name="description" content="30-day M6.0+ earthquake probability for global seismic zones. Grid cells ranked by coherence field singularity conditions with full evidence.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.io/live/earthquake/">
   <link rel="stylesheet" href="/assets/styles.css?v=4">
@@ -14,31 +14,31 @@
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Earthquake Monitor - HazardPulse">
-  <meta property="og:description" content="Global earthquake probability forecasts for the world's highest-risk seismic zones. 30-day M6.0+ likelihood ranked by evidence-weighted models.">
+  <meta property="og:description" content="30-day M6.0+ earthquake probability for global seismic zones. Grid cells ranked by coherence field singularity conditions with full evidence.">
   <meta property="og:url" content="https://hazardpulse.io/live/earthquake/">
   <meta property="og:site_name" content="HazardPulse">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Earthquake Monitor - HazardPulse">
-  <meta name="twitter:description" content="Global earthquake probability forecasts for the world's highest-risk seismic zones. 30-day M6.0+ likelihood ranked by evidence-weighted models.">
+  <meta name="twitter:description" content="30-day M6.0+ earthquake probability for global seismic zones. Grid cells ranked by coherence field singularity conditions with full evidence.">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    "name": "HazardPulse Global Seismic Forecast",
-    "description": "Probabilistic 30-day M6.0+ earthquake forecasts for the world's highest-risk seismic zones with full provenance chain.",
+    "name": "HazardPulse Global Earthquake Criticality Forecast",
+    "description": "Probabilistic earthquake forecasts for global seismic zones using coherence field theory singularity conditions with full provenance chain.",
     "license": "https://hazardpulse.io/legal/disclaimer/",
     "creator": { "@type": "Organization", "name": "Coherence Energy Labs", "url": "https://coherenceenergylabs.com" },
-    "temporalCoverage": "2026-03-13/2026-04-12",
+    "temporalCoverage": "2026-03-22/2026-04-21",
     "spatialCoverage": { "@type": "Place", "name": "Global seismic zones" },
-    "variableMeasured": "Probability of M6.0+ earthquake in 30-day window"
+    "variableMeasured": "Probability of M6.0+ earthquake in 30 days"
   }
   </script>
 
   <script type="speculationrules">
   {
     "prefetch": [
-      { "source": "list", "urls": ["/live/", "/live/hurricane/", "/live/tornado/", "/evidence/", "/verification/"] }
+      { "source": "list", "urls": ["/live/", "/live/tornado/", "/live/hurricane/", "/evidence/", "/verification/"] }
     ]
   }
   </script>
@@ -92,8 +92,8 @@
       <div class="eyebrow">Live seismic intelligence</div>
       <h1 id="hero-heading">Global Earthquake Monitor</h1>
       <p class="subtitle">
-        30-day probability forecasts for the world's highest-risk seismic zones, ranked by evidence-weighted
-        M6.0+ likelihood. Every number is auditable.
+        30-day M6.0+ earthquake probability for the world's most active seismic zones.
+        Grid cells ranked by coherence field singularity conditions with full evidence.
       </p>
     </section>
 
@@ -110,10 +110,10 @@
         <!-- Worker injects personalized seismic threat content here based on IP geolocation -->
       </section>
 
-      <!-- ═══ WORLD MAP ═══ -->
+      <!-- WORLD MAP -->
       <section class="section" aria-labelledby="worldmap-heading">
-        <h2 id="worldmap-heading">Global seismic zone map</h2>
-        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Active and monitored seismic zones with tectonic plate boundaries. Hover a marker for details.</p>
+        <h2 id="worldmap-heading">Global seismic activity map</h2>
+        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">2-degree grid cells colored by M6.0+ probability. Markers show top 10 risk zones. Hover for details.</p>
 
         <div class="world-map-wrapper">
           <svg class="world-map" viewBox="0 0 960 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive world map showing global hazard zones, tectonic boundaries, and active monitoring regions">
@@ -483,7 +483,7 @@
   </g>
 
   <!-- Hurricane basins -->
-  <g class="hurricane-basins" style="display:none" aria-label="Tropical cyclone basins">
+  <g class="hurricane-basins" aria-label="Tropical cyclone basins">
     <ellipse class="basin-outline" cx="333.3" cy="181.3" rx="93.3" ry="40.0"/>
     <text class="grid-label" x="333.3" y="229.3" text-anchor="middle" font-size="7" opacity="0.4">Atlantic</text>
     <ellipse class="basin-outline" cx="173.3" cy="200.0" rx="53.3" ry="26.7"/>
@@ -499,7 +499,7 @@
   </g>
 
   <!-- Tornado regions -->
-  <g class="tornado-overlays" style="display:none" aria-label="Known tornado-prone regions">
+  <g class="tornado-overlays" aria-label="Known tornado-prone regions">
     <polygon class="tornado-region" points="208.0,138.7 226.7,138.7 229.3,152.0 213.3,152.0"/>
     <text class="grid-label" x="219.3" y="145.3" text-anchor="middle" font-size="6" opacity="0.4">Tornado Alley</text>
     <polygon class="tornado-region" points="234.7,144.0 256.0,144.0 256.0,157.3 234.7,157.3"/>
@@ -512,104 +512,191 @@
 
   <!-- Hazard markers (page-specific, inserted per page) -->
   <g class="hazard-markers">
-    <a href="/live/earthquake/#event-1" aria-label="Southern California earthquake zone - 27.4% probability">
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="164.8" cy="148.8" r="4"/>
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="164.8" cy="148.8" r="4"/>
-      <circle class="hz-marker hz-marker-eq" cx="164.8" cy="148.8" r="4.6" filter="url(#glow-ea)"/>
+    <a href="#cell-39-58" aria-label="19N, -63E - 48.0% (3/5 conditions)"><rect x="309.3" y="186.7" width="5.3" height="5.3" fill="#d32f2f" opacity="0.73" stroke="#d32f2f" stroke-width="0.5"/></a>
+    <a href="#cell-50-27" aria-label="41N, -125E - 32.0% (2/5 conditions)"><rect x="144.0" y="128.0" width="5.3" height="5.3" fill="#d32f2f" opacity="0.53" stroke="#d32f2f" stroke-width="0.5"/></a>
+    <a href="#cell-49-100" aria-label="39N, 21E - 32.0% (2/5 conditions)"><rect x="533.3" y="133.3" width="5.3" height="5.3" fill="#d32f2f" opacity="0.53" stroke="#d32f2f" stroke-width="0.5"/></a>
+    <a href="#cell-54-167" aria-label="49N, 155E - 32.0% (2/5 conditions)"><rect x="890.7" y="106.7" width="5.3" height="5.3" fill="#d32f2f" opacity="0.53" stroke="#d32f2f" stroke-width="0.5"/></a>
+    <a href="#cell-55-0" aria-label="51N, -179E - 29.9% (3/5 conditions)"><rect x="0.0" y="101.3" width="5.3" height="5.3" fill="#e65100" opacity="0.51" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-53-166" aria-label="47N, 153E - 27.4% (2/5 conditions)"><rect x="885.3" y="112.0" width="5.3" height="5.3" fill="#e65100" opacity="0.48" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-22-3" aria-label="-15N, -173E - 25.6% (2/5 conditions)"><rect x="16.0" y="277.3" width="5.3" height="5.3" fill="#e65100" opacity="0.46" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-60-16" aria-label="61N, -147E - 25.4% (3/5 conditions)"><rect x="85.3" y="74.7" width="5.3" height="5.3" fill="#e65100" opacity="0.45" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-56-7" aria-label="53N, -165E - 22.6% (2/5 conditions)"><rect x="37.3" y="96.0" width="5.3" height="5.3" fill="#e65100" opacity="0.42" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-39-57" aria-label="19N, -65E - 21.8% (2/5 conditions)"><rect x="304.0" y="186.7" width="5.3" height="5.3" fill="#e65100" opacity="0.41" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-19-55" aria-label="-21N, -69E - 20.4% (2/5 conditions)"><rect x="293.3" y="293.3" width="5.3" height="5.3" fill="#e65100" opacity="0.39" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-56-5" aria-label="53N, -169E - 19.2% (2/5 conditions)"><rect x="26.7" y="96.0" width="5.3" height="5.3" fill="#e65100" opacity="0.38" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-56-4" aria-label="53N, -171E - 19.2% (2/5 conditions)"><rect x="21.3" y="96.0" width="5.3" height="5.3" fill="#e65100" opacity="0.38" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-56-6" aria-label="53N, -167E - 19.2% (2/5 conditions)"><rect x="32.0" y="96.0" width="5.3" height="5.3" fill="#e65100" opacity="0.38" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-55-1" aria-label="51N, -177E - 18.5% (2/5 conditions)"><rect x="5.3" y="101.3" width="5.3" height="5.3" fill="#e65100" opacity="0.37" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-21-3" aria-label="-17N, -173E - 18.3% (2/5 conditions)"><rect x="16.0" y="282.7" width="5.3" height="5.3" fill="#e65100" opacity="0.37" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-39-56" aria-label="19N, -67E - 18.1% (2/5 conditions)"><rect x="298.7" y="186.7" width="5.3" height="5.3" fill="#e65100" opacity="0.37" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-49-28" aria-label="39N, -123E - 16.9% (2/5 conditions)"><rect x="149.3" y="133.3" width="5.3" height="5.3" fill="#e65100" opacity="0.35" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-61-15" aria-label="63N, -149E - 16.6% (2/5 conditions)"><rect x="80.0" y="69.3" width="5.3" height="5.3" fill="#e65100" opacity="0.35" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-60-15" aria-label="61N, -149E - 15.2% (2/5 conditions)"><rect x="80.0" y="74.7" width="5.3" height="5.3" fill="#e65100" opacity="0.33" stroke="#e65100" stroke-width="0.5"/></a>
+    <a href="#cell-60-14" aria-label="61N, -151E - 14.8% (2/5 conditions)"><rect x="74.7" y="74.7" width="5.3" height="5.3" fill="#f9a825" opacity="0.33" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-60-13" aria-label="61N, -153E - 14.6% (2/5 conditions)"><rect x="69.3" y="74.7" width="5.3" height="5.3" fill="#f9a825" opacity="0.32" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-54-168" aria-label="49N, 157E - 14.4% (1/5 conditions)"><rect x="896.0" y="106.7" width="5.3" height="5.3" fill="#f9a825" opacity="0.32" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-55-179" aria-label="51N, 179E - 13.6% (2/5 conditions)"><rect x="954.7" y="101.3" width="5.3" height="5.3" fill="#f9a825" opacity="0.31" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-58-12" aria-label="57N, -155E - 11.8% (2/5 conditions)"><rect x="64.0" y="85.3" width="5.3" height="5.3" fill="#f9a825" opacity="0.29" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-26-154" aria-label="-7N, 129E - 11.3% (2/5 conditions)"><rect x="821.3" y="256.0" width="5.3" height="5.3" fill="#f9a825" opacity="0.29" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-38-57" aria-label="17N, -65E - 11.2% (1/5 conditions)"><rect x="304.0" y="192.0" width="5.3" height="5.3" fill="#f9a825" opacity="0.28" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-64-18" aria-label="69N, -143E - 10.7% (1/5 conditions)"><rect x="96.0" y="53.3" width="5.3" height="5.3" fill="#f9a825" opacity="0.28" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-55-3" aria-label="51N, -173E - 9.6% (1/5 conditions)"><rect x="16.0" y="101.3" width="5.3" height="5.3" fill="#f9a825" opacity="0.27" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-56-8" aria-label="53N, -163E - 8.5% (1/5 conditions)"><rect x="42.7" y="96.0" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-24-171" aria-label="-11N, 163E - 8.0% (1/5 conditions)"><rect x="912.0" y="266.7" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-21-0" aria-label="-17N, -179E - 8.0% (1/5 conditions)"><rect x="0.0" y="282.7" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-56-170" aria-label="53N, 161E - 8.0% (1/5 conditions)"><rect x="906.7" y="96.0" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-47-41" aria-label="35N, -97E - 8.0% (1/5 conditions)"><rect x="218.7" y="144.0" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-17-56" aria-label="-25N, -67E - 8.0% (1/5 conditions)"><rect x="298.7" y="304.0" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-19-0" aria-label="-21N, -179E - 8.0% (1/5 conditions)"><rect x="0.0" y="293.3" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-55-169" aria-label="51N, 159E - 8.0% (1/5 conditions)"><rect x="901.3" y="101.3" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-57-10" aria-label="55N, -159E - 8.0% (1/5 conditions)"><rect x="53.3" y="90.7" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-43-116" aria-label="27N, 53E - 8.0% (1/5 conditions)"><rect x="618.7" y="165.3" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-36-44" aria-label="13N, -91E - 8.0% (1/5 conditions)"><rect x="234.7" y="202.7" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-48-31" aria-label="37N, -117E - 8.0% (1/5 conditions)"><rect x="165.3" y="138.7" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-50-161" aria-label="41N, 143E - 8.0% (1/5 conditions)"><rect x="858.7" y="128.0" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-58-11" aria-label="57N, -157E - 8.0% (1/5 conditions)"><rect x="58.7" y="85.3" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-27-165" aria-label="-5N, 151E - 8.0% (1/5 conditions)"><rect x="880.0" y="250.7" width="5.3" height="5.3" fill="#f9a825" opacity="0.25" stroke="#f9a825" stroke-width="0.5"/></a>
+    <a href="#cell-59-14" aria-label="59N, -151E - 7.5% (1/5 conditions)"><rect x="74.7" y="80.0" width="5.3" height="5.3" fill="#1976d2" opacity="0.24" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-61-14" aria-label="63N, -151E - 7.4% (1/5 conditions)"><rect x="74.7" y="69.3" width="5.3" height="5.3" fill="#1976d2" opacity="0.24" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-20-174" aria-label="-19N, 169E - 6.9% (1/5 conditions)"><rect x="928.0" y="288.0" width="5.3" height="5.3" fill="#1976d2" opacity="0.23" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-38-56" aria-label="17N, -67E - 6.5% (1/5 conditions)"><rect x="298.7" y="192.0" width="5.3" height="5.3" fill="#1976d2" opacity="0.23" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-48-125" aria-label="37N, 71E - 6.4% (1/5 conditions)"><rect x="666.7" y="138.7" width="5.3" height="5.3" fill="#1976d2" opacity="0.23" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-46-39" aria-label="33N, -101E - 6.4% (1/5 conditions)"><rect x="208.0" y="149.3" width="5.3" height="5.3" fill="#1976d2" opacity="0.23" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-59-13" aria-label="59N, -153E - 6.3% (1/5 conditions)"><rect x="69.3" y="80.0" width="5.3" height="5.3" fill="#1976d2" opacity="0.23" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-55-2" aria-label="51N, -175E - 6.3% (1/5 conditions)"><rect x="10.7" y="101.3" width="5.3" height="5.3" fill="#1976d2" opacity="0.23" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-19-1" aria-label="-21N, -177E - 5.8% (1/5 conditions)"><rect x="5.3" y="293.3" width="5.3" height="5.3" fill="#1976d2" opacity="0.22" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-39-55" aria-label="19N, -69E - 5.8% (1/5 conditions)"><rect x="293.3" y="186.7" width="5.3" height="5.3" fill="#1976d2" opacity="0.22" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-57-9" aria-label="55N, -161E - 5.6% (1/5 conditions)"><rect x="48.0" y="90.7" width="5.3" height="5.3" fill="#1976d2" opacity="0.22" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-20-1" aria-label="-19N, -177E - 5.5% (1/5 conditions)"><rect x="5.3" y="288.0" width="5.3" height="5.3" fill="#1976d2" opacity="0.22" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-45-37" aria-label="31N, -105E - 5.5% (1/5 conditions)"><rect x="197.3" y="154.7" width="5.3" height="5.3" fill="#1976d2" opacity="0.22" stroke="#1976d2" stroke-width="0.5"/></a>
+    <a href="#cell-55-178" aria-label="51N, 177E - 0.0% (0/5 conditions)"><rect x="949.3" y="101.3" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-46-37" aria-label="33N, -105E - 0.0% (0/5 conditions)"><rect x="197.3" y="149.3" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-56-178" aria-label="53N, 177E - 0.0% (0/5 conditions)"><rect x="949.3" y="96.0" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-57-8" aria-label="55N, -163E - 0.0% (0/5 conditions)"><rect x="42.7" y="90.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-59-12" aria-label="59N, -155E - 0.0% (0/5 conditions)"><rect x="64.0" y="80.0" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-49-31" aria-label="39N, -117E - 0.0% (0/5 conditions)"><rect x="165.3" y="133.3" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-39-12" aria-label="19N, -155E - 0.0% (0/5 conditions)"><rect x="64.0" y="186.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-60-20" aria-label="61N, -139E - 0.0% (0/5 conditions)"><rect x="106.7" y="74.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-41-150" aria-label="23N, 121E - 0.0% (0/5 conditions)"><rect x="800.0" y="176.0" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-58-15" aria-label="57N, -149E - 0.0% (0/5 conditions)"><rect x="80.0" y="85.3" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-19-124" aria-label="-21N, 69E - 0.0% (0/5 conditions)"><rect x="661.3" y="293.3" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-60-19" aria-label="61N, -141E - 0.0% (0/5 conditions)"><rect x="101.3" y="74.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-39-52" aria-label="19N, -75E - 0.0% (0/5 conditions)"><rect x="277.3" y="186.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-48-29" aria-label="37N, -121E - 0.0% (0/5 conditions)"><rect x="154.7" y="138.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-13-0" aria-label="-33N, -179E - 0.0% (0/5 conditions)"><rect x="0.0" y="325.3" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-47-30" aria-label="35N, -119E - 0.0% (0/5 conditions)"><rect x="160.0" y="144.0" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-15-54" aria-label="-29N, -71E - 0.0% (0/5 conditions)"><rect x="288.0" y="314.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-57-11" aria-label="55N, -157E - 0.0% (0/5 conditions)"><rect x="58.7" y="90.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-49-161" aria-label="39N, 143E - 0.0% (0/5 conditions)"><rect x="858.7" y="133.3" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-46-31" aria-label="33N, -117E - 0.0% (0/5 conditions)"><rect x="165.3" y="149.3" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-48-32" aria-label="37N, -115E - 0.0% (0/5 conditions)"><rect x="170.7" y="138.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-14-54" aria-label="-31N, -71E - 0.0% (0/5 conditions)"><rect x="288.0" y="320.0" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-42-152" aria-label="25N, 125E - 0.0% (0/5 conditions)"><rect x="810.7" y="170.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-18-179" aria-label="-23N, 179E - 0.0% (0/5 conditions)"><rect x="954.7" y="298.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-46-43" aria-label="33N, -93E - 0.0% (0/5 conditions)"><rect x="229.3" y="149.3" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-33-153" aria-label="7N, 127E - 0.0% (0/5 conditions)"><rect x="816.0" y="218.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-28-155" aria-label="-3N, 131E - 0.0% (0/5 conditions)"><rect x="826.7" y="245.3" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-18-0" aria-label="-23N, -179E - 0.0% (0/5 conditions)"><rect x="0.0" y="298.7" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-59-21" aria-label="59N, -137E - 0.0% (0/5 conditions)"><rect x="112.0" y="80.0" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-41-162" aria-label="23N, 145E - 0.0% (0/5 conditions)"><rect x="864.0" y="176.0" width="5.3" height="5.3" fill="#757575" opacity="0.15" stroke="#757575" stroke-width="0.5"/></a>
+    <a href="#cell-1" aria-label="Cell 19N -63E - 48.0% (Very High)">
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="312.0" cy="189.3" r="6"/>
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="312.0" cy="189.3" r="6"/>
+      <circle class="hz-marker hz-marker-eq" cx="312.0" cy="189.3" r="5.0" filter="url(#glow-eq)"/>
       <g class="map-tooltip">
-        <rect class="tooltip-bg" x="174.8" y="130.8" width="78" height="22" rx="3"/>
-        <text class="tooltip-text" x="176.8" y="140.8">Southern California</text>
-        <text class="tooltip-sub" x="176.8" y="149.8">27.4% · Rank #1</text>
+        <rect class="tooltip-bg" x="322.0" y="171.3" width="120" height="22" rx="3"/>
+        <text class="tooltip-text" x="324.0" y="181.3">19N, -63E</text>
+        <text class="tooltip-sub" x="324.0" y="190.3">48.0% · 3/5</text>
       </g>
     </a>
-    <a href="/live/earthquake/#event-2" aria-label="Nankai Trough earthquake zone - 22.1% probability">
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="842.7" cy="150.7" r="4"/>
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="842.7" cy="150.7" r="4"/>
-      <circle class="hz-marker hz-marker-eq" cx="842.7" cy="150.7" r="3.7" filter="url(#glow-ea)"/>
+    <a href="#cell-2" aria-label="Cell 41N -125E - 32.0% (Very High)">
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="146.7" cy="130.7" r="4"/>
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="146.7" cy="130.7" r="4"/>
+      <circle class="hz-marker hz-marker-eq" cx="146.7" cy="130.7" r="3.5" filter="url(#glow-eq)"/>
       <g class="map-tooltip">
-        <rect class="tooltip-bg" x="852.7" y="132.7" width="78" height="22" rx="3"/>
-        <text class="tooltip-text" x="854.7" y="142.7">Nankai Trough</text>
-        <text class="tooltip-sub" x="854.7" y="151.7">22.1% · Rank #2</text>
+        <rect class="tooltip-bg" x="156.7" y="112.7" width="120" height="22" rx="3"/>
+        <text class="tooltip-text" x="158.7" y="122.7">41N, -125E</text>
+        <text class="tooltip-sub" x="158.7" y="131.7">32.0% · 2/5</text>
       </g>
     </a>
-    <a href="/live/earthquake/#event-3" aria-label="East Anatolian Fault earthquake zone - 19.8% probability">
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="582.7" cy="140.0" r="4"/>
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="582.7" cy="140.0" r="4"/>
-      <circle class="hz-marker hz-marker-eq" cx="582.7" cy="140.0" r="3.3" filter="url(#glow-ea)"/>
+    <a href="#cell-3" aria-label="Cell 39N 21E - 32.0% (Very High)">
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="536.0" cy="136.0" r="4"/>
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="536.0" cy="136.0" r="4"/>
+      <circle class="hz-marker hz-marker-eq" cx="536.0" cy="136.0" r="3.5" filter="url(#glow-eq)"/>
       <g class="map-tooltip">
-        <rect class="tooltip-bg" x="592.7" y="122.0" width="78" height="22" rx="3"/>
-        <text class="tooltip-text" x="594.7" y="132.0">East Anatolian Fault</text>
-        <text class="tooltip-sub" x="594.7" y="141.0">19.8% · Rank #3</text>
+        <rect class="tooltip-bg" x="546.0" y="118.0" width="120" height="22" rx="3"/>
+        <text class="tooltip-text" x="548.0" y="128.0">39N, 21E</text>
+        <text class="tooltip-sub" x="548.0" y="137.0">32.0% · 2/5</text>
       </g>
     </a>
-    <a href="/live/earthquake/#event-4" aria-label="Atacama Segment earthquake zone - 17.5% probability">
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="292.0" cy="302.7" r="4"/>
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="292.0" cy="302.7" r="4"/>
-      <circle class="hz-marker hz-marker-eq" cx="292.0" cy="302.7" r="3" filter="url(#glow-ea)"/>
+    <a href="#cell-4" aria-label="Cell 49N 155E - 32.0% (Very High)">
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="893.3" cy="109.3" r="4"/>
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="893.3" cy="109.3" r="4"/>
+      <circle class="hz-marker hz-marker-eq" cx="893.3" cy="109.3" r="3.5" filter="url(#glow-eq)"/>
       <g class="map-tooltip">
-        <rect class="tooltip-bg" x="302.0" y="284.7" width="78" height="22" rx="3"/>
-        <text class="tooltip-text" x="304.0" y="294.7">Atacama Segment</text>
-        <text class="tooltip-sub" x="304.0" y="303.7">17.5% · Rank #4</text>
+        <rect class="tooltip-bg" x="903.3" y="91.3" width="120" height="22" rx="3"/>
+        <text class="tooltip-text" x="905.3" y="101.3">49N, 155E</text>
+        <text class="tooltip-sub" x="905.3" y="110.3">32.0% · 2/5</text>
       </g>
     </a>
-    <a href="/live/earthquake/#event-5" aria-label="Sunda Megathrust earthquake zone - 15.2% probability">
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="748.0" cy="249.3" r="4"/>
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="748.0" cy="249.3" r="4"/>
-      <circle class="hz-marker hz-marker-eq" cx="748.0" cy="249.3" r="3" filter="url(#glow-ea)"/>
+    <a href="#cell-5" aria-label="Cell 51N -179E - 29.9% (Elevated)">
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="2.7" cy="104.0" r="4"/>
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="2.7" cy="104.0" r="4"/>
+      <circle class="hz-marker hz-marker-eq" cx="2.7" cy="104.0" r="3.5" filter="url(#glow-eq)"/>
       <g class="map-tooltip">
-        <rect class="tooltip-bg" x="758.0" y="231.3" width="78" height="22" rx="3"/>
-        <text class="tooltip-text" x="760.0" y="241.3">Sunda Megathrust</text>
-        <text class="tooltip-sub" x="760.0" y="250.3">15.2% · Rank #5</text>
+        <rect class="tooltip-bg" x="12.7" y="86.0" width="120" height="22" rx="3"/>
+        <text class="tooltip-text" x="14.7" y="96.0">51N, -179E</text>
+        <text class="tooltip-sub" x="14.7" y="105.0">29.9% · 3/5</text>
       </g>
     </a>
-    <a href="/live/earthquake/#event-6" aria-label="Cascadia Subduction earthquake zone - 14.2% probability">
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="149.3" cy="117.3" r="4"/>
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="149.3" cy="117.3" r="4"/>
-      <circle class="hz-marker hz-marker-eq" cx="149.3" cy="117.3" r="3" filter="url(#glow-ea)"/>
+    <a href="#cell-6" aria-label="Cell 47N 153E - 27.4% (Elevated)">
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="888.0" cy="114.7" r="4"/>
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="888.0" cy="114.7" r="4"/>
+      <circle class="hz-marker hz-marker-eq" cx="888.0" cy="114.7" r="3.5" filter="url(#glow-eq)"/>
       <g class="map-tooltip">
-        <rect class="tooltip-bg" x="159.3" y="99.3" width="78" height="22" rx="3"/>
-        <text class="tooltip-text" x="161.3" y="109.3">Cascadia Subduction</text>
-        <text class="tooltip-sub" x="161.3" y="118.3">14.2% · Rank #6</text>
+        <rect class="tooltip-bg" x="898.0" y="96.7" width="120" height="22" rx="3"/>
+        <text class="tooltip-text" x="900.0" y="106.7">47N, 153E</text>
+        <text class="tooltip-sub" x="900.0" y="115.7">27.4% · 2/5</text>
       </g>
     </a>
-    <a href="/live/earthquake/#event-7" aria-label="Alpine Fault earthquake zone - 12.8% probability">
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="933.3" cy="356.0" r="4"/>
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="933.3" cy="356.0" r="4"/>
-      <circle class="hz-marker hz-marker-eq" cx="933.3" cy="356.0" r="3" filter="url(#glow-ea)"/>
+    <a href="#cell-7" aria-label="Cell -15N -173E - 25.6% (Elevated)">
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="18.7" cy="280.0" r="4"/>
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="18.7" cy="280.0" r="4"/>
+      <circle class="hz-marker hz-marker-eq" cx="18.7" cy="280.0" r="3.5" filter="url(#glow-eq)"/>
       <g class="map-tooltip">
-        <rect class="tooltip-bg" x="851.3" y="338.0" width="78" height="22" rx="3"/>
-        <text class="tooltip-text" x="853.3" y="348.0">Alpine Fault</text>
-        <text class="tooltip-sub" x="853.3" y="357.0">12.8% · Rank #7</text>
+        <rect class="tooltip-bg" x="28.7" y="262.0" width="120" height="22" rx="3"/>
+        <text class="tooltip-text" x="30.7" y="272.0">-15N, -173E</text>
+        <text class="tooltip-sub" x="30.7" y="281.0">25.6% · 2/5</text>
       </g>
     </a>
-    <a href="/live/earthquake/#event-8" aria-label="Aleutian Arc earthquake zone - 12.8% probability">
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="13.3" cy="101.3" r="4"/>
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="13.3" cy="101.3" r="4"/>
-      <circle class="hz-marker hz-marker-eq" cx="13.3" cy="101.3" r="3" filter="url(#glow-ea)"/>
+    <a href="#cell-8" aria-label="Cell 61N -147E - 25.4% (Elevated)">
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="88.0" cy="77.3" r="4"/>
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="88.0" cy="77.3" r="4"/>
+      <circle class="hz-marker hz-marker-eq" cx="88.0" cy="77.3" r="3.5" filter="url(#glow-eq)"/>
       <g class="map-tooltip">
-        <rect class="tooltip-bg" x="23.3" y="83.3" width="78" height="22" rx="3"/>
-        <text class="tooltip-text" x="25.3" y="93.3">Aleutian Arc</text>
-        <text class="tooltip-sub" x="25.3" y="102.3">12.8% · Rank #8</text>
+        <rect class="tooltip-bg" x="98.0" y="59.3" width="120" height="22" rx="3"/>
+        <text class="tooltip-text" x="100.0" y="69.3">61N, -147E</text>
+        <text class="tooltip-sub" x="100.0" y="78.3">25.4% · 3/5</text>
       </g>
     </a>
-    <a href="/live/earthquake/#event-9" aria-label="Himalayan Thrust earthquake zone - 11.3% probability">
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="706.7" cy="165.3" r="4"/>
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="706.7" cy="165.3" r="4"/>
-      <circle class="hz-marker hz-marker-eq" cx="706.7" cy="165.3" r="3" filter="url(#glow-ea)"/>
+    <a href="#cell-9" aria-label="Cell 53N -165E - 22.6% (Elevated)">
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="40.0" cy="98.7" r="4"/>
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="40.0" cy="98.7" r="4"/>
+      <circle class="hz-marker hz-marker-eq" cx="40.0" cy="98.7" r="3.5" filter="url(#glow-eq)"/>
       <g class="map-tooltip">
-        <rect class="tooltip-bg" x="716.7" y="147.3" width="78" height="22" rx="3"/>
-        <text class="tooltip-text" x="718.7" y="157.3">Himalayan Thrust</text>
-        <text class="tooltip-sub" x="718.7" y="166.3">11.3% · Rank #9</text>
+        <rect class="tooltip-bg" x="50.0" y="80.7" width="120" height="22" rx="3"/>
+        <text class="tooltip-text" x="52.0" y="90.7">53N, -165E</text>
+        <text class="tooltip-sub" x="52.0" y="99.7">22.6% · 2/5</text>
       </g>
     </a>
-    <a href="/live/earthquake/#event-10" aria-label="Central Apennine earthquake zone - 8.7% probability">
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="516.0" cy="126.7" r="4"/>
-      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="516.0" cy="126.7" r="4"/>
-      <circle class="hz-marker hz-marker-eq" cx="516.0" cy="126.7" r="3" filter="url(#glow-ea)"/>
+    <a href="#cell-10" aria-label="Cell 19N -65E - 21.8% (Elevated)">
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-1" cx="306.7" cy="189.3" r="4"/>
+      <circle class="hz-pulse hz-pulse-eq hz-pulse-delay-2" cx="306.7" cy="189.3" r="4"/>
+      <circle class="hz-marker hz-marker-eq" cx="306.7" cy="189.3" r="3.5" filter="url(#glow-eq)"/>
       <g class="map-tooltip">
-        <rect class="tooltip-bg" x="526.0" y="108.7" width="78" height="22" rx="3"/>
-        <text class="tooltip-text" x="528.0" y="118.7">Central Apennine</text>
-        <text class="tooltip-sub" x="528.0" y="127.7">8.7% · Rank #10</text>
+        <rect class="tooltip-bg" x="316.7" y="171.3" width="120" height="22" rx="3"/>
+        <text class="tooltip-text" x="318.7" y="181.3">19N, -65E</text>
+        <text class="tooltip-sub" x="318.7" y="190.3">21.8% · 2/5</text>
       </g>
     </a>
   </g>
@@ -622,469 +709,310 @@
 </svg>
 
           <div class="map-legend">
-            <span class="map-legend-item"><span class="map-legend-dot eq"></span> Earthquake zone</span>
-            <span class="map-legend-item"><span style="display:inline-block;width:20px;height:2px;border-top:2px dashed var(--eq);opacity:.5;vertical-align:middle;margin-right:2px;"></span> Tectonic boundary</span>
+            <span class="map-legend-item"><span class="map-legend-dot eq"></span> Seismic zone</span>
+            <span class="map-legend-item"><span style="display:inline-block;width:20px;height:2px;border-top:2px dashed var(--eq);opacity:.5;vertical-align:middle;margin-right:2px;"></span> Plate boundary</span>
             <span class="map-legend-item"><span class="map-legend-dot user"></span> Your location</span>
           </div>
         </div>
       </section>
 
-      <!-- ═══ TOP 10 RANKED TABLE ═══ -->
-      <section class="section" aria-labelledby="zones-heading">
-        <h2 id="zones-heading">Top 10 zones by M6.0+ probability</h2>
-        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">All monitored seismic zones worldwide, ranked by 30-day probability of M6.0+ event. Forecasts use ETAS, Coulomb stress, and recurrence models.</p>
-
-        <div style="overflow-x:auto;">
-          <table class="ranked-table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Zone</th>
-                <th>Region</th>
-                <th>Probability</th>
-                <th>Magnitude</th>
-                <th>Trend</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr id="event-1" class="event-row">
-                <td><span class="rank-badge rank-1">1</span></td>
-                <td><strong>Southern California</strong></td>
-                <td>US</td>
-                <td><strong>27.4%</strong></td>
-                <td>M6.0+</td>
-                <td class="trend-up">↑ 1.9%</td>
-                <td><span class="chip good">Checks passed</span></td>
-              </tr>
-              <tr class="event-detail"><td colspan="7">
-                <div class="kv"><span>Location</span><strong>San Andreas Fault, southern segment near Cajon Pass (34.2°N, 118.2°W)</strong></div>
-                <div class="kv"><span>Confidence range</span><strong>22.1% – 33.2%</strong></div>
-                <div class="kv"><span>Why changing</span><strong>Microseismic swarm activity, Coulomb stress transfer from recent M4.8, b-value anomaly declining</strong></div>
-                <a href="#socal-dive" class="btn btn-secondary" style="padding:4px 12px;font-size:12px;margin-top:6px;">Deep dive →</a>
-              </td></tr>
-
-              <tr id="event-2" class="event-row">
-                <td><span class="rank-badge">2</span></td>
-                <td><strong>Nankai Trough</strong></td>
-                <td>Japan</td>
-                <td><strong>22.1%</strong></td>
-                <td>M6.0+</td>
-                <td class="trend-up">↑ 0.8%</td>
-                <td><span class="chip good">Checks passed</span></td>
-              </tr>
-              <tr class="event-detail"><td colspan="7">
-                <div class="kv"><span>Location</span><strong>Nankai Trough subduction zone, southwest of Kii Peninsula (33.0°N, 135.5°E)</strong></div>
-                <div class="kv"><span>Confidence range</span><strong>17.4% – 27.8%</strong></div>
-                <div class="kv"><span>Why changing</span><strong>Slow slip events detected on plate interface; geodetic strain accumulation above long-term average</strong></div>
-              </td></tr>
-
-              <tr id="event-3" class="event-row">
-                <td><span class="rank-badge">3</span></td>
-                <td><strong>East Anatolian Fault</strong></td>
-                <td>Turkey</td>
-                <td><strong>19.8%</strong></td>
-                <td>M6.0+</td>
-                <td class="trend-up">↑ 2.4%</td>
-                <td><span class="chip good">Checks passed</span></td>
-              </tr>
-              <tr class="event-detail"><td colspan="7">
-                <div class="kv"><span>Location</span><strong>East Anatolian Fault zone, Kahramanmaraş segment (37.5°N, 37.0°E)</strong></div>
-                <div class="kv"><span>Confidence range</span><strong>14.8% – 25.5%</strong></div>
-                <div class="kv"><span>Why changing</span><strong>Post-2023 Coulomb stress redistribution; adjacent locked segments showing increased microseismicity</strong></div>
-              </td></tr>
-
-              <tr id="event-4" class="event-row">
-                <td><span class="rank-badge">4</span></td>
-                <td><strong>Atacama Segment</strong></td>
-                <td>Chile</td>
-                <td><strong>17.5%</strong></td>
-                <td>M6.0+</td>
-                <td class="trend-flat">flat</td>
-                <td><span class="chip good">Checks passed</span></td>
-              </tr>
-              <tr class="event-detail"><td colspan="7">
-                <div class="kv"><span>Location</span><strong>Atacama segment of the Peru-Chile trench (27.0°S, 70.8°W)</strong></div>
-                <div class="kv"><span>Confidence range</span><strong>12.8% – 22.9%</strong></div>
-                <div class="kv"><span>Why changing</span><strong>Seismic gap with 150+ years since last M8.0; steady background rate; no significant change this cycle</strong></div>
-              </td></tr>
-
-              <tr id="event-5" class="event-row">
-                <td><span class="rank-badge">5</span></td>
-                <td><strong>Sunda Megathrust</strong></td>
-                <td>Indonesia</td>
-                <td><strong>15.2%</strong></td>
-                <td>M6.0+</td>
-                <td class="trend-down">↓ 0.5%</td>
-                <td><span class="chip good">Checks passed</span></td>
-              </tr>
-              <tr class="event-detail"><td colspan="7">
-                <div class="kv"><span>Location</span><strong>Mentawai segment of Sunda megathrust (2.5°S, 99.5°E)</strong></div>
-                <div class="kv"><span>Confidence range</span><strong>10.8% – 20.4%</strong></div>
-                <div class="kv"><span>Why changing</span><strong>Slight decrease in ETAS triggering rate after minor sequence ended; locked patch remains stressed</strong></div>
-              </td></tr>
-
-              <tr id="event-6" class="event-row">
-                <td><span class="rank-badge">6</span></td>
-                <td><strong>Cascadia Subduction</strong></td>
-                <td>US/Canada</td>
-                <td><strong>14.2%</strong></td>
-                <td>M6.0+</td>
-                <td class="trend-up">↑ 0.3%</td>
-                <td><span class="chip good">Checks passed</span></td>
-              </tr>
-              <tr class="event-detail"><td colspan="7">
-                <div class="kv"><span>Location</span><strong>Cascadia subduction zone, offshore Oregon-Washington (45.0°N, 124.5°W)</strong></div>
-                <div class="kv"><span>Confidence range</span><strong>10.1% – 19.0%</strong></div>
-                <div class="kv"><span>Why changing</span><strong>Episodic tremor and slip detected in last 14 days; BPT conditional hazard slowly rising</strong></div>
-              </td></tr>
-
-              <tr id="event-7" class="event-row">
-                <td><span class="rank-badge">7</span></td>
-                <td><strong>Alpine Fault</strong></td>
-                <td>New Zealand</td>
-                <td><strong>12.8%</strong></td>
-                <td>M6.0+</td>
-                <td class="trend-flat">flat</td>
-                <td><span class="chip warn">Limited data</span></td>
-              </tr>
-              <tr class="event-detail"><td colspan="7">
-                <div class="kv"><span>Location</span><strong>Alpine Fault, central South Island (43.5°S, 170.2°E)</strong></div>
-                <div class="kv"><span>Confidence range</span><strong>8.2% – 18.5%</strong></div>
-                <div class="kv"><span>Why changing</span><strong>Long elapsed time since last major rupture (1717); BPT model indicates high conditional probability; sparse near-fault instrumentation</strong></div>
-              </td></tr>
-
-              <tr id="event-8" class="event-row">
-                <td><span class="rank-badge">8</span></td>
-                <td><strong>Aleutian Arc</strong></td>
-                <td>US/Alaska</td>
-                <td><strong>12.8%</strong></td>
-                <td>M6.0+</td>
-                <td class="trend-up">↑ 0.4%</td>
-                <td><span class="chip good">Checks passed</span></td>
-              </tr>
-              <tr class="event-detail"><td colspan="7">
-                <div class="kv"><span>Location</span><strong>Aleutian subduction zone, Shumagin Gap (55.0°N, 162.0°W)</strong></div>
-                <div class="kv"><span>Confidence range</span><strong>8.5% – 17.8%</strong></div>
-                <div class="kv"><span>Why changing</span><strong>Small uptick in intermediate-depth seismicity; Coulomb stress from 2020 M7.8 Simeonof still loading adjacent segments</strong></div>
-              </td></tr>
-
-              <tr id="event-9" class="event-row">
-                <td><span class="rank-badge">9</span></td>
-                <td><strong>Himalayan Thrust</strong></td>
-                <td>Nepal</td>
-                <td><strong>11.3%</strong></td>
-                <td>M6.0+</td>
-                <td class="trend-up">↑ 1.2%</td>
-                <td><span class="chip good">Checks passed</span></td>
-              </tr>
-              <tr class="event-detail"><td colspan="7">
-                <div class="kv"><span>Location</span><strong>Main Himalayan Thrust, western Nepal gap (29.5°N, 81.5°E)</strong></div>
-                <div class="kv"><span>Confidence range</span><strong>7.5% – 16.0%</strong></div>
-                <div class="kv"><span>Why changing</span><strong>Microseismicity cluster at 10–15 km depth; geodetic locking ratio increasing; western gap unruptured since 1505</strong></div>
-              </td></tr>
-
-              <tr id="event-10" class="event-row">
-                <td><span class="rank-badge">10</span></td>
-                <td><strong>Central Apennine</strong></td>
-                <td>Italy</td>
-                <td><strong>8.7%</strong></td>
-                <td>M6.0+</td>
-                <td class="trend-down">↓ 0.3%</td>
-                <td><span class="chip good">Checks passed</span></td>
-              </tr>
-              <tr class="event-detail"><td colspan="7">
-                <div class="kv"><span>Location</span><strong>Central Apennine normal faults, L'Aquila–Amatrice corridor (42.5°N, 13.3°E)</strong></div>
-                <div class="kv"><span>Confidence range</span><strong>5.8% – 12.4%</strong></div>
-                <div class="kv"><span>Why changing</span><strong>Post-2016 Amatrice sequence Omori decay continuing; ETAS rate declining as expected</strong></div>
-              </td></tr>
-            </tbody>
-          </table>
+      <!-- DISCLAIMER BANNER -->
+      <section class="section">
+        <div class="card" style="background:var(--warn-bg,#fff8e1);border-left:4px solid var(--warn,#c98a12);padding:12px 16px;">
+          <strong>Research Only</strong> --
+          RESEARCH ONLY. NOT an operational earthquake prediction system. Does NOT replace USGS, JMA, or any national geological survey warnings. Always follow official guidance. See earthquake.usgs.gov for authoritative data.
         </div>
       </section>
 
-      <!-- ═══ DEEP DIVE: #1 SOUTHERN CALIFORNIA ═══ -->
-      <section class="section" id="socal-dive" aria-labelledby="focus-heading">
-        <h2 id="focus-heading">#1 - Southern California deep dive</h2>
+      <!-- STATUS BAR -->
 
-        <!-- Simple view -->
-        <div data-depth="simple">
-          <div class="grid">
-            <div class="card col-6 hazard-eq">
-              <h3>Where it is</h3>
-              <p style="font-size:1.05em;line-height:1.6;">
-                The highest-risk zone is along the San Andreas Fault's southern segment near Cajon Pass, about
-                60 miles east of Los Angeles. This is one of the most studied fault systems in the world, and the
-                section between the Salton Sea and San Bernardino has not produced a major earthquake since 1857.
-              </p>
-              <div class="kv"><span>Fault</span><strong>San Andreas, southern segment</strong></div>
-              <div class="kv"><span>Coordinates</span><strong>34.2°N, 118.2°W</strong></div>
-              <div class="kv"><span>Last major event</span><strong>M7.9 Fort Tejon, 1857</strong></div>
-            </div>
-            <div class="card col-6 hazard-eq">
-              <h3>What might happen</h3>
-              <p style="font-size:1.05em;line-height:1.6;">
-                There is a <strong>27.4% chance</strong> of a magnitude 6.0 or larger earthquake in this zone within the
-                next 30 days. This is notably elevated compared to the long-term average, driven by recent microseismic
-                swarm activity and stress transfer from a recent M4.8 event.
-              </p>
-              <div class="kv"><span>30-day probability</span><strong>27.4% for M6.0+</strong></div>
-              <div class="kv"><span>Confidence range</span><strong>22.1% – 33.2%</strong></div>
-              <div class="kv"><span>Model</span><strong>hp-etas-v3.2.1</strong></div>
-            </div>
-          </div>
-          <div class="grid" style="margin-top:var(--s-md);">
-            <div class="card col-6 hazard-eq">
-              <h3>Why probability is elevated</h3>
-              <p style="font-size:1.05em;line-height:1.6;">
-                Three factors are combining: a <strong>microseismic swarm</strong> (312 events M≥2.0 in the last 30 days),
-                <strong>Coulomb stress transfer</strong> from a recent M4.8 event loading the locked segment, and a
-                <strong>declining b-value</strong> (shifted from 0.95 to 0.87), which historically correlates with
-                increased large-event probability.
-              </p>
-              <div class="kv"><span>Swarm activity</span><strong>312 events M≥2.0 in 30 days (3× baseline)</strong></div>
-              <div class="kv"><span>Coulomb stress change</span><strong>+0.042 MPa on locked segment</strong></div>
-              <div class="kv"><span>b-value shift</span><strong>0.95 → 0.87 (declining)</strong></div>
-            </div>
-            <div class="card col-6 hazard-eq">
-              <h3>What SoCal residents should do</h3>
-              <p style="font-size:1.05em;line-height:1.6;">
-                <strong>Follow USGS guidance.</strong> Earthquakes cannot be predicted with certainty. This is a probability
-                estimate, not a prediction. Use it as motivation to review your preparedness.
-              </p>
-              <ul style="color:var(--text-secondary);line-height:1.8;">
-                <li>Review your earthquake kit (water, food, flashlight, first aid)</li>
-                <li>Know how to Drop, Cover, and Hold On</li>
-                <li>Secure heavy furniture and water heaters</li>
-                <li>Identify safe spots in every room</li>
-                <li>Keep shoes and a flashlight by your bed</li>
-                <li>Do not rely on HazardPulse for safety decisions - use official <a href="https://earthquake.usgs.gov/" rel="noopener">USGS</a> guidance</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- Technical view -->
-        <div data-depth="technical">
-          <div class="grid">
-            <div class="card col-4 hazard-eq">
-              <h3>Core parameters</h3>
-              <div class="metric">27.4%</div>
-              <div class="metric-label">M6.0+ probability (30 d)</div>
-              <div class="kv"><span>Confidence band</span><strong>22.1% – 33.2%</strong></div>
-              <div class="kv"><span>Zone center</span><strong>34.2°N, 118.2°W</strong></div>
-              <div class="kv"><span>Fault</span><strong>San Andreas, southern segment</strong></div>
-              <div class="kv"><span>Depth range</span><strong>5–15 km</strong></div>
-              <div class="kv"><span>Window</span><strong>Mar 13 – Apr 12 2026</strong></div>
-              <div class="chip-row">
-                <span class="chip good">Gates: 13/13 pass</span>
-                <span class="chip neutral">Replay: available</span>
-              </div>
-            </div>
-            <div class="card col-4 hazard-eq">
-              <h3>Seismicity analysis</h3>
-              <div class="kv"><span>b-value (Gutenberg-Richter)</span><strong>0.87 ± 0.04</strong></div>
-              <div class="kv"><span>b-value previous cycle</span><strong>0.95 ± 0.04</strong></div>
-              <div class="kv"><span>b-value shift significance</span><strong style="color:var(--bad)">Δb = −0.08 (>2σ)</strong></div>
-              <div class="kv"><span>Omori p-value</span><strong>1.08</strong></div>
-              <div class="kv"><span>Events M≥2.0 (30 d)</span><strong>312 (baseline ~105)</strong></div>
-              <div class="kv"><span>Largest recent event</span><strong>M4.8, Mar 07 2026</strong></div>
-              <div class="kv"><span>Completeness magnitude</span><strong>M1.8</strong></div>
-            </div>
-            <div class="card col-4 hazard-eq">
-              <h3>Coulomb stress &amp; recurrence</h3>
-              <div class="kv"><span>ΔCFS on locked segment</span><strong style="color:var(--bad)">+0.042 MPa</strong></div>
-              <div class="kv"><span>CFS source</span><strong>M4.8 Mar 07 + cumulative swarm</strong></div>
-              <div class="kv"><span>CFS threshold note</span><strong>&gt;0.01 MPa is considered significant</strong></div>
-              <div class="kv"><span>BPT mean interval</span><strong>152 years</strong></div>
-              <div class="kv"><span>Elapsed since last M7+</span><strong>169 years (1857 Fort Tejon)</strong></div>
-              <div class="kv"><span>BPT conditional hazard</span><strong style="color:var(--bad)">Rising - elapsed > mean</strong></div>
-              <div class="kv"><span>Aperiodicity (α)</span><strong>0.5</strong></div>
-            </div>
-          </div>
-
-          <div class="grid" style="margin-top:var(--s-md);">
-            <div class="card col-4 hazard-eq">
-              <h3>ETAS model output</h3>
-              <div class="kv"><span>ETAS background rate</span><strong>0.18 events/day M≥4.0</strong></div>
-              <div class="kv"><span>ETAS triggered rate</span><strong>0.42 events/day M≥4.0</strong></div>
-              <div class="kv"><span>ETAS total rate</span><strong>0.60 events/day M≥4.0</strong></div>
-              <div class="kv"><span>ETAS M6.0+ exceedance</span><strong>0.274</strong></div>
-              <div class="kv"><span>Previous cycle</span><strong>0.255</strong></div>
-              <div class="kv"><span>Delta</span><strong style="color:var(--bad)">+0.019</strong></div>
-            </div>
-            <div class="card col-4 hazard-eq">
-              <h3>Model ensemble</h3>
-              <div class="kv"><span>Model</span><strong>hp-etas-v3.2.1</strong></div>
-              <div class="kv"><span>Ensemble members</span><strong>ETAS + Coulomb + BPT + b-value anomaly</strong></div>
-              <div class="kv"><span>Weighting</span><strong>0.40 ETAS / 0.25 Coulomb / 0.20 BPT / 0.15 b-value</strong></div>
-              <div class="kv"><span>Calibration method</span><strong>Isotonic regression on 10-year retrospective</strong></div>
-              <div class="kv"><span>Ensemble mean</span><strong>0.274</strong></div>
-              <div class="kv"><span>Ensemble spread</span><strong>0.041 (moderate agreement)</strong></div>
-            </div>
-            <div class="card col-4 hazard-eq">
-              <h3>Data sources</h3>
-              <div class="kv"><span>Seismicity catalog</span><strong>USGS ComCat + SCSN</strong></div>
-              <div class="kv"><span>Geodetic data</span><strong>UNAVCO GPS network</strong></div>
-              <div class="kv"><span>Stress modeling</span><strong>Coulomb 3.4</strong></div>
-              <div class="kv"><span>Fault geometry</span><strong>UCERF3 fault model</strong></div>
-              <div class="kv"><span>Catalog latency</span><strong>&lt;15 min (real-time feed)</strong></div>
-              <div class="kv"><span>Last refresh</span><strong>Mar 13 2026, 03:00 UTC</strong></div>
-            </div>
-          </div>
-
-          <div class="grid" style="margin-top:var(--s-md);">
-            <div class="card col-6 hazard-eq">
-              <h3>Calibration metrics (10-year retrospective)</h3>
-              <table>
-                <thead><tr><th>Predicted</th><th>Observed</th><th>Count</th><th>Error</th></tr></thead>
-                <tbody>
-                  <tr><td>0–5%</td><td>3.2%</td><td>1420</td><td>+0.7%</td></tr>
-                  <tr><td>5–10%</td><td>8.1%</td><td>680</td><td>+0.6%</td></tr>
-                  <tr><td>10–15%</td><td>13.4%</td><td>340</td><td>+1.0%</td></tr>
-                  <tr><td>15–20%</td><td>18.2%</td><td>185</td><td>+0.7%</td></tr>
-                  <tr><td>20–30%</td><td>26.1%</td><td>112</td><td>+1.1%</td></tr>
-                  <tr><td>30+%</td><td>35.8%</td><td>48</td><td>+0.8%</td></tr>
-                </tbody>
-              </table>
-              <p class="muted" style="margin-top:12px;font-size:13px;">
-                Southern California's 27.4% falls in the 20–30% bin where the model has 26.1% observed - well calibrated (error +1.1%).
-              </p>
-              <div class="kv"><span>Brier score</span><strong>0.142</strong></div>
-              <div class="kv"><span>Brier skill vs. UCERF3 baseline</span><strong>+0.18</strong></div>
-              <div class="kv"><span>AUC (10-year)</span><strong>0.733</strong></div>
-              <div class="kv"><span>Log score</span><strong>−0.389</strong></div>
-              <div class="kv"><span>Sharpness</span><strong>0.076</strong></div>
-            </div>
-            <div class="card col-6 hazard-eq">
-              <h3>Gate status - quality checks</h3>
-              <table>
-                <thead><tr><th>Gate</th><th>Status</th><th>What it checks</th></tr></thead>
-                <tbody>
-                  <tr><td>G0 Schema</td><td><span class="chip good">pass</span></td><td>Fields present, types valid</td></tr>
-                  <tr><td>G1 Freshness</td><td><span class="chip good">pass</span></td><td>USGS + SCSN feeds within threshold</td></tr>
-                  <tr><td>G2 Model Pinned</td><td><span class="chip good">pass</span></td><td>hp-etas-v3.2.1 matches registry</td></tr>
-                  <tr><td>G3 Provenance</td><td><span class="chip good">pass</span></td><td>All input/output hashes verified</td></tr>
-                  <tr><td>G4 Calibration</td><td><span class="chip good">pass</span></td><td>Brier 0.142 above floor</td></tr>
-                  <tr><td>G5 Spatiotemporal</td><td><span class="chip good">pass</span></td><td>Zone within valid region</td></tr>
-                  <tr><td>G6 Harm Guard</td><td><span class="chip good">pass</span></td><td>No alarmist language</td></tr>
-                  <tr><td>G7 Explanation</td><td><span class="chip good">pass</span></td><td>4+ factors listed</td></tr>
-                  <tr><td>G8 Replayability</td><td><span class="chip good">pass</span></td><td>Replay artifact verified</td></tr>
-                  <tr><td>G9 Projection</td><td><span class="chip good">pass</span></td><td>Disclaimer attached</td></tr>
-                  <tr><td>G10 Security</td><td><span class="chip good">pass</span></td><td>Headers valid</td></tr>
-                  <tr><td>G11 Performance</td><td><span class="chip good">pass</span></td><td>Payload within budget</td></tr>
-                  <tr><td>G12 Trust Sync</td><td><span class="chip good">pass</span></td><td>Badges match gate state</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="grid" style="margin-top:var(--s-md);">
-            <div class="card col-12 hazard-eq">
-              <h3>Evidence fingerprint</h3>
-              <div class="kv"><span>Forecast ID</span><strong><code>eq_fcst_20260313_0300</code></strong></div>
-              <div class="kv"><span>Model version</span><strong><code>hp-etas-v3.2.1</code></strong></div>
-              <div class="kv"><span>Input hash</span><strong style="font-family:var(--font-mono);font-size:12px;">sha256:a3f7c2d8e1b9f4a5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9</strong></div>
-              <div class="kv"><span>Feature digest</span><strong style="font-family:var(--font-mono);font-size:12px;">sha256:b8c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1</strong></div>
-              <div class="kv"><span>Inference digest</span><strong style="font-family:var(--font-mono);font-size:12px;">sha256:c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0</strong></div>
-              <div class="kv"><span>Output hash</span><strong style="font-family:var(--font-mono);font-size:12px;">sha256:d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1</strong></div>
-              <div class="kv"><span>Model hash</span><strong style="font-family:var(--font-mono);font-size:12px;">sha256:e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2</strong></div>
-              <div class="cta-row" style="margin-top:12px;">
-                <a href="/evidence/#eq" class="btn btn-secondary">View evidence →</a>
-                <a href="/data/replay/eq_fcst_20260313_0300.json" class="btn btn-secondary">Download replay artifact</a>
-                <a href="/data/evidence/provenance-envelopes.json" class="btn btn-secondary">Provenance JSON</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══ RECENT TREND ═══ -->
-      <section class="section" aria-labelledby="trend-heading">
-        <h2 id="trend-heading">Recent trend - Southern California M6.0+ probability</h2>
-        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Last 10 forecast cycles showing probability trajectory. Seven of the last ten cycles showed increases.</p>
-        <div class="card hazard-eq">
-          <table>
-            <thead><tr><th>Cycle (UTC)</th><th>Probability</th><th>Range</th><th>Change</th><th>Gate</th></tr></thead>
-            <tbody>
-              <tr><td>Mar 13 03:00</td><td><strong>27.4%</strong></td><td>22.1 – 33.2</td><td class="trend-up">+1.9</td><td><span class="chip good">pass</span></td></tr>
-              <tr><td>Mar 13 00:00</td><td>25.5%</td><td>20.4 – 31.1</td><td class="trend-up">+0.6</td><td><span class="chip good">pass</span></td></tr>
-              <tr><td>Mar 12 21:00</td><td>24.9%</td><td>19.9 – 30.5</td><td class="trend-up">+1.1</td><td><span class="chip good">pass</span></td></tr>
-              <tr><td>Mar 12 18:00</td><td>23.8%</td><td>19.0 – 29.3</td><td class="trend-down">−0.4</td><td><span class="chip good">pass</span></td></tr>
-              <tr><td>Mar 12 15:00</td><td>24.2%</td><td>19.3 – 29.7</td><td class="trend-up">+0.8</td><td><span class="chip good">pass</span></td></tr>
-              <tr><td>Mar 12 12:00</td><td>23.4%</td><td>18.7 – 28.8</td><td class="trend-up">+0.5</td><td><span class="chip good">pass</span></td></tr>
-              <tr><td>Mar 12 09:00</td><td>22.9%</td><td>18.3 – 28.2</td><td class="trend-up">+1.4</td><td><span class="chip good">pass</span></td></tr>
-              <tr><td>Mar 12 06:00</td><td>21.5%</td><td>17.1 – 26.6</td><td class="trend-down">−0.3</td><td><span class="chip good">pass</span></td></tr>
-              <tr><td>Mar 12 03:00</td><td>21.8%</td><td>17.4 – 26.9</td><td class="trend-up">+0.7</td><td><span class="chip good">pass</span></td></tr>
-              <tr><td>Mar 12 00:00</td><td>21.1%</td><td>16.8 – 26.1</td><td> - </td><td><span class="chip good">pass</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ═══ WHAT CHANGED AND WHY ═══ -->
-      <section class="section" aria-labelledby="why-heading">
-        <h2 id="why-heading">What changed and why</h2>
-        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Plain-language summary of what's driving the numbers since last update.</p>
+      <section class="section">
         <div class="grid">
-          <div class="col-8">
-            <div class="card hazard-eq">
-              <div data-depth="simple">
-                <div class="kv"><span>Southern California (↑1.9%)</span><strong>A burst of small earthquakes near the San Andreas fault increased the short-term triggering rate. Combined with stress from a recent M4.8, the 30-day probability rose to 27.4%.</strong></div>
-                <div class="kv"><span>Nankai Trough (↑0.8%)</span><strong>Slow slip events detected beneath the Kii Peninsula are transferring stress to the locked plate interface. Probability edged up slightly.</strong></div>
-                <div class="kv"><span>East Anatolian (↑2.4%)</span><strong>Microseismicity on locked segments adjacent to the 2023 rupture zone has increased. Coulomb stress redistribution continues to load these segments.</strong></div>
-                <div class="kv"><span>Global overview</span><strong>10 seismic zones tracked across 7 tectonic settings. Elevated activity in the Pacific Ring of Fire and Alpine-Himalayan belt.</strong></div>
-              </div>
-              <div data-depth="technical">
-                <div class="kv"><span>SoCal - driver</span><strong>ETAS triggered rate 0.42 events/day M≥4.0 (baseline 0.12). b-value shifted from 0.95 to 0.87 (>2σ). ΔCFS +0.042 MPa on locked segment from M4.8 Mar 07 + swarm. BPT elapsed/mean ratio = 1.11.</strong></div>
-                <div class="kv"><span>Nankai - driver</span><strong>Slow slip events detected Mar 05–11 on plate interface at 25–35 km depth. Geodetic strain rate 1.3× above 10-year mean. ETAS background rate stable. Probability driven by BPT + geodetic components.</strong></div>
-                <div class="kv"><span>East Anatolian - driver</span><strong>Post-2023 Coulomb redistribution loading Pazarcık–Amanos segment. ΔCFS +0.08 MPa. 47 events M≥2.5 in 30 d on adjacent locked segments (baseline ~15). b-value 0.82 ± 0.06.</strong></div>
-                <div class="kv"><span>Himalayan - driver</span><strong>Cluster of 28 events M≥2.0 at 10–15 km depth in western Nepal gap. Geodetic locking ratio 0.88 (high). Gap unruptured since 1505 (521 years). BPT conditional hazard sharply elevated.</strong></div>
-              </div>
-            </div>
+          <div class="card col-3">
+            <div class="kv"><span>Last update</span><strong>Sun, 22 Mar 2026 22:48:07 UTC</strong></div>
           </div>
-          <div class="col-4">
-            <div class="card">
-              <h3>System health</h3>
-              <div class="kv"><span>Last update</span><strong>4 minutes ago</strong></div>
-              <div class="kv"><span>Zones tracked</span><strong>10 active globally</strong></div>
-              <div class="kv"><span>Tectonic settings</span><strong>7 (subduction, transform, thrust, normal, megathrust, continental, intraplate)</strong></div>
-              <div class="kv"><span>Data sources</span><strong>USGS, JMA, EMSC, GeoNet, INGV</strong></div>
-              <div class="kv"><span>Replay rate</span><strong>99.94% of forecasts</strong></div>
-              <div class="kv"><span>Quality checks (7d)</span><strong>99.1% passed</strong></div>
-              <div data-depth="technical">
-                <div class="kv"><span>Gate throughput</span><strong>13/13 gates green</strong></div>
-                <div class="kv"><span>P99 latency</span><strong>1.8 s (target: &lt;5 s)</strong></div>
-                <div class="kv"><span>Build hash</span><strong style="font-family:var(--font-mono);font-size:12px;">sha256:f2a3b4…c5d6</strong></div>
-              </div>
-            </div>
+          <div class="card col-3">
+            <div class="kv"><span>Model</span><strong>eq_coherence_v1_0</strong></div>
+          </div>
+          <div class="card col-3">
+            <div class="kv"><span>Active cells</span><strong>87 cells scored</strong></div>
+          </div>
+          <div class="card col-3">
+            <div class="kv"><span>Events (30 d)</span><strong>2039 M2.5+</strong></div>
           </div>
         </div>
       </section>
 
-      <!-- ═══ MODEL LINEAGE ═══ -->
-      <section class="section" aria-labelledby="lineage-heading">
-        <h2 id="lineage-heading">Model lineage</h2>
-        <div class="card hazard-eq">
-          <div class="kv"><span>Current model</span><strong>hp-etas-v3.2.1</strong></div>
-          <div class="kv"><span>Promoted</span><strong>2026-02-28</strong></div>
-          <div class="kv"><span>Previous</span><strong>hp-etas-v3.1.0 (retired 2026-02-28)</strong></div>
-          <div data-depth="simple">
-            <div class="kv"><span>Features</span><strong>38 predictors across seismicity rate, b-value, Coulomb stress, BPT recurrence, geodetic strain, and fault geometry</strong></div>
-            <div class="kv"><span>Why upgraded</span><strong>v3.2.1 added real-time geodetic strain input and improved Brier skill by +0.04 across all zones</strong></div>
-            <div class="kv"><span>Zone coverage</span><strong>Global - 47 monitored zones across all major plate boundaries</strong></div>
+      <!-- TOP RISK CELLS -->
+
+      <section class="section" aria-labelledby="cells-heading">
+        <h2 id="cells-heading">Top risk cells by seismic criticality</h2>
+        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">2-degree grid cells ranked by estimated M6.0+ probability (30 days). Click any row to expand coherence diagnostics.</p>
+
+        <details class="event-row-details" id="cell-1">
+          <summary class="event-row">
+            <span class="rank-badge rank-1">1</span> <strong>19N, -63E</strong> (6 events, Mmax 5.2) <strong style="color:#d32f2f">48.0%</strong> <span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">Very High</span> Conditions: 3/5
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>b-value</span><strong>--</strong></div>
+            <div class="kv"><span>b-value trend</span><strong>--</strong></div>
+            <div class="kv"><span>Correlation length</span><strong>91.8 km</strong></div>
+            <div class="kv"><span>Corr. length trend</span><strong>-- km/month</strong></div>
+            <div class="kv"><span>Rate acceleration</span><strong>3.35x</strong></div>
+            <div class="kv"><span>IET delta-AIC</span><strong>32.38</strong></div>
+            <div class="kv"><span>S / Gamma</span><strong>1.316</strong></div>
+            <div class="kv"><span>Days to criticality</span><strong>--</strong></div>
+            <div class="kv"><span>Depth trend</span><strong>-13.51 km</strong></div>
+            <div class="kv"><span>Spatial concentration</span><strong>43.0 km</strong></div>
+            <div class="kv"><span>Corr. length elevated</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>b-value depressed</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>IET Lorentzian</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>Rate accelerating</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>Loading &gt; healing</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
           </div>
-          <div data-depth="technical">
-            <div class="kv"><span>Architecture</span><strong>ETAS point-process + Coulomb stress transfer + BPT renewal + b-value anomaly detector, ensemble calibrated via isotonic regression</strong></div>
-            <div class="kv"><span>Training set</span><strong>1980–2026 global M≥4.0 catalog + UCERF3 fault model + GNSS velocity field (n=312,847 events)</strong></div>
-            <div class="kv"><span>Training cutoff</span><strong>2026-02-15</strong></div>
-            <div class="kv"><span>Brier improvement</span><strong>+0.04 (global), +0.06 (subduction), +0.03 (transform)</strong></div>
-            <div class="kv"><span>Model hash</span><strong style="font-family:var(--font-mono);font-size:12px;">sha256:e1f2a3…d0e1</strong></div>
+        </details>
+        <details class="event-row-details" id="cell-2">
+          <summary class="event-row">
+            <span class="rank-badge">2</span> <strong>41N, -125E</strong> (18 events, Mmax 3.7) <strong style="color:#d32f2f">32.0%</strong> <span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">Very High</span> Conditions: 2/5
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>b-value</span><strong>--</strong></div>
+            <div class="kv"><span>b-value trend</span><strong>--</strong></div>
+            <div class="kv"><span>Correlation length</span><strong>27.1 km</strong></div>
+            <div class="kv"><span>Corr. length trend</span><strong>-- km/month</strong></div>
+            <div class="kv"><span>Rate acceleration</span><strong>3.55x</strong></div>
+            <div class="kv"><span>IET delta-AIC</span><strong>16.04</strong></div>
+            <div class="kv"><span>S / Gamma</span><strong>1.078</strong></div>
+            <div class="kv"><span>Days to criticality</span><strong>--</strong></div>
+            <div class="kv"><span>Depth trend</span><strong>1.71 km</strong></div>
+            <div class="kv"><span>Spatial concentration</span><strong>57.1 km</strong></div>
+            <div class="kv"><span>Corr. length elevated</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>b-value depressed</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>IET Lorentzian</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>Rate accelerating</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>Loading &gt; healing</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+          </div>
+        </details>
+        <details class="event-row-details" id="cell-3">
+          <summary class="event-row">
+            <span class="rank-badge">3</span> <strong>39N, 21E</strong> (12 events, Mmax 5.5) <strong style="color:#d32f2f">32.0%</strong> <span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">Very High</span> Conditions: 2/5
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>b-value</span><strong>--</strong></div>
+            <div class="kv"><span>b-value trend</span><strong>--</strong></div>
+            <div class="kv"><span>Correlation length</span><strong>12.9 km</strong></div>
+            <div class="kv"><span>Corr. length trend</span><strong>-- km/month</strong></div>
+            <div class="kv"><span>Rate acceleration</span><strong>4.00x</strong></div>
+            <div class="kv"><span>IET delta-AIC</span><strong>--</strong></div>
+            <div class="kv"><span>S / Gamma</span><strong>1.336</strong></div>
+            <div class="kv"><span>Days to criticality</span><strong>--</strong></div>
+            <div class="kv"><span>Depth trend</span><strong>1.16 km</strong></div>
+            <div class="kv"><span>Spatial concentration</span><strong>56.8 km</strong></div>
+            <div class="kv"><span>Corr. length elevated</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>b-value depressed</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>IET Lorentzian</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>Rate accelerating</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>Loading &gt; healing</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+          </div>
+        </details>
+        <details class="event-row-details" id="cell-4">
+          <summary class="event-row">
+            <span class="rank-badge">4</span> <strong>49N, 155E</strong> (5 events, Mmax 4.8) <strong style="color:#d32f2f">32.0%</strong> <span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">Very High</span> Conditions: 2/5
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>b-value</span><strong>--</strong></div>
+            <div class="kv"><span>b-value trend</span><strong>--</strong></div>
+            <div class="kv"><span>Correlation length</span><strong>28.6 km</strong></div>
+            <div class="kv"><span>Corr. length trend</span><strong>-- km/month</strong></div>
+            <div class="kv"><span>Rate acceleration</span><strong>3.27x</strong></div>
+            <div class="kv"><span>IET delta-AIC</span><strong>10.39</strong></div>
+            <div class="kv"><span>S / Gamma</span><strong>1.415</strong></div>
+            <div class="kv"><span>Days to criticality</span><strong>--</strong></div>
+            <div class="kv"><span>Depth trend</span><strong>-0.92 km</strong></div>
+            <div class="kv"><span>Spatial concentration</span><strong>64.7 km</strong></div>
+            <div class="kv"><span>Corr. length elevated</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>b-value depressed</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>IET Lorentzian</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>Rate accelerating</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>Loading &gt; healing</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+          </div>
+        </details>
+        <details class="event-row-details" id="cell-5">
+          <summary class="event-row">
+            <span class="rank-badge">5</span> <strong>51N, -179E</strong> (20 events, Mmax 4.5) <strong style="color:#e65100">29.9%</strong> <span class="chip" style="background:#e65100;color:#fff;font-size:11px;padding:2px 8px;">Elevated</span> Conditions: 3/5
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>b-value</span><strong>0.651</strong></div>
+            <div class="kv"><span>b-value trend</span><strong>--</strong></div>
+            <div class="kv"><span>Correlation length</span><strong>67.2 km</strong></div>
+            <div class="kv"><span>Corr. length trend</span><strong>-- km/month</strong></div>
+            <div class="kv"><span>Rate acceleration</span><strong>1.56x</strong></div>
+            <div class="kv"><span>IET delta-AIC</span><strong>61.40</strong></div>
+            <div class="kv"><span>S / Gamma</span><strong>1.076</strong></div>
+            <div class="kv"><span>Days to criticality</span><strong>--</strong></div>
+            <div class="kv"><span>Depth trend</span><strong>-0.73 km</strong></div>
+            <div class="kv"><span>Spatial concentration</span><strong>101.2 km</strong></div>
+            <div class="kv"><span>Corr. length elevated</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>b-value depressed</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>IET Lorentzian</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>Rate accelerating</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>Loading &gt; healing</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+          </div>
+        </details>
+        <details class="event-row-details" id="cell-6">
+          <summary class="event-row">
+            <span class="rank-badge">6</span> <strong>47N, 153E</strong> (9 events, Mmax 5.8) <strong style="color:#e65100">27.4%</strong> <span class="chip" style="background:#e65100;color:#fff;font-size:11px;padding:2px 8px;">Elevated</span> Conditions: 2/5
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>b-value</span><strong>--</strong></div>
+            <div class="kv"><span>b-value trend</span><strong>--</strong></div>
+            <div class="kv"><span>Correlation length</span><strong>18.6 km</strong></div>
+            <div class="kv"><span>Corr. length trend</span><strong>-- km/month</strong></div>
+            <div class="kv"><span>Rate acceleration</span><strong>2.57x</strong></div>
+            <div class="kv"><span>IET delta-AIC</span><strong>--</strong></div>
+            <div class="kv"><span>S / Gamma</span><strong>1.269</strong></div>
+            <div class="kv"><span>Days to criticality</span><strong>--</strong></div>
+            <div class="kv"><span>Depth trend</span><strong>-53.39 km</strong></div>
+            <div class="kv"><span>Spatial concentration</span><strong>77.8 km</strong></div>
+            <div class="kv"><span>Corr. length elevated</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>b-value depressed</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>IET Lorentzian</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>Rate accelerating</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>Loading &gt; healing</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+          </div>
+        </details>
+        <details class="event-row-details" id="cell-7">
+          <summary class="event-row">
+            <span class="rank-badge">7</span> <strong>-15N, -173E</strong> (10 events, Mmax 6.3) <strong style="color:#e65100">25.6%</strong> <span class="chip" style="background:#e65100;color:#fff;font-size:11px;padding:2px 8px;">Elevated</span> Conditions: 2/5
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>b-value</span><strong>--</strong></div>
+            <div class="kv"><span>b-value trend</span><strong>--</strong></div>
+            <div class="kv"><span>Correlation length</span><strong>95.5 km</strong></div>
+            <div class="kv"><span>Corr. length trend</span><strong>-- km/month</strong></div>
+            <div class="kv"><span>Rate acceleration</span><strong>2.40x</strong></div>
+            <div class="kv"><span>IET delta-AIC</span><strong>--</strong></div>
+            <div class="kv"><span>S / Gamma</span><strong>0.977</strong></div>
+            <div class="kv"><span>Days to criticality</span><strong>--</strong></div>
+            <div class="kv"><span>Depth trend</span><strong>9.54 km</strong></div>
+            <div class="kv"><span>Spatial concentration</span><strong>39.4 km</strong></div>
+            <div class="kv"><span>Corr. length elevated</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>b-value depressed</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>IET Lorentzian</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>Rate accelerating</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>Loading &gt; healing</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+          </div>
+        </details>
+        <details class="event-row-details" id="cell-8">
+          <summary class="event-row">
+            <span class="rank-badge">8</span> <strong>61N, -147E</strong> (5 events, Mmax 3.2) <strong style="color:#e65100">25.4%</strong> <span class="chip" style="background:#e65100;color:#fff;font-size:11px;padding:2px 8px;">Elevated</span> Conditions: 3/5
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>b-value</span><strong>--</strong></div>
+            <div class="kv"><span>b-value trend</span><strong>--</strong></div>
+            <div class="kv"><span>Correlation length</span><strong>87.6 km</strong></div>
+            <div class="kv"><span>Corr. length trend</span><strong>-- km/month</strong></div>
+            <div class="kv"><span>Rate acceleration</span><strong>1.59x</strong></div>
+            <div class="kv"><span>IET delta-AIC</span><strong>76.78</strong></div>
+            <div class="kv"><span>S / Gamma</span><strong>1.133</strong></div>
+            <div class="kv"><span>Days to criticality</span><strong>--</strong></div>
+            <div class="kv"><span>Depth trend</span><strong>-23.48 km</strong></div>
+            <div class="kv"><span>Spatial concentration</span><strong>78.1 km</strong></div>
+            <div class="kv"><span>Corr. length elevated</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>b-value depressed</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>IET Lorentzian</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>Rate accelerating</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>Loading &gt; healing</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+          </div>
+        </details>
+        <details class="event-row-details" id="cell-9">
+          <summary class="event-row">
+            <span class="rank-badge">9</span> <strong>53N, -165E</strong> (26 events, Mmax 3.9) <strong style="color:#e65100">22.6%</strong> <span class="chip" style="background:#e65100;color:#fff;font-size:11px;padding:2px 8px;">Elevated</span> Conditions: 2/5
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>b-value</span><strong>--</strong></div>
+            <div class="kv"><span>b-value trend</span><strong>--</strong></div>
+            <div class="kv"><span>Correlation length</span><strong>55.1 km</strong></div>
+            <div class="kv"><span>Corr. length trend</span><strong>-- km/month</strong></div>
+            <div class="kv"><span>Rate acceleration</span><strong>2.11x</strong></div>
+            <div class="kv"><span>IET delta-AIC</span><strong>64.77</strong></div>
+            <div class="kv"><span>S / Gamma</span><strong>1.023</strong></div>
+            <div class="kv"><span>Days to criticality</span><strong>--</strong></div>
+            <div class="kv"><span>Depth trend</span><strong>-2.00 km</strong></div>
+            <div class="kv"><span>Spatial concentration</span><strong>79.4 km</strong></div>
+            <div class="kv"><span>Corr. length elevated</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>b-value depressed</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>IET Lorentzian</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>Rate accelerating</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>Loading &gt; healing</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+          </div>
+        </details>
+        <details class="event-row-details" id="cell-10">
+          <summary class="event-row">
+            <span class="rank-badge">10</span> <strong>19N, -65E</strong> (29 events, Mmax 3.8) <strong style="color:#e65100">21.8%</strong> <span class="chip" style="background:#e65100;color:#fff;font-size:11px;padding:2px 8px;">Elevated</span> Conditions: 2/5
+          </summary>
+          <div class="event-detail" style="padding:12px 10px;">
+            <div class="kv"><span>b-value</span><strong>--</strong></div>
+            <div class="kv"><span>b-value trend</span><strong>--</strong></div>
+            <div class="kv"><span>Correlation length</span><strong>26.0 km</strong></div>
+            <div class="kv"><span>Corr. length trend</span><strong>-- km/month</strong></div>
+            <div class="kv"><span>Rate acceleration</span><strong>2.05x</strong></div>
+            <div class="kv"><span>IET delta-AIC</span><strong>45.27</strong></div>
+            <div class="kv"><span>S / Gamma</span><strong>1.157</strong></div>
+            <div class="kv"><span>Days to criticality</span><strong>--</strong></div>
+            <div class="kv"><span>Depth trend</span><strong>-9.14 km</strong></div>
+            <div class="kv"><span>Spatial concentration</span><strong>53.3 km</strong></div>
+            <div class="kv"><span>Corr. length elevated</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>b-value depressed</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>IET Lorentzian</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>Rate accelerating</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>Loading &gt; healing</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+          </div>
+        </details>
+      </section>
+
+      <!-- TOP CELL DEEP DIVE -->
+      <section class="section" aria-labelledby="focus-heading">
+        <h2 id="focus-heading">Top risk cell -- coherence diagnostics</h2>
+        <div class="grid">
+          <div class="card col-6 hazard-eq">
+            <h3>19N, -63E -- Coherence fields</h3>
+            <div class="metric" style="color:#d32f2f">48.0%</div>
+            <div class="metric-label">Estimated M6.0+ probability (30 days)</div>
+            <div class="kv"><span>b-value (GR)</span><strong>--</strong></div>
+            <div class="kv"><span>Correlation length (km)</span><strong>91.8000</strong></div>
+            <div class="kv"><span>Corr. length trend (km/mo)</span><strong>--</strong></div>
+            <div class="kv"><span>Rate acceleration</span><strong>3.3500</strong></div>
+            <div class="kv"><span>IET delta-AIC</span><strong>32.3800</strong></div>
+            <div class="kv"><span>S / Gamma</span><strong>1.3160</strong></div>
+            <div class="kv"><span>tau (coherence field)</span><strong>0.3799</strong></div>
+            <div class="kv"><span>grad(tau)</span><strong>0.1763</strong></div>
+            <div class="kv"><span>Days to criticality</span><strong>--</strong></div>
+          </div>
+          <div class="card col-6 hazard-eq">
+            <h3>Singularity analysis</h3>
+            <div class="kv"><span>Conditions met</span><strong>3 / 5</strong></div>
+            <div class="kv"><span>Corr. length elevated (&gt;1.5x bg)</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>b-value depressed (&lt;0.85)</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>IET Lorentzian (delta-AIC &lt; -2)</span><span class="chip" style="background:#757575;color:#fff;font-size:11px;padding:2px 8px;">no</span></div>
+            <div class="kv"><span>Rate accelerating (&gt;1.5x)</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+            <div class="kv"><span>Loading &gt; healing (S/Gamma &gt; 1)</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">YES</span></div>
+          </div>
+        </div>
+        <div class="grid" style="margin-top:var(--s-md);">
+          <div class="card col-12 hazard-eq">
+            <h3>Cell statistics</h3>
+            <div class="kv"><span>Location</span><strong>19.00N, -63.00E</strong></div>
+            <div class="kv"><span>Events (30 days)</span><strong>6</strong></div>
+            <div class="kv"><span>Max magnitude</span><strong>M5.2</strong></div>
+            <div class="kv"><span>b-value trend</span><strong>--</strong></div>
+            <div class="kv"><span>Depth trend</span><strong>-13.51 km</strong></div>
+            <div class="kv"><span>Model version</span><strong>eq_coherence_v1_0</strong></div>
           </div>
         </div>
       </section>
 
-      <!-- ═══ EVIDENCE AND REPLAY ═══ -->
+      <!-- EVIDENCE AND REPLAY -->
       <section class="section" aria-labelledby="evidence-heading">
         <h2 id="evidence-heading">Evidence and replay</h2>
         <div class="grid">
@@ -1095,13 +1023,13 @@
           </div>
           <div class="card col-4">
             <h3>Check our track record</h3>
-            <p class="muted">How often are we right? We publish accuracy scores publicly, broken down by zone and magnitude.</p>
+            <p class="muted">How often are we right? We publish accuracy scores publicly, broken down by region and magnitude.</p>
             <a href="/verification/" class="btn btn-secondary" style="margin-top:8px;">See accuracy</a>
           </div>
           <div class="card col-4">
             <h3>Replay any forecast</h3>
             <p class="muted">Download the input data and re-run any past forecast yourself. Same data in, same result out - guaranteed.</p>
-            <a href="/data/replay/eq_fcst_20260313_0300.json" class="btn btn-secondary" style="margin-top:8px;">Download replay</a>
+            <a href="/data/replay/eq_fcst_20260322_0300.json" class="btn btn-secondary" style="margin-top:8px;">Download replay</a>
           </div>
         </div>
       </section>
@@ -1138,33 +1066,9 @@
         Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
         with stated uncertainty - they are not certainties.
       </p>
-      <p class="footer-build">Built with Coherence Lang · Zero client-side JS · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
+      <p class="footer-build">Built with Coherence Lang &middot; Zero client-side JavaScript &middot; Zero npm dependencies &middot; Geolocation by Cloudflare Edge</p>
     </div>
   </footer>
 
-  <script>
-  (function() {
-    'use strict';
-    var rows = document.querySelectorAll('.event-row');
-    for (var r = 0; r < rows.length; r++) {
-      rows[r].style.cursor = 'pointer';
-      rows[r].addEventListener('click', function() {
-        var detail = this.nextElementSibling;
-        if (detail && detail.classList.contains('event-detail')) {
-          var isOpen = detail.style.maxHeight && detail.style.maxHeight !== '0px';
-          if (isOpen) {
-            detail.style.maxHeight = '0px';
-            detail.style.opacity = '0';
-            detail.style.padding = '0';
-          } else {
-            detail.style.maxHeight = '600px';
-            detail.style.opacity = '1';
-            detail.style.padding = '12px 10px';
-          }
-        }
-      });
-    }
-  })();
-  </script>
 </body>
 </html>
