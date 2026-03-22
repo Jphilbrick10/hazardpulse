@@ -15,7 +15,7 @@ on:
 jobs:
   score:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     permissions:
       contents: write
 
@@ -41,6 +41,20 @@ jobs:
             DATE_ARG="--date ${{ inputs.date }}"
           fi
           python scripts/fetch_and_score_tornado.py $DATE_ARG
+
+      - name: Verify output
+        run: |
+          python -c "
+          import json
+          with open('dist/data/live-tornadoes.json') as f:
+              d = json.load(f)
+          print(f'Storms scored: {d.get(\"n_active_storms\", 0)}')
+          print(f'Model: {d.get(\"model_version\", \"unknown\")}')
+          print(f'Tier: {d.get(\"scoring_tier\", \"unknown\")}')
+          print(f'Tier label: {d.get(\"scoring_tier_label\", \"unknown\")}')
+          assert 'disclaimer' in d, 'Missing disclaimer!'
+          print('Output verification passed.')
+          "
 
       - name: Check for changes
         id: changes

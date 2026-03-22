@@ -41,7 +41,6 @@ from hazardpulse.data.hrrr import (  # noqa: E402
 from hazardpulse.data.probsevere import (  # noqa: E402
     fetch_probsevere_day,
     load_cached_probsevere,
-    scan_probsevere_cache,
 )
 from hazardpulse.tornado.coherence_engine import (  # noqa: E402
     compute_coherence_fields,
@@ -49,22 +48,30 @@ from hazardpulse.tornado.coherence_engine import (  # noqa: E402
     extract_coherence_at_point,
     test_singularity_at_point,
 )
-from hazardpulse.tornado.operational_storm import (  # noqa: E402
-    ALL_NAMES_FULL,
-    GradientBoostedTrees,
-    MetaStacker,
-    TornadoStormConfig,
-    build_storm_features,
-    compute_auc,
-    extract_block_a,
-    extract_block_a_from_probsevere,
-    extract_block_e,
-    extract_block_s,
-    extract_block_t,
-    logistic_predict,
-    logistic_train,
-    predict_tornado_probability,
-    sigmoid,
+try:
+    from hazardpulse.tornado.operational_storm import (  # noqa: E402
+        ALL_NAMES_FULL,
+        GradientBoostedTrees,
+        MetaStacker,
+        TornadoStormConfig,
+        build_storm_features,
+        compute_auc,
+        extract_block_a,
+        extract_block_a_from_probsevere,
+        extract_block_e,
+        extract_block_s,
+        extract_block_t,
+        logistic_predict,
+        logistic_train,
+        predict_tornado_probability,
+        sigmoid,
+    )
+    HAS_OPERATIONAL = True
+except ImportError:
+    HAS_OPERATIONAL = False
+
+from hazardpulse.tornado.tornado_npe import (  # noqa: E402
+    analytic_tornado_probability,
 )
 
 # ---------------------------------------------------------------------------
@@ -124,7 +131,7 @@ def build_storm_tracks(
 
 
 # ---------------------------------------------------------------------------
-# Quick-train a model on cached historical data
+# Model loading and analytic scoring
 # ---------------------------------------------------------------------------
 
 
@@ -136,172 +143,62 @@ def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return math.sqrt(dlat ** 2 + dlon ** 2)
 
 
-def _load_spc_tornado_index() -> dict[str, list[dict]]:
-    """Load SPC tornado reports indexed by date string YYYYMMDD."""
-    import csv
-    import io
-    from hazardpulse.data.http import fetch_text
+def load_pretrained_model() -> dict | None:
+    """Try to load a pre-trained model from results/models/tornado_gbt.json.
 
-    url = "https://www.spc.noaa.gov/wcm/data/1950-2024_actual_tornadoes.csv"
-    try:
-        raw = fetch_text(url, namespace="spc_tornado", timeout=120)
-    except Exception:
-        # Try 2023 version
-        raw = fetch_text(
-            "https://www.spc.noaa.gov/wcm/data/1950-2023_actual_tornadoes.csv",
-            namespace="spc_tornado", timeout=120,
-        )
-
-    by_date: dict[str, list[dict]] = {}
-    for row in csv.DictReader(io.StringIO(raw)):
-        try:
-            yr = int(row.get("yr", 0))
-            mo = int(row.get("mo", 0))
-            dy = int(row.get("dy", 0))
-            slat = float(row.get("slat", 0))
-            slon = float(row.get("slon", 0))
-            mag = int(row.get("mag", -9))
-            if yr < 2020 or mag < 0 or slat == 0:
-                continue
-            date_str = f"{yr:04d}{mo:02d}{dy:02d}"
-            time_str = row.get("time", "")
-            hour = -1.0
-            if time_str and ":" in time_str:
-                try:
-                    parts = time_str.split(":")
-                    hour = int(parts[0]) + int(parts[1]) / 60.0
-                except Exception:
-                    hour = -1.0
-            by_date.setdefault(date_str, []).append({
-                "slat": slat, "slon": slon, "mag": mag, "hour": hour,
-            })
-        except (ValueError, KeyError):
-            continue
-    return by_date
-
-
-def train_quick_model(
-    config: TornadoStormConfig | None = None,
-) -> dict | None:
-    """Train a lightweight model on any available cached ProbSevere data.
-
-    Uses actual SPC tornado reports as labels (matched by 40km proximity).
-    If no historical ProbSevere data is cached, returns None.
+    Returns the model dict if found and loadable, otherwise None.
     """
-    if config is None:
-        config = TornadoStormConfig()
-
-    cached_dates = scan_probsevere_cache()
-    if not cached_dates:
+    model_path = RESULTS / "models" / "tornado_gbt.json"
+    if not model_path.exists():
+        # Also check the old location
+        model_path = RESULTS / "tornado_storm_model.json"
+    if not model_path.exists():
+        return None
+    try:
+        model_data = json.loads(model_path.read_text(encoding="utf-8"))
+        if not HAS_OPERATIONAL:
+            print("  Warning: operational_storm module not available, cannot use ML model")
+            return None
+        print(f"  Loaded pre-trained model from {model_path.name}")
+        return model_data
+    except Exception as e:
+        print(f"  Warning: Failed to load model: {e}")
         return None
 
-    # Load SPC tornado reports for label matching
-    print("  Loading SPC tornado reports for labels...")
-    spc_tornadoes_by_date = _load_spc_tornado_index()
-    print(f"  SPC tornado dates: {len(spc_tornadoes_by_date)}")
 
-    print(f"  Found {len(cached_dates)} cached ProbSevere days for training")
+def score_storm_analytic(
+    storm: dict,
+    coherence_fields: dict[str, np.ndarray] | None,
+) -> float:
+    """Score a single storm using analytic probability (no ML needed).
 
-    # Build a minimal training set from cached data
-    from hazardpulse.tornado.coherence_engine import compute_coherence_fields
+    Uses coherence field theory + ProbSevere observational signals.
+    Falls back to zero coherence fields if HRRR is unavailable.
+    """
+    lat = float(storm.get("lat", 0))
+    lon = float(storm.get("lon", 0))
 
-    train_samples: list[dict] = []
-    for date_str in cached_dates[:60]:  # Cap at 60 days for speed
-        ps = load_cached_probsevere(date_str)
-        if ps is None or not ps:
-            continue
+    # Extract coherence at storm location
+    if coherence_fields is not None:
+        coh = extract_coherence_at_point(coherence_fields, lat, lon)
+        tau = coh.get("tau", 0)
+        grad_tau = coh.get("grad_tau", 0)
+        torsion = coh.get("torsion", 0)
+        alignment = coh.get("alignment", 0)
+        s_over_gamma = coh.get("s_over_gamma", 0)
+        da = coh.get("da", 0)
+    else:
+        tau = grad_tau = torsion = alignment = s_over_gamma = da = 0.0
 
-        # Try loading HRRR for this day
-        hrrr = load_cached_hrrr(date_str, hour=18)
-        coh_fields = None
-        derived = None
-        if hrrr is not None:
-            try:
-                coh_fields = compute_coherence_fields(hrrr)
-                derived = coh_fields.get("_derived")
-            except Exception:
-                coh_fields = None
+    maxllaz = float(storm.get("maxllaz", 0))
+    srh01 = float(storm.get("srh01", 0))
 
-        tracks = build_storm_tracks(ps)
-        for sid, track in tracks.items():
-            if len(track) < 2:
-                continue
-            history: list[dict] = []
-            for ts_idx, valid_time, storm in track[-5:]:
-                history.append(storm)
-            storm = track[-1][2]
-            block_s = extract_block_s(storm)
-            block_e = extract_block_e(storm, history)
-            lat = float(storm.get("lat", 0))
-            lon = float(storm.get("lon", 0))
-            if hrrr is not None and derived is not None:
-                block_a = extract_block_a(lat, lon, hrrr, derived)
-            else:
-                block_a = extract_block_a_from_probsevere(storm)
-            block_t = extract_block_t(lat, lon, storm, coh_fields)
-
-            # Parse storm valid_time to get hour
-            storm_hour = float(storm.get("hour", -1))
-            if storm_hour < 0:
-                # Try parsing from valid_time string
-                vt = storm.get("valid_time", "")
-                if "T" in vt:
-                    try:
-                        storm_hour = int(vt.split("T")[1][:2]) + int(vt.split("T")[1][3:5]) / 60.0
-                    except Exception:
-                        storm_hour = -1
-
-            # Use actual SPC tornado reports as labels
-            # Match: tornado within 40km AND within 60 min after storm obs
-            label = 0
-            for tor in spc_tornadoes_by_date.get(date_str, []):
-                dist = _haversine_km(lat, lon, tor["slat"], tor["slon"])
-                if dist > 40.0:
-                    continue
-                # Check temporal overlap: tornado must occur within 60 min of storm obs
-                tor_hour = tor.get("hour", -1)
-                if storm_hour >= 0 and tor_hour >= 0:
-                    dt_hours = tor_hour - storm_hour
-                    if dt_hours < 0:
-                        dt_hours += 24  # handle midnight crossing
-                    if 0 <= dt_hours <= 1.0:  # within 60 min forward
-                        label = 1
-                        break
-                elif dist <= 40.0:
-                    # No hour info -- fall back to same-day (mark as uncertain)
-                    label = 1
-                    break
-
-            train_samples.append({
-                "S": block_s, "E": block_e,
-                "A": block_a, "T": block_t,
-                "label": label, "date": date_str,
-            })
-
-    if len(train_samples) < 50:
-        print("  Not enough training samples, using fallback mode")
-        return None
-
-    # Temporal split: first 80% of dates = train, last 20% = val
-    all_dates_sorted = sorted(set(s.get("date", "") for s in train_samples))
-    n_dates = len(all_dates_sorted)
-    split_date = all_dates_sorted[int(n_dates * 0.8)]
-    train_data = [s for s in train_samples if s.get("date", "") <= split_date]
-    val_data = [s for s in train_samples if s.get("date", "") > split_date]
-
-    if len(val_data) < 10:
-        # Not enough validation data with temporal split; fall back
-        np.random.seed(42)
-        np.random.shuffle(train_samples)
-        split = int(0.8 * len(train_samples))
-        train_data = train_samples[:split]
-        val_data = train_samples[split:]
-
-    print(f"  Training quick model on {len(train_data)} samples...")
-
-    from hazardpulse.tornado.operational_storm import train_operational_tornado_model
-    model = train_operational_tornado_model(train_data, val_data, config)
-    return model
+    prob = analytic_tornado_probability(
+        tau=tau, grad_tau=grad_tau, torsion=torsion,
+        alignment=alignment, s_over_gamma=s_over_gamma, da=da,
+        maxllaz=maxllaz, srh01=srh01,
+    )
+    return float(prob)
 
 
 # ---------------------------------------------------------------------------
@@ -315,8 +212,14 @@ def score_storms(
     coherence_fields: dict[str, np.ndarray] | None,
     model: dict | None,
     now: dt.datetime,
+    scoring_tier: str = "tier3_ps_only",
 ) -> list[dict]:
     """Score all active storms from the latest ProbSevere time step.
+
+    scoring_tier controls which scoring method is used:
+      - "tier1_ml": Full ML model (pre-trained GBT)
+      - "tier2_analytic": Analytic coherence probability (no ML)
+      - "tier3_ps_only": ProbSevere raw scores only (minimal fallback)
 
     Returns list of scored storm dicts ready for JSON output.
     """
@@ -347,8 +250,13 @@ def score_storms(
         track = tracks.get(sid, [])
         history = [t[2] for t in track]
 
-        # Score
-        if model is not None:
+        # --- Three-tier scoring ---
+        top_features: list = []
+        model_scores: dict = {}
+        coherence_score: float = 0.0
+
+        if scoring_tier == "tier1_ml" and model is not None and HAS_OPERATIONAL:
+            # Tier 1: Full ML model
             result = predict_tornado_probability(
                 storm, history, hrrr, coherence_fields, model
             )
@@ -357,14 +265,19 @@ def score_storms(
             top_features = result["top_features"]
             model_scores = result["model_scores"]
             coherence_score = result["coherence_score"]
-        else:
-            # Fallback: use ProbSevere tornado score + coherence diagnostics
-            ps_tor = float(storm.get("ps_tor", 0)) / 100.0
-            prob = round(min(ps_tor, 0.99), 4)
+        elif scoring_tier in ("tier1_ml", "tier2_analytic") and coherence_fields is not None:
+            # Tier 2: Analytic coherence model (no ML needed)
+            prob = score_storm_analytic(storm, coherence_fields)
+            prob = round(min(max(prob, 0.0), 0.99), 4)
             risk = _risk_band(prob)
-            top_features = []
+            model_scores = {"analytic_prob": prob}
+            coherence_score = prob
+        else:
+            # Tier 3: ProbSevere-only fallback
+            ps_tor = float(storm.get("ps_tor", 0)) / 100.0
+            prob = round(min(max(ps_tor, 0.0), 0.99), 4)
+            risk = _risk_band(prob)
             model_scores = {"ps_tor_raw": round(ps_tor, 4)}
-            coherence_score = 0.0
 
         # Coherence diagnostics at storm location
         coherence_diag: dict = {}
@@ -403,6 +316,7 @@ def score_storms(
             "model_scores": model_scores,
             "coherence_score": coherence_score,
             "coherence_diagnostics": coherence_diag,
+            "scoring_tier": scoring_tier,
             "model_version": MODEL_VERSION,
             "track_length": len(history),
         }
@@ -427,8 +341,16 @@ def score_storms(
 def write_outputs(
     scored_storms: list[dict],
     now: dt.datetime,
+    scoring_tier: str = "tier3_ps_only",
 ) -> None:
     """Write scored results to dist/data/."""
+
+    # Determine scoring tier label for display
+    tier_labels = {
+        "tier1_ml": "ML (pre-trained gradient-boosted trees)",
+        "tier2_analytic": "Analytic coherence model (physics-only, no ML)",
+        "tier3_ps_only": "ProbSevere-only fallback (no ML, no HRRR)",
+    }
 
     # Write live-tornadoes.json
     output = {
@@ -439,6 +361,8 @@ def write_outputs(
         ),
         "updated_at": now.isoformat() + "Z",
         "model_version": MODEL_VERSION,
+        "scoring_tier": scoring_tier,
+        "scoring_tier_label": tier_labels.get(scoring_tier, scoring_tier),
         "n_active_storms": len(scored_storms),
         "storms": scored_storms,
     }
@@ -559,7 +483,7 @@ def main() -> None:
         else:
             print("  No ProbSevere data available.")
             print("  Writing empty state...")
-            write_outputs([], now)
+            write_outputs([], now, scoring_tier="tier3_ps_only")
             append_ledger([], now)
             print()
             print("Done. No storms to score.")
@@ -570,7 +494,7 @@ def main() -> None:
 
     if n_storms_latest == 0:
         print("  No active storms in latest time step.")
-        write_outputs([], now)
+        write_outputs([], now, scoring_tier="tier3_ps_only")
         append_ledger([], now)
         print()
         print("Done. No storms to score.")
@@ -611,36 +535,33 @@ def main() -> None:
     else:
         print("  Skipped (no HRRR data)")
 
-    # Step 4: Load or train model
+    # Step 4: Determine scoring tier
     print()
-    print("Step 4: Loading prediction model...")
+    print("Step 4: Determining scoring tier...")
     model: dict | None = None
+    scoring_tier: str = "tier3_ps_only"
 
-    # Try to load pre-trained model from results/
-    model_path = RESULTS / "tornado_storm_model.json"
-    if model_path.exists():
-        try:
-            model_data = json.loads(model_path.read_text(encoding="utf-8"))
-            print(f"  Loaded pre-trained model v{model_data.get('version', '?')}")
-            # For now, fall through to quick-train since JSON model loading
-            # requires reconstructing GBT trees.  TODO: implement model
-            # serialization.
-            model = None
-        except Exception:
-            pass
-
-    if model is None:
-        print("  No pre-trained model found. Training quick model...")
-        model = train_quick_model()
-        if model is not None:
-            print(f"  Quick model trained (val AUC={model.get('val_auc', 0):.4f})")
-        else:
-            print("  Using ProbSevere fallback scoring (no ML model)")
+    # Tier 1: Try loading a pre-trained ML model
+    model = load_pretrained_model()
+    if model is not None:
+        scoring_tier = "tier1_ml"
+        print(f"  -> Tier 1: Pre-trained ML model")
+    elif coherence_fields is not None:
+        # Tier 2: Use analytic coherence model (no ML needed)
+        scoring_tier = "tier2_analytic"
+        print(f"  -> Tier 2: Analytic coherence model (no ML, uses HRRR)")
+    else:
+        # Tier 3: ProbSevere-only fallback
+        scoring_tier = "tier3_ps_only"
+        print(f"  -> Tier 3: ProbSevere-only fallback (no ML, no HRRR)")
 
     # Step 5: Score active storms
     print()
     print("Step 5: Scoring active storms...")
-    scored = score_storms(time_steps, hrrr, coherence_fields, model, now)
+    scored = score_storms(
+        time_steps, hrrr, coherence_fields, model, now,
+        scoring_tier=scoring_tier,
+    )
 
     for s in scored[:10]:
         print(
@@ -652,7 +573,7 @@ def main() -> None:
     # Step 6: Write outputs
     print()
     print("Step 6: Writing outputs...")
-    write_outputs(scored, now)
+    write_outputs(scored, now, scoring_tier=scoring_tier)
     append_ledger(scored, now)
 
     print()
