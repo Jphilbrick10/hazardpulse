@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Model Registry - HazardPulse</title>
+  <meta name="description" content="Active and retired model versions, promotion history, and performance metrics for all HazardPulse hazard models.">
+  <meta name="theme-color" content="#f6f9ff">
+  <link rel="canonical" href="https://hazardpulse.io/registry/">
+  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Model Registry - HazardPulse">
+  <meta property="og:description" content="Active and retired model versions with promotion history and performance metrics.">
+  <meta property="og:url" content="https://hazardpulse.io/registry/">
+  <meta property="og:site_name" content="HazardPulse">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Model Registry - HazardPulse">
+  <meta name="twitter:description" content="Active and retired model versions with promotion history and performance metrics.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "DataCatalog",
+    "name": "HazardPulse Model Registry",
+    "description": "Versioned model registry with promotion/rejection history.",
+    "url": "https://hazardpulse.io/registry/",
+    "creator": { "@type": "Organization", "name": "Coherence Energy Labs" }
+  }
+  </script>
+
+  <script type="speculationrules">
+  { "prefetch": [{ "source": "list", "urls": ["/methods/", "/verification/"] }] }
+  </script>
+</head>
+<body>
+  <div class="emergency-banner" role="alert" aria-live="assertive"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar" role="banner">
+    <div class="container topbar-inner">
+      <a href="/" class="brand" aria-label="HazardPulse home">
+        <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
+        HazardPulse <small>Classic</small>
+      </a>
+      <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
+      <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+      </label>
+      <nav class="nav" aria-label="Primary navigation">
+        <div class="nav-dropdown">
+          <a href="/live/">Live</a>
+          <div class="nav-dropdown-menu">
+            <a href="/live/earthquake/"><span class="hazard-dot eq"></span> Earthquake</a>
+            <a href="/live/hurricane/"><span class="hazard-dot hu"></span> Hurricane</a>
+            <a href="/live/tornado/"><span class="hazard-dot to"></span> Tornado</a>
+          </div>
+        </div>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+        <a href="/registry/" aria-current="page">Registry</a>
+        <a href="/api/">API</a>
+      </nav>
+      <div class="theme-switch">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
+        <label for="theme-toggle">Dark</label>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="hero">
+      <div class="eyebrow">Model registry</div>
+      <h1>Every model is versioned and tracked.</h1>
+      <p class="subtitle">
+        We never run an unregistered model. Every version is pinned, every promotion
+        is justified, and every retirement is recorded.
+      </p>
+    </section>
+
+    <section class="section" aria-labelledby="active-heading">
+      <h2 id="active-heading">Active models</h2>
+      <div class="card">
+        <table>
+          <thead><tr><th>Model</th><th>Hazard</th><th>Status</th><th>Promoted</th><th>AUC</th><th>Brier</th><th>Architecture</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>hp-etas-v3.2.1</strong></td>
+              <td>Earthquake</td>
+              <td><span class="chip good">active</span></td>
+              <td>2026-02-28</td>
+              <td>0.81</td>
+              <td>0.142</td>
+              <td>GBM + Bayesian cal.</td>
+            </tr>
+            <tr>
+              <td><strong>hp-hurricane-ri-v8.1</strong></td>
+              <td>Hurricane RI</td>
+              <td><span class="chip good">active</span></td>
+              <td>2026-03-13</td>
+              <td>0.938</td>
+              <td>0.034</td>
+              <td>50-bag logistic + histogram GBT (d3+d4) + Platt cal.</td>
+            </tr>
+            <tr>
+              <td><strong>hp-tornado-meso-v1.4.2</strong></td>
+              <td>Tornado</td>
+              <td><span class="chip good">active</span></td>
+              <td>2026-03-05</td>
+              <td>0.77</td>
+              <td>0.118</td>
+              <td>Random forest + Platt cal.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="history-heading">
+      <h2 id="history-heading">Promotion / retirement history</h2>
+      <div class="card">
+        <table>
+          <thead><tr><th>Date</th><th>Action</th><th>Model</th><th>Reason</th></tr></thead>
+          <tbody>
+            <tr><td>2026-03-05</td><td><span class="chip good">promote</span></td><td>hp-tornado-meso-v1.4.2</td><td>+0.02 AUC, improved sharpness on 2025 spring holdout</td></tr>
+            <tr><td>2026-03-05</td><td><span class="chip neutral">retire</span></td><td>hp-tornado-meso-v1.4.1</td><td>Superseded by hp-tornado-meso-v1.4.2</td></tr>
+            <tr><td>2026-03-13</td><td><span class="chip good">promote</span></td><td>hp-hurricane-ri-v8.1</td><td>Advisory-time eval: AUC 0.938 avg (0.910–0.957), BSS +0.29, +0.009 delta vs OFCL across 5 holdouts. 65 features, real NOAA SST, Platt calibration.</td></tr>
+            <tr><td>2026-03-13</td><td><span class="chip neutral">retire</span></td><td>hp-hurricane-ri-v3.2</td><td>Superseded by hp-hurricane-ri-v8.1 — v3.2 used IBTrACS best-track eval (AUC 0.84); v8.1 uses honest advisory-time protocol</td></tr>
+            <tr><td>2026-03-01</td><td><span class="chip good">promote</span></td><td>hp-hurricane-ri-v3.2</td><td>+0.04 AUC, -0.015 Brier vs hp-hurricane-ri-v3.1 on holdout</td></tr>
+            <tr><td>2026-03-01</td><td><span class="chip neutral">retire</span></td><td>hp-hurricane-ri-v3.1</td><td>Superseded by hp-hurricane-ri-v3.2</td></tr>
+            <tr><td>2026-02-28</td><td><span class="chip good">promote</span></td><td>hp-etas-v3.2.1</td><td>+0.03 AUC, -0.011 Brier vs hp-etas-v3.1.0 on holdout</td></tr>
+            <tr><td>2026-02-28</td><td><span class="chip neutral">retire</span></td><td>hp-etas-v3.1.0</td><td>Superseded by hp-etas-v3.2.1</td></tr>
+            <tr><td>2026-02-15</td><td><span class="chip bad">reject</span></td><td>eq-v3.2.0</td><td>Failed calibration floor G4 on validation set (Brier 0.261)</td></tr>
+            <tr><td>2026-02-10</td><td><span class="chip bad">reject</span></td><td>to-v1.4.0</td><td>Regression in false alarm rate (+8%) on CONUS spring holdout</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="retired-heading">
+      <h2 id="retired-heading">Retired models</h2>
+      <div class="card">
+        <table>
+          <thead><tr><th>Model</th><th>Hazard</th><th>Retired</th><th>Final AUC</th><th>Final Brier</th><th>Forecasts issued</th></tr></thead>
+          <tbody>
+            <tr><td>hp-etas-v3.1.0</td><td>Earthquake</td><td>2026-02-28</td><td>0.78</td><td>0.153</td><td>2,841</td></tr>
+            <tr><td>hp-hurricane-ri-v3.2</td><td>Hurricane RI</td><td>2026-03-13</td><td>0.84</td><td>0.168</td><td>1,891</td></tr>
+            <tr><td>hp-hurricane-ri-v3.1</td><td>Hurricane RI</td><td>2026-03-01</td><td>0.80</td><td>0.183</td><td>1,247</td></tr>
+            <tr><td>hp-tornado-meso-v1.4.1</td><td>Tornado</td><td>2026-03-05</td><td>0.75</td><td>0.124</td><td>3,102</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="policy-heading">
+      <h2 id="policy-heading">Promotion policy</h2>
+      <div class="grid">
+        <div class="card col-6">
+          <h3>Requirements for promotion</h3>
+          <ul>
+            <li>Statistically significant improvement on holdout set (AUC or Brier)</li>
+            <li>No regression in calibration or false alarm rate</li>
+            <li>Passes all gate checks (G0–G12) on validation corpus</li>
+            <li>Training data cutoff documented and frozen</li>
+            <li>Feature set and architecture documented in registry</li>
+          </ul>
+        </div>
+        <div class="card col-6">
+          <h3>Rejection criteria</h3>
+          <ul>
+            <li>Brier score above calibration floor threshold (0.25)</li>
+            <li>False alarm rate regression exceeding 5%</li>
+            <li>Calibration error exceeding 8% in any bin</li>
+            <li>Inability to produce replay-verified deterministic outputs</li>
+            <li>Missing or incomplete feature documentation</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-row" style="margin-bottom:32px;">
+      <a href="/data/model-registry.json" class="btn btn-secondary">Download registry (JSON)</a>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="/live/">Live forecasts</a>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+      </div>
+      <div class="footer-col">
+        <h4>Data</h4>
+        <a href="/registry/">Model registry</a>
+        <a href="/api/">API contracts</a>
+        <a href="/ops/status/">System status</a>
+        <a href="/feed.xml">RSS feed</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/legal/disclaimer/">Disclaimer</a>
+        <a href="https://earthquake.usgs.gov/" rel="noopener">USGS</a>
+        <a href="https://www.nhc.noaa.gov/" rel="noopener">NHC</a>
+        <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
+      </div>
+      <p class="footer-disclaimer">
+        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
+        Always follow guidance from the USGS, National Hurricane Center (NHC), National Weather Service (NWS),
+        Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
+        with stated uncertainty - they are not certainties.
+      </p>
+      <p class="footer-build">Built with Coherence Lang · Zero client-side JS · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
+    </div>
+  </footer>
+</body>
+</html>

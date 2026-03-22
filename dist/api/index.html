@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>API Contracts - HazardPulse</title>
+  <meta name="description" content="HazardPulse API endpoints, schema contracts, versioning policy, and integration guide.">
+  <meta name="theme-color" content="#f6f9ff">
+  <link rel="canonical" href="https://hazardpulse.io/api/">
+  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="API Contracts - HazardPulse">
+  <meta property="og:description" content="API endpoints, schema contracts, and integration guide.">
+  <meta property="og:url" content="https://hazardpulse.io/api/">
+  <meta property="og:site_name" content="HazardPulse">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="API Contracts - HazardPulse">
+  <meta name="twitter:description" content="API endpoints, schema contracts, and integration guide.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebAPI",
+    "name": "HazardPulse API",
+    "description": "Programmatic access to live hazard forecasts, evidence ledgers, verification scores, and replay artifacts.",
+    "url": "https://hazardpulse.io/api/",
+    "provider": { "@type": "Organization", "name": "Coherence Energy Labs" }
+  }
+  </script>
+
+  <script type="speculationrules">
+  { "prefetch": [{ "source": "list", "urls": ["/methods/", "/evidence/"] }] }
+  </script>
+</head>
+<body>
+  <div class="emergency-banner" role="alert" aria-live="assertive"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar" role="banner">
+    <div class="container topbar-inner">
+      <a href="/" class="brand" aria-label="HazardPulse home">
+        <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
+        HazardPulse <small>Classic</small>
+      </a>
+      <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
+      <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+      </label>
+      <nav class="nav" aria-label="Primary navigation">
+        <div class="nav-dropdown">
+          <a href="/live/">Live</a>
+          <div class="nav-dropdown-menu">
+            <a href="/live/earthquake/"><span class="hazard-dot eq"></span> Earthquake</a>
+            <a href="/live/hurricane/"><span class="hazard-dot hu"></span> Hurricane</a>
+            <a href="/live/tornado/"><span class="hazard-dot to"></span> Tornado</a>
+          </div>
+        </div>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+        <a href="/registry/">Registry</a>
+        <a href="/api/" aria-current="page">API</a>
+      </nav>
+      <div class="theme-switch">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
+        <label for="theme-toggle">Dark</label>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="hero">
+      <div class="eyebrow">API</div>
+      <h1>Integrate with verified forecasts.</h1>
+      <p class="subtitle">
+        Programmatic access to live forecasts, evidence chains, verification scores,
+        and replay artifacts. Strict schema versioning. Deterministic response envelopes.
+      </p>
+    </section>
+
+    <section class="section" aria-labelledby="endpoints-heading">
+      <h2 id="endpoints-heading">Core endpoints</h2>
+      <div class="card">
+        <table>
+          <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Auth</th></tr></thead>
+          <tbody>
+            <tr><td><code>GET</code></td><td><code>/api/v1/live/pulse</code></td><td>Current probabilities for all hazards</td><td>None</td></tr>
+            <tr><td><code>GET</code></td><td><code>/api/v1/live/{hazard}</code></td><td>Detail for a specific hazard (earthquake, hurricane, tornado)</td><td>None</td></tr>
+            <tr><td><code>GET</code></td><td><code>/api/v1/forecast/{forecast_id}</code></td><td>Full forecast record by ID</td><td>None</td></tr>
+            <tr><td><code>GET</code></td><td><code>/api/v1/evidence/{provenance_id}</code></td><td>Provenance envelope by ID</td><td>None</td></tr>
+            <tr><td><code>GET</code></td><td><code>/api/v1/gates/{gate_decision_id}</code></td><td>Gate decision record by ID</td><td>None</td></tr>
+            <tr><td><code>GET</code></td><td><code>/api/v1/verification/summary</code></td><td>Rolling verification scores</td><td>None</td></tr>
+            <tr><td><code>GET</code></td><td><code>/api/v1/registry/models</code></td><td>Active model versions and metadata</td><td>None</td></tr>
+            <tr><td><code>GET</code></td><td><code>/api/v1/replay/{forecast_id}</code></td><td>Replay artifact for deterministic re-run</td><td>None</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="streaming-heading">
+      <h2 id="streaming-heading">Streaming endpoints</h2>
+      <div class="card">
+        <table>
+          <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Protocol</th></tr></thead>
+          <tbody>
+            <tr><td><code>GET</code></td><td><code>/stream/live/pulse</code></td><td>Real-time forecast updates</td><td>SSE</td></tr>
+            <tr><td><code>GET</code></td><td><code>/stream/ops/status</code></td><td>System health events</td><td>SSE</td></tr>
+          </tbody>
+        </table>
+        <p class="muted" style="margin-top:12px;font-size:13px;">
+          Server-Sent Events (SSE) with automatic reconnection. Each event is a complete
+          JSON payload matching the corresponding REST endpoint schema.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="contracts-heading">
+      <h2 id="contracts-heading">Data contracts</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        All responses follow versioned contracts. Breaking changes require a version bump.
+      </p>
+
+      <div class="grid">
+        <div class="card col-6">
+          <h3>HazardForecastV1</h3>
+          <div class="kv"><span>forecast_id</span><strong>String</strong></div>
+          <div class="kv"><span>hazard_type</span><strong>earthquake | hurricane | tornado</strong></div>
+          <div class="kv"><span>issued_at</span><strong>Timestamp (ISO 8601)</strong></div>
+          <div class="kv"><span>valid_from / valid_to</span><strong>Timestamp</strong></div>
+          <div class="kv"><span>probability</span><strong>Float (0.0–1.0)</strong></div>
+          <div class="kv"><span>confidence_lo / confidence_hi</span><strong>Float</strong></div>
+          <div class="kv"><span>delta_from_prev</span><strong>Float</strong></div>
+          <div class="kv"><span>model_version</span><strong>String</strong></div>
+          <div class="kv"><span>features_digest</span><strong>String (SHA-256)</strong></div>
+          <div class="kv"><span>provenance_id</span><strong>String</strong></div>
+          <div class="kv"><span>gate_decision_id</span><strong>String</strong></div>
+        </div>
+
+        <div class="card col-6">
+          <h3>ProvenanceEnvelopeV1</h3>
+          <div class="kv"><span>provenance_id</span><strong>String</strong></div>
+          <div class="kv"><span>trace_id</span><strong>String</strong></div>
+          <div class="kv"><span>input_hash</span><strong>String (SHA-256)</strong></div>
+          <div class="kv"><span>output_hash</span><strong>String (SHA-256)</strong></div>
+          <div class="kv"><span>source_refs</span><strong>List[String]</strong></div>
+          <div class="kv"><span>transform_refs</span><strong>List[String]</strong></div>
+          <div class="kv"><span>signed_at</span><strong>Timestamp</strong></div>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:16px;">
+        <div class="card col-6">
+          <h3>GateDecisionV1</h3>
+          <div class="kv"><span>gate_decision_id</span><strong>String</strong></div>
+          <div class="kv"><span>decision</span><strong>pass | block | degrade</strong></div>
+          <div class="kv"><span>blocking_reasons</span><strong>List[String]</strong></div>
+          <div class="kv"><span>warnings</span><strong>List[String]</strong></div>
+          <div class="kv"><span>emitted_at</span><strong>Timestamp</strong></div>
+        </div>
+        <div class="card col-6">
+          <h3>VerificationRecordV1</h3>
+          <div class="kv"><span>verification_id</span><strong>String</strong></div>
+          <div class="kv"><span>forecast_id</span><strong>String</strong></div>
+          <div class="kv"><span>outcome_observed</span><strong>Bool</strong></div>
+          <div class="kv"><span>brier_contrib</span><strong>Float</strong></div>
+          <div class="kv"><span>log_score</span><strong>Float</strong></div>
+          <div class="kv"><span>calibration_bin</span><strong>String</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="principles-heading">
+      <h2 id="principles-heading">API principles</h2>
+      <div class="grid">
+        <div class="card col-6">
+          <h3>Versioning</h3>
+          <ul>
+            <li>All endpoints are versioned (<code>/api/v1/</code>).</li>
+            <li>Breaking changes require a new version with explicit deprecation window.</li>
+            <li>Schema fields are never removed within a version; new fields may be added.</li>
+          </ul>
+        </div>
+        <div class="card col-6">
+          <h3>Response envelopes</h3>
+          <ul>
+            <li>Every response includes <code>meta.version</code>, <code>meta.generated_at</code>, and <code>meta.cache_ttl</code>.</li>
+            <li>Error responses include <code>error.code</code>, <code>error.message</code>, and <code>error.trace_id</code>.</li>
+            <li>All timestamps are ISO 8601 UTC.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid" style="margin-top:16px;">
+        <div class="card col-6">
+          <h3>Caching</h3>
+          <ul>
+            <li>Live endpoints: <code>max-age=300</code> (5 minutes).</li>
+            <li>Evidence/replay: <code>max-age=31536000, immutable</code> (1 year).</li>
+            <li>Registry/verification: <code>max-age=3600</code> (1 hour).</li>
+          </ul>
+        </div>
+        <div class="card col-6">
+          <h3>Rate limits</h3>
+          <ul>
+            <li>Public tier: 60 requests / minute.</li>
+            <li>No API key required for public read endpoints.</li>
+            <li>Streaming endpoints: 1 concurrent connection per IP.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-row" style="margin-bottom:32px;">
+      <a href="/data/api-contracts.json" class="btn btn-secondary">Download contracts (JSON)</a>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="/live/">Live forecasts</a>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+      </div>
+      <div class="footer-col">
+        <h4>Data</h4>
+        <a href="/registry/">Model registry</a>
+        <a href="/api/">API contracts</a>
+        <a href="/ops/status/">System status</a>
+        <a href="/feed.xml">RSS feed</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/legal/disclaimer/">Disclaimer</a>
+        <a href="https://earthquake.usgs.gov/" rel="noopener">USGS</a>
+        <a href="https://www.nhc.noaa.gov/" rel="noopener">NHC</a>
+        <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
+      </div>
+      <p class="footer-disclaimer">
+        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
+        Always follow guidance from the USGS, National Hurricane Center (NHC), National Weather Service (NWS),
+        Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
+        with stated uncertainty - they are not certainties.
+      </p>
+      <p class="footer-build">Built with Coherence Lang · Zero client-side JS · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "forecast_id": "hu_fcst_20260313_0300",
+  "hazard": "hurricane",
+  "issued_at": "2026-03-13T03:00:00Z",
+  "model_version": "hurricane_ri_v8_1",
+  "steps": [
+    "ingest_atcf_advisory",
+    "fetch_noaa_oisst_sst",
+    "feature_build_sst_enso_physics",
+    "feature_build_cross_aid_interactions",
+    "l2_feature_selection_top65",
+    "model_inference_bagged_logistic_50bags",
+    "model_inference_histogram_gbt_d3",
+    "model_inference_histogram_gbt_d4",
+    "platt_calibration",
+    "cv_blend_ensemble",
+    "gate_evaluation_g0_g12",
+    "publish_artifact"
+  ],
+  "n_features_used": 65,
+  "feature_layers": [
+    "atcf_advisories_12h_24h_36h_48h",
+    "real_sst_noaa_oisst_v2_1",
+    "enso_oni_index",
+    "physics_derived",
+    "cross_aid_consensus",
+    "interaction_terms"
+  ],
+  "ensemble_members": [
+    "bagged_logistic_50bags",
+    "histogram_gbt_depth3",
+    "histogram_gbt_depth4",
+    "logistic_l2"
+  ],
+  "calibration": "platt",
+  "result_probability": 0.418
+}
+

@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Methods - HazardPulse</title>
+  <meta name="description" content="How HazardPulse builds probabilistic hazard forecasts: data sources, model architectures, evaluation protocols, caveats, and governance gates.">
+  <meta name="theme-color" content="#f6f9ff">
+  <link rel="canonical" href="https://hazardpulse.io/methods/">
+  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Methods - HazardPulse">
+  <meta property="og:description" content="Data sources, model architectures, evaluation protocols, caveats, and governance.">
+  <meta property="og:url" content="https://hazardpulse.io/methods/">
+  <meta property="og:site_name" content="HazardPulse">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Methods - HazardPulse">
+  <meta name="twitter:description" content="Data sources, model architectures, evaluation protocols, caveats, and governance.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "HazardPulse Methods and Methodology",
+    "description": "Complete methodology for probabilistic hazard forecasting including data sources, model architectures, evaluation protocols, and governance.",
+    "url": "https://hazardpulse.io/methods/",
+    "author": { "@type": "Organization", "name": "Coherence Energy Labs" }
+  }
+  </script>
+
+  <script type="speculationrules">
+  { "prefetch": [{ "source": "list", "urls": ["/verification/", "/evidence/", "/registry/"] }] }
+  </script>
+</head>
+<body>
+  <div class="emergency-banner" role="alert" aria-live="assertive"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar" role="banner">
+    <div class="container topbar-inner">
+      <a href="/" class="brand" aria-label="HazardPulse home">
+        <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
+        HazardPulse <small>Classic</small>
+      </a>
+      <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
+      <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+      </label>
+      <nav class="nav" aria-label="Primary navigation">
+        <div class="nav-dropdown">
+          <a href="/live/">Live</a>
+          <div class="nav-dropdown-menu">
+            <a href="/live/earthquake/"><span class="hazard-dot eq"></span> Earthquake</a>
+            <a href="/live/hurricane/"><span class="hazard-dot hu"></span> Hurricane</a>
+            <a href="/live/tornado/"><span class="hazard-dot to"></span> Tornado</a>
+          </div>
+        </div>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/" aria-current="page">Methods</a>
+        <a href="/registry/">Registry</a>
+        <a href="/api/">API</a>
+      </nav>
+      <div class="theme-switch">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
+        <label for="theme-toggle">Dark</label>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="hero">
+      <div class="eyebrow">Methods</div>
+      <h1>How we build forecasts</h1>
+      <p class="subtitle">
+        Every number on this platform comes from a defined pipeline:
+        ingest authoritative data, run a pinned model, check governance gates,
+        and publish with full provenance. Here is exactly how each step works.
+      </p>
+    </section>
+
+    <!-- The equation -->
+    <section class="section" aria-labelledby="eq-heading">
+      <h2 id="eq-heading">The governing equation</h2>
+      <div class="equation-block">
+        P(event | data, model, gate=pass) &nbsp; ± &nbsp; confidence band
+      </div>
+      <p class="muted">
+        Every forecast is a conditional probability: the chance of a hazard event
+        given the latest ingested data, a pinned model version, and confirmation that
+        all governance gates passed. The confidence band quantifies how much the estimate
+        could shift given data and model uncertainty. If any blocking gate fails, the
+        forecast is not published.
+      </p>
+    </section>
+
+    <!-- Data sources -->
+    <section class="section" aria-labelledby="sources-heading">
+      <h2 id="sources-heading">Data sources</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        All input data comes from authoritative government and scientific agencies.
+        We do not generate our own observations.
+      </p>
+
+      <div class="data-source hazard-eq">
+        <strong>USGS ANSS Comprehensive Earthquake Catalog (ComCat)</strong>
+        <p class="muted">
+          Real-time and reviewed earthquake events. Updated continuously.
+          Feed latency: typically 1–5 minutes after event detection.
+          Used for: seismicity rates, b-value computation, event clustering, Coulomb stress updates.
+        </p>
+      </div>
+
+      <div class="data-source hazard-hu">
+        <strong>NOAA GFS (Global Forecast System)</strong>
+        <p class="muted">
+          Synoptic-scale atmospheric analysis and forecasts. Updated every 6 hours (00Z, 06Z, 12Z, 18Z).
+          Used for: deep-layer shear, SST, ocean heat content, upper-level divergence, moisture fields.
+        </p>
+      </div>
+
+      <div class="data-source hazard-hu">
+        <strong>NHC Advisories and SHIPS Guidance</strong>
+        <p class="muted">
+          Official tropical cyclone intensity/track advisories and Statistical Hurricane Intensity
+          Prediction Scheme outputs. Updated with each advisory cycle.
+          Used for: current intensity, track forecast, environmental predictors.
+        </p>
+      </div>
+
+      <div class="data-source hazard-to">
+        <strong>SPC Mesoanalysis</strong>
+        <p class="muted">
+          Storm Prediction Center real-time mesoscale analysis fields. Updated hourly.
+          Used for: CAPE, CIN, STP, SRH, composite parameters, LCL height.
+          Freshness threshold: 45 minutes. Beyond this, gate G1 triggers degrade.
+        </p>
+      </div>
+
+      <div class="data-source hazard-to">
+        <strong>RAP / HRRR and MRMS</strong>
+        <p class="muted">
+          Rapid Refresh / High-Resolution Rapid Refresh model output and Multi-Radar Multi-Sensor
+          precipitation/rotation products. Updated hourly (RAP) and every 15 min (HRRR/MRMS).
+          Used for: convective initiation, mesocyclone detection, environmental verification.
+        </p>
+      </div>
+    </section>
+
+    <!-- Model architectures -->
+    <section class="section" aria-labelledby="models-heading">
+      <h2 id="models-heading">Model architectures</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        Each hazard has its own model tailored to the physics and data characteristics of that domain.
+      </p>
+
+      <div class="grid">
+        <div class="card col-4 hazard-eq">
+          <h3>Earthquake (hp-etas-v3.2.1)</h3>
+          <div class="kv"><span>Architecture</span><strong>Gradient-boosted ensemble + Bayesian calibration</strong></div>
+          <div class="kv"><span>Features</span><strong>42</strong></div>
+          <div class="kv"><span>Key inputs</span><strong>Seismicity rates, b-value, Coulomb stress, geodetic strain, catalog statistics</strong></div>
+          <div class="kv"><span>Training cutoff</span><strong>2026-02-15</strong></div>
+          <div class="kv"><span>Calibration method</span><strong>Isotonic regression on holdout</strong></div>
+        </div>
+
+        <div class="card col-4 hazard-hu">
+          <h3>Hurricane RI (hp-hurricane-ri-v3.2)</h3>
+          <div class="kv"><span>Architecture</span><strong>Logistic regression ensemble + isotonic calibration</strong></div>
+          <div class="kv"><span>Features</span><strong>38</strong></div>
+          <div class="kv"><span>Key inputs</span><strong>Shear, SST, OHC, outflow, SHIPS predictors, satellite estimates</strong></div>
+          <div class="kv"><span>Training cutoff</span><strong>2026-02-20</strong></div>
+          <div class="kv"><span>Calibration method</span><strong>Isotonic regression on holdout</strong></div>
+        </div>
+
+        <div class="card col-4 hazard-to">
+          <h3>Tornado (hp-tornado-meso-v1.4.2)</h3>
+          <div class="kv"><span>Architecture</span><strong>Random forest + Platt-scaled calibration</strong></div>
+          <div class="kv"><span>Features</span><strong>34</strong></div>
+          <div class="kv"><span>Key inputs</span><strong>STP, MLCAPE, MLCIN, deep shear, SRH, LCL height, composite parameters</strong></div>
+          <div class="kv"><span>Training cutoff</span><strong>2026-02-25</strong></div>
+          <div class="kv"><span>Calibration method</span><strong>Platt scaling on holdout</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Evaluation protocol -->
+    <section class="section" aria-labelledby="eval-heading">
+      <h2 id="eval-heading">Evaluation protocol</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        Every forecast is evaluated against observed outcomes after its valid window closes.
+      </p>
+
+      <div class="grid">
+        <div class="card col-6">
+          <h3>Resolution process</h3>
+          <ul>
+            <li>Each forecast has a defined valid window (e.g., 30 days for earthquake, 24h for RI/tornado).</li>
+            <li>After the window closes, we check authoritative sources for the observed outcome.</li>
+            <li>Earthquake: USGS reviewed catalog. Hurricane: NHC best track. Tornado: SPC storm reports.</li>
+            <li>The outcome is recorded immutably in the verification ledger.</li>
+            <li>No manual overrides or retroactive adjustments.</li>
+          </ul>
+        </div>
+        <div class="card col-6">
+          <h3>Scoring metrics</h3>
+          <ul>
+            <li><strong>Brier score</strong> - Mean squared probability error. Lower is better. 0 = perfect.</li>
+            <li><strong>Brier skill score</strong> - Improvement over climatological baseline.</li>
+            <li><strong>AUC</strong> - Discrimination ability (ROC curve area).</li>
+            <li><strong>Log score</strong> - Information-theoretic proper scoring rule.</li>
+            <li><strong>Calibration</strong> - Agreement between predicted and observed rates by bin.</li>
+            <li><strong>Sharpness</strong> - How decisive forecasts are (spread of probabilities).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Caveats and boundaries -->
+    <section class="section" aria-labelledby="caveats-heading">
+      <h2 id="caveats-heading">Caveats and boundaries</h2>
+      <div class="card">
+        <ul>
+          <li><strong>These are not official forecasts.</strong> HazardPulse provides experimental research
+            outputs. Always follow guidance from USGS, NHC, NWS, and SPC.</li>
+          <li><strong>Models have known limitations.</strong> Earthquake probability in low-seismicity regions
+            has high uncertainty. Hurricane RI skill degrades for weak/disorganized systems.
+            Tornado forecasting at long lead times (&gt;12h) has low sharpness.</li>
+          <li><strong>Probabilities are not certainties.</strong> A 40% probability means 60% chance the
+            event does not happen. Interpret accordingly.</li>
+          <li><strong>Calibration is approximate.</strong> Reliability diagrams show systematic tendencies
+            but are computed on finite samples. Small bins have high sampling noise.</li>
+          <li><strong>Data freshness matters.</strong> If an input source is stale (exceeds threshold),
+            gate G1 triggers degrade, widening uncertainty bands and displaying a warning.</li>
+          <li><strong>Models are retrained periodically.</strong> Version changes can cause abrupt shifts
+            in probability that reflect improved skill, not real changes in hazard.</li>
+          <li><strong>Geographic scope is limited.</strong> Earthquake coverage focuses on well-instrumented
+            seismic networks. Hurricane RI applies to Atlantic and East Pacific named storms.
+            Tornado covers CONUS only.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Governance -->
+    <section class="section" aria-labelledby="gov-heading">
+      <h2 id="gov-heading">Governance and gates</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        13 hard gates must pass before any forecast reaches you. This is not optional.
+      </p>
+      <div class="card">
+        <table>
+          <thead><tr><th>#</th><th>Gate</th><th>What it checks</th></tr></thead>
+          <tbody>
+            <tr><td>G0</td><td>Schema Validity</td><td>All fields present and correctly typed</td></tr>
+            <tr><td>G1</td><td>Source Freshness</td><td>Input data within acceptable latency</td></tr>
+            <tr><td>G2</td><td>Model Lineage Pinned</td><td>Model version matches registry</td></tr>
+            <tr><td>G3</td><td>Provenance Complete</td><td>All hashes present and chain intact</td></tr>
+            <tr><td>G4</td><td>Calibration Floor</td><td>Brier score below threshold</td></tr>
+            <tr><td>G5</td><td>Spatiotemporal Sanity</td><td>Scope within valid bounds</td></tr>
+            <tr><td>G6</td><td>Alert Harm Guard</td><td>No alarmist or misleading language</td></tr>
+            <tr><td>G7</td><td>Explanation Minimum</td><td>Why-changed panel has sufficient factors</td></tr>
+            <tr><td>G8</td><td>Replayability</td><td>Replay artifact emitted and hash-verified</td></tr>
+            <tr><td>G9</td><td>Public Projection Policy</td><td>Disclaimer attached to output</td></tr>
+            <tr><td>G10</td><td>Security Policy</td><td>HTTP headers and CSP valid</td></tr>
+            <tr><td>G11</td><td>Performance Budgets</td><td>Payload within size limits</td></tr>
+            <tr><td>G12</td><td>Trust Surface Sync</td><td>UI chips match actual gate state</td></tr>
+          </tbody>
+        </table>
+        <p class="muted" style="margin-top:12px;font-size:13px;">
+          <strong>pass</strong> = fully publish. <strong>degrade</strong> = publish with warning
+          banner and widened uncertainty. <strong>block</strong> = forecast is not published.
+        </p>
+      </div>
+    </section>
+
+    <!-- Legal guidance -->
+    <section class="section" aria-labelledby="legal-heading">
+      <h2 id="legal-heading">Interpretation guidance</h2>
+      <div class="grid">
+        <div class="card col-6">
+          <h3>What this is</h3>
+          <ul>
+            <li>Experimental probabilistic research output</li>
+            <li>A tool for understanding risk, not a replacement for official warnings</li>
+            <li>Transparent about uncertainty and limitations</li>
+            <li>Fully auditable through public evidence chain</li>
+          </ul>
+        </div>
+        <div class="card col-6">
+          <h3>What this is not</h3>
+          <ul>
+            <li>Not an official forecast or warning</li>
+            <li>Not a substitute for USGS, NHC, NWS, or SPC guidance</li>
+            <li>Not guaranteed to be accurate for any individual event</li>
+            <li>Not advice for evacuation or emergency decisions</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="/live/">Live forecasts</a>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+      </div>
+      <div class="footer-col">
+        <h4>Data</h4>
+        <a href="/registry/">Model registry</a>
+        <a href="/api/">API contracts</a>
+        <a href="/ops/status/">System status</a>
+        <a href="/feed.xml">RSS feed</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/legal/disclaimer/">Disclaimer</a>
+        <a href="https://earthquake.usgs.gov/" rel="noopener">USGS</a>
+        <a href="https://www.nhc.noaa.gov/" rel="noopener">NHC</a>
+        <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
+      </div>
+      <p class="footer-disclaimer">
+        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
+        Always follow guidance from the USGS, National Hurricane Center (NHC), National Weather Service (NWS),
+        Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
+        with stated uncertainty - they are not certainties.
+      </p>
+      <p class="footer-build">Built with Coherence Lang · Zero client-side JS · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
+    </div>
+  </footer>
+</body>
+</html>

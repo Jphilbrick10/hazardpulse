@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evidence Ledger - HazardPulse</title>
+  <meta name="description" content="Immutable prediction ledger, provenance envelopes, gate decisions, and replay artifacts. Every forecast is auditable end-to-end.">
+  <meta name="theme-color" content="#f6f9ff">
+  <link rel="canonical" href="https://hazardpulse.io/evidence/">
+  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Evidence Ledger - HazardPulse">
+  <meta property="og:description" content="Immutable prediction ledger, provenance envelopes, and gate decisions. Every forecast is auditable.">
+  <meta property="og:url" content="https://hazardpulse.io/evidence/">
+  <meta property="og:site_name" content="HazardPulse">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Evidence Ledger - HazardPulse">
+  <meta name="twitter:description" content="Immutable prediction ledger, provenance envelopes, and gate decisions. Every forecast is auditable.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "DataCatalog",
+    "name": "HazardPulse Evidence Ledger",
+    "description": "Immutable prediction ledger, provenance envelopes, gate decision records, and deterministic replay artifacts for all HazardPulse forecasts.",
+    "url": "https://hazardpulse.io/evidence/",
+    "creator": { "@type": "Organization", "name": "Coherence Energy Labs" }
+  }
+  </script>
+
+  <script type="speculationrules">
+  { "prefetch": [{ "source": "list", "urls": ["/verification/", "/live/"] }] }
+  </script>
+</head>
+<body>
+  <div class="emergency-banner" role="alert" aria-live="assertive"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar" role="banner">
+    <div class="container topbar-inner">
+      <a href="/" class="brand" aria-label="HazardPulse home">
+        <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
+        HazardPulse <small>Classic</small>
+      </a>
+      <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
+      <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+      </label>
+      <nav class="nav" aria-label="Primary navigation">
+        <div class="nav-dropdown">
+          <a href="/live/">Live</a>
+          <div class="nav-dropdown-menu">
+            <a href="/live/earthquake/"><span class="hazard-dot eq"></span> Earthquake</a>
+            <a href="/live/hurricane/"><span class="hazard-dot hu"></span> Hurricane</a>
+            <a href="/live/tornado/"><span class="hazard-dot to"></span> Tornado</a>
+          </div>
+        </div>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/" aria-current="page">Evidence</a>
+        <a href="/methods/">Methods</a>
+        <a href="/registry/">Registry</a>
+        <a href="/api/">API</a>
+      </nav>
+      <div class="theme-switch">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
+        <label for="theme-toggle">Dark</label>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="hero">
+      <div class="eyebrow">Evidence</div>
+      <h1>Every forecast has a receipt.</h1>
+      <p class="subtitle">
+        The evidence ledger is the backbone of trust. Every published forecast links to an
+        immutable chain: the data that went in, the model that ran, the gates that checked it,
+        and the exact output that was published.
+      </p>
+    </section>
+
+    <!-- Prediction ledger -->
+    <section class="section" aria-labelledby="ledger-heading" id="ledger">
+      <h2 id="ledger-heading">Prediction ledger</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        Append-only record of every published forecast. Entries are never deleted or modified.
+      </p>
+
+      <div class="ledger-entry hazard-eq" id="eq">
+        <div class="kv"><span>Forecast ID</span><strong><code>eq_fcst_20260313_0300</code></strong></div>
+        <div class="kv"><span>Hazard</span><strong>Earthquake</strong></div>
+        <div class="kv"><span>Issued</span><strong>2026-03-13 03:00 UTC</strong></div>
+        <div class="kv"><span>Probability</span><strong>27.4% (21.2–33.0)</strong></div>
+        <div class="kv"><span>Model</span><strong>hp-etas-v3.2.1</strong></div>
+        <div class="kv"><span>Gate</span><strong><span class="chip good">pass</span></strong></div>
+        <div class="kv"><span>Provenance ID</span><strong><code>prov_eq_20260313_0300_a3f8</code></strong></div>
+        <div class="chip-row">
+          <a href="/live/earthquake/" class="btn btn-secondary" style="padding:4px 12px;font-size:12px;">Detail</a>
+          <a href="/data/replay/eq_fcst_20260313_0300.json" class="btn btn-secondary" style="padding:4px 12px;font-size:12px;">Replay</a>
+        </div>
+      </div>
+
+      <div class="ledger-entry hazard-hu" id="hu">
+        <div class="kv"><span>Forecast ID</span><strong><code>hu_fcst_20260313_0300</code></strong></div>
+        <div class="kv"><span>Hazard</span><strong>Hurricane RI</strong></div>
+        <div class="kv"><span>Issued</span><strong>2026-03-13 03:00 UTC</strong></div>
+        <div class="kv"><span>Probability</span><strong>41.8% (35.0–48.1)</strong></div>
+        <div class="kv"><span>Model</span><strong>hp-hurricane-ri-v3.2</strong></div>
+        <div class="kv"><span>Gate</span><strong><span class="chip good">pass</span></strong></div>
+        <div class="kv"><span>Provenance ID</span><strong><code>prov_hu_20260313_0300_d4b1</code></strong></div>
+        <div class="chip-row">
+          <a href="/live/hurricane/" class="btn btn-secondary" style="padding:4px 12px;font-size:12px;">Detail</a>
+          <a href="/data/replay/hu_fcst_20260313_0300.json" class="btn btn-secondary" style="padding:4px 12px;font-size:12px;">Replay</a>
+        </div>
+      </div>
+
+      <div class="ledger-entry hazard-to" id="to">
+        <div class="kv"><span>Forecast ID</span><strong><code>to_fcst_20260313_0300</code></strong></div>
+        <div class="kv"><span>Hazard</span><strong>Tornado</strong></div>
+        <div class="kv"><span>Issued</span><strong>2026-03-13 03:00 UTC</strong></div>
+        <div class="kv"><span>Probability</span><strong>18.6% (14.8–22.9)</strong></div>
+        <div class="kv"><span>Model</span><strong>hp-tornado-meso-v1.4.2</strong></div>
+        <div class="kv"><span>Gate</span><strong><span class="chip warn">degrade</span></strong></div>
+        <div class="kv"><span>Provenance ID</span><strong><code>prov_to_20260313_0300_f290</code></strong></div>
+        <div class="chip-row">
+          <a href="/live/tornado/" class="btn btn-secondary" style="padding:4px 12px;font-size:12px;">Detail</a>
+          <a href="/data/replay/to_fcst_20260313_0300.json" class="btn btn-secondary" style="padding:4px 12px;font-size:12px;">Replay</a>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a href="/data/evidence/prediction-ledger.json" class="btn btn-secondary">Download full ledger (JSON)</a>
+      </div>
+    </section>
+
+    <!-- Provenance envelopes -->
+    <section class="section" aria-labelledby="provenance-heading">
+      <h2 id="provenance-heading">Provenance envelopes</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        Each forecast has a cryptographic envelope proving exactly what data and computation produced it.
+        Envelopes include input/output hashes, source references, and transform chain.
+      </p>
+
+      <div class="card">
+        <h3>Envelope: <code>prov_eq_20260313_0300_a3f8</code></h3>
+        <div class="kv"><span>Trace ID</span><strong><code>trace_eq_20260313_0300</code></strong></div>
+        <div class="kv"><span>Input hash (SHA-256)</span><strong><code>5c88a0e1..3f27b9d4</code></strong></div>
+        <div class="kv"><span>Output hash (SHA-256)</span><strong><code>d920f4c3..81e0a567</code></strong></div>
+        <div class="kv"><span>Sources</span><strong>USGS ANSS ComCat (2026-03-13T02:54Z)</strong></div>
+        <div class="kv"><span>Transforms</span><strong>catalog_filter → feature_extract → hp-etas-v3.2.1 → calibrate → gate_check</strong></div>
+        <div class="kv"><span>Signed at</span><strong>2026-03-13 03:00:12 UTC</strong></div>
+      </div>
+
+      <div class="card" style="margin-top:12px;">
+        <h3>Envelope: <code>prov_hu_20260313_0300_d4b1</code></h3>
+        <div class="kv"><span>Trace ID</span><strong><code>trace_hu_20260313_0300</code></strong></div>
+        <div class="kv"><span>Input hash (SHA-256)</span><strong><code>8f12c3d4..a9b7e601</code></strong></div>
+        <div class="kv"><span>Output hash (SHA-256)</span><strong><code>3e78f1a2..c405d912</code></strong></div>
+        <div class="kv"><span>Sources</span><strong>GFS 06Z, NHC Advisory #14, SHIPS 02:30Z</strong></div>
+        <div class="kv"><span>Transforms</span><strong>gfs_extract → ships_merge → hp-hurricane-ri-v3.2 → calibrate → gate_check</strong></div>
+        <div class="kv"><span>Signed at</span><strong>2026-03-13 03:00:14 UTC</strong></div>
+      </div>
+
+      <div class="card" style="margin-top:12px;">
+        <h3>Envelope: <code>prov_to_20260313_0300_f290</code></h3>
+        <div class="kv"><span>Trace ID</span><strong><code>trace_to_20260313_0300</code></strong></div>
+        <div class="kv"><span>Input hash (SHA-256)</span><strong><code>c3a1b2d4..e8f09712</code></strong></div>
+        <div class="kv"><span>Output hash (SHA-256)</span><strong><code>12d4f8a0..b3c7e190</code></strong></div>
+        <div class="kv"><span>Sources</span><strong>SPC mesoanalysis (02:12Z, stale), RAP 03Z, MRMS 02:50Z</strong></div>
+        <div class="kv"><span>Transforms</span><strong>spc_extract → rap_merge → hp-tornado-meso-v1.4.2 → calibrate → gate_check(degrade)</strong></div>
+        <div class="kv"><span>Signed at</span><strong>2026-03-13 03:00:18 UTC</strong></div>
+      </div>
+
+      <div class="cta-row">
+        <a href="/data/evidence/provenance-envelopes.json" class="btn btn-secondary">Download all envelopes (JSON)</a>
+      </div>
+    </section>
+
+    <!-- Gate decisions -->
+    <section class="section" aria-labelledby="gates-heading" id="gates">
+      <h2 id="gates-heading">Gate decision ledger</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        Every forecast passes through 13 hard gates before publication. Here are the latest decisions.
+      </p>
+
+      <div class="card">
+        <table>
+          <thead><tr><th>Decision ID</th><th>Hazard</th><th>Result</th><th>Warnings</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>gate_eq_20260313_0300_001</code></td>
+              <td>Earthquake</td>
+              <td><span class="chip good">pass</span></td>
+              <td>None</td>
+              <td>03:00:11 UTC</td>
+            </tr>
+            <tr>
+              <td><code>gate_hu_20260313_0300_001</code></td>
+              <td>Hurricane RI</td>
+              <td><span class="chip good">pass</span></td>
+              <td>None</td>
+              <td>03:00:13 UTC</td>
+            </tr>
+            <tr id="to-gate">
+              <td><code>gate_to_20260313_0300_001</code></td>
+              <td>Tornado</td>
+              <td><span class="chip warn">degrade</span></td>
+              <td>G1: SPC feed latency 48 min &gt; 45 min threshold</td>
+              <td>03:00:17 UTC</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cta-row">
+        <a href="/data/evidence/gate-decisions.json" class="btn btn-secondary">Download gate decisions (JSON)</a>
+      </div>
+    </section>
+
+    <!-- Replay index -->
+    <section class="section" aria-labelledby="replay-heading" id="replay">
+      <h2 id="replay-heading">Replay index</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        Every forecast can be replayed deterministically. Download the frozen input artifact,
+        run it through the pinned model version, and verify you get the same output hash.
+      </p>
+
+      <div class="card">
+        <table>
+          <thead><tr><th>Forecast ID</th><th>Hazard</th><th>Input hash</th><th>Output hash</th><th>Artifact</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>eq_fcst_20260313_0300</code></td>
+              <td>Earthquake</td>
+              <td><code>5c88a0e1..</code></td>
+              <td><code>d920f4c3..</code></td>
+              <td><a href="/data/replay/eq_fcst_20260313_0300.json">Download</a></td>
+            </tr>
+            <tr>
+              <td><code>hu_fcst_20260313_0300</code></td>
+              <td>Hurricane RI</td>
+              <td><code>8f12c3d4..</code></td>
+              <td><code>3e78f1a2..</code></td>
+              <td><a href="/data/replay/hu_fcst_20260313_0300.json">Download</a></td>
+            </tr>
+            <tr>
+              <td><code>to_fcst_20260313_0300</code></td>
+              <td>Tornado</td>
+              <td><code>c3a1b2d4..</code></td>
+              <td><code>12d4f8a0..</code></td>
+              <td><a href="/data/replay/to_fcst_20260313_0300.json">Download</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cta-row">
+        <a href="/data/evidence/replay-index.json" class="btn btn-secondary">Download replay index (JSON)</a>
+      </div>
+    </section>
+
+    <!-- Export options -->
+    <section class="section" aria-labelledby="export-heading">
+      <h2 id="export-heading">Export options</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Download evidence artifacts in your preferred format.</p>
+      <div class="grid">
+        <div class="card col-4">
+          <h3>Prediction ledger</h3>
+          <div class="cta-row" style="margin-top:8px;">
+            <a href="/data/evidence/prediction-ledger.json" class="btn btn-secondary" style="padding:6px 14px;font-size:13px;">JSON</a>
+          </div>
+        </div>
+        <div class="card col-4">
+          <h3>Provenance envelopes</h3>
+          <div class="cta-row" style="margin-top:8px;">
+            <a href="/data/evidence/provenance-envelopes.json" class="btn btn-secondary" style="padding:6px 14px;font-size:13px;">JSON</a>
+          </div>
+        </div>
+        <div class="card col-4">
+          <h3>Gate decisions</h3>
+          <div class="cta-row" style="margin-top:8px;">
+            <a href="/data/evidence/gate-decisions.json" class="btn btn-secondary" style="padding:6px 14px;font-size:13px;">JSON</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chain integrity -->
+    <section class="section" aria-labelledby="integrity-heading">
+      <h2 id="integrity-heading">Chain integrity</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        The evidence chain is verified every publish cycle. Here is the current integrity status.
+      </p>
+      <div class="grid">
+        <div class="card col-3">
+          <div class="metric" style="color:var(--good)">Intact</div>
+          <div class="metric-label">Chain status</div>
+        </div>
+        <div class="card col-3">
+          <div class="metric">1,119</div>
+          <div class="metric-label">Total ledger entries</div>
+        </div>
+        <div class="card col-3">
+          <div class="metric">100%</div>
+          <div class="metric-label">Provenance coverage</div>
+        </div>
+        <div class="card col-3">
+          <div class="metric">0</div>
+          <div class="metric-label">Hash mismatches</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="/live/">Live forecasts</a>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+      </div>
+      <div class="footer-col">
+        <h4>Data</h4>
+        <a href="/registry/">Model registry</a>
+        <a href="/api/">API contracts</a>
+        <a href="/ops/status/">System status</a>
+        <a href="/feed.xml">RSS feed</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/legal/disclaimer/">Disclaimer</a>
+        <a href="https://earthquake.usgs.gov/" rel="noopener">USGS</a>
+        <a href="https://www.nhc.noaa.gov/" rel="noopener">NHC</a>
+        <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
+      </div>
+      <p class="footer-disclaimer">
+        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
+        Always follow guidance from the USGS, National Hurricane Center (NHC), National Weather Service (NWS),
+        Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
+        with stated uncertainty - they are not certainties.
+      </p>
+      <p class="footer-build">Built with Coherence Lang · Zero client-side JS · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
+    </div>
+  </footer>
+</body>
+</html>

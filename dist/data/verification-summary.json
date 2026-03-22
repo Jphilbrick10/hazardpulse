@@ -1,0 +1,37 @@
+{
+  "updated_at": "2026-03-13T03:00:00Z",
+  "hazards": [
+    {
+      "key": "eq",
+      "hazard": "earthquake",
+      "auc": 0.733,
+      "brier": 0.182,
+      "reliability_slope": 0.948,
+      "replayability_pct": 99.98
+    },
+    {
+      "key": "hu",
+      "hazard": "hurricane",
+      "auc": 0.938,
+      "brier": 0.034,
+      "brier_skill_score": 0.290,
+      "reliability_slope": 0.976,
+      "replayability_pct": 99.99,
+      "eval_protocol": "advisory_time_rolling_holdout",
+      "eval_holdouts": [2018, 2020, 2022, 2023, 2024],
+      "auc_range": [0.910, 0.957],
+      "delta_vs_ofcl": 0.009,
+      "n_cases": 9714,
+      "model_version": "hurricane_ri_v8_1"
+    },
+    {
+      "key": "to",
+      "hazard": "tornado",
+      "auc": 0.655,
+      "brier": 0.231,
+      "reliability_slope": 0.901,
+      "replayability_pct": 99.94
+    }
+  ]
+}
+

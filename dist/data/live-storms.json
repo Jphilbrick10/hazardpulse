@@ -1,0 +1,56 @@
+{
+  "updated_at": "2026-03-15T12:00:00Z",
+  "model_version": "hurricane_ri_v8_1",
+  "n_active_storms": 1,
+  "storms": [
+    {
+      "storm_id": "AL012026",
+      "storm_name": "Hurricane Alice",
+      "basin": "AL",
+      "lat": 19.8,
+      "lon": -64.5,
+      "vmax_kt": 75,
+      "mslp_hpa": 980,
+      "category": "Category 1",
+      "issue_time": "2026-03-15T12:00:00Z",
+      "ri_probability": 0.372,
+      "ri_probability_raw": 0.365,
+      "model_scores": {
+        "gbt_d3": 0.381,
+        "gbt_d4": 0.369,
+        "logistic": 0.358,
+        "bagged": 0.374
+      },
+      "n_features": 58,
+      "model_version": "hurricane_ri_v8_1",
+      "calibration": "platt",
+      "heading_deg": 315,
+      "speed_mph": 14,
+      "sst_c": 28.7,
+      "shear_kt": 10,
+      "ofcl_24h_dv_kt": 20,
+      "spaghetti_models": {
+        "OFCL": {"12h": 80, "24h": 95, "36h": 105, "48h": 110, "lat_24h": 21.2, "lon_24h": -66.8},
+        "HWRF": {"12h": 85, "24h": 100, "36h": 115, "48h": 120, "lat_24h": 21.5, "lon_24h": -67.2},
+        "HMON": {"12h": 80, "24h": 90, "36h": 100, "48h": 105, "lat_24h": 21.0, "lon_24h": -66.5},
+        "GFS":  {"12h": 75, "24h": 85, "36h": 95, "48h": 100, "lat_24h": 20.8, "lon_24h": -66.0},
+        "EURO": {"12h": 80, "24h": 95, "36h": 110, "48h": 115, "lat_24h": 21.3, "lon_24h": -67.0},
+        "SHIP": {"12h": 80, "24h": 90, "36h": 95, "48h": 95, "lat_24h": 21.1, "lon_24h": -66.3},
+        "DSHP": {"12h": 85, "24h": 100, "36h": 110, "48h": 115, "lat_24h": 21.4, "lon_24h": -67.1},
+        "LGEM": {"12h": 80, "24h": 90, "36h": 100, "48h": 100, "lat_24h": 21.0, "lon_24h": -66.4}
+      },
+      "trend_history": [
+        {"cycle": "2026-03-15T12:00Z", "prob": 0.372, "lo": 0.310, "hi": 0.435},
+        {"cycle": "2026-03-15T06:00Z", "prob": 0.348, "lo": 0.290, "hi": 0.410},
+        {"cycle": "2026-03-15T00:00Z", "prob": 0.331, "lo": 0.275, "hi": 0.390},
+        {"cycle": "2026-03-14T18:00Z", "prob": 0.318, "lo": 0.262, "hi": 0.378},
+        {"cycle": "2026-03-14T12:00Z", "prob": 0.305, "lo": 0.250, "hi": 0.365},
+        {"cycle": "2026-03-14T06:00Z", "prob": 0.298, "lo": 0.243, "hi": 0.358},
+        {"cycle": "2026-03-14T00:00Z", "prob": 0.285, "lo": 0.232, "hi": 0.342},
+        {"cycle": "2026-03-13T18:00Z", "prob": 0.271, "lo": 0.220, "hi": 0.326}
+      ]
+    }
+  ],
+  "_test": true,
+  "_test_note": "This is a synthetic test hurricane for display verification. Not real data."
+}

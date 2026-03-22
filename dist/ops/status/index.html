@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>System Status - HazardPulse</title>
+  <meta name="description" content="HazardPulse operational status: data freshness, publish cadence, gate health, and incident notes.">
+  <meta name="theme-color" content="#f6f9ff">
+  <link rel="canonical" href="https://hazardpulse.io/ops/status/">
+  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="System Status - HazardPulse">
+  <meta property="og:description" content="Operational status, data freshness, gate health, and incident notes.">
+  <meta property="og:url" content="https://hazardpulse.io/ops/status/">
+  <meta property="og:site_name" content="HazardPulse">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="System Status - HazardPulse">
+  <meta name="twitter:description" content="Operational status, data freshness, gate health, and incident notes.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "System Status - HazardPulse",
+    "description": "Real-time operational status for all HazardPulse subsystems.",
+    "url": "https://hazardpulse.io/ops/status/",
+    "isPartOf": { "@type": "WebSite", "name": "HazardPulse", "url": "https://hazardpulse.io/" }
+  }
+  </script>
+
+  <script type="speculationrules">
+  { "prefetch": [{ "source": "list", "urls": ["/live/", "/evidence/"] }] }
+  </script>
+</head>
+<body>
+  <div class="emergency-banner" role="alert" aria-live="assertive"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar" role="banner">
+    <div class="container topbar-inner">
+      <a href="/" class="brand" aria-label="HazardPulse home">
+        <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
+        HazardPulse <small>Classic</small>
+      </a>
+      <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
+      <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+      </label>
+      <nav class="nav" aria-label="Primary navigation">
+        <div class="nav-dropdown">
+          <a href="/live/">Live</a>
+          <div class="nav-dropdown-menu">
+            <a href="/live/earthquake/"><span class="hazard-dot eq"></span> Earthquake</a>
+            <a href="/live/hurricane/"><span class="hazard-dot hu"></span> Hurricane</a>
+            <a href="/live/tornado/"><span class="hazard-dot to"></span> Tornado</a>
+          </div>
+        </div>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+        <a href="/registry/">Registry</a>
+        <a href="/api/">API</a>
+      </nav>
+      <div class="theme-switch">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
+        <label for="theme-toggle">Dark</label>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="hero">
+      <div class="eyebrow">Operations</div>
+      <h1>System status</h1>
+      <p class="subtitle">
+        Real-time health of data ingestion, forecast publishing, gate evaluation,
+        and evidence chain integrity.
+      </p>
+    </section>
+
+    <section class="section" aria-labelledby="health-heading">
+      <h2 id="health-heading">Current health</h2>
+      <div class="grid">
+        <div class="card col-3">
+          <div class="metric" style="color:var(--good)">Operational</div>
+          <div class="metric-label">Overall status</div>
+        </div>
+        <div class="card col-3">
+          <div class="metric">3h 0m</div>
+          <div class="metric-label">Last publish cycle</div>
+        </div>
+        <div class="card col-3">
+          <div class="metric">99.4%</div>
+          <div class="metric-label">Uptime (30d)</div>
+        </div>
+        <div class="card col-3">
+          <div class="metric">0</div>
+          <div class="metric-label">Active incidents</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="freshness-heading">
+      <h2 id="freshness-heading">Data freshness by source</h2>
+      <div class="card">
+        <table>
+          <thead><tr><th>Source</th><th>Last received</th><th>Latency</th><th>Threshold</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>USGS ANSS ComCat</td>
+              <td>2026-03-13 02:54 UTC</td>
+              <td>2.3 min</td>
+              <td>45 min</td>
+              <td><span class="chip good">fresh</span></td>
+            </tr>
+            <tr>
+              <td>GFS 06Z</td>
+              <td>2026-03-13 02:48 UTC</td>
+              <td>12 min</td>
+              <td>90 min</td>
+              <td><span class="chip good">fresh</span></td>
+            </tr>
+            <tr>
+              <td>NHC Advisory</td>
+              <td>2026-03-13 02:00 UTC</td>
+              <td>60 min</td>
+              <td>180 min</td>
+              <td><span class="chip good">fresh</span></td>
+            </tr>
+            <tr>
+              <td>SPC Mesoanalysis</td>
+              <td>2026-03-13 02:12 UTC</td>
+              <td>48 min</td>
+              <td>45 min</td>
+              <td><span class="chip warn">stale</span></td>
+            </tr>
+            <tr>
+              <td>RAP Model</td>
+              <td>2026-03-13 02:50 UTC</td>
+              <td>10 min</td>
+              <td>60 min</td>
+              <td><span class="chip good">fresh</span></td>
+            </tr>
+            <tr>
+              <td>MRMS Composite</td>
+              <td>2026-03-13 02:50 UTC</td>
+              <td>10 min</td>
+              <td>30 min</td>
+              <td><span class="chip good">fresh</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="cadence-heading">
+      <h2 id="cadence-heading">Publish cadence</h2>
+      <div class="grid">
+        <div class="card col-4">
+          <h3>Target</h3>
+          <div class="metric">3h</div>
+          <div class="metric-label">Publish interval</div>
+        </div>
+        <div class="card col-4">
+          <h3>Adherence (7d)</h3>
+          <div class="metric">97.6%</div>
+          <div class="metric-label">On-time publishes</div>
+        </div>
+        <div class="card col-4">
+          <h3>Missed cycles (30d)</h3>
+          <div class="metric">2</div>
+          <div class="metric-label">Due to upstream feed outages</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="gates-heading">
+      <h2 id="gates-heading">Gate health (7d rolling)</h2>
+      <div class="card">
+        <table>
+          <thead><tr><th>Gate</th><th>Pass rate</th><th>Degrade</th><th>Block</th></tr></thead>
+          <tbody>
+            <tr><td>G0 Schema Validity</td><td>100%</td><td>0</td><td>0</td></tr>
+            <tr><td>G1 Source Freshness</td><td>94.6%</td><td>3</td><td>0</td></tr>
+            <tr><td>G2 Model Lineage Pinned</td><td>100%</td><td>0</td><td>0</td></tr>
+            <tr><td>G3 Provenance Complete</td><td>100%</td><td>0</td><td>0</td></tr>
+            <tr><td>G4 Calibration Floor</td><td>100%</td><td>0</td><td>0</td></tr>
+            <tr><td>G5 Spatiotemporal Sanity</td><td>100%</td><td>0</td><td>0</td></tr>
+            <tr><td>G6 Alert Harm Guard</td><td>100%</td><td>0</td><td>0</td></tr>
+            <tr><td>G7 Explanation Minimum</td><td>100%</td><td>0</td><td>0</td></tr>
+            <tr><td>G8 Replayability</td><td>100%</td><td>0</td><td>0</td></tr>
+            <tr><td>G9 Public Projection Policy</td><td>100%</td><td>0</td><td>0</td></tr>
+            <tr><td>G10 Security Policy</td><td>100%</td><td>0</td><td>0</td></tr>
+            <tr><td>G11 Performance Budgets</td><td>100%</td><td>0</td><td>0</td></tr>
+            <tr><td>G12 Trust Surface Sync</td><td>100%</td><td>0</td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="incidents-heading">
+      <h2 id="incidents-heading">Incident log</h2>
+      <div class="card">
+        <table>
+          <thead><tr><th>Date</th><th>Duration</th><th>Impact</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>2026-03-10</td>
+              <td>45 min</td>
+              <td>1 missed cycle</td>
+              <td>USGS ComCat feed outage. No earthquake forecast published for 03:00 UTC cycle. Resumed at 03:45 UTC.</td>
+            </tr>
+            <tr>
+              <td>2026-03-07</td>
+              <td>20 min</td>
+              <td>1 missed cycle</td>
+              <td>GFS 00Z data delayed by NOAA. Hurricane RI forecast for 00:00 UTC cycle skipped. Published at 00:20 UTC with 06Z fallback.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="muted" style="margin-top:12px;font-size:13px;">
+          All incidents are recorded permanently. We do not delete or edit incident entries.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="/live/">Live forecasts</a>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+      </div>
+      <div class="footer-col">
+        <h4>Data</h4>
+        <a href="/registry/">Model registry</a>
+        <a href="/api/">API contracts</a>
+        <a href="/ops/status/">System status</a>
+        <a href="/feed.xml">RSS feed</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/legal/disclaimer/">Disclaimer</a>
+        <a href="https://earthquake.usgs.gov/" rel="noopener">USGS</a>
+        <a href="https://www.nhc.noaa.gov/" rel="noopener">NHC</a>
+        <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
+      </div>
+      <p class="footer-disclaimer">
+        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
+        Always follow guidance from the USGS, National Hurricane Center (NHC), National Weather Service (NWS),
+        Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
+        with stated uncertainty - they are not certainties.
+      </p>
+      <p class="footer-build">Built with Coherence Lang · Zero client-side JS · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
+    </div>
+  </footer>
+</body>
+</html>

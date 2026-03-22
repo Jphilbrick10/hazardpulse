@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "endpoints": [
+    {
+      "path": "/api/v1/live/pulse",
+      "method": "GET",
+      "contract": "LivePulseV1",
+      "auth": "none"
+    },
+    {
+      "path": "/api/v1/forecast/{forecast_id}",
+      "method": "GET",
+      "contract": "HazardForecastV1",
+      "auth": "api_key"
+    },
+    {
+      "path": "/api/v1/evidence/{provenance_id}",
+      "method": "GET",
+      "contract": "ProvenanceEnvelopeV1",
+      "auth": "api_key"
+    },
+    {
+      "path": "/api/v1/gates/{gate_decision_id}",
+      "method": "GET",
+      "contract": "GateDecisionV1",
+      "auth": "api_key"
+    },
+    {
+      "path": "/stream/live/pulse",
+      "method": "GET",
+      "contract": "LivePulseEventV1",
+      "auth": "api_key"
+    }
+  ]
+}
+
