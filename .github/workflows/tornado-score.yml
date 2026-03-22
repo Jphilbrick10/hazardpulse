@@ -32,6 +32,7 @@ jobs:
         run: |
           pip install numpy scipy
           pip install -e .
+          python -c "from hazardpulse.data.http import fetch_bytes; print('Import OK')"
 
       - name: Run tornado scoring pipeline
         env:
