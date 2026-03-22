@@ -35,11 +35,10 @@ CACHE_ROOT = Path(os.environ.get(
 # AWS ProbSevere v3 endpoints
 # ---------------------------------------------------------------------------
 
-# ProbSevere v3 is available via MRMS/ProbSevere on AWS Open Data
-PS_S3_ROOT = (
-    "https://mrms-cp-probsevere.s3.amazonaws.com/ProbSevere/v3/"
-    "{year}/{month}/{day}/"
-)
+# ProbSevere is available via NOAA MRMS on AWS Open Data
+# Bucket: noaa-mrms-pds, prefix: ProbSevere/{YYYYMMDD}/
+PS_S3_BUCKET = "https://noaa-mrms-pds.s3.amazonaws.com"
+PS_S3_PREFIX = "ProbSevere/{date_str}/"
 
 # Convective hours to scan (12 Z to 06 Z next day, every 15 min)
 CONVECTIVE_HOURS: list[int] = list(range(12, 24)) + list(range(0, 7))
@@ -153,11 +152,39 @@ def fetch_probsevere_day(
     day = date_str[6:8]
 
     time_steps: list[dict] = []
-    for hour in CONVECTIVE_HOURS:
-        for minute in SCAN_MINUTES:
-            ts = _fetch_single_timestep(year, month, day, hour, minute)
-            if ts is not None:
-                time_steps.append(ts)
+
+    # First try listing actual files from S3 (more reliable than guessing)
+    s3_files = _list_s3_files(date_str)
+    if s3_files:
+        # Pick files at ~15min intervals
+        import re as _re
+        seen_slots: set[str] = set()
+        for key in s3_files:
+            m = _re.search(r"_(\d{8})_(\d{6})\.json", key)
+            if not m:
+                continue
+            hhmm = m.group(2)[:4]  # HHMM
+            slot = hhmm[:2] + ("00" if int(hhmm[2:]) < 30 else "30")  # round to 30min
+            if slot in seen_slots:
+                continue
+            seen_slots.add(slot)
+            url = f"{PS_S3_BUCKET}/{key}"
+            try:
+                raw = fetch_bytes(url, namespace="probsevere", timeout=30, use_cache=False)
+                data = json.loads(raw.decode("utf-8", errors="replace"))
+                valid_time = data.get("validTime", f"{year}-{month}-{day}T{hhmm[:2]}:{hhmm[2:]}:00Z")
+                storms = _parse_storms(data)
+                if storms is not None:
+                    time_steps.append({"valid_time": valid_time, "storms": storms})
+            except Exception:
+                continue
+    else:
+        # Fallback: try known time slots
+        for hour in CONVECTIVE_HOURS:
+            for minute in SCAN_MINUTES:
+                ts = _fetch_single_timestep(year, month, day, hour, minute)
+                if ts is not None:
+                    time_steps.append(ts)
 
     # Persist to cache
     out_path = _cache_path(date_str, cache_dir=cache_dir)
@@ -177,6 +204,22 @@ def fetch_probsevere_day(
 # ---------------------------------------------------------------------------
 
 
+def _list_s3_files(date_str: str) -> list[str]:
+    """List ProbSevere JSON files for a date from the NOAA MRMS S3 bucket."""
+    import re
+    import urllib.request as _urllib
+
+    prefix = PS_S3_PREFIX.format(date_str=date_str)
+    list_url = f"{PS_S3_BUCKET}/?list-type=2&prefix={prefix}&max-keys=1000"
+    try:
+        req = _urllib.Request(list_url, headers={"User-Agent": "hazardpulse/0.1"})
+        resp = _urllib.urlopen(req, timeout=15)
+        xml = resp.read().decode("utf-8", errors="replace")
+        return re.findall(r"<Key>(.*?)</Key>", xml)
+    except Exception:
+        return []
+
+
 def _fetch_single_timestep(
     year: str,
     month: str,
@@ -184,60 +227,101 @@ def _fetch_single_timestep(
     hour: int,
     minute: int,
 ) -> dict | None:
-    """Fetch a single 15-minute ProbSevere v3 time step.
+    """Fetch a single ProbSevere time step closest to the given hour:minute.
 
     Returns a dict with ``valid_time`` and ``storms`` or *None* on failure.
     """
-    # ProbSevere v3 filename convention
-    timestamp = f"{year}{month}{day}_{hour:02d}{minute:02d}00"
-    filename = f"MRMS_ProbSevere_{timestamp}.json"
-    url = (
-        f"https://mrms-cp-probsevere.s3.amazonaws.com/"
-        f"ProbSevere/v3/{year}/{month}/{day}/{filename}"
-    )
+    date_str = f"{year}{month}{day}"
+    # Try the NOAA MRMS bucket (correct URL)
+    target_hhmm = f"{hour:02d}{minute:02d}"
+    filename = f"MRMS_PROBSEVERE_{date_str}_{target_hhmm}00.json"
+    url = f"{PS_S3_BUCKET}/ProbSevere/{date_str}/{filename}"
 
     try:
-        raw = fetch_bytes(url, namespace="probsevere", timeout=30)
+        raw = fetch_bytes(url, namespace="probsevere", timeout=30, use_cache=False)
         data = json.loads(raw.decode("utf-8", errors="replace"))
     except Exception:
+        # Try nearby timestamps (ProbSevere uses ~2min intervals, not exact 15min)
+        for delta in range(1, 5):
+            for m in [minute + delta, minute - delta]:
+                if 0 <= m < 60:
+                    fn = f"MRMS_PROBSEVERE_{date_str}_{hour:02d}{m:02d}00.json"
+                    u = f"{PS_S3_BUCKET}/ProbSevere/{date_str}/{fn}"
+                    try:
+                        raw = fetch_bytes(u, namespace="probsevere", timeout=15, use_cache=False)
+                        data = json.loads(raw.decode("utf-8", errors="replace"))
+                        break
+                    except Exception:
+                        continue
+            else:
+                continue
+            break
+        else:
+            return None
+
+    valid_time = data.get("validTime", f"{year}-{month}-{day}T{hour:02d}:{minute:02d}:00Z")
+
+    storms = _parse_storms(data)
+    if storms is None:
         return None
+    return {"valid_time": valid_time, "storms": storms}
 
-    valid_time = f"{year}-{month}-{day}T{hour:02d}:{minute:02d}:00Z"
 
-    # ProbSevere v3 GeoJSON: features are storm objects
-    storms: list[dict] = []
+def _parse_storms(data: dict) -> list[dict] | None:
+    """Parse ProbSevere GeoJSON features into storm dicts."""
     features = data.get("features", [])
+    if not features:
+        return []
+
+    storms: list[dict] = []
     for feat in features:
         props = feat.get("properties", {})
         geom = feat.get("geometry", {})
+
+        # Compute centroid lat/lon from geometry polygon
+        lat, lon = 0.0, 0.0
+        coords = geom.get("coordinates", [[]])
+        if coords and coords[0]:
+            ring = coords[0]
+            lat = sum(p[1] for p in ring) / len(ring)
+            lon = sum(p[0] for p in ring) / len(ring)
+
+        def _float(key: str, default: float = 0.0) -> float:
+            v = props.get(key)
+            if v is None or v == "N/A":
+                return default
+            try:
+                return float(v)
+            except (ValueError, TypeError):
+                return default
+
         storm: dict = {
             "id": props.get("ID", 0),
-            "lat": props.get("LAT", 0.0),
-            "lon": props.get("LON", 0.0),
-            "ps": props.get("PROB", 0.0),
-            "ps_tor": props.get("PROBTOR", 0.0),
-            "ps_hail": props.get("PROBHAIL", 0.0),
-            "ps_wind": props.get("PROBWIND", 0.0),
-            "mucape": props.get("MUCAPE", 0.0),
-            "mlcape": props.get("MLCAPE", 0.0),
-            "mlcin": props.get("MLCIN", 0.0),
-            "ebshear": props.get("EBSHEAR", 0.0),
-            "srh01": props.get("SRH01", 0.0),
-            "mesh": props.get("MESH", 0.0),
-            "vil_density": props.get("VILD", 0.0),
-            "flash_rate": props.get("FLASHRATE", 0.0),
-            "flash_density": props.get("FLASHDENSITY", 0.0),
-            "maxllaz": props.get("MAXLLAZ", 0.0),
-            "p98llaz": props.get("P98LLAZ", 0.0),
-            "p98mlaz": props.get("P98MLAZ", 0.0),
-            "lja": props.get("LJA", 0.0),
-            "size": props.get("SIZE", 0.0),
-            "motion_east": props.get("MOTION_EAST", 0.0),
-            "motion_south": props.get("MOTION_SOUTH", 0.0),
+            "lat": lat,
+            "lon": lon,
+            "ps": _float("PS"),
+            "ps_tor": _float("PROBTOR") or _float("PS_TOR"),
+            "ps_hail": _float("PROBHAIL") or _float("PS_HAIL"),
+            "ps_wind": _float("PROBWIND") or _float("PS_WIND"),
+            "mucape": _float("MUCAPE"),
+            "mlcape": _float("MLCAPE"),
+            "mlcin": _float("MLCIN"),
+            "ebshear": _float("EBSHEAR"),
+            "srh01": _float("SRH01KM") or _float("SRH01"),
+            "mesh": _float("MESH"),
+            "vil_density": _float("VIL_DENSITY") or _float("VILD"),
+            "flash_rate": _float("FLASH_RATE") or _float("FLASHRATE"),
+            "flash_density": _float("FLASH_DENSITY") or _float("FLASHDENSITY"),
+            "maxllaz": _float("MAXLLAZ"),
+            "p98llaz": _float("P98LLAZ"),
+            "p98mlaz": _float("P98MLAZ"),
+            "lja": _float("LJA"),
+            "size": _float("SIZE"),
+            "motion_east": _float("MOTION_EAST"),
+            "motion_south": _float("MOTION_SOUTH"),
         }
-        # Attach geometry for frontend polygon rendering
         if geom:
             storm["geometry"] = geom
         storms.append(storm)
 
-    return {"valid_time": valid_time, "storms": storms}
+    return storms

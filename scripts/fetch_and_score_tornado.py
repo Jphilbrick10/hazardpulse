@@ -469,7 +469,7 @@ def main() -> None:
     # Step 1: Fetch ProbSevere data
     print("Step 1: Fetching ProbSevere storm objects...")
     try:
-        time_steps = fetch_probsevere_day(date_str)
+        time_steps = fetch_probsevere_day(date_str, refresh=True)
     except Exception as e:
         print(f"  Warning: ProbSevere fetch failed: {e}")
         time_steps = []
