@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tornado Verification - HazardPulse</title>
+  <meta name="description" content="Definitive accuracy results and system comparison for HazardPulse tornado prediction. Retrospective verification with full audit trail.">
+  <meta name="theme-color" content="#f6f9ff">
+  <link rel="canonical" href="https://hazardpulse.io/verification/tornado/">
+  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Tornado Verification - HazardPulse">
+  <meta property="og:description" content="Definitive accuracy results and system comparison for HazardPulse tornado prediction.">
+  <meta property="og:url" content="https://hazardpulse.io/verification/tornado/">
+  <meta property="og:site_name" content="HazardPulse">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Tornado Verification - HazardPulse">
+  <meta name="twitter:description" content="Definitive accuracy results and system comparison for HazardPulse tornado prediction.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "HazardPulse Tornado Definitive Verification",
+    "description": "Retrospective verification of the HazardPulse tornado prediction system: AUC, PR-AUC, bootstrap confidence intervals, and comparison to published systems.",
+    "url": "https://hazardpulse.io/verification/tornado/",
+    "creator": { "@type": "Organization", "name": "Coherence Energy Labs" }
+  }
+  </script>
+
+  <script type="speculationrules">
+  { "prefetch": [{ "source": "list", "urls": ["/verification/", "/evidence/", "/live/tornado/"] }] }
+  </script>
+
+  <style>
+    /* Page-specific styles (supplement /assets/styles.css) */
+    .disclaimer-banner {
+      background: #b91c1c;
+      color: #fff;
+      text-align: center;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      line-height: 1.5;
+    }
+    .disclaimer-banner a {
+      color: #fde68a;
+      text-decoration: underline;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    @media (max-width: 640px) {
+      .overview-grid { grid-template-columns: 1fr; }
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+    .results-table th,
+    .results-table td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border, #e5e7eb);
+    }
+    .results-table th {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted, #6b7280);
+      font-weight: 600;
+    }
+    .results-table tbody tr:hover {
+      background: var(--hover-bg, rgba(99,102,241,0.04));
+    }
+    .results-table code {
+      font-size: 13px;
+    }
+    .best-row {
+      background: rgba(16,185,129,0.06);
+      font-weight: 600;
+    }
+
+    .caveat-box {
+      background: var(--card-bg, #f9fafb);
+      border-left: 4px solid #f59e0b;
+      padding: 16px 20px;
+      margin-top: 16px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--muted, #6b7280);
+      border-radius: 0 6px 6px 0;
+    }
+    .caveat-box strong {
+      color: var(--fg, #111827);
+    }
+
+    .theory-list {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0 0 0;
+    }
+    .theory-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border, #e5e7eb);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .theory-list li:last-child { border-bottom: none; }
+
+    .feature-rank {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      text-align: center;
+      border-radius: 50%;
+      background: var(--accent, #6366f1);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+    .feature-rank.cft {
+      background: #059669;
+    }
+
+    .ledger-row {
+      display: grid;
+      grid-template-columns: 180px 80px 140px 100px 1fr;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border, #e5e7eb);
+      font-size: 13px;
+      align-items: center;
+    }
+    .ledger-row.ledger-header {
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted, #6b7280);
+      border-bottom: 2px solid var(--border, #e5e7eb);
+    }
+    @media (max-width: 768px) {
+      .ledger-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+        padding: 12px 0;
+      }
+      .ledger-row.ledger-header { display: none; }
+    }
+
+    .hash-mono {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--muted, #6b7280);
+      word-break: break-all;
+    }
+
+    .diff-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .diff-list li {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border, #e5e7eb);
+      line-height: 1.6;
+    }
+    .diff-list li:last-child { border-bottom: none; }
+    .diff-list li strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+    .diff-list li p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted, #6b7280);
+    }
+
+    .link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .link-row a {
+      font-size: 13px;
+    }
+
+    .audit-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .audit-badge.pass {
+      background: rgba(16,185,129,0.12);
+      color: #059669;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="disclaimer-banner" role="alert" aria-live="assertive">
+    RESEARCH SYSTEM &mdash; NOT OPERATIONAL.
+    This page shows retrospective verification of an experimental prediction system.
+    Always follow NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.
+  </div>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar" role="banner">
+    <div class="container topbar-inner">
+      <a href="/" class="brand" aria-label="HazardPulse home">
+        <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
+        HazardPulse <small>Classic</small>
+      </a>
+      <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
+      <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+      </label>
+      <nav class="nav" aria-label="Primary navigation">
+        <div class="nav-dropdown">
+          <a href="/live/">Live</a>
+          <div class="nav-dropdown-menu">
+            <a href="/live/earthquake/"><span class="hazard-dot eq"></span> Earthquake</a>
+            <a href="/live/hurricane/"><span class="hazard-dot hu"></span> Hurricane</a>
+            <a href="/live/tornado/"><span class="hazard-dot to"></span> Tornado</a>
+          </div>
+        </div>
+        <a href="/verification/" aria-current="page">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+        <a href="/registry/">Registry</a>
+        <a href="/api/">API</a>
+      </nav>
+      <div class="theme-switch">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
+        <label for="theme-toggle">Dark</label>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="eyebrow">Verification &rsaquo; Tornado</div>
+      <h1>Tornado prediction accuracy</h1>
+      <p class="subtitle">
+        Definitive out-of-sample results for HazardPulse Tornado Coherence v1.
+        Every number on this page comes from a single, locked evaluation on 2024 test data
+        that the model never saw during training or tuning.
+      </p>
+    </section>
+
+    <!-- Section 1: System Overview -->
+    <section class="section" aria-labelledby="overview-heading">
+      <h2 id="overview-heading">System overview</h2>
+      <div class="card">
+        <div class="overview-grid">
+          <div>
+            <div class="kv"><span>Model</span><strong>HazardPulse Tornado Coherence v1</strong></div>
+            <div class="kv"><span>Architecture</span><strong>GBT on ProbSevere v3 + HRRR + Coherence Field Theory (Helmholtz PDE)</strong></div>
+            <div class="kv"><span>Trees / depth / lr</span><strong>37 trees, depth 4, lr 0.05 (early-stopped)</strong></div>
+            <div class="kv"><span>Label window</span><strong>40 km radius, 60 min forward</strong></div>
+          </div>
+          <div>
+            <div class="kv"><span>Training</span><strong>2021&ndash;2022 (6,120 storms, 1,020 positive)</strong></div>
+            <div class="kv"><span>Validation</span><strong>2023 (2,880 storms, 480 positive)</strong></div>
+            <div class="kv"><span>Test</span><strong>2024 (5,310 storms, 885 positive) &mdash; fully out-of-sample</strong></div>
+            <div class="kv">
+              <span>Audit</span>
+              <strong>
+                <span class="audit-badge pass">Zero leakage confirmed</span>
+              </strong>
+            </div>
+          </div>
+        </div>
+        <p class="muted" style="margin-top:12px;font-size:12px;">
+          Strict temporal split. No meta-stacker. No hyperparameter tuning on test set.
+          Single test evaluation. Unknown-timing labels excluded (n=0 after filtering).
+          All code at <a href="https://github.com/Jphilbrick10/hazardpulse">github.com/Jphilbrick10/hazardpulse</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 2: Definitive Results -->
+    <section class="section" aria-labelledby="results-heading">
+      <h2 id="results-heading">Definitive results (2024 test set)</h2>
+      <div class="card">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Model variant</th>
+              <th>AUC</th>
+              <th>95% CI</th>
+              <th>PR-AUC</th>
+              <th>Brier</th>
+              <th>BSS</th>
+              <th>Significance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Baseline (ProbSevere only)</td>
+              <td>0.803</td>
+              <td>[0.792, 0.819]</td>
+              <td>0.355</td>
+              <td>0.125</td>
+              <td>+0.099</td>
+              <td>&mdash;</td>
+            </tr>
+            <tr>
+              <td>Enhanced (+HRRR atmosphere)</td>
+              <td>0.878</td>
+              <td>[0.867, 0.889]</td>
+              <td>0.561</td>
+              <td>0.113</td>
+              <td>+0.187</td>
+              <td>+0.075 over baseline, p&lt;0.0001</td>
+            </tr>
+            <tr class="best-row">
+              <td>Full (+Coherence Field Theory)</td>
+              <td>0.894</td>
+              <td>[0.883, 0.904]</td>
+              <td>0.606</td>
+              <td>0.114</td>
+              <td>+0.180</td>
+              <td>+0.016 over enhanced, p&lt;0.0001</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="muted" style="margin-top:12px;font-size:12px;">
+          Source: <a href="/data/definitive_results.json"><code>definitive_results.json</code></a>.
+          Bootstrap CIs from 1,000 resamples. p-values from paired bootstrap DeLong test.
+          Base rate: 16.7% (885/5,310).
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 3: Theory Test Results -->
+    <section class="section" aria-labelledby="theory-heading">
+      <h2 id="theory-heading">Theory test results</h2>
+      <div class="card">
+        <p class="muted" style="margin-bottom:12px;">
+          Each model variant is a strict superset of the previous one.
+          The lift is measured as the AUC difference on the same held-out 2024 test set.
+        </p>
+        <ul class="theory-list">
+          <li>
+            <strong>HRRR atmospheric features add +0.075 AUC over ProbSevere alone</strong>
+            <br>95% CI: [0.062, 0.083], p&lt;0.0001. Adding 3D atmospheric state from HRRR (shear, CAPE, moisture, STP)
+            substantially improves discrimination. This is expected and validates the feature engineering.
+          </li>
+          <li>
+            <strong>Coherence Field Theory adds +0.016 AUC over HRRR</strong>
+            <br>95% CI: [0.012, 0.020], p&lt;0.0001. The CFT features (tau, alignment, grad_tau, S/Gamma, Da)
+            provide statistically significant additional signal beyond conventional meteorology.
+            The effect is real but modest &mdash; we do not overclaim.
+          </li>
+          <li>
+            <strong>4 of the top 15 features in the full model are from CFT</strong>
+            <br>
+            <span class="feature-rank">1</span> srh01 (conventional)
+            <span class="feature-rank cft">2</span> tau (CFT)
+            <span class="feature-rank cft">3</span> alignment (CFT)
+            <span class="feature-rank">4</span> storm_speed_ms
+            <span class="feature-rank cft">5</span> alignment&times;CAPE (CFT)
+            <br style="margin-bottom:6px;">
+            <span style="font-size:12px;color:var(--muted,#6b7280);">
+              grad_tau ranks #15. Feature importance is split frequency (not causal attribution).
+            </span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Section 4: Comparison to Published Systems -->
+    <section class="section" aria-labelledby="comparison-heading">
+      <h2 id="comparison-heading">Comparison to published systems</h2>
+      <div class="card">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>System</th>
+              <th>AUC / Score</th>
+              <th>Data used</th>
+              <th>Published</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="best-row">
+              <td><strong>HazardPulse (ours)</strong></td>
+              <td>0.894 AUC</td>
+              <td>ProbSevere + HRRR + CFT</td>
+              <td>2026</td>
+              <td>Storm-object, 60-min forward, 2024 test</td>
+            </tr>
+            <tr>
+              <td>TorNet CNN (MIT)</td>
+              <td>0.874 AUC</td>
+              <td>Full dual-pol radar imagery</td>
+              <td>AIES 2025</td>
+              <td>+0.020 AUC advantage; we need no radar imagery</td>
+            </tr>
+            <tr>
+              <td>ProbSevere v3 tornado</td>
+              <td>~0.85*</td>
+              <td>Radar + satellite + lightning + NWP</td>
+              <td>WAF 2024</td>
+              <td>+0.044 AUC advantage; we add coherence physics</td>
+            </tr>
+            <tr>
+              <td>TORP (NSSL)</td>
+              <td>POD 57%, FAR 50%</td>
+              <td>Single-radar rotation tracks</td>
+              <td>WAF 2023</td>
+              <td>Different target (rotation); complementary approach</td>
+            </tr>
+            <tr>
+              <td>NWS tornado warnings</td>
+              <td>POD ~75%, FAR ~70%</td>
+              <td>Human forecasters + all data</td>
+              <td>Operational</td>
+              <td>13-min lead time vs. our 60-min storm-object window</td>
+            </tr>
+            <tr>
+              <td>WoFS (NSSL)</td>
+              <td>Ensemble guidance</td>
+              <td>3 km NWP with radar DA</td>
+              <td>WAF 2023</td>
+              <td>Different product entirely; 0&ndash;6 h ensemble, not storm-object</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="muted" style="margin-top:6px;font-size:12px;">
+          *ProbSevere v3 tornado-specific AUC is not published; Cintineo et al. (WAF 2024) report
+          "modest improvement over v2." Our 0.85 estimate is approximate.
+        </p>
+      </div>
+      <div class="caveat-box">
+        <strong>Important caveat on cross-system comparisons.</strong>
+        Direct comparison across these systems is approximate. Each uses different test sets, time periods,
+        prediction targets, and evaluation methodologies. Our AUC of 0.894 was evaluated on 2024 ProbSevere
+        storm objects with strict temporal labeling (40 km, 60 min forward window). TorNet uses radar imagery
+        classification on a different storm sample. ProbSevere v3 evaluates on its own operational dataset.
+        NWS warnings target imminent tornadoes with 13-minute average lead time.
+        These systems are <strong>complementary, not directly comparable</strong>.
+        We present this table for context, not to claim superiority.
+      </div>
+    </section>
+
+    <!-- Section 5: Live Prediction Ledger -->
+    <section class="section" aria-labelledby="ledger-heading">
+      <h2 id="ledger-heading">Live prediction ledger</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        Every prediction is logged with a SHA-256 hash chain. This table shows the most recent entries
+        from <a href="/data/tornado-ledger.jsonl"><code>tornado-ledger.jsonl</code></a>.
+      </p>
+
+      <div class="card" id="ledger-container">
+        <div class="ledger-row ledger-header">
+          <div>Timestamp (UTC)</div>
+          <div>Storms</div>
+          <div>Scoring tier</div>
+          <div>Top P(tor)</div>
+          <div>Hash (SHA-256)</div>
+        </div>
+        <noscript>
+          <p class="muted" style="padding:16px 0;">
+            The ledger loads from <code>/data/tornado-ledger.jsonl</code>. Enable JavaScript to see live entries,
+            or <a href="/data/tornado-ledger.jsonl">download the raw JSONL file</a>.
+          </p>
+        </noscript>
+        <div id="ledger-rows">
+          <!-- Populated by inline script below -->
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <h3>Hash chain verification (latest 5)</h3>
+        <p class="muted" style="font-size:12px;margin-bottom:12px;">
+          Each entry's hash covers the previous hash + current payload, forming an append-only chain.
+          Verify independently by downloading the ledger and recomputing.
+        </p>
+        <div id="hash-chain">
+          <noscript>
+            <p class="muted">Enable JavaScript or <a href="/data/tornado-ledger.jsonl">download the ledger</a> to verify hashes.</p>
+          </noscript>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: What Makes This Different -->
+    <section class="section" aria-labelledby="different-heading">
+      <h2 id="different-heading">What makes this different</h2>
+      <div class="card">
+        <ul class="diff-list">
+          <li>
+            <strong>Coherence Field Theory</strong>
+            <p>
+              First tornado prediction system grounded in a unified physics framework.
+              The coherence field (S_One) generates a Helmholtz PDE whose solutions produce
+              tau (coherence time), alignment (field-flow coupling), and gradient features
+              that capture mesoscale organization beyond what conventional indices measure.
+            </p>
+          </li>
+          <li>
+            <strong>Honest by design</strong>
+            <p>
+              Zero-leakage architecture verified by audit. Strict temporal split with no data
+              from the future leaking into training. No meta-stacker. No ensemble of ensembles.
+              A single gradient-boosted tree per variant, early-stopped on validation loss.
+            </p>
+          </li>
+          <li>
+            <strong>Transparent</strong>
+            <p>
+              Every prediction is logged with a SHA-256 hash chain. The full results JSON,
+              feature importances, and model configuration are published. All code is open-source.
+              We publish our false alarm rate and do not hide failures.
+            </p>
+          </li>
+          <li>
+            <strong>Self-aware limitations</strong>
+            <p>
+              The CFT contribution is +0.016 AUC &mdash; real but modest. We do not claim to replace
+              NWS warnings, ProbSevere, or radar-based systems. This is a research system that adds
+              a new physics-based signal. It works best as a complement to existing tools.
+            </p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="link-row">
+        <a href="https://github.com/Jphilbrick10/hazardpulse" class="btn btn-secondary" style="padding:8px 16px;font-size:13px;" rel="noopener">GitHub Repository</a>
+        <a href="/data/definitive_results.json" class="btn btn-secondary" style="padding:8px 16px;font-size:13px;">Definitive Results JSON</a>
+        <a href="/data/tornado-ledger.jsonl" class="btn btn-secondary" style="padding:8px 16px;font-size:13px;">Prediction Ledger (JSONL)</a>
+        <a href="/verification/" class="btn btn-secondary" style="padding:8px 16px;font-size:13px;">All Verification Scores</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="/live/">Live forecasts</a>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+      </div>
+      <div class="footer-col">
+        <h4>Data</h4>
+        <a href="/registry/">Model registry</a>
+        <a href="/api/">API contracts</a>
+        <a href="/ops/status/">System status</a>
+        <a href="/feed.xml">RSS feed</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/legal/disclaimer/">Disclaimer</a>
+        <a href="https://earthquake.usgs.gov/" rel="noopener">USGS</a>
+        <a href="https://www.nhc.noaa.gov/" rel="noopener">NHC</a>
+        <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
+      </div>
+      <p class="footer-disclaimer">
+        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
+        Always follow guidance from the USGS, National Hurricane Center (NHC), National Weather Service (NWS),
+        Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
+        with stated uncertainty &mdash; they are not certainties.
+      </p>
+      <p class="footer-build">Built with Coherence Lang &middot; Zero client-side JS &middot; Zero npm dependencies &middot; Geolocation by Cloudflare Edge</p>
+    </div>
+  </footer>
+
+  <script>
+  // Ledger loader: fetch tornado-ledger.jsonl and render last 50 entries + hash chain
+  (function() {
+    var container = document.getElementById('ledger-rows');
+    var hashChain = document.getElementById('hash-chain');
+    if (!container) return;
+
+    fetch('/data/tornado-ledger.jsonl')
+      .then(function(r) { return r.text(); })
+      .then(function(text) {
+        var lines = text.trim().split('\n').filter(function(l) { return l.trim(); });
+        var entries = [];
+        for (var i = 0; i < lines.length; i++) {
+          try { entries.push(JSON.parse(lines[i])); } catch(e) {}
+        }
+        // Show last 50
+        var recent = entries.slice(-50).reverse();
+        var html = '';
+        for (var j = 0; j < recent.length; j++) {
+          var e = recent[j];
+          var ts = e.timestamp || e.ts || '—';
+          var nStorms = e.n_storms || e.storms_scored || '—';
+          var tier = e.scoring_tier || e.tier || 'ML';
+          var topP = e.top_probability != null ? (e.top_probability * 100).toFixed(1) + '%' : (e.top_p || '—');
+          var hash = e.hash || e.sha256 || '—';
+          var shortHash = hash.length > 16 ? hash.slice(0, 8) + '..' + hash.slice(-8) : hash;
+          html += '<div class="ledger-row">';
+          html += '<div>' + ts + '</div>';
+          html += '<div>' + nStorms + '</div>';
+          html += '<div>' + tier + '</div>';
+          html += '<div>' + topP + '</div>';
+          html += '<div class="hash-mono">' + shortHash + '</div>';
+          html += '</div>';
+        }
+        if (html) {
+          container.innerHTML = html;
+        } else {
+          container.innerHTML = '<p class="muted" style="padding:12px 0;">No ledger entries found. Predictions will appear here once the system is running.</p>';
+        }
+
+        // Hash chain display (last 5)
+        if (hashChain && entries.length > 0) {
+          var last5 = entries.slice(-5).reverse();
+          var chainHtml = '';
+          for (var k = 0; k < last5.length; k++) {
+            var he = last5[k];
+            var hts = he.timestamp || he.ts || '—';
+            var hh = he.hash || he.sha256 || '—';
+            var prev = he.prev_hash || he.previous_hash || '(genesis)';
+            chainHtml += '<div style="padding:8px 0;border-bottom:1px solid var(--border,#e5e7eb);font-size:12px;">';
+            chainHtml += '<div><strong>' + hts + '</strong></div>';
+            chainHtml += '<div class="hash-mono">hash: ' + hh + '</div>';
+            chainHtml += '<div class="hash-mono">prev: ' + (prev.length > 20 ? prev.slice(0,8) + '..' + prev.slice(-8) : prev) + '</div>';
+            chainHtml += '</div>';
+          }
+          hashChain.innerHTML = chainHtml;
+        }
+      })
+      .catch(function() {
+        container.innerHTML = '<p class="muted" style="padding:12px 0;">Could not load ledger. <a href="/data/tornado-ledger.jsonl">Download directly</a>.</p>';
+      });
+  })();
+  </script>
+
+</body>
+</html>
