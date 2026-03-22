@@ -1,0 +1,83 @@
+name: Earthquake Scoring
+
+on:
+  schedule:
+    # Run every 6 hours to accumulate data while building the site.
+    # Increase frequency when going live to public.
+    - cron: "30 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install numpy scipy
+          pip install -e .
+          python -c "from hazardpulse.earthquake.coherence_engine import extract_coherence_features; print('Import OK')"
+
+      - name: Run earthquake scoring pipeline
+        run: |
+          python scripts/fetch_and_score_earthquake.py
+
+      - name: Verify output
+        run: |
+          python -c "
+          import json, pathlib
+
+          # Check earthquake page was generated
+          eq_page = pathlib.Path('dist/live/earthquake/index.html')
+          assert eq_page.exists(), 'Missing earthquake page!'
+          content = eq_page.read_text()
+          assert 'RESEARCH ONLY' in content, 'Missing disclaimer!'
+          assert '<script' not in content.lower() or 'application/ld+json' in content or 'speculationrules' in content, 'Unexpected JavaScript detected!'
+          print(f'Earthquake page: {len(content)} bytes')
+
+          # Check live-pulse.json was updated
+          pulse = json.loads(pathlib.Path('dist/data/live-pulse.json').read_text())
+          eq_entry = next((h for h in pulse['hazards'] if h['key'] == 'eq'), None)
+          assert eq_entry is not None, 'Missing earthquake entry in live-pulse.json!'
+          print(f'EQ probability: {eq_entry.get(\"probability\", 0):.1%}')
+          print(f'EQ risk band: {eq_entry.get(\"risk_band\", \"unknown\")}')
+          print(f'EQ model: {eq_entry.get(\"model_version\", \"unknown\")}')
+
+          # Check ledger
+          ledger = pathlib.Path('dist/data/earthquake-ledger.jsonl')
+          if ledger.exists():
+              lines = ledger.read_text().strip().split('\\n')
+              last = json.loads(lines[-1])
+              print(f'Ledger entries: {len(lines)}')
+              print(f'Last hash: {last[\"hash\"][:16]}...')
+
+          print('Output verification passed.')
+          "
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet dist/live/earthquake/index.html dist/data/live-pulse.json dist/data/earthquake-ledger.jsonl 2>/dev/null && echo "changed=false" >> "$GITHUB_OUTPUT" || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push updated data
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f dist/live/earthquake/index.html dist/data/live-pulse.json dist/data/earthquake-ledger.jsonl
+          git commit -m "data: earthquake scoring update $(date -u +%Y-%m-%dT%H:%MZ)
+
+          Automated scoring via fetch_and_score_earthquake.py.
+          Model: eq_coherence_v1_0 | Source: USGS FDSN M2.5+ catalog | CFT Helmholtz PDE"
+          git push
