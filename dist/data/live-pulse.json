@@ -1,0 +1,46 @@
+{
+  "updated_at": "2026-03-21T23:30:00.159463Z",
+  "hazards": [
+    {
+      "key": "eq",
+      "hazard": "earthquake",
+      "probability": 0.274,
+      "conf_lo": 0.212,
+      "conf_hi": 0.33,
+      "delta": 0.019,
+      "risk_band": "guarded",
+      "gate_status": "pass",
+      "forecast_id": "eq_fcst_20260313_0300"
+    },
+    {
+      "key": "hu",
+      "hazard": "hurricane",
+      "probability": 0.372,
+      "conf_lo": 0.31,
+      "conf_hi": 0.435,
+      "delta": 0.024,
+      "risk_band": "elevated",
+      "gate_status": "pass",
+      "forecast_id": "hu_fcst_20260315_1200",
+      "model_version": "hurricane_ri_v8_1",
+      "model_auc": 0.938,
+      "n_features": 58,
+      "calibration": "platt",
+      "n_active_storms": 1
+    },
+    {
+      "key": "to",
+      "hazard": "tornado",
+      "probability": 0.2509,
+      "conf_lo": 0.148,
+      "conf_hi": 0.229,
+      "delta": -0.021,
+      "risk_band": "moderate",
+      "gate_status": "pass",
+      "forecast_id": "to_fcst_20260313_0300",
+      "model_version": "tornado_storm_v1_0",
+      "n_active_storms": 86,
+      "coherence_score": -1.737
+    }
+  ]
+}

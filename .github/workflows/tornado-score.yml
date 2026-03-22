@@ -1,0 +1,60 @@
+name: Tornado Scoring (Severe Season)
+
+on:
+  schedule:
+    # Run every 15 minutes during severe weather season (Mar-Jun)
+    # and every hour rest of year
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Date to score (YYYYMMDD, default: today)"
+        required: false
+        type: string
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install numpy scipy
+
+      - name: Run tornado scoring pipeline
+        env:
+          HAZARDPULSE_HRRR_CACHE: ${{ github.workspace }}/.cache/hrrr
+          HAZARDPULSE_PROBSEVERE_CACHE: ${{ github.workspace }}/.cache/probsevere
+        run: |
+          DATE_ARG=""
+          if [ -n "${{ inputs.date }}" ]; then
+            DATE_ARG="--date ${{ inputs.date }}"
+          fi
+          python scripts/fetch_and_score_tornado.py $DATE_ARG
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet dist/data/live-tornadoes.json dist/data/live-pulse.json dist/data/tornado-ledger.jsonl 2>/dev/null && echo "changed=false" >> "$GITHUB_OUTPUT" || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push updated data
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dist/data/live-tornadoes.json dist/data/live-pulse.json dist/data/tornado-ledger.jsonl
+          git commit -m "data: tornado scoring update $(date -u +%Y-%m-%dT%H:%MZ)
+
+          Automated scoring via fetch_and_score_tornado.py.
+          Model: hp-tornado-coherence-v1 | Sources: ProbSevere v3, HRRR, CFT"
+          git push
