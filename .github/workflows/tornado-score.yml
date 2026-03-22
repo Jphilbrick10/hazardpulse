@@ -29,7 +29,9 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install numpy scipy
+        run: |
+          pip install numpy scipy
+          pip install -e .
 
       - name: Run tornado scoring pipeline
         env:
