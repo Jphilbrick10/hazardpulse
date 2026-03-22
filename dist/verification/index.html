@@ -93,7 +93,7 @@
           <p class="muted" style="font-size:12px;margin-top:4px;">Lower is better. 0 = perfect, 0.25 = no skill.</p>
         </div>
         <div class="card col-3">
-          <div class="metric">0.81</div>
+          <div class="metric">0.772</div>
           <div class="metric-label">Mean AUC</div>
           <p class="muted" style="font-size:12px;margin-top:4px;">Area under ROC curve. 1.0 = perfect discrimination.</p>
         </div>
@@ -118,7 +118,7 @@
           <h3>Scores</h3>
           <div class="kv"><span>Brier score</span><strong>0.142</strong></div>
           <div class="kv"><span>Brier skill score</span><strong>+0.18</strong></div>
-          <div class="kv"><span>AUC</span><strong>0.81</strong></div>
+          <div class="kv"><span>AUC</span><strong>0.733</strong></div>
           <div class="kv"><span>Log score</span><strong>-0.384</strong></div>
           <div class="kv"><span>Sharpness</span><strong>0.072</strong></div>
           <div class="kv"><span>Forecasts resolved</span><strong>363</strong></div>
@@ -175,7 +175,7 @@
           <h3>Scores</h3>
           <div class="kv"><span>Brier score</span><strong>0.168</strong></div>
           <div class="kv"><span>Brier skill score</span><strong>+0.22</strong></div>
-          <div class="kv"><span>AUC</span><strong>0.84</strong></div>
+          <div class="kv"><span>AUC</span><strong>0.938</strong></div>
           <div class="kv"><span>Log score</span><strong>-0.421</strong></div>
           <div class="kv"><span>Sharpness</span><strong>0.089</strong></div>
           <div class="kv"><span>Forecasts resolved</span><strong>303</strong></div>
@@ -226,12 +226,16 @@
 
     <section class="section" aria-labelledby="to-heading">
       <h2 id="to-heading">Tornado verification</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        Two models are evaluated: the day-ahead formation model (hp-tornado-meso-v1.4.2, AUC 0.644)
+        and the storm-object coherence model (hp-tornado-coherence-v1, AUC 0.894 on 2024 strict temporal holdout).
+      </p>
       <div class="grid">
         <div class="card col-6">
-          <h3>Scores</h3>
-          <div class="kv"><span>Brier score</span><strong>0.118</strong></div>
+          <h3>Scores (day-ahead formation: hp-tornado-meso-v1.4.2)</h3>
+          <div class="kv"><span>Brier score</span><strong>0.231</strong></div>
           <div class="kv"><span>Brier skill score</span><strong>+0.12</strong></div>
-          <div class="kv"><span>AUC</span><strong>0.77</strong></div>
+          <div class="kv"><span>AUC</span><strong>0.644</strong></div>
           <div class="kv"><span>Log score</span><strong>-0.342</strong></div>
           <div class="kv"><span>Sharpness</span><strong>0.054</strong></div>
           <div class="kv"><span>Forecasts resolved</span><strong>453</strong></div>
@@ -275,6 +279,15 @@
               <tr><td>60+%</td><td>1.9%</td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+      <div class="grid" style="margin-top:16px;">
+        <div class="card col-12">
+          <h3>Storm-object coherence model (hp-tornado-coherence-v1)</h3>
+          <p class="muted" style="margin-bottom:8px;">Scores ProbSevere storm objects using Coherence Field Theory diagnostics. Research status — accumulating verification data.</p>
+          <div class="kv"><span>AUC</span><strong>0.894 (2024 strict temporal holdout)</strong></div>
+          <div class="kv"><span>Features</span><strong>41</strong></div>
+          <div class="kv"><span>Status</span><strong>Research / Accumulating</strong></div>
         </div>
       </div>
     </section>

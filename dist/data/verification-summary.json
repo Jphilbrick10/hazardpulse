@@ -25,12 +25,22 @@
       "model_version": "hurricane_ri_v8_1"
     },
     {
-      "key": "to",
-      "hazard": "tornado",
-      "auc": 0.655,
+      "key": "to_formation",
+      "hazard": "tornado_formation",
+      "model_version": "tornado_meso_v1_4_2",
+      "auc": 0.644,
       "brier": 0.231,
       "reliability_slope": 0.901,
       "replayability_pct": 99.94
+    },
+    {
+      "key": "to_storm_object",
+      "hazard": "tornado_storm_object",
+      "model_version": "tornado_coherence_v1",
+      "auc": 0.894,
+      "eval_protocol": "strict_temporal_2024",
+      "n_features": 41,
+      "status": "research_accumulating"
     }
   ]
 }

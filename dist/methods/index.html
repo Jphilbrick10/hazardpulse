@@ -171,21 +171,34 @@
         </div>
 
         <div class="card col-4 hazard-hu">
-          <h3>Hurricane RI (hp-hurricane-ri-v3.2)</h3>
-          <div class="kv"><span>Architecture</span><strong>Logistic regression ensemble + isotonic calibration</strong></div>
-          <div class="kv"><span>Features</span><strong>38</strong></div>
-          <div class="kv"><span>Key inputs</span><strong>Shear, SST, OHC, outflow, SHIPS predictors, satellite estimates</strong></div>
-          <div class="kv"><span>Training cutoff</span><strong>2026-02-20</strong></div>
-          <div class="kv"><span>Calibration method</span><strong>Isotonic regression on holdout</strong></div>
+          <h3>Hurricane RI (hp-hurricane-ri-v8.1)</h3>
+          <div class="kv"><span>Architecture</span><strong>50-bag logistic + histogram GBT (d3+d4) + Platt calibration</strong></div>
+          <div class="kv"><span>Features</span><strong>65</strong></div>
+          <div class="kv"><span>Key inputs</span><strong>Shear, SST (real NOAA), OHC, outflow, SHIPS predictors, satellite estimates</strong></div>
+          <div class="kv"><span>Training cutoff</span><strong>2026-03-13</strong></div>
+          <div class="kv"><span>Calibration method</span><strong>Platt scaling on holdout</strong></div>
+          <div class="kv"><span>AUC</span><strong>0.938 (advisory-time eval, 5 holdouts)</strong></div>
         </div>
 
         <div class="card col-4 hazard-to">
-          <h3>Tornado (hp-tornado-meso-v1.4.2)</h3>
+          <h3>Tornado formation (hp-tornado-meso-v1.4.2)</h3>
           <div class="kv"><span>Architecture</span><strong>Random forest + Platt-scaled calibration</strong></div>
           <div class="kv"><span>Features</span><strong>34</strong></div>
           <div class="kv"><span>Key inputs</span><strong>STP, MLCAPE, MLCIN, deep shear, SRH, LCL height, composite parameters</strong></div>
           <div class="kv"><span>Training cutoff</span><strong>2026-02-25</strong></div>
           <div class="kv"><span>Calibration method</span><strong>Platt scaling on holdout</strong></div>
+          <div class="kv"><span>AUC</span><strong>0.644 (day-ahead formation)</strong></div>
+        </div>
+
+        <div class="card col-4 hazard-to">
+          <h3>Tornado storm-object (hp-tornado-coherence-v1)</h3>
+          <div class="kv"><span>Architecture</span><strong>Coherence Field Theory scoring on ProbSevere storm objects</strong></div>
+          <div class="kv"><span>Features</span><strong>41</strong></div>
+          <div class="kv"><span>Key inputs</span><strong>ProbSevere attributes, CAPE, SRH, MaxLLAz, coherence field diagnostics</strong></div>
+          <div class="kv"><span>Training cutoff</span><strong>2026-03-15</strong></div>
+          <div class="kv"><span>Calibration method</span><strong>Platt scaling on 2024 strict temporal holdout</strong></div>
+          <div class="kv"><span>AUC</span><strong>0.894 (2024 test, strict temporal)</strong></div>
+          <div class="kv"><span>Status</span><strong>Research / Accumulating</strong></div>
         </div>
       </div>
     </section>
