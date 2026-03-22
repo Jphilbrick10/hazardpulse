@@ -2,9 +2,9 @@ name: Tornado Scoring (Severe Season)
 
 on:
   schedule:
-    # Run every 15 minutes during severe weather season (Mar-Jun)
-    # and every hour rest of year
-    - cron: "*/15 * * * *"
+    # Run every 6 hours to accumulate data while building the site.
+    # Increase to hourly or 15-min when going live to public.
+    - cron: "0 */6 * * *"
   workflow_dispatch:
     inputs:
       date:
