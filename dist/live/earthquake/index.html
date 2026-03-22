@@ -1141,5 +1141,30 @@
       <p class="footer-build">Built with Coherence Lang · Zero client-side JS · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
     </div>
   </footer>
+
+  <script>
+  (function() {
+    'use strict';
+    var rows = document.querySelectorAll('.event-row');
+    for (var r = 0; r < rows.length; r++) {
+      rows[r].style.cursor = 'pointer';
+      rows[r].addEventListener('click', function() {
+        var detail = this.nextElementSibling;
+        if (detail && detail.classList.contains('event-detail')) {
+          var isOpen = detail.style.maxHeight && detail.style.maxHeight !== '0px';
+          if (isOpen) {
+            detail.style.maxHeight = '0px';
+            detail.style.opacity = '0';
+            detail.style.padding = '0';
+          } else {
+            detail.style.maxHeight = '600px';
+            detail.style.opacity = '1';
+            detail.style.padding = '12px 10px';
+          }
+        }
+      });
+    }
+  })();
+  </script>
 </body>
 </html>

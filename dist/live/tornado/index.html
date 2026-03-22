@@ -792,18 +792,128 @@
       return d.innerHTML;
     }
 
-    function formatTime(iso) {
-      if (!iso) return '--';
-      try {
-        var d = new Date(iso);
-        return d.toUTCString().replace('GMT', 'UTC');
-      } catch(e) {
-        return iso;
+    function formatTime(ts) {
+      if (!ts) return '--';
+      // Handle "20260322_040039 UTC" format from the pipeline
+      var m = String(ts).match(/^(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})\s*UTC$/);
+      if (m) {
+        return m[1] + '-' + m[2] + '-' + m[3] + ' ' + m[4] + ':' + m[5] + ':' + m[6] + ' UTC';
       }
+      // Handle ISO 8601 format
+      try {
+        var d = new Date(ts);
+        if (!isNaN(d.getTime())) {
+          return d.toUTCString().replace('GMT', 'UTC');
+        }
+      } catch(e) { /* fall through */ }
+      return String(ts);
     }
 
     function pct(p) {
       return (p * 100).toFixed(1) + '%';
+    }
+
+    // Convert lat/lon to SVG coordinates for the 960x480 equirectangular world map
+    function latLonToSVG(lat, lon) {
+      // The SVG uses a simple equirectangular projection: x = (lon+180)/360 * 960, y = (90-lat)/180 * 480
+      var x = ((lon + 180) / 360) * 960;
+      var y = ((90 - lat) / 180) * 480;
+      return { x: x, y: y };
+    }
+
+    function updateMapMarkers(storms) {
+      var markersGroup = document.querySelector('.hazard-markers');
+      if (!markersGroup) return;
+
+      // Clear old static markers
+      markersGroup.innerHTML = '';
+
+      var limit = Math.min(storms.length, 20);
+      for (var i = 0; i < limit; i++) {
+        var s = storms[i];
+        var rank = i + 1;
+        var pos = latLonToSVG(s.lat, s.lon);
+        var riskLabel = RISK_LABELS[s.risk_band] || s.risk_band;
+        var label = 'Storm ' + s.storm_id + ' - ' + pct(s.tornado_probability) + ' (' + riskLabel + ')';
+
+        // Size the marker by rank: #1 is largest
+        var baseR = rank === 1 ? 4.5 : 3;
+
+        var a = document.createElementNS('http://www.w3.org/2000/svg', 'a');
+        a.setAttribute('href', '#cell-' + rank);
+        a.setAttribute('aria-label', label);
+
+        // Pulse rings
+        for (var p = 1; p <= 2; p++) {
+          var pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          pulse.setAttribute('class', 'hz-pulse hz-pulse-to hz-pulse-delay-' + p);
+          pulse.setAttribute('cx', pos.x.toFixed(1));
+          pulse.setAttribute('cy', pos.y.toFixed(1));
+          pulse.setAttribute('r', (baseR + 1).toFixed(0));
+          a.appendChild(pulse);
+        }
+
+        // Main marker
+        var marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        marker.setAttribute('class', 'hz-marker hz-marker-to');
+        marker.setAttribute('cx', pos.x.toFixed(1));
+        marker.setAttribute('cy', pos.y.toFixed(1));
+        marker.setAttribute('r', baseR.toFixed(1));
+        marker.setAttribute('filter', 'url(#glow-to)');
+        a.appendChild(marker);
+
+        // Tooltip group
+        var tipG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        tipG.setAttribute('class', 'map-tooltip');
+
+        var tipBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        tipBg.setAttribute('class', 'tooltip-bg');
+        tipBg.setAttribute('x', (pos.x + 10).toFixed(1));
+        tipBg.setAttribute('y', (pos.y - 18).toFixed(1));
+        tipBg.setAttribute('width', '90');
+        tipBg.setAttribute('height', '22');
+        tipBg.setAttribute('rx', '3');
+        tipG.appendChild(tipBg);
+
+        var tipText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        tipText.setAttribute('class', 'tooltip-text');
+        tipText.setAttribute('x', (pos.x + 12).toFixed(1));
+        tipText.setAttribute('y', (pos.y - 8).toFixed(1));
+        tipText.textContent = 'Storm ' + s.storm_id;
+        tipG.appendChild(tipText);
+
+        var tipSub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        tipSub.setAttribute('class', 'tooltip-sub');
+        tipSub.setAttribute('x', (pos.x + 12).toFixed(1));
+        tipSub.setAttribute('y', (pos.y + 1).toFixed(1));
+        tipSub.textContent = pct(s.tornado_probability) + ' \u00B7 Rank #' + rank;
+        tipG.appendChild(tipSub);
+
+        a.appendChild(tipG);
+        markersGroup.appendChild(a);
+      }
+    }
+
+    function addClickHandlers() {
+      var rows = document.querySelectorAll('.event-row');
+      for (var r = 0; r < rows.length; r++) {
+        rows[r].style.cursor = 'pointer';
+        rows[r].addEventListener('click', function() {
+          var detail = this.nextElementSibling;
+          if (detail && detail.classList.contains('event-detail')) {
+            var isOpen = detail.style.maxHeight && detail.style.maxHeight !== '0px';
+            if (isOpen) {
+              detail.style.maxHeight = '0px';
+              detail.style.opacity = '0';
+              detail.style.padding = '0';
+            } else {
+              detail.style.maxHeight = '600px';
+              detail.style.opacity = '1';
+              detail.style.padding = '12px 10px';
+            }
+          }
+        });
+      }
     }
 
     function renderStorms(data) {
@@ -838,6 +948,9 @@
         return;
       }
 
+      // Update map markers with actual storm positions
+      updateMapMarkers(storms);
+
       // Storm table
       var secEl = document.getElementById('storms-section');
       var tbody = document.getElementById('storms-tbody');
@@ -851,7 +964,7 @@
           var riskColor = RISK_COLORS[s.risk_band] || '#757575';
           var riskLabel = RISK_LABELS[s.risk_band] || s.risk_band;
           var rankClass = rank === 1 ? ' rank-1' : '';
-          html += '<tr id="cell-' + rank + '" class="event-row">' +
+          html += '<tr id="cell-' + rank + '" class="event-row" tabindex="0" role="button" aria-expanded="false" aria-label="Storm ' + esc(String(s.storm_id)) + ' - click to expand details">' +
             '<td><span class="rank-badge' + rankClass + '">' + rank + '</span></td>' +
             '<td><strong>' + esc(String(s.storm_id)) + '</strong></td>' +
             '<td>' + s.lat.toFixed(2) + ', ' + s.lon.toFixed(2) + '</td>' +
@@ -861,8 +974,8 @@
             '<td>' + (s.srh01 || 0).toFixed(0) + '</td>' +
             '<td>' + (s.maxllaz || 0).toFixed(4) + '</td>' +
             '</tr>';
-          // Detail row
-          html += '<tr class="event-detail"><td colspan="8">' +
+          // Detail row (hidden by default via CSS max-height:0)
+          html += '<tr class="event-detail" aria-hidden="true"><td colspan="8">' +
             '<div class="kv"><span>ProbSevere score</span><strong>' + (s.ps || 0).toFixed(0) + '</strong></div>' +
             '<div class="kv"><span>PS tornado score</span><strong>' + (s.ps_tor || 0).toFixed(0) + '</strong></div>' +
             '<div class="kv"><span>Effective bulk shear</span><strong>' + (s.ebshear || 0).toFixed(0) + ' kt</strong></div>' +
@@ -870,9 +983,14 @@
             '<div class="kv"><span>Flash rate</span><strong>' + (s.flash_rate || 0).toFixed(0) + ' /min</strong></div>' +
             '<div class="kv"><span>Track length</span><strong>' + (s.track_length || 0) + ' time steps</strong></div>' +
             '<div class="kv"><span>Scoring tier</span><strong>' + esc(s.scoring_tier || '--') + '</strong></div>' +
+            '<div class="kv"><span>Valid time</span><strong>' + formatTime(s.valid_time) + '</strong></div>' +
+            '<div class="kv"><span>Motion</span><strong>' + (s.motion_east || 0).toFixed(1) + ' E, ' + (s.motion_south || 0).toFixed(1) + ' S m/s</strong></div>' +
             '</td></tr>';
         }
         tbody.innerHTML = html;
+
+        // Attach click and keyboard handlers
+        addClickHandlers();
       }
 
       // Top storm deep dive (coherence diagnostics)
@@ -892,12 +1010,24 @@
           ch += '<div class="metric" style="color:' + (RISK_COLORS[top.risk_band] || '#757575') + '">' + pct(top.tornado_probability) + '</div>';
           ch += '<div class="metric-label">Tornado probability</div>';
 
-          var cohKeys = ['tau', 'grad_tau', 'torsion', 'alignment', 's_over_gamma', 'da'];
+          // Use correct key casing matching the JSON data
+          var cohKeys = [
+            { key: 'tau', label: 'tau' },
+            { key: 'grad_tau', label: 'grad_tau' },
+            { key: 'torsion', label: 'torsion' },
+            { key: 'alignment', label: 'alignment' },
+            { key: 'S_field', label: 'S_field' },
+            { key: 'Gamma_field', label: 'Gamma_field' },
+            { key: 'S_over_Gamma', label: 'S / Gamma' },
+            { key: 'Da', label: 'Da (Damkohler)' },
+            { key: 'E_coh', label: 'E_coh' },
+            { key: 'singularity_count', label: 'Singularity count' }
+          ];
           for (var k = 0; k < cohKeys.length; k++) {
-            var key = cohKeys[k];
-            var val = coh[key];
+            var ck = cohKeys[k];
+            var val = coh[ck.key];
             if (val !== undefined && val !== null) {
-              ch += '<div class="kv"><span>' + esc(key) + '</span><strong>' + Number(val).toFixed(4) + '</strong></div>';
+              ch += '<div class="kv"><span>' + esc(ck.label) + '</span><strong>' + Number(val).toFixed(4) + '</strong></div>';
             }
           }
           ch += '</div>';
@@ -928,7 +1058,7 @@
           ch += '<div class="kv"><span>0-1km SRH</span><strong>' + (top.srh01 || 0).toFixed(0) + ' m^2/s^2</strong></div>';
           ch += '<div class="kv"><span>Eff. bulk shear</span><strong>' + (top.ebshear || 0).toFixed(0) + ' kt</strong></div>';
           ch += '<div class="kv"><span>MaxLLAz</span><strong>' + (top.maxllaz || 0).toFixed(4) + ' /s</strong></div>';
-          ch += '<div class="kv"><span>Valid time</span><strong>' + esc(top.valid_time || '--') + '</strong></div>';
+          ch += '<div class="kv"><span>Valid time</span><strong>' + esc(formatTime(top.valid_time)) + '</strong></div>';
           ch += '<div class="kv"><span>Model version</span><strong>' + esc(top.model_version || '--') + '</strong></div>';
           ch += '</div>';
           ch += '</div>';
