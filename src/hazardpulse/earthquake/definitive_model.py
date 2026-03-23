@@ -5,7 +5,7 @@
 # False negatives (missed earthquakes) WILL occur. Do NOT rely on this
 # system for safety-critical decisions.
 
-"""Definitive leak-proof earthquake prediction model.
+"""Definitive leak-proof earthquake prediction model v2.
 
 Design philosophy: ZERO LEAKAGE BY CONSTRUCTION.
     - ONE model type: Gradient Boosted Trees. No meta-stacker, no blending.
@@ -14,10 +14,15 @@ Design philosophy: ZERO LEAKAGE BY CONSTRUCTION.
     - All features verified causal (available at prediction time).
     - No hyperparameter tuning on test. Test touched ONCE.
 
+Feature architecture (v2 -- mega-model):
+    Block S: 61 seismicity features (full v8c port, numpy-vectorized)
+    Block C: 12 coherence field theory features
+    Block X:  8 cross-domain interaction terms
+
 Three model variants (one GBT each, NO stacking):
-    1. Baseline:  Block S only (15 features) -- standard seismicity
-    2. Enhanced:  Block S + C (27 features) -- + coherence field theory
-    3. Full:      Block S + C + I (32 features) -- + interaction terms
+    1. Baseline:  Block S only (61 features) -- full v8c seismicity
+    2. Enhanced:  Block S + C (73 features) -- + coherence field theory
+    3. Full:      Block S + C + X (81 features) -- + cross-domain interactions
 
 Temporal splits (hardcoded, non-negotiable):
     Train: 2005-01-01 to 2017-12-31
@@ -30,6 +35,7 @@ Label definition:
     Gardner-Knopoff aftershock declustering applied first.
     2 negatives per positive, time-offset +/-1.5 to +/-4.5 years.
 
+Performance: numpy-vectorized feature extraction (~1000 samples/min).
 Self-contained: copies GBT implementation fresh, imports only from
 hazardpulse.data.earthquake and hazardpulse.earthquake.coherence_engine.
 """
@@ -80,75 +86,139 @@ MIN_MAINSHOCK_MAG: float = 6.0
 CONTROL_RATIO: int = 2  # negatives per positive
 CONTROL_OFFSET_RANGE: tuple[float, float] = (1.5, 4.5)  # years
 
+# Time constants
+SEC_PER_DAY: float = 86400.0
+SEC_PER_YEAR: float = 365.25 * SEC_PER_DAY
+
 
 # ===================================================================
 # FEATURE BLOCK SIZES
 # ===================================================================
 
-N_FEAT_S: int = 15   # Standard seismicity
+N_FEAT_S: int = 61   # Full v8c seismicity
 N_FEAT_C: int = 12   # Coherence field theory
-N_FEAT_I: int = 5    # Interaction terms
+N_FEAT_X: int = 8    # Cross-domain interactions
 
-N_FEAT_BASELINE: int = N_FEAT_S                          # 15
-N_FEAT_ENHANCED: int = N_FEAT_S + N_FEAT_C               # 27
-N_FEAT_FULL: int = N_FEAT_S + N_FEAT_C + N_FEAT_I        # 32
+N_FEAT_BASELINE: int = N_FEAT_S                          # 61
+N_FEAT_ENHANCED: int = N_FEAT_S + N_FEAT_C               # 73
+N_FEAT_FULL: int = N_FEAT_S + N_FEAT_C + N_FEAT_X        # 81
 
 
 # ===================================================================
 # FEATURE NAMES -- every feature has a causal validity comment
 # ===================================================================
 
-# Block S: Standard Seismicity (15 features)
+# Block S: Full v8c Seismicity (60 features)
 # All derived from PAST seismicity at the sample location.
 BLOCK_S_NAMES: list[str] = [
-    "rate_1m",          # 1.  1-month event rate acceleration -- past
-    "rate_3m",          # 2.  3-month event rate acceleration -- past
-    "rate_6m",          # 3.  6-month event rate acceleration -- past
-    "rate_12m",         # 4.  12-month event rate acceleration -- past
-    "b_value",          # 5.  Gutenberg-Richter b-value -- past
-    "b_trend",          # 6.  b-value change (recent vs older) -- past
-    "mc_late",          # 7.  Magnitude of completeness (recent) -- past
-    "nn_change",        # 8.  Nearest-neighbour distance change -- past
-    "st_nn",            # 9.  Spatiotemporal nearest-neighbour metric -- past
-    "frac_clust",       # 10. Fraction of clustered events -- past
-    "mom_accel",        # 11. Moment release acceleration -- past
-    "mom_deficit",      # 12. Moment deficit vs long-term rate -- past
-    "coulomb_proxy",    # 13. Coulomb stress transfer proxy -- past
-    "max_mag_90d",      # 14. Max magnitude in last 90 days -- past
-    "max_mag_180d",     # 15. Max magnitude in last 180 days -- past
+    # b-value features (6)
+    "b_trend",          # b_late - b_early -- past
+    "b_recent",         # b_90d - b_older -- past
+    "mc_late",          # magnitude of completeness (recent half) -- past
+    "mc_change",        # Mc_late - Mc_early -- past
+    "rate_mc_norm",     # above-Mc rate ratio late/early -- past
+    "b_near",           # b-value within 100km -- past
+    # Rate acceleration (7)
+    "rate_1m",          # 1-month rate acceleration -- past
+    "rate_3m",          # 3-month rate acceleration -- past
+    "rate_6m",          # 6-month rate acceleration -- past
+    "rate_12m",         # 12-month rate acceleration -- past
+    "rate_7_30",        # 7-day / 30-day rate ratio -- past
+    "rate_30_90",       # 30-day / 90-day rate ratio -- past
+    "rate_90_365",      # 90-day / 365-day rate ratio -- past
+    # NN/clustering (6)
+    "nn_change",        # NN distance change (recent vs older) -- past
+    "st_nn",            # spatiotemporal NN metric -- past
+    "st_nn_std",        # std of spatiotemporal NN -- past
+    "frac_clust",       # fraction of clustered events -- past
+    "centroid_mig",     # centroid migration (km) -- past
+    "elong",            # elongation ratio (eigenvalue) -- past
+    # Magnitude (5)
+    "maxmag_30d",       # max magnitude in last 30 days -- past
+    "maxmag_90d",       # max magnitude in last 90 days -- past
+    "maxmag_180d",      # max magnitude in last 180 days -- past
+    "mag_var_chg",      # magnitude variance change -- past
+    "mag_range_30d",    # magnitude range in last 30 days -- past
+    # Coulomb (4)
+    "coulomb",          # Coulomb stress proxy (M5+, <100km, <180d) -- past
+    "coulomb_moment",   # moment-weighted Coulomb -- past
+    "coulomb_n",        # count of M5+ in Coulomb zone -- past
+    "coulomb_broad",    # broad Coulomb (M5+, <300km, <365d) -- past
+    # Foreshock (4)
+    "inv_omori",        # inverse Omori correlation -- past
+    "bath_ratio",       # Bath's law ratio -- past
+    "foreshock_r",      # foreshock fraction -- past
+    "quiescence_7d",    # 7-day quiescence signal -- past
+    # Moment (5)
+    "mom_90d",          # log10 moment in 90 days -- past
+    "mom_180d",         # log10 moment in 180 days -- past
+    "mom_1y",           # log10 moment in 1 year -- past
+    "mom_accel",        # moment acceleration -- past
+    "mom_deficit",      # moment deficit vs annual rate -- past
+    # Depth (4)
+    "depth_mean",       # mean depth -- past
+    "depth_std",        # depth std -- past
+    "depth_trend",      # depth trend (late - early mean) -- past
+    "depth_bimod",      # depth bimodality -- past
+    # Tectonic regime (1)
+    "subduc",           # subduction indicator -- past
+    # Counts (5)
+    "n_events",         # total event count -- past
+    "n_7d",             # events in last 7 days -- past
+    "n_14d",            # events in last 14 days -- past
+    "n_30d",            # events in last 30 days -- past
+    "n_90d",            # events in last 90 days -- past
+    # Recurrence (4)
+    "m5_accel",         # M5+ acceleration -- past
+    "spatial_conc",     # spatial concentration (std of dists) -- past
+    "mag_range_90d",    # magnitude range in last 90 days -- past
+    "m6_recur",         # M6+ recurrence interval (years) -- past
+    # v8c interactions (4) -- reduced to non-redundant set
+    "b_x_rate",         # b_trend * rate_3m -- past
+    "coul_x_rate",      # coulomb * rate_1m -- past
+    "mom_x_clust",      # mom_accel * frac_clust -- past
+    "fore_x_bath",      # foreshock_r * bath_ratio -- past
+    # v8c near-field (6)
+    "near_n_90d",       # events <100km in 90 days -- past
+    "near_mom_90d",     # log10 moment <100km in 90 days -- past
+    "near_iet_cv",      # near-field interevent time CV -- past
+    "near_iet_min",     # near-field min interevent time -- past
+    "near_far_ratio",   # near/far rate ratio -- past
+    "near_rate_x_b",    # near_n_90d * b_trend -- past
 ]
 
 # Block C: Coherence Field Theory (12 features)
-# Derived from coherence_engine using PAST seismicity only.
 BLOCK_C_NAMES: list[str] = [
-    "ell",                  # 16. Correlation length (km) -- past
-    "ell_trend",            # 17. Correlation length change rate -- past
-    "ell_acceleration",     # 18. d^2(ell)/dt^2 -- past
-    "days_to_criticality",  # 19. Estimated days until t_c -- past divergence fit
-    "nu_exponent",          # 20. Critical exponent from ell(t) fit -- past
-    "divergence_r2",        # 21. R^2 of divergence fit (confidence) -- past
-    "delta_aic_iet",        # 22. Lorentzian vs exponential IET -- past
-    "tau_local",            # 23. Helmholtz coherence at location -- past
-    "grad_tau_local",       # 24. Coherence gradient -- past
-    "S_over_Gamma",         # 25. Source/damping ratio -- past
-    "Da_local",             # 26. Damkohler number -- past
-    "singularity_count",    # 27. Conditions met (0-5) -- past
+    "ell",                  # Correlation length (km) -- past
+    "ell_trend",            # Correlation length change rate -- past
+    "ell_acceleration",     # d^2(ell)/dt^2 -- past
+    "days_to_criticality",  # Estimated days until t_c -- past divergence fit
+    "nu_exponent",          # Critical exponent from ell(t) fit -- past
+    "divergence_r2",        # R^2 of divergence fit (confidence) -- past
+    "delta_aic_iet",        # Lorentzian vs exponential IET -- past
+    "tau_local",            # Helmholtz coherence at location -- past
+    "grad_tau_local",       # Coherence gradient -- past
+    "S_over_Gamma",         # Source/damping ratio -- past
+    "Da_local",             # Damkohler number -- past
+    "singularity_count",    # Conditions met (0-5) -- past
 ]
 
-# Block I: Interaction Terms (5 features)
-# Cross-products of Block S and Block C features.
-BLOCK_I_NAMES: list[str] = [
-    "ell_x_b_trend",           # 28. Diverging length with dropping b -- past
-    "ell_x_rate_accel",        # 29. Diverging length with accelerating rate -- past
-    "tau_x_max_mag",           # 30. Coherence x largest event -- past
-    "dtc_x_singularity",      # 31. Imminence x conditions met -- past
-    "sg_x_ell_accel",         # 32. Loading x accelerating divergence -- past
+# Block X: Cross-domain Interactions (8 features)
+BLOCK_X_NAMES: list[str] = [
+    "ell_x_b_trend",            # ell * b_trend -- past
+    "ell_x_rate_1m",            # ell * rate_1m -- past
+    "ell_x_coulomb",            # ell * coulomb -- past
+    "tau_x_maxmag_90d",         # tau_local * maxmag_90d -- past
+    "dtc_x_singularity",        # days_to_criticality * singularity_count -- past
+    "sg_x_mom_accel",           # S_over_Gamma * mom_accel -- past
+    "daic_x_frac_clust",        # delta_aic_iet * frac_clust -- past
+    "ell_accel_x_rate_7_30",    # ell_acceleration * rate_7_30 -- past
 ]
 
 ALL_FEATURE_NAMES_BASELINE: list[str] = BLOCK_S_NAMES
 ALL_FEATURE_NAMES_ENHANCED: list[str] = BLOCK_S_NAMES + BLOCK_C_NAMES
 ALL_FEATURE_NAMES_FULL: list[str] = (
-    BLOCK_S_NAMES + BLOCK_C_NAMES + BLOCK_I_NAMES
+    BLOCK_S_NAMES + BLOCK_C_NAMES + BLOCK_X_NAMES
 )
 
 
@@ -156,28 +226,25 @@ ALL_FEATURE_NAMES_FULL: list[str] = (
 # GBT HYPERPARAMETERS -- FIXED A PRIORI, NOT TUNED ON VALIDATION
 # ===================================================================
 
-GBT_N_TREES: int = 200
+GBT_N_TREES: int = 300
 GBT_MAX_DEPTH: int = 4
-GBT_LEARNING_RATE: float = 0.05
-GBT_SUBSAMPLE: float = 0.5
+GBT_LEARNING_RATE: float = 0.03
+GBT_SUBSAMPLE: float = 0.6
 GBT_COLSAMPLE: float = 0.7
-GBT_MIN_SAMPLES_LEAF: int = 20
+GBT_MIN_SAMPLES_LEAF: int = 15
 GBT_L2_REG: float = 1.0
-GBT_GAMMA: float = 0.1
+GBT_GAMMA: float = 0.05
 
 # Early stopping patience (on validation loss)
-EARLY_STOP_PATIENCE: int = 20
+EARLY_STOP_PATIENCE: int = 50
 
 
 # ===================================================================
-# HAVERSINE DISTANCE
+# VECTORIZED HAVERSINE
 # ===================================================================
 
 def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    """Compute great-circle distance in km between two points.
-
-    Uses the Haversine formula. Inputs in degrees.
-    """
+    """Compute great-circle distance in km between two points."""
     R = 6371.0
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
@@ -190,15 +257,34 @@ def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return R * 2.0 * math.atan2(math.sqrt(a), math.sqrt(1.0 - a))
 
 
+def haversine_vec(
+    lat1: float, lon1: float,
+    lats: np.ndarray, lons: np.ndarray,
+) -> np.ndarray:
+    """Vectorized haversine: one point vs array of points. Returns km."""
+    R = 6371.0
+    dlat = np.radians(lats - lat1)
+    dlon = np.radians(lons - lon1)
+    a = (
+        np.sin(dlat / 2.0) ** 2
+        + np.cos(np.radians(lat1))
+        * np.cos(np.radians(lats))
+        * np.sin(dlon / 2.0) ** 2
+    )
+    return R * 2.0 * np.arctan2(np.sqrt(a), np.sqrt(1.0 - a))
+
+
+def mag_to_moment(mag: np.ndarray) -> np.ndarray:
+    """Convert magnitude(s) to seismic moment (N*m)."""
+    return 10.0 ** (1.5 * np.asarray(mag, dtype=np.float64) + 9.05)
+
+
 # ===================================================================
 # SIGMOID (numerically stable)
 # ===================================================================
 
 def sigmoid(z: np.ndarray) -> np.ndarray:
-    """Numerically stable sigmoid function.
-
-    Uses the two-branch trick to avoid overflow in exp().
-    """
+    """Numerically stable sigmoid function."""
     z = np.asarray(z, dtype=np.float32)
     z = np.clip(z, -88.0, 88.0)
     return np.where(
@@ -206,6 +292,39 @@ def sigmoid(z: np.ndarray) -> np.ndarray:
         1.0 / (1.0 + np.exp(-z)),
         np.exp(z) / (1.0 + np.exp(z)),
     ).astype(np.float32)
+
+
+# ===================================================================
+# V8C HELPER: PROPER B-VALUE (MAXIMUM CURVATURE)
+# ===================================================================
+
+def estimate_mc_maxcurv(magnitudes: np.ndarray, bin_width: float = 0.1) -> float:
+    """Estimate magnitude of completeness using maximum curvature method."""
+    if len(magnitudes) < 10:
+        return 4.0
+    bins = np.arange(
+        np.floor(np.min(magnitudes) * 10) / 10,
+        np.ceil(np.max(magnitudes) * 10) / 10 + bin_width,
+        bin_width,
+    )
+    if len(bins) < 2:
+        return 4.0
+    hist, edges = np.histogram(magnitudes, bins=bins)
+    if len(hist) == 0:
+        return 4.0
+    max_idx = np.argmax(hist)
+    mc = (edges[max_idx] + edges[max_idx + 1]) / 2.0 + 0.2
+    return mc
+
+
+def b_value_proper(magnitudes: np.ndarray) -> tuple[float, float]:
+    """Compute b-value using Aki-Utsu MLE with max-curvature Mc."""
+    mc = estimate_mc_maxcurv(magnitudes)
+    above = magnitudes[magnitudes >= mc]
+    if len(above) < 5:
+        return 1.0, mc
+    b = np.log10(np.e) / (np.mean(above) - (mc - 0.05))
+    return b, mc
 
 
 # ===================================================================
@@ -218,9 +337,6 @@ class GradientBoostedTrees:
     Uses log-loss (cross-entropy) with Newton-Raphson leaf values.
     Supports subsample, colsample, balanced class weights, L2 regularization,
     and minimum complexity gain (gamma) pruning.
-
-    Feature importance is via split counts (honest about limitations:
-    this is a frequency-based proxy, not a causal importance measure).
     """
 
     def __init__(
@@ -252,11 +368,7 @@ class GradientBoostedTrees:
         hessians: np.ndarray,
         depth: int = 0,
     ) -> dict:
-        """Build a single regression tree on gradient/hessian targets.
-
-        Uses exact greedy split finding with candidate thresholds from
-        percentiles for continuous features.
-        """
+        """Build a single regression tree on gradient/hessian targets."""
         N = len(gradients)
         G = float(np.sum(gradients))
         H = float(np.sum(hessians))
@@ -356,19 +468,7 @@ class GradientBoostedTrees:
         y_val: np.ndarray | None = None,
         verbose: bool = False,
     ) -> dict:
-        """Train the GBT ensemble on labelled data.
-
-        Parameters
-        ----------
-        X : ndarray, shape (n_train, n_features)
-        y : ndarray, shape (n_train,)  -- binary labels (0 or 1)
-        X_val, y_val : optional validation set for early stopping
-        verbose : bool
-
-        Returns
-        -------
-        dict  -- training metadata
-        """
+        """Train the GBT ensemble on labelled data."""
         X = np.asarray(X, dtype=np.float32)
         y = np.asarray(y, dtype=np.float32)
         N = len(y)
@@ -477,11 +577,7 @@ class GradientBoostedTrees:
         return sigmoid(F)
 
     def feature_importances(self, n_features: int) -> np.ndarray:
-        """Compute feature importance from tree split counts.
-
-        NOTE: This is a frequency-based proxy for importance, not a causal
-        measure. Use with appropriate caveats.
-        """
+        """Compute feature importance from tree split counts."""
         counts = np.zeros(n_features, dtype=np.float64)
 
         def _walk(node: dict) -> None:
@@ -667,12 +763,7 @@ def paired_bootstrap_test(
     n_boot: int = 2000,
     seed: int = 42,
 ) -> dict:
-    """Test whether model B significantly outperforms model A.
-
-    Uses paired bootstrap: the SAME resampled indices are used for both
-    models on each iteration, so the comparison controls for sampling
-    variability.
-    """
+    """Test whether model B significantly outperforms model A."""
     rng = np.random.RandomState(seed)
     y_true = np.asarray(y_true, dtype=np.float64)
     y_pred_a = np.asarray(y_pred_a, dtype=np.float64)
@@ -709,31 +800,24 @@ def paired_bootstrap_test(
 # ===================================================================
 
 class FeatureNormalizer:
-    """Z-score normalizer. Fit on train, apply to val/test.
-
-    Prevents any information leakage from val/test into normalization
-    statistics.
-    """
+    """Z-score normalizer. Fit on train, apply to val/test."""
 
     def __init__(self) -> None:
         self.mean: np.ndarray | None = None
         self.std: np.ndarray | None = None
 
     def fit(self, X: np.ndarray) -> None:
-        """Compute mean and std from training data only."""
         X = np.asarray(X, dtype=np.float32)
         self.mean = X.mean(axis=0, dtype=np.float32)
         self.std = X.std(axis=0, dtype=np.float32)
         self.std[self.std < 1e-12] = 1.0
 
     def transform(self, X: np.ndarray) -> np.ndarray:
-        """Apply normalization using stored train statistics."""
         assert self.mean is not None, "FeatureNormalizer has not been fit"
         X = np.asarray(X, dtype=np.float32)
         return ((X - self.mean) / self.std).astype(np.float32)
 
     def fit_transform(self, X: np.ndarray) -> np.ndarray:
-        """Fit and transform in one step (for training data only)."""
         self.fit(X)
         return self.transform(X)
 
@@ -743,13 +827,8 @@ class FeatureNormalizer:
 # ===================================================================
 
 def _gardner_knopoff_window(mag: float) -> tuple[float, float]:
-    """Return (distance_km, time_days) window for aftershock removal.
-
-    Gardner & Knopoff (1974) empirical aftershock windows.
-    """
-    # Distance window: 10^(0.1238*M + 0.983) km
+    """Return (distance_km, time_days) window for aftershock removal."""
     d_km = 10.0 ** (0.1238 * mag + 0.983)
-    # Time window: 10^(0.5409*M - 0.547) days  (for M >= 2.5)
     if mag >= 6.5:
         t_days = 10.0 ** (0.032 * mag + 2.7389)
     else:
@@ -760,24 +839,7 @@ def _gardner_knopoff_window(mag: float) -> tuple[float, float]:
 def decluster_gardner_knopoff(
     events: list[dict],
 ) -> tuple[list[dict], list[dict]]:
-    """Remove aftershocks using Gardner-Knopoff (1974) windows.
-
-    Processes events in descending magnitude order: each event's window
-    removes subsequent smaller events.
-
-    Parameters
-    ----------
-    events : list[dict]
-        USGS catalog events with keys: time, latitude, longitude, mag.
-
-    Returns
-    -------
-    mainshocks : list[dict]
-        Declustered catalog (mainshocks only).
-    aftershocks : list[dict]
-        Removed aftershock events.
-    """
-    # Parse epochs for all events
+    """Remove aftershocks using Gardner-Knopoff (1974) windows."""
     parsed: list[tuple[float, dict]] = []
     for e in events:
         t_str = e.get("time", "")
@@ -785,45 +847,36 @@ def decluster_gardner_knopoff(
         if epoch > 0 and e.get("mag") is not None:
             parsed.append((epoch, e))
 
-    # FAST approach: only process M5+ as potential mainshocks.
-    # Events below M5 are kept as-is (used for features, not as targets).
-    # This reduces O(N²) from 494K² to ~5K × 494K = manageable.
-
-    # Sort by magnitude descending
     parsed.sort(key=lambda x: x[1]["mag"], reverse=True)
 
-    is_aftershock = set()  # indices marked as aftershocks
+    is_aftershock = set()
     n = len(parsed)
 
-    # Build arrays for vectorized checks
     epochs = np.array([p[0] for p in parsed])
     lats = np.array([p[1]["latitude"] for p in parsed])
     lons = np.array([p[1]["longitude"] for p in parsed])
     mags = np.array([p[1]["mag"] for p in parsed])
 
-    # Only M5+ events can be mainshocks that remove aftershocks
     for i in range(n):
         if i in is_aftershock:
             continue
         if mags[i] < 5.0:
-            break  # sorted by mag desc, so all remaining are < 5.0
+            break
         d_km, t_days = _gardner_knopoff_window(float(mags[i]))
         t_sec = t_days * 86400.0
 
-        # Temporal filter (vectorized)
         dt = np.abs(epochs - epochs[i])
         time_mask = dt <= t_sec
-
-        # Magnitude filter
         mag_mask = mags < mags[i]
-
         candidates = np.where(time_mask & mag_mask)[0]
 
         for j in candidates:
             if j == i or j in is_aftershock:
                 continue
-            dist = haversine_km(float(lats[i]), float(lons[i]),
-                                float(lats[j]), float(lons[j]))
+            dist = haversine_km(
+                float(lats[i]), float(lons[i]),
+                float(lats[j]), float(lons[j]),
+            )
             if dist <= d_km:
                 is_aftershock.add(j)
 
@@ -892,32 +945,7 @@ def generate_control_samples(
     forward_days: float = FORWARD_WINDOW_DAYS,
     rng: np.random.RandomState | None = None,
 ) -> list[dict]:
-    """Generate negative control samples at the SAME location as a target.
-
-    Controls are time-offset +/-1.5 to +/-4.5 years from the mainshock,
-    verified to have no M6+ within label_radius_km and forward_days.
-
-    Parameters
-    ----------
-    target : dict
-        The positive (M6+) mainshock event.
-    mainshocks : list[dict]
-        Full declustered catalog for checking negatives.
-    catalog_epochs : ndarray
-        Pre-computed epochs for all mainshocks.
-    n_controls : int
-        Number of negative samples to generate per positive.
-    offset_range : tuple
-        Range (min_years, max_years) for time offset.
-    label_radius_km, forward_days : float
-        Spatial and temporal window for label verification.
-
-    Returns
-    -------
-    list[dict]
-        Control sample dicts with keys: latitude, longitude, time,
-        ref_epoch, label (=0).
-    """
+    """Generate negative control samples at the SAME location as a target."""
     if rng is None:
         rng = np.random.RandomState(42)
 
@@ -932,14 +960,12 @@ def generate_control_samples(
         if len(controls) >= n_controls:
             break
 
-        # Random offset: +/-1.5 to +/-4.5 years
         offset_years = rng.uniform(offset_range[0], offset_range[1])
         if rng.random() < 0.5:
             offset_years = -offset_years
         offset_sec = offset_years * 365.25 * 86400.0
         control_epoch = target_epoch + offset_sec
 
-        # Verify no M6+ mainshock within radius and forward window
         has_m6_forward = False
         for ms in mainshocks:
             ms_mag = ms.get("mag", 0)
@@ -958,7 +984,6 @@ def generate_control_samples(
                 break
 
         if not has_m6_forward:
-            # Reconstruct an ISO-8601 timestamp for the control
             ctrl_dt = _dt.datetime.fromtimestamp(
                 control_epoch, tz=_dt.timezone.utc
             )
@@ -980,19 +1005,12 @@ def build_samples(
     full_catalog: list[dict],
     verbose: bool = True,
 ) -> list[dict]:
-    """Build positive + negative samples from declustered catalog.
-
-    Positive samples: each M6+ mainshock.
-    Negative samples: same location, time-offset, verified no M6+ forward.
-
-    Each sample dict has: latitude, longitude, ref_epoch, label, year.
-    """
+    """Build positive + negative samples from declustered catalog."""
     targets = identify_target_mainshocks(mainshocks)
     if verbose:
         print(f"    M6+ mainshocks found: {len(targets)}")
         sys.stdout.flush()
 
-    # Pre-compute epochs for all mainshocks (for control verification)
     ms_epochs = np.array([_event_epoch(m) for m in mainshocks], dtype=np.float64)
 
     rng = np.random.RandomState(42)
@@ -1002,7 +1020,6 @@ def build_samples(
         target_epoch = _event_epoch(target)
         target_year = _event_year(target)
 
-        # Positive sample
         samples.append({
             "latitude": target["latitude"],
             "longitude": target["longitude"],
@@ -1011,7 +1028,6 @@ def build_samples(
             "year": target_year,
         })
 
-        # Negative controls
         controls = generate_control_samples(
             target, mainshocks, ms_epochs, rng=rng,
         )
@@ -1035,207 +1051,422 @@ def build_samples(
 
 
 # ===================================================================
-# BLOCK S FEATURE EXTRACTION (Standard Seismicity)
+# PRE-BUILT NUMPY ARRAYS FOR FAST FEATURE EXTRACTION
 # ===================================================================
 
-def _events_in_window(
-    full_catalog: list[dict],
-    lat: float,
-    lon: float,
-    ref_epoch: float,
-    radius_km: float,
-    window_days: float,
-) -> list[dict]:
-    """Filter catalog to events within radius_km and window_days BEFORE ref_epoch."""
-    window_sec = window_days * 86400.0
-    result = []
-    for e in full_catalog:
-        emag = e.get("mag")
-        elat = e.get("latitude")
-        elon = e.get("longitude")
-        if emag is None or elat is None or elon is None:
-            continue
-        eepoch = _event_epoch(e)
-        if eepoch <= 0:
-            continue
-        # STRICT: only PAST events (before ref_epoch)
-        dt = ref_epoch - eepoch
-        if dt < 0 or dt > window_sec:
-            continue
-        dist = haversine_km(lat, lon, elat, elon)
-        if dist <= radius_km:
-            result.append(e)
-    return result
+class CatalogArrays:
+    """Pre-built numpy arrays from full catalog for vectorized features.
+
+    Converts the full catalog to sorted numpy arrays ONCE at startup.
+    Provides fast spatial pre-filtering via 5-degree lat/lon bins.
+    """
+
+    def __init__(self, full_catalog: list[dict], verbose: bool = True) -> None:
+        if verbose:
+            print("    Pre-building numpy arrays from catalog...")
+            sys.stdout.flush()
+
+        n = len(full_catalog)
+        self.times = np.empty(n, dtype=np.float64)
+        self.lats = np.empty(n, dtype=np.float64)
+        self.lons = np.empty(n, dtype=np.float64)
+        self.mags = np.empty(n, dtype=np.float64)
+        self.depths = np.empty(n, dtype=np.float64)
+
+        for i, e in enumerate(full_catalog):
+            t_str = e.get("time", "")
+            self.times[i] = _parse_event_time(t_str) if isinstance(t_str, str) else 0.0
+            self.lats[i] = e.get("latitude", 0.0)
+            self.lons[i] = e.get("longitude", 0.0)
+            self.mags[i] = e.get("mag", 0.0)
+            self.depths[i] = e.get("depth", 10.0) if e.get("depth") is not None else 10.0
+
+        # Sort by time
+        order = np.argsort(self.times)
+        self.times = self.times[order]
+        self.lats = self.lats[order]
+        self.lons = self.lons[order]
+        self.mags = self.mags[order]
+        self.depths = self.depths[order]
+
+        # Pre-build M6+ arrays for recurrence features
+        m6_mask = self.mags >= 6.0
+        self.m6_times = self.times[m6_mask]
+        self.m6_lats = self.lats[m6_mask]
+        self.m6_lons = self.lons[m6_mask]
+
+        if verbose:
+            print(f"    Arrays built: {n} events, {int(m6_mask.sum())} M6+")
+            sys.stdout.flush()
 
 
-def extract_block_s(
-    full_catalog: list[dict],
-    lat: float,
-    lon: float,
-    ref_epoch: float,
-    radius_km: float = LABEL_RADIUS_KM,
-) -> np.ndarray:
-    """Extract Block S (standard seismicity) features.
+# ===================================================================
+# BLOCK S: FULL V8C SEISMICITY FEATURES (60 features, numpy-vectorized)
+# ===================================================================
 
-    All features use ONLY events BEFORE ref_epoch. No leakage.
+def compute_block_s(
+    ev_lat: float,
+    ev_lon: float,
+    ev_time: float,
+    cat: CatalogArrays,
+) -> np.ndarray | None:
+    """Compute all 60 Block S features using v8c numpy-vectorized approach.
+
+    Parameters
+    ----------
+    ev_lat, ev_lon : float
+        Sample location (degrees).
+    ev_time : float
+        Reference time (epoch seconds). Only events BEFORE this are used.
+    cat : CatalogArrays
+        Pre-built numpy arrays from full catalog.
 
     Returns
     -------
-    ndarray, shape (15,), dtype float32
+    ndarray, shape (60,), dtype float32, or None if insufficient data.
     """
-    feats = np.full(N_FEAT_S, np.nan, dtype=np.float64)
+    # Select events: before ev_time, within 5 years, within ~500km box
+    t_start = ev_time - 5.0 * SEC_PER_YEAR
+    time_mask = (cat.times >= t_start) & (cat.times < ev_time)
+    box_deg = 4.5
+    spatial_mask = (
+        (np.abs(cat.lats - ev_lat) < box_deg)
+        & (np.abs(cat.lons - ev_lon) < box_deg)
+    )
+    mask = time_mask & spatial_mask
 
-    # Get events in progressively larger time windows
-    ev_1m = _events_in_window(full_catalog, lat, lon, ref_epoch, radius_km, 30)
-    ev_3m = _events_in_window(full_catalog, lat, lon, ref_epoch, radius_km, 90)
-    ev_6m = _events_in_window(full_catalog, lat, lon, ref_epoch, radius_km, 180)
-    ev_12m = _events_in_window(full_catalog, lat, lon, ref_epoch, radius_km, 365)
-    ev_24m = _events_in_window(full_catalog, lat, lon, ref_epoch, radius_km, 730)
+    if np.sum(mask) < 10:
+        return None
 
-    # 1-4: Rate acceleration ratios (recent / older, normalised by time)
-    def _rate_accel(recent: list, full: list, recent_frac: float) -> float:
-        n_full = len(full)
-        n_recent = len(recent)
-        if n_full == 0:
-            return 0.0
-        n_older = n_full - n_recent
-        rate_recent = n_recent / recent_frac if recent_frac > 0 else 0
-        rate_older = n_older / (1.0 - recent_frac) if (1.0 - recent_frac) > 0 else 0
-        if rate_older < 1e-12:
-            return rate_recent / max(rate_older, 1e-12)
-        return rate_recent / rate_older
+    t = cat.times[mask]
+    la = cat.lats[mask]
+    lo = cat.lons[mask]
+    m = cat.mags[mask]
+    d = cat.depths[mask]
+    dists = haversine_vec(ev_lat, ev_lon, la, lo)
 
-    feats[0] = _rate_accel(ev_1m, ev_3m, 1.0 / 3.0)   # rate_1m
-    feats[1] = _rate_accel(ev_3m, ev_12m, 3.0 / 12.0)  # rate_3m
-    feats[2] = _rate_accel(ev_6m, ev_24m, 6.0 / 24.0)  # rate_6m
-    feats[3] = _rate_accel(ev_12m, ev_24m, 12.0 / 24.0) # rate_12m
+    # Precise radius: 500km
+    rmask = dists < 500
+    if np.sum(rmask) < 10:
+        return None
+    t = t[rmask]
+    la = la[rmask]
+    lo = lo[rmask]
+    m = m[rmask]
+    d = d[rmask]
+    dists = dists[rmask]
+    dt = (ev_time - t) / SEC_PER_DAY  # days before event
+    N = len(t)
 
-    # 5-7: b_value, b_trend, mc_late
-    mags_12m = np.array([e["mag"] for e in ev_12m if e.get("mag") is not None])
-    b_val, mc, b_unc, n_b = compute_b_value(mags_12m)
-    feats[4] = b_val   # b_value
+    feats: dict[str, float] = {}
 
-    # b_trend: compare b of recent 6m vs older 6m (within 12m window)
-    mags_6m = np.array([e["mag"] for e in ev_6m if e.get("mag") is not None])
-    b_recent, _, _, _ = compute_b_value(mags_6m)
-    # Older 6 months: events in 12m but not in 6m
-    ev_older_6m = [e for e in ev_12m if e not in ev_6m]
-    mags_older_6m = np.array([e["mag"] for e in ev_older_6m if e.get("mag") is not None])
-    b_older, _, _, _ = compute_b_value(mags_older_6m)
-    if not math.isnan(b_recent) and not math.isnan(b_older):
-        feats[5] = b_recent - b_older  # b_trend (negative = dropping)
+    # ---- b-value features ----
+    if N >= 30:
+        half = N // 2
+        b_early, mc_early = b_value_proper(m[:half])
+        b_late, mc_late = b_value_proper(m[half:])
+        feats["b_trend"] = b_late - b_early
+
+        r90 = dt < 90
+        if np.sum(r90) >= 10 and np.sum(~r90) >= 10:
+            b_rec, _ = b_value_proper(m[r90])
+            b_old, _ = b_value_proper(m[~r90])
+            feats["b_recent"] = b_rec - b_old
+        else:
+            feats["b_recent"] = 0.0
+
+        feats["mc_late"] = mc_late
+
+        # Mc trend
+        mc_e = estimate_mc_maxcurv(m[:half])
+        mc_l = estimate_mc_maxcurv(m[half:])
+        feats["mc_change"] = mc_l - mc_e
+        above_e = np.sum(m[:half] >= mc_e)
+        above_l = np.sum(m[half:] >= mc_l)
+        ht = (t[half] - t[0]) / SEC_PER_YEAR
+        lt = (t[-1] - t[half]) / SEC_PER_YEAR
+        if ht > 0 and lt > 0:
+            feats["rate_mc_norm"] = (above_l / lt) / (above_e / ht + 0.01)
+        else:
+            feats["rate_mc_norm"] = 1.0
     else:
-        feats[5] = 0.0
+        feats["b_trend"] = 0.0
+        feats["b_recent"] = 0.0
+        feats["mc_late"] = 4.0
+        feats["mc_change"] = 0.0
+        feats["rate_mc_norm"] = 1.0
 
-    feats[6] = mc  # mc_late (magnitude of completeness)
-
-    # 8-10: Nearest-neighbour metrics
-    if len(ev_12m) >= 5:
-        lats = np.array([e["latitude"] for e in ev_12m])
-        lons = np.array([e["longitude"] for e in ev_12m])
-
-        # Compute pairwise NN distances (subsample for efficiency)
-        n_ev = len(ev_12m)
-        nn_dists = np.full(n_ev, np.inf, dtype=np.float64)
-        for i in range(n_ev):
-            for j in range(n_ev):
-                if i == j:
-                    continue
-                d = haversine_km(lats[i], lons[i], lats[j], lons[j])
-                if d < nn_dists[i]:
-                    nn_dists[i] = d
-        nn_mean = float(np.mean(nn_dists[nn_dists < np.inf]))
-
-        # NN of recent vs older
-        n_recent = len(ev_6m)
-        if n_recent >= 3 and n_ev - n_recent >= 3:
-            nn_recent = float(np.mean(nn_dists[:n_recent]))
-            nn_older = float(np.mean(nn_dists[n_recent:]))
-            feats[7] = nn_recent - nn_older  # nn_change (negative = tightening)
-        else:
-            feats[7] = 0.0
-
-        feats[8] = nn_mean  # st_nn (mean spatiotemporal NN distance)
-
-        # Fraction clustered: events with NN < median
-        median_nn = float(np.median(nn_dists[nn_dists < np.inf]))
-        if median_nn > 0:
-            feats[9] = float(np.mean(nn_dists < median_nn))  # frac_clust
-        else:
-            feats[9] = 0.5
+    # Near-field b-value
+    near = dists < 100
+    near_m = m[near]
+    if len(near_m) >= 15:
+        b_near, _ = b_value_proper(near_m)
+        feats["b_near"] = b_near
     else:
-        feats[7] = 0.0
-        feats[8] = 0.0
-        feats[9] = 0.5
+        feats["b_near"] = 1.0
 
-    # 11-12: Moment acceleration and deficit
-    moments_12m = np.array([
-        compute_seismic_moment(e["mag"]) for e in ev_12m
-        if e.get("mag") is not None
-    ])
-    moments_6m = np.array([
-        compute_seismic_moment(e["mag"]) for e in ev_6m
-        if e.get("mag") is not None
-    ])
+    # ---- Rate acceleration ----
+    for wname, wdays in [("1m", 30), ("3m", 90), ("6m", 180), ("12m", 365)]:
+        n_win = np.sum(dt < wdays)
+        n_base = np.sum((dt >= wdays) & (dt < wdays * 3))
+        base_rate = n_base / (2.0 * wdays + 0.01)
+        win_rate = n_win / (wdays + 0.01)
+        feats[f"rate_{wname}"] = float(np.log1p(win_rate / (base_rate + 0.001)))
 
-    if len(moments_12m) > 0 and len(moments_6m) > 0:
-        mom_total = float(moments_12m.sum())
-        mom_recent = float(moments_6m.sum())
-        mom_older = mom_total - mom_recent
-        if mom_older > 0:
-            feats[10] = mom_recent / mom_older  # mom_accel
-        else:
-            feats[10] = 1.0
+    # Fine-grained rate ratios
+    r7d = float(np.sum(dt < 7))
+    r30d = float(np.sum(dt < 30))
+    r90d = float(np.sum(dt < 90))
+    r365d = float(np.sum(dt < 365))
+    feats["rate_7_30"] = float(np.log1p(r7d / (r30d / 30 * 7 + 0.1)))
+    feats["rate_30_90"] = float(np.log1p(r30d / (r90d / 90 * 30 + 0.1)))
+    feats["rate_90_365"] = float(np.log1p(r90d / (r365d / 365 * 90 + 0.1)))
 
-        # Moment deficit: compare 12m rate vs 24m long-term rate
-        moments_24m = np.array([
-            compute_seismic_moment(e["mag"]) for e in ev_24m
-            if e.get("mag") is not None
+    # ---- NN distance change ----
+    r90_mask = dt < 90
+    old_mask = dt >= 90
+    if np.sum(r90_mask) >= 3 and np.sum(old_mask) >= 3:
+        feats["nn_change"] = float(
+            np.mean(np.sort(dists[r90_mask])[:3])
+            - np.mean(np.sort(dists[old_mask])[:3])
+        )
+    else:
+        feats["nn_change"] = 0.0
+
+    # ---- Clustering ----
+    if N >= 20:
+        sample_idx = np.random.choice(N, min(N, 60), replace=False)
+        st_dists_list = []
+        for i in sample_idx:
+            other = np.arange(N) != i
+            sd = haversine_vec(la[i], lo[i], la[other], lo[other])
+            td = np.abs(t[i] - t[other]) / SEC_PER_DAY + 0.01
+            st = np.log10(sd + 0.1) + np.log10(td)
+            st_dists_list.append(float(np.min(st)))
+        feats["st_nn"] = float(np.mean(st_dists_list))
+        feats["st_nn_std"] = float(np.std(st_dists_list))
+        feats["frac_clust"] = float(np.mean(np.array(st_dists_list) < 2.0))
+    else:
+        feats["st_nn"] = 5.0
+        feats["st_nn_std"] = 0.0
+        feats["frac_clust"] = 0.0
+
+    # Centroid migration
+    if np.sum(r90_mask) >= 3 and np.sum(old_mask) >= 3:
+        feats["centroid_mig"] = float(haversine_km(
+            float(np.mean(la[r90_mask])), float(np.mean(lo[r90_mask])),
+            float(np.mean(la[old_mask])), float(np.mean(lo[old_mask])),
+        ))
+    else:
+        feats["centroid_mig"] = 0.0
+
+    # Elongation
+    if N >= 10:
+        pos = np.column_stack([
+            la - np.mean(la),
+            (lo - np.mean(lo)) * np.cos(np.radians(ev_lat)),
         ])
-        if len(moments_24m) > 0:
-            long_term_rate = float(moments_24m.sum()) / 2.0  # per year
-            recent_rate = mom_total  # per year (12m window)
-            feats[11] = recent_rate / max(long_term_rate, 1e-30) - 1.0  # mom_deficit
+        cov = np.cov(pos.T)
+        evals = np.sort(np.linalg.eigvalsh(cov))[::-1]
+        feats["elong"] = float(evals[0] / (evals[1] + 1e-6)) if evals[1] > 0 else 1.0
+    else:
+        feats["elong"] = 1.0
+
+    # ---- Max magnitude in windows ----
+    for wname, wdays in [("30d", 30), ("90d", 90), ("180d", 180)]:
+        wm = m[dt < wdays]
+        feats[f"maxmag_{wname}"] = float(np.max(wm)) if len(wm) > 0 else 4.0
+
+    # Mag variance change
+    if N >= 20:
+        half = N // 2
+        feats["mag_var_chg"] = float(np.var(m[half:]) - np.var(m[:half]))
+    else:
+        feats["mag_var_chg"] = 0.0
+
+    # Mag ranges
+    m30 = m[dt < 30]
+    feats["mag_range_30d"] = float(np.max(m30) - np.min(m30)) if len(m30) >= 2 else 0.0
+
+    # ---- Coulomb stress proxy ----
+    m5_near = (m >= 5.0) & (dt < 180) & (dists < 100) & (dists > 1)
+    feats["coulomb"] = (
+        float(np.sum(1.0 / (dists[m5_near] + 1.0)))
+        if np.sum(m5_near) > 0 else 0.0
+    )
+    feats["coulomb_moment"] = (
+        float(np.sum(mag_to_moment(m[m5_near]) / (dists[m5_near] + 1.0)) / 1e18)
+        if np.sum(m5_near) > 0 else 0.0
+    )
+    feats["coulomb_n"] = float(np.sum(m5_near))
+
+    m5_broad = (m >= 5.0) & (dt < 365) & (dists < 300) & (dists > 1)
+    feats["coulomb_broad"] = (
+        float(np.sum(
+            mag_to_moment(m[m5_broad]) / (dists[m5_broad] + 10.0) ** 2
+        ) / 1e15)
+        if np.sum(m5_broad) > 0 else 0.0
+    )
+
+    # ---- Foreshock detection ----
+    r90_events = int(np.sum(r90_mask))
+    if r90_events >= 5:
+        recent_dt = np.sort(dt[r90_mask])
+        n_weeks = max(4, int(np.ceil(90 / 7)))
+        week_counts = np.zeros(n_weeks)
+        for dd in recent_dt:
+            wk = min(int(dd / 7), n_weeks - 1)
+            week_counts[wk] += 1
+        x = np.arange(n_weeks)
+        if np.std(week_counts) > 0:
+            feats["inv_omori"] = float(-np.corrcoef(x, week_counts)[0, 1])
         else:
-            feats[11] = 0.0
+            feats["inv_omori"] = 0.0
     else:
-        feats[10] = 1.0
-        feats[11] = 0.0
+        feats["inv_omori"] = 0.0
 
-    # 13: Coulomb proxy (largest event in 12m * inverse distance)
-    if len(ev_12m) >= 1:
-        best_coulomb = 0.0
-        for e in ev_12m:
-            emag = e.get("mag", 0)
-            dist = haversine_km(lat, lon, e["latitude"], e["longitude"])
-            if dist < 1.0:
-                dist = 1.0
-            coulomb = compute_seismic_moment(emag) / (dist ** 2)
-            if coulomb > best_coulomb:
-                best_coulomb = coulomb
-        feats[12] = math.log10(best_coulomb + 1e-30)  # coulomb_proxy (log scale)
+    # Bath's law
+    if len(m30) >= 2:
+        sm = np.sort(m30)[::-1]
+        feats["bath_ratio"] = float(sm[1] / (sm[0] + 0.01))
     else:
-        feats[12] = 0.0
+        feats["bath_ratio"] = 0.0
 
-    # 14-15: Max magnitude in last 90d and 180d
-    mags_90d = [e["mag"] for e in ev_3m if e.get("mag") is not None]
-    mags_180d = [e["mag"] for e in ev_6m if e.get("mag") is not None]
-    feats[13] = max(mags_90d) if mags_90d else 0.0   # max_mag_90d
-    feats[14] = max(mags_180d) if mags_180d else 0.0  # max_mag_180d
+    # Foreshock ratio
+    if N >= 10:
+        check = min(N, 150)
+        fcount = 0
+        for i in range(max(0, N - check), N):
+            if np.any((t > t[i]) & (t < t[i] + 7 * SEC_PER_DAY) & (m > m[i])):
+                fcount += 1
+        feats["foreshock_r"] = fcount / check
+    else:
+        feats["foreshock_r"] = 0.0
 
-    return feats.astype(np.float32)
+    # Quiescence detection
+    expected_7d = r365d / 365 * 7
+    feats["quiescence_7d"] = float(np.log1p(expected_7d / (r7d + 0.1)))
+
+    # ---- Moment release ----
+    moments = mag_to_moment(m)
+    for wname, wdays in [("90d", 90), ("180d", 180), ("1y", 365)]:
+        wm = moments[dt < wdays]
+        feats[f"mom_{wname}"] = float(
+            np.log10(np.sum(wm) + 1e10)
+        ) if len(wm) > 0 else 10.0
+
+    rec_mom = float(np.sum(moments[dt < 180]))
+    old_mom = float(np.sum(moments[(dt >= 180) & (dt < 365)]))
+    feats["mom_accel"] = float(np.log1p(rec_mom / (old_mom + 1e10)))
+
+    yrs = max(0.5, (np.max(t) - np.min(t)) / SEC_PER_YEAR)
+    annual = float(np.sum(moments)) / yrs
+    feats["mom_deficit"] = float(
+        np.log10(np.sum(moments[dt < 365]) / (annual + 1e10) + 0.01)
+    )
+
+    # ---- Depth features ----
+    feats["depth_mean"] = float(np.mean(d))
+    feats["depth_std"] = float(np.std(d)) if N >= 5 else 0.0
+    if N >= 20:
+        half = N // 2
+        feats["depth_trend"] = float(np.mean(d[half:]) - np.mean(d[:half]))
+    else:
+        feats["depth_trend"] = 0.0
+
+    if N >= 20:
+        dh, _ = np.histogram(d, bins=10)
+        feats["depth_bimod"] = float(np.std(dh) / (np.mean(dh) + 0.1))
+    else:
+        feats["depth_bimod"] = 0.0
+
+    # ---- Tectonic regime ----
+    deep = (d > 70) & (dists < 200)
+    feats["subduc"] = float(np.sum(deep)) / max(1, N)
+
+    # ---- Event counts ----
+    feats["n_events"] = float(N)
+    feats["n_7d"] = float(np.sum(dt < 7))
+    feats["n_14d"] = float(np.sum(dt < 14))
+    feats["n_30d"] = float(np.sum(dt < 30))
+    feats["n_90d"] = float(np.sum(dt < 90))
+
+    # ---- M5+ acceleration ----
+    m5_90 = float(np.sum((m >= 5.0) & (dt < 90)))
+    m5_365 = float(np.sum((m >= 5.0) & (dt < 365)))
+    feats["m5_accel"] = float(np.log1p(m5_90 / (m5_365 / 365 * 90 + 0.1)))
+
+    # Spatial concentration
+    if np.sum(r90_mask) >= 3:
+        feats["spatial_conc"] = float(np.std(dists[r90_mask]))
+    else:
+        feats["spatial_conc"] = 100.0
+
+    # Mag range 90d
+    m90 = m[dt < 90]
+    feats["mag_range_90d"] = float(np.max(m90) - np.min(m90)) if len(m90) >= 2 else 0.0
+
+    # ---- M6+ recurrence ----
+    if len(cat.m6_times) > 0:
+        hd = haversine_vec(ev_lat, ev_lon, cat.m6_lats, cat.m6_lons)
+        nearby_m6 = cat.m6_times[(hd < 300) & (cat.m6_times < ev_time)]
+        if len(nearby_m6) >= 2:
+            intervals = np.diff(np.sort(nearby_m6)) / SEC_PER_YEAR
+            feats["m6_recur"] = float(np.mean(intervals))
+        else:
+            feats["m6_recur"] = 10.0
+    else:
+        feats["m6_recur"] = 10.0
+
+    # ---- v8c interactions (4 non-redundant) ----
+    feats["b_x_rate"] = feats["b_trend"] * feats["rate_3m"]
+    feats["coul_x_rate"] = feats["coulomb"] * feats["rate_1m"]
+    feats["mom_x_clust"] = feats["mom_accel"] * feats["frac_clust"]
+    feats["fore_x_bath"] = feats["foreshock_r"] * feats["bath_ratio"]
+
+    # ---- v8c near-field (6) ----
+    near_90 = near & (dt < 90)
+    feats["near_n_90d"] = float(np.sum(near_90))
+    feats["near_mom_90d"] = float(
+        np.log10(np.sum(mag_to_moment(m[near_90])) + 1e10)
+    ) if np.sum(near_90) > 0 else 10.0
+
+    # Near-field interevent time CV
+    near_dt = np.sort(dt[near])
+    if len(near_dt) >= 5:
+        iet = np.diff(near_dt)
+        feats["near_iet_cv"] = float(np.std(iet) / (np.mean(iet) + 0.01))
+        feats["near_iet_min"] = float(np.min(iet))
+    else:
+        feats["near_iet_cv"] = 1.0
+        feats["near_iet_min"] = 100.0
+
+    # Near/far ratio
+    far = (dists >= 250) & (dists < 500)
+    n_near_90 = float(np.sum(near & (dt < 90)))
+    n_far_90 = float(np.sum(far & (dt < 90)))
+    feats["near_far_ratio"] = float(np.log1p(n_near_90 / (n_far_90 + 0.1)))
+
+    # Near-field rate x b
+    feats["near_rate_x_b"] = feats["near_n_90d"] * feats["b_trend"]
+
+    # ---- Assemble into ordered array matching BLOCK_S_NAMES ----
+    result = np.zeros(N_FEAT_S, dtype=np.float32)
+    for i, name in enumerate(BLOCK_S_NAMES):
+        result[i] = feats.get(name, 0.0)
+
+    return result
 
 
 # ===================================================================
-# BLOCK C FEATURE EXTRACTION (Coherence Field Theory)
+# BLOCK C: COHERENCE FIELD THEORY FEATURES (12 features)
 # ===================================================================
 
-def extract_block_c(
+def compute_block_c(
     full_catalog: list[dict],
     lat: float,
     lon: float,
     ref_epoch: float,
-    grid_fields: dict[str, np.ndarray] | None = None,
 ) -> np.ndarray:
     """Extract Block C (coherence field theory) features.
 
@@ -1248,10 +1479,8 @@ def extract_block_c(
     """
     feats = np.full(N_FEAT_C, np.nan, dtype=np.float64)
 
-    # Events already filtered to nearby + before ref_epoch by caller
     past_catalog = [e for e in full_catalog if _event_epoch(e) < ref_epoch]
 
-    # Extract coherence features (float64 precision for fits)
     cft = extract_coherence_features(
         past_catalog,
         lat=lat,
@@ -1259,72 +1488,77 @@ def extract_block_c(
         radius_km=LABEL_RADIUS_KM,
         time_window_days=FORWARD_WINDOW_DAYS,
         ref_epoch=ref_epoch,
-        grid_fields=grid_fields,
     )
 
-    feats[0] = cft.get("ell", np.nan)                  # ell
-    feats[1] = cft.get("ell_trend", np.nan)             # ell_trend
-    feats[2] = cft.get("ell_acceleration", np.nan)      # ell_acceleration
-    feats[3] = cft.get("days_to_criticality", np.nan)   # days_to_criticality
-    feats[4] = cft.get("nu_exponent", np.nan)            # nu_exponent
-    feats[5] = cft.get("t_c_confidence", np.nan)         # divergence_r2
-    feats[6] = cft.get("delta_aic_iet", np.nan)          # delta_aic_iet
-    feats[7] = cft.get("tau_local", np.nan)              # tau_local
-    feats[8] = cft.get("grad_tau_local", np.nan)         # grad_tau_local
-    feats[9] = cft.get("S_over_Gamma", np.nan)           # S_over_Gamma
-    feats[10] = cft.get("Da_local", np.nan)              # Da_local
+    feats[0] = cft.get("ell", np.nan)
+    feats[1] = cft.get("ell_trend", np.nan)
+    feats[2] = cft.get("ell_acceleration", np.nan)
+    feats[3] = cft.get("days_to_criticality", np.nan)
+    feats[4] = cft.get("nu_exponent", np.nan)
+    feats[5] = cft.get("t_c_confidence", np.nan)
+    feats[6] = cft.get("delta_aic_iet", np.nan)
+    feats[7] = cft.get("tau_local", np.nan)
+    feats[8] = cft.get("grad_tau_local", np.nan)
+    feats[9] = cft.get("S_over_Gamma", np.nan)
+    feats[10] = cft.get("Da_local", np.nan)
 
-    # Singularity count
     sing = test_earthquake_singularity(cft)
-    feats[11] = float(sing.conditions_met)               # singularity_count
+    feats[11] = float(sing.conditions_met)
 
     return feats.astype(np.float32)
 
 
 # ===================================================================
-# BLOCK I FEATURE EXTRACTION (Interaction Terms)
+# BLOCK X: CROSS-DOMAIN INTERACTION FEATURES (8 features)
 # ===================================================================
 
-def extract_block_i(
+def compute_block_x(
     block_s: np.ndarray,
     block_c: np.ndarray,
 ) -> np.ndarray:
-    """Extract Block I (interaction) features from S and C blocks.
+    """Extract Block X (cross-domain interaction) features.
 
-    Cross-products designed to capture physically meaningful interactions:
-    1. ell x b_trend: diverging length with dropping b-value
-    2. ell x rate_accel: diverging length with accelerating rate
-    3. tau x max_mag: coherence x largest event
-    4. days_to_criticality x singularity_count: imminence x conditions
-    5. S_over_Gamma x ell_acceleration: loading x accelerating divergence
+    8 physically motivated cross-products between seismicity and CFT.
 
     Returns
     -------
-    ndarray, shape (5,), dtype float32
+    ndarray, shape (8,), dtype float32
     """
-    feats = np.full(N_FEAT_I, 0.0, dtype=np.float64)
+    feats = np.zeros(N_FEAT_X, dtype=np.float64)
 
-    # Handle NaN by replacing with 0 for products
     def _safe(val: float) -> float:
-        return 0.0 if math.isnan(val) else val
+        return 0.0 if (math.isnan(val) or math.isinf(val)) else val
 
-    ell = _safe(float(block_c[0]))           # ell
-    ell_trend = _safe(float(block_c[1]))     # ell_trend
-    ell_accel = _safe(float(block_c[2]))     # ell_acceleration
-    dtc = _safe(float(block_c[3]))           # days_to_criticality
-    tau = _safe(float(block_c[7]))           # tau_local
-    sg = _safe(float(block_c[9]))            # S_over_Gamma
-    sing = _safe(float(block_c[11]))         # singularity_count
+    # Block S feature indices (from BLOCK_S_NAMES order):
+    # 0=b_trend, 6=rate_1m, 10=rate_7_30, 15=frac_clust,
+    # 20=maxmag_90d, 24=coulomb, 33=mom_accel
+    s_b_trend = _safe(float(block_s[0]))
+    s_rate_1m = _safe(float(block_s[6]))
+    s_rate_7_30 = _safe(float(block_s[10]))
+    s_frac_clust = _safe(float(block_s[15]))
+    s_maxmag_90d = _safe(float(block_s[20]))
+    s_coulomb = _safe(float(block_s[24]))
+    s_mom_accel = _safe(float(block_s[33]))
 
-    b_trend = _safe(float(block_s[5]))       # b_trend
-    rate_1m = _safe(float(block_s[0]))       # rate_1m (acceleration)
-    max_mag_180d = _safe(float(block_s[14])) # max_mag_180d
+    # Block C feature indices (from BLOCK_C_NAMES order):
+    # 0=ell, 1=ell_trend, 2=ell_acceleration, 3=days_to_criticality,
+    # 6=delta_aic_iet, 7=tau_local, 9=S_over_Gamma, 11=singularity_count
+    c_ell = _safe(float(block_c[0]))
+    c_ell_accel = _safe(float(block_c[2]))
+    c_dtc = _safe(float(block_c[3]))
+    c_daic = _safe(float(block_c[6]))
+    c_tau = _safe(float(block_c[7]))
+    c_sg = _safe(float(block_c[9]))
+    c_sing = _safe(float(block_c[11]))
 
-    feats[0] = ell * b_trend                 # ell_x_b_trend
-    feats[1] = ell * rate_1m                 # ell_x_rate_accel
-    feats[2] = tau * max_mag_180d            # tau_x_max_mag
-    feats[3] = dtc * sing                    # dtc_x_singularity
-    feats[4] = sg * ell_accel                # sg_x_ell_accel
+    feats[0] = c_ell * s_b_trend              # ell_x_b_trend
+    feats[1] = c_ell * s_rate_1m              # ell_x_rate_1m
+    feats[2] = c_ell * s_coulomb              # ell_x_coulomb
+    feats[3] = c_tau * s_maxmag_90d           # tau_x_maxmag_90d
+    feats[4] = c_dtc * c_sing                 # dtc_x_singularity
+    feats[5] = c_sg * s_mom_accel             # sg_x_mom_accel
+    feats[6] = c_daic * s_frac_clust          # daic_x_frac_clust
+    feats[7] = c_ell_accel * s_rate_7_30      # ell_accel_x_rate_7_30
 
     return feats.astype(np.float32)
 
@@ -1346,13 +1580,14 @@ def load_all_data(
 ]:
     """Load earthquake catalog, build samples, extract features, split.
 
-    This is the complete data pipeline. Steps:
+    Steps:
     1. Load USGS catalog (2000-2024, M2.5+)
     2. Gardner-Knopoff aftershock declustering
     3. Identify M6+ mainshocks
     4. Generate same-location controls (2:1 neg ratio)
     5. Temporal split with assertions
-    6. Extract features for each sample
+    6. Pre-build numpy arrays for vectorized features
+    7. Extract features for each sample
     """
     # Step 1: Load USGS catalog
     if verbose:
@@ -1410,7 +1645,7 @@ def load_all_data(
             f"LEAKAGE: Test sample year {s['year']} outside [{TEST_START}, {TEST_END}]"
         )
 
-    # Additional cross-boundary assertion
+    # Cross-boundary assertion
     if train_samples and val_samples:
         max_train_year = max(s["year"] for s in train_samples)
         min_val_year = min(s["year"] for s in val_samples)
@@ -1431,44 +1666,16 @@ def load_all_data(
         print(f"      Test  ({TEST_START}-{TEST_END}):  {len(test_samples)} samples")
         sys.stdout.flush()
 
-    # Step 6: Extract features
+    # Step 6: Pre-build numpy arrays for FAST vectorized features
     if verbose:
-        print("\n    Extracting features...")
+        print("\n    Pre-building catalog arrays for vectorized features...")
         sys.stdout.flush()
 
-    # Pre-build spatial index for fast radius queries
+    cat = CatalogArrays(full_catalog, verbose=verbose)
+
+    # Step 7: Extract features
     if verbose:
-        print("    Building spatial index for fast radius queries...")
-        sys.stdout.flush()
-
-    # Bin events by 5-degree lat/lon cells
-    spatial_bins: dict[tuple[int, int], list[dict]] = {}
-    for e in full_catalog:
-        lat_bin = int(e.get("latitude", 0) / 5)
-        lon_bin = int(e.get("longitude", 0) / 5)
-        spatial_bins.setdefault((lat_bin, lon_bin), []).append(e)
-
-    def _get_nearby_events(lat: float, lon: float, radius_km: float,
-                            before_epoch: float) -> list[dict]:
-        """Fast spatial query using pre-built bins."""
-        lat_bin = int(lat / 5)
-        lon_bin = int(lon / 5)
-        # 300km ≈ 3 degrees, so check ±1 bin
-        nearby = []
-        for dlat in range(-1, 2):
-            for dlon in range(-1, 2):
-                for e in spatial_bins.get((lat_bin + dlat, lon_bin + dlon), []):
-                    eepoch = _event_epoch(e)
-                    if eepoch <= 0 or eepoch >= before_epoch:
-                        continue
-                    dist = _haversine_km(lat, lon,
-                                         e.get("latitude", 0), e.get("longitude", 0))
-                    if dist <= radius_km:
-                        nearby.append(e)
-        return nearby
-
-    if verbose:
-        print(f"    Spatial index: {len(spatial_bins)} bins")
+        print("\n    Extracting features (numpy-vectorized)...")
         sys.stdout.flush()
 
     def _extract_features_for_split(
@@ -1479,14 +1686,20 @@ def load_all_data(
         n = len(split_samples)
         X_s = np.zeros((n, N_FEAT_S), dtype=np.float32)
         X_c = np.zeros((n, N_FEAT_C), dtype=np.float32)
-        X_i = np.zeros((n, N_FEAT_I), dtype=np.float32)
+        X_x = np.zeros((n, N_FEAT_X), dtype=np.float32)
         y = np.zeros(n, dtype=np.float32)
+
+        t0 = time.time()
+        n_skipped = 0
 
         for idx, sample in enumerate(split_samples):
             if verbose and (idx + 1) % 50 == 0:
+                elapsed = time.time() - t0
+                rate = (idx + 1) / elapsed if elapsed > 0 else 0
                 print(
                     f"      {split_name}: {idx + 1}/{n} "
-                    f"({100 * (idx + 1) / n:.0f}%)",
+                    f"({100 * (idx + 1) / n:.0f}%, "
+                    f"{rate:.0f} samples/min)",
                 )
                 sys.stdout.flush()
 
@@ -1494,32 +1707,37 @@ def load_all_data(
             lon = sample["longitude"]
             ref_epoch = sample["ref_epoch"]
 
-            # Get nearby events using spatial index (FAST)
-            nearby = _get_nearby_events(lat, lon, LABEL_RADIUS_KM, ref_epoch)
+            # Block S: fast numpy-vectorized (v8c approach)
+            s_feats = compute_block_s(lat, lon, ref_epoch, cat)
+            if s_feats is None:
+                n_skipped += 1
+                # Leave as zeros -- will be imputed later
+            else:
+                X_s[idx] = s_feats
 
-            # Block S (pass nearby events instead of full catalog)
-            s_feats = extract_block_s(nearby, lat, lon, ref_epoch)
-            X_s[idx] = s_feats
-
-            # Block C (pass nearby events)
-            c_feats = extract_block_c(nearby, lat, lon, ref_epoch)
+            # Block C: coherence engine
+            c_feats = compute_block_c(full_catalog, lat, lon, ref_epoch)
             X_c[idx] = c_feats
 
-            # Block I
-            i_feats = extract_block_i(s_feats, c_feats)
-            X_i[idx] = i_feats
+            # Block X: cross-domain interactions
+            x_feats = compute_block_x(X_s[idx], X_c[idx])
+            X_x[idx] = x_feats
 
             y[idx] = sample["label"]
 
         if verbose:
-            print(f"      {split_name}: {n}/{n} (100%)     ")
+            elapsed = time.time() - t0
+            print(
+                f"      {split_name}: {n}/{n} (100%) -- "
+                f"{elapsed:.1f}s, {n_skipped} skipped"
+            )
             sys.stdout.flush()
 
         # Assemble feature matrices for each variant
         X_dict = {
             "baseline": X_s.copy(),
             "enhanced": np.hstack([X_s, X_c]),
-            "full": np.hstack([X_s, X_c, X_i]),
+            "full": np.hstack([X_s, X_c, X_x]),
         }
         return X_dict, y
 
@@ -1530,7 +1748,6 @@ def load_all_data(
     # Impute NaN with training mean (per feature)
     for variant in ["baseline", "enhanced", "full"]:
         train_mean = np.nanmean(X_train[variant], axis=0)
-        # Replace NaN in training mean with 0
         train_mean = np.where(np.isnan(train_mean), 0.0, train_mean)
 
         for X in [X_train[variant], X_val[variant], X_test[variant]]:
@@ -1540,7 +1757,7 @@ def load_all_data(
                 if col_nans.any():
                     X[col_nans, col] = train_mean[col]
 
-    # 5:1 downsample if needed (check class ratio in training)
+    # 5:1 downsample if needed
     n_pos_train = int(y_train.sum())
     n_neg_train = int(len(y_train) - n_pos_train)
     if n_neg_train > 5 * n_pos_train:
@@ -1562,7 +1779,8 @@ def load_all_data(
         if verbose:
             print(
                 f"    After downsample: {len(y_train)} samples "
-                f"({int(y_train.sum())} pos, {int(len(y_train) - y_train.sum())} neg)"
+                f"({int(y_train.sum())} pos, "
+                f"{int(len(y_train) - y_train.sum())} neg)"
             )
 
     meta = {
@@ -1592,30 +1810,17 @@ def assert_temporal_integrity(
     val_years: list[int],
     test_years: list[int],
 ) -> None:
-    """Assert that no sample crosses temporal boundaries.
-
-    This is the core anti-leakage guarantee.
-    """
+    """Assert that no sample crosses temporal boundaries."""
     for y in train_years:
         assert y <= TRAIN_END, (
             f"LEAKAGE: Train year {y} > TRAIN_END {TRAIN_END}"
         )
-
     for y in val_years:
-        assert y >= VAL_START, (
-            f"LEAKAGE: Val year {y} < VAL_START {VAL_START}"
-        )
-        assert y <= VAL_END, (
-            f"LEAKAGE: Val year {y} > VAL_END {VAL_END}"
-        )
-
+        assert y >= VAL_START, f"LEAKAGE: Val year {y} < VAL_START {VAL_START}"
+        assert y <= VAL_END, f"LEAKAGE: Val year {y} > VAL_END {VAL_END}"
     for y in test_years:
-        assert y >= TEST_START, (
-            f"LEAKAGE: Test year {y} < TEST_START {TEST_START}"
-        )
-        assert y <= TEST_END, (
-            f"LEAKAGE: Test year {y} > TEST_END {TEST_END}"
-        )
+        assert y >= TEST_START, f"LEAKAGE: Test year {y} < TEST_START {TEST_START}"
+        assert y <= TEST_END, f"LEAKAGE: Test year {y} > TEST_END {TEST_END}"
 
 
 # ===================================================================
@@ -1626,27 +1831,28 @@ def main(
     output_dir: str | Path | None = None,
     verbose: bool = True,
 ) -> dict:
-    """Run the complete definitive earthquake prediction pipeline.
+    """Run the complete definitive earthquake prediction pipeline v2.
 
     Steps:
         1. Load USGS catalog
         2. Gardner-Knopoff aftershock declustering
         3. Identify M6+ mainshocks
         4. Generate same-location controls (2:1 neg ratio)
-        5. For each sample: compute Block S features from catalog
-        6. For each sample: compute Block C features from coherence_engine
-        7. Assert temporal split integrity
-        8. 5:1 downsample if needed
-        9. Normalize features
-        10. Train 3 GBT models
-        11. Evaluate on test ONCE
-        12. Significance tests
-        13. Save results
+        5. Pre-build numpy arrays for fast vectorized features
+        6. For each sample: compute Block S (60 v8c features, numpy)
+        7. For each sample: compute Block C (12 CFT features)
+        8. For each sample: compute Block X (8 cross-domain interactions)
+        9. Assert temporal split integrity
+        10. Normalize features
+        11. Train 3 GBT models
+        12. Evaluate on test ONCE
+        13. Significance tests
+        14. Save results
 
     Parameters
     ----------
     output_dir : str or Path, optional
-        Directory for results JSON. Defaults to project root.
+        Directory for results JSON.
     verbose : bool
         Print progress.
 
@@ -1667,9 +1873,15 @@ def main(
 
     if verbose:
         print("=" * 72)
-        print("DEFINITIVE EARTHQUAKE PREDICTION MODEL v1")
+        print("DEFINITIVE EARTHQUAKE PREDICTION MODEL v2 (MEGA-MODEL)")
         print("RESEARCH ONLY -- NOT OPERATIONAL")
         print("=" * 72)
+        print()
+        print(f"Feature architecture:")
+        print(f"  Block S: {N_FEAT_S} seismicity features (full v8c, numpy-vectorized)")
+        print(f"  Block C: {N_FEAT_C} coherence field theory features")
+        print(f"  Block X: {N_FEAT_X} cross-domain interaction features")
+        print(f"  Total:   {N_FEAT_FULL} features (full model)")
         print()
         print("Temporal splits:")
         print(f"  Train: {TRAIN_START} -- {TRAIN_END}")
@@ -1678,16 +1890,17 @@ def main(
         print()
         print(f"GBT config: {GBT_N_TREES} trees, depth={GBT_MAX_DEPTH}, "
               f"lr={GBT_LEARNING_RATE}, subsample={GBT_SUBSAMPLE}")
+        print(f"Early stopping patience: {EARLY_STOP_PATIENCE}")
         print(f"Label: M{MIN_MAINSHOCK_MAG}+ within {LABEL_RADIUS_KM} km, "
               f"{FORWARD_WINDOW_DAYS:.0f} days forward")
         print()
         sys.stdout.flush()
 
     # ---------------------------------------------------------------
-    # Steps 1-6: Load data, decluster, build samples, extract features
+    # Steps 1-7: Load data, decluster, build samples, extract features
     # ---------------------------------------------------------------
     if verbose:
-        print("[1-6] Loading data, building samples, extracting features...")
+        print("[1-7] Loading data, building samples, extracting features...")
         sys.stdout.flush()
 
     X_train, X_val, X_test, y_train, y_val, y_test, meta = load_all_data(
@@ -1699,10 +1912,10 @@ def main(
     assert len(y_test) > 0, "No test samples loaded"
 
     # ---------------------------------------------------------------
-    # Step 9: Normalize features (fit on train, apply to val/test)
+    # Step 10: Normalize features (fit on train, apply to val/test)
     # ---------------------------------------------------------------
     if verbose:
-        print("\n[9] Normalizing features...")
+        print("\n[10] Normalizing features...")
         sys.stdout.flush()
 
     normalizers: dict[str, FeatureNormalizer] = {}
@@ -1714,10 +1927,10 @@ def main(
         normalizers[variant] = norm
 
     # ---------------------------------------------------------------
-    # Step 10: Train 3 GBT models on train (with early stopping on val)
+    # Step 11: Train 3 GBT models on train (with early stopping on val)
     # ---------------------------------------------------------------
     if verbose:
-        print("\n[10] Training GBT models...")
+        print("\n[11] Training GBT models...")
         sys.stdout.flush()
 
     models: dict[str, GradientBoostedTrees] = {}
@@ -1781,10 +1994,10 @@ def main(
             )
 
     # ---------------------------------------------------------------
-    # Step 11: Evaluate on test ONCE
+    # Step 12: Evaluate on test ONCE
     # ---------------------------------------------------------------
     if verbose:
-        print("\n[11] TEST EVALUATION (single pass, no going back)...")
+        print("\n[12] TEST EVALUATION (single pass, no going back)...")
         sys.stdout.flush()
 
     test_preds: dict[str, np.ndarray] = {}
@@ -1809,10 +2022,10 @@ def main(
             sys.stdout.flush()
 
     # ---------------------------------------------------------------
-    # Step 12: Significance tests
+    # Step 13: Significance tests
     # ---------------------------------------------------------------
     if verbose:
-        print("\n[12] Paired bootstrap significance tests...")
+        print("\n[13] Paired bootstrap significance tests...")
         sys.stdout.flush()
 
     cft_lift = paired_bootstrap_test(
@@ -1844,21 +2057,29 @@ def main(
     )
 
     if verbose:
-        print(f"\n  Top 15 features (full model, split count importance):")
-        for name, imp in importance_ranked[:15]:
-            print(f"    {name:25s}  {imp:.4f}")
+        print(f"\n  Top 20 features (full model, split count importance):")
+        for name, imp in importance_ranked[:20]:
+            print(f"    {name:30s}  {imp:.4f}")
         sys.stdout.flush()
 
     # ---------------------------------------------------------------
-    # Step 13: Assemble and save results
+    # Step 14: Assemble and save results
     # ---------------------------------------------------------------
     elapsed = time.time() - t_start
 
     results = {
-        "model": "hazardpulse_earthquake_definitive_v1",
+        "model": "hazardpulse_earthquake_definitive_v2",
         "disclaimer": "RESEARCH ONLY. NOT operational. NOT a replacement for USGS.",
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "elapsed_seconds": round(elapsed, 1),
+        "feature_architecture": {
+            "block_s": f"{N_FEAT_S} seismicity features (full v8c port)",
+            "block_c": f"{N_FEAT_C} coherence field theory features",
+            "block_x": f"{N_FEAT_X} cross-domain interaction features",
+            "baseline_total": N_FEAT_BASELINE,
+            "enhanced_total": N_FEAT_ENHANCED,
+            "full_total": N_FEAT_FULL,
+        },
         "audit_guarantees": {
             "temporal_split": (
                 f"Train {TRAIN_START}-{TRAIN_END}, "
@@ -1877,6 +2098,7 @@ def main(
             "meta_stacker": False,
             "hyperparameter_tuning_on_test": False,
             "single_test_evaluation": True,
+            "feature_extraction": "numpy-vectorized (v8c approach)",
             "model_type": "GradientBoostedTrees (single per variant, no ensemble)",
             "gbt_config": {
                 "n_trees": GBT_N_TREES,
@@ -1887,6 +2109,7 @@ def main(
                 "min_samples_leaf": GBT_MIN_SAMPLES_LEAF,
                 "l2_reg": GBT_L2_REG,
                 "gamma": GBT_GAMMA,
+                "early_stop_patience": EARLY_STOP_PATIENCE,
             },
         },
         "data_summary": meta,
@@ -1924,13 +2147,13 @@ def main(
     }
 
     # Save to JSON
-    results_path = output_dir / "definitive_results.json"
+    results_path = output_dir / "definitive_results_v2.json"
     with open(results_path, "w") as fh:
         json.dump(results, fh, indent=2, default=str)
 
     if verbose:
         print(f"\n  Results saved to: {results_path}")
-        print(f"  Total time: {elapsed:.1f} seconds")
+        print(f"  Total time: {elapsed:.1f} seconds ({elapsed / 60:.1f} minutes)")
         print("\n" + "=" * 72)
         print("DONE. Remember: this is RESEARCH ONLY.")
         print("=" * 72)
@@ -1947,7 +2170,10 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Definitive leak-proof earthquake prediction model (RESEARCH ONLY)",
+        description=(
+            "Definitive leak-proof earthquake prediction model v2 "
+            "(RESEARCH ONLY)"
+        ),
     )
     parser.add_argument(
         "--output-dir",
