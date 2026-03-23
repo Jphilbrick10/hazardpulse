@@ -1,0 +1,308 @@
+{
+  "model": "hazardpulse_earthquake_definitive_v1",
+  "disclaimer": "RESEARCH ONLY. NOT operational. NOT a replacement for USGS.",
+  "timestamp": "2026-03-23T01:10:26Z",
+  "elapsed_seconds": 2034.4,
+  "audit_guarantees": {
+    "temporal_split": "Train 2005-2017, Val 2018-2019, Test 2020-2024",
+    "label_definition": "M6.0+ within 300.0km and 365 days FORWARD",
+    "aftershock_declustering": "Gardner-Knopoff (1974)",
+    "control_generation": "Same-location, 2:1 neg ratio, time-offset 1.5-4.5 years",
+    "meta_stacker": false,
+    "hyperparameter_tuning_on_test": false,
+    "single_test_evaluation": true,
+    "model_type": "GradientBoostedTrees (single per variant, no ensemble)",
+    "gbt_config": {
+      "n_trees": 200,
+      "max_depth": 4,
+      "learning_rate": 0.05,
+      "subsample": 0.5,
+      "colsample": 0.7,
+      "min_samples_leaf": 20,
+      "l2_reg": 1.0,
+      "gamma": 0.1
+    }
+  },
+  "data_summary": {
+    "n_catalog_events": 493963,
+    "n_mainshocks": 256018,
+    "n_aftershocks_removed": 237945,
+    "n_train": 3082,
+    "n_val": 377,
+    "n_test": 726,
+    "train_pos": 1060,
+    "train_neg": 2022,
+    "val_pos": 108,
+    "val_neg": 269,
+    "test_pos": 335,
+    "test_neg": 391
+  },
+  "training_metadata": {
+    "baseline": {
+      "n_trees_used": 1,
+      "stopped_early": true,
+      "best_val_loss": 0.6066042184829712
+    },
+    "enhanced": {
+      "n_trees_used": 9,
+      "stopped_early": true,
+      "best_val_loss": 0.6048519015312195
+    },
+    "full": {
+      "n_trees_used": 4,
+      "stopped_early": true,
+      "best_val_loss": 0.6057345867156982
+    }
+  },
+  "validation_sanity_check": {
+    "baseline": {
+      "auc": 0.585088806278398
+    },
+    "enhanced": {
+      "auc": 0.7206044334297129
+    },
+    "full": {
+      "auc": 0.6628459314332918
+    }
+  },
+  "baseline": {
+    "auc": 0.61434515402527,
+    "pr_auc": 0.5911323938711645,
+    "brier": 0.2592399354031915,
+    "bss": -0.04316637929971057,
+    "calibration": {
+      "predicted": [
+        0.351318087829046
+      ],
+      "observed": [
+        0.46143250688705234
+      ],
+      "counts": [
+        726
+      ]
+    },
+    "bootstrap_ci": {
+      "mean": 0.6038110116122422,
+      "ci_lo": 0.5623087342828155,
+      "ci_hi": 0.6441283023381154,
+      "std": 0.02076647778390299
+    },
+    "n_positive": 335,
+    "n_negative": 391,
+    "base_rate": 0.46143250688705234
+  },
+  "enhanced": {
+    "auc": 0.6492575485742649,
+    "pr_auc": 0.5981812748229157,
+    "brier": 0.24396541204627784,
+    "bss": 0.018297411766966087,
+    "calibration": {
+      "predicted": [
+        0.2911814290743608,
+        0.3735765010207981,
+        0.4227257477385657,
+        0.5047712326049805
+      ],
+      "observed": [
+        0.0,
+        0.3663663663663664,
+        0.5582010582010583,
+        1.0
+      ],
+      "counts": [
+        13,
+        333,
+        378,
+        2
+      ]
+    },
+    "bootstrap_ci": {
+      "mean": 0.6490877280063656,
+      "ci_lo": 0.6087633861050518,
+      "ci_hi": 0.6889420925023672,
+      "std": 0.020346497806200962
+    },
+    "n_positive": 335,
+    "n_negative": 391,
+    "base_rate": 0.46143250688705234
+  },
+  "full": {
+    "auc": 0.618887658892239,
+    "pr_auc": 0.5810343804390057,
+    "brier": 0.25257475239342236,
+    "bss": -0.016346071630457537,
+    "calibration": {
+      "predicted": [
+        0.29697277396917343,
+        0.3686862412103861,
+        0.40965889258818194
+      ],
+      "observed": [
+        0.0,
+        0.44542772861356933,
+        0.75
+      ],
+      "counts": [
+        4,
+        678,
+        44
+      ]
+    },
+    "bootstrap_ci": {
+      "mean": 0.6189433199496422,
+      "ci_lo": 0.5800454184733618,
+      "ci_hi": 0.6600271287877086,
+      "std": 0.020625577310660188
+    },
+    "n_positive": 335,
+    "n_negative": 391,
+    "base_rate": 0.46143250688705234
+  },
+  "theory_tests": {
+    "cft_lift": {
+      "delta_auc": 0.03491239454899486,
+      "ci_lo": 0.007070345355607757,
+      "ci_hi": 0.08271562704663418,
+      "p_value": 0.007
+    },
+    "interaction_lift": {
+      "delta_auc": -0.03036988968202592,
+      "ci_lo": -0.06061721971246192,
+      "ci_hi": -0.0004611087756993452,
+      "p_value": 0.9755
+    }
+  },
+  "feature_importance": {
+    "full_model": [
+      {
+        "feature": "mom_deficit",
+        "importance": 0.16666666666666666
+      },
+      {
+        "feature": "max_mag_90d",
+        "importance": 0.125
+      },
+      {
+        "feature": "delta_aic_iet",
+        "importance": 0.125
+      },
+      {
+        "feature": "coulomb_proxy",
+        "importance": 0.10416666666666667
+      },
+      {
+        "feature": "nn_change",
+        "importance": 0.0625
+      },
+      {
+        "feature": "st_nn",
+        "importance": 0.0625
+      },
+      {
+        "feature": "ell",
+        "importance": 0.0625
+      },
+      {
+        "feature": "rate_1m",
+        "importance": 0.041666666666666664
+      },
+      {
+        "feature": "frac_clust",
+        "importance": 0.041666666666666664
+      },
+      {
+        "feature": "mom_accel",
+        "importance": 0.041666666666666664
+      },
+      {
+        "feature": "max_mag_180d",
+        "importance": 0.041666666666666664
+      },
+      {
+        "feature": "ell_acceleration",
+        "importance": 0.041666666666666664
+      },
+      {
+        "feature": "b_value",
+        "importance": 0.020833333333333332
+      },
+      {
+        "feature": "mc_late",
+        "importance": 0.020833333333333332
+      },
+      {
+        "feature": "ell_trend",
+        "importance": 0.020833333333333332
+      },
+      {
+        "feature": "days_to_criticality",
+        "importance": 0.020833333333333332
+      },
+      {
+        "feature": "rate_3m",
+        "importance": 0.0
+      },
+      {
+        "feature": "rate_6m",
+        "importance": 0.0
+      },
+      {
+        "feature": "rate_12m",
+        "importance": 0.0
+      },
+      {
+        "feature": "b_trend",
+        "importance": 0.0
+      },
+      {
+        "feature": "nu_exponent",
+        "importance": 0.0
+      },
+      {
+        "feature": "divergence_r2",
+        "importance": 0.0
+      },
+      {
+        "feature": "tau_local",
+        "importance": 0.0
+      },
+      {
+        "feature": "grad_tau_local",
+        "importance": 0.0
+      },
+      {
+        "feature": "S_over_Gamma",
+        "importance": 0.0
+      },
+      {
+        "feature": "Da_local",
+        "importance": 0.0
+      },
+      {
+        "feature": "singularity_count",
+        "importance": 0.0
+      },
+      {
+        "feature": "ell_x_b_trend",
+        "importance": 0.0
+      },
+      {
+        "feature": "ell_x_rate_accel",
+        "importance": 0.0
+      },
+      {
+        "feature": "tau_x_max_mag",
+        "importance": 0.0
+      },
+      {
+        "feature": "dtc_x_singularity",
+        "importance": 0.0
+      },
+      {
+        "feature": "sg_x_ell_accel",
+        "importance": 0.0
+      }
+    ],
+    "note": "Importance is split frequency, NOT causal attribution. A feature that splits often may simply have high variance."
+  }
+}

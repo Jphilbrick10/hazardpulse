@@ -785,44 +785,50 @@ def decluster_gardner_knopoff(
         if epoch > 0 and e.get("mag") is not None:
             parsed.append((epoch, e))
 
-    # Sort by magnitude descending (largest events are mainshocks)
+    # FAST approach: only process M5+ as potential mainshocks.
+    # Events below M5 are kept as-is (used for features, not as targets).
+    # This reduces O(N²) from 494K² to ~5K × 494K = manageable.
+
+    # Sort by magnitude descending
     parsed.sort(key=lambda x: x[1]["mag"], reverse=True)
 
-    is_aftershock = [False] * len(parsed)
+    is_aftershock = set()  # indices marked as aftershocks
+    n = len(parsed)
 
-    for i in range(len(parsed)):
-        if is_aftershock[i]:
+    # Build arrays for vectorized checks
+    epochs = np.array([p[0] for p in parsed])
+    lats = np.array([p[1]["latitude"] for p in parsed])
+    lons = np.array([p[1]["longitude"] for p in parsed])
+    mags = np.array([p[1]["mag"] for p in parsed])
+
+    # Only M5+ events can be mainshocks that remove aftershocks
+    for i in range(n):
+        if i in is_aftershock:
             continue
-        epoch_i = parsed[i][0]
-        ev_i = parsed[i][1]
-        mag_i = ev_i["mag"]
-        lat_i = ev_i["latitude"]
-        lon_i = ev_i["longitude"]
-        d_km, t_days = _gardner_knopoff_window(mag_i)
+        if mags[i] < 5.0:
+            break  # sorted by mag desc, so all remaining are < 5.0
+        d_km, t_days = _gardner_knopoff_window(float(mags[i]))
         t_sec = t_days * 86400.0
 
-        for j in range(len(parsed)):
-            if j == i or is_aftershock[j]:
-                continue
-            epoch_j = parsed[j][0]
-            ev_j = parsed[j][1]
+        # Temporal filter (vectorized)
+        dt = np.abs(epochs - epochs[i])
+        time_mask = dt <= t_sec
 
-            # Must be smaller magnitude
-            if ev_j["mag"] >= mag_i:
-                continue
+        # Magnitude filter
+        mag_mask = mags < mags[i]
 
-            # Temporal check
-            dt = abs(epoch_j - epoch_i)
-            if dt > t_sec:
-                continue
+        candidates = np.where(time_mask & mag_mask)[0]
 
-            # Spatial check
-            dist = haversine_km(lat_i, lon_i, ev_j["latitude"], ev_j["longitude"])
+        for j in candidates:
+            if j == i or j in is_aftershock:
+                continue
+            dist = haversine_km(float(lats[i]), float(lons[i]),
+                                float(lats[j]), float(lons[j]))
             if dist <= d_km:
-                is_aftershock[j] = True
+                is_aftershock.add(j)
 
-    mainshocks = [parsed[i][1] for i in range(len(parsed)) if not is_aftershock[i]]
-    aftershocks = [parsed[i][1] for i in range(len(parsed)) if is_aftershock[i]]
+    mainshocks = [parsed[i][1] for i in range(n) if i not in is_aftershock]
+    aftershocks = [parsed[i][1] for i in range(n) if i in is_aftershock]
 
     return mainshocks, aftershocks
 
@@ -1242,12 +1248,8 @@ def extract_block_c(
     """
     feats = np.full(N_FEAT_C, np.nan, dtype=np.float64)
 
-    # Filter catalog to events before ref_epoch
-    past_catalog = []
-    for e in full_catalog:
-        eepoch = _event_epoch(e)
-        if 0 < eepoch < ref_epoch:
-            past_catalog.append(e)
+    # Events already filtered to nearby + before ref_epoch by caller
+    past_catalog = [e for e in full_catalog if _event_epoch(e) < ref_epoch]
 
     # Extract coherence features (float64 precision for fits)
     cft = extract_coherence_features(
@@ -1434,6 +1436,41 @@ def load_all_data(
         print("\n    Extracting features...")
         sys.stdout.flush()
 
+    # Pre-build spatial index for fast radius queries
+    if verbose:
+        print("    Building spatial index for fast radius queries...")
+        sys.stdout.flush()
+
+    # Bin events by 5-degree lat/lon cells
+    spatial_bins: dict[tuple[int, int], list[dict]] = {}
+    for e in full_catalog:
+        lat_bin = int(e.get("latitude", 0) / 5)
+        lon_bin = int(e.get("longitude", 0) / 5)
+        spatial_bins.setdefault((lat_bin, lon_bin), []).append(e)
+
+    def _get_nearby_events(lat: float, lon: float, radius_km: float,
+                            before_epoch: float) -> list[dict]:
+        """Fast spatial query using pre-built bins."""
+        lat_bin = int(lat / 5)
+        lon_bin = int(lon / 5)
+        # 300km ≈ 3 degrees, so check ±1 bin
+        nearby = []
+        for dlat in range(-1, 2):
+            for dlon in range(-1, 2):
+                for e in spatial_bins.get((lat_bin + dlat, lon_bin + dlon), []):
+                    eepoch = _event_epoch(e)
+                    if eepoch <= 0 or eepoch >= before_epoch:
+                        continue
+                    dist = _haversine_km(lat, lon,
+                                         e.get("latitude", 0), e.get("longitude", 0))
+                    if dist <= radius_km:
+                        nearby.append(e)
+        return nearby
+
+    if verbose:
+        print(f"    Spatial index: {len(spatial_bins)} bins")
+        sys.stdout.flush()
+
     def _extract_features_for_split(
         split_samples: list[dict],
         split_name: str,
@@ -1450,7 +1487,6 @@ def load_all_data(
                 print(
                     f"      {split_name}: {idx + 1}/{n} "
                     f"({100 * (idx + 1) / n:.0f}%)",
-                    end="\r",
                 )
                 sys.stdout.flush()
 
@@ -1458,12 +1494,15 @@ def load_all_data(
             lon = sample["longitude"]
             ref_epoch = sample["ref_epoch"]
 
-            # Block S
-            s_feats = extract_block_s(full_catalog, lat, lon, ref_epoch)
+            # Get nearby events using spatial index (FAST)
+            nearby = _get_nearby_events(lat, lon, LABEL_RADIUS_KM, ref_epoch)
+
+            # Block S (pass nearby events instead of full catalog)
+            s_feats = extract_block_s(nearby, lat, lon, ref_epoch)
             X_s[idx] = s_feats
 
-            # Block C
-            c_feats = extract_block_c(full_catalog, lat, lon, ref_epoch)
+            # Block C (pass nearby events)
+            c_feats = extract_block_c(nearby, lat, lon, ref_epoch)
             X_c[idx] = c_feats
 
             # Block I
