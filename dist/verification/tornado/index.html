@@ -488,14 +488,19 @@
           <div>Top P(tor)</div>
           <div>Hash (SHA-256)</div>
         </div>
-        <noscript>
-          <p class="muted" style="padding:16px 0;">
-            The ledger loads from <code>/data/tornado-ledger.jsonl</code>. Enable JavaScript to see live entries,
-            or <a href="/data/tornado-ledger.jsonl">download the raw JSONL file</a>.
-          </p>
-        </noscript>
         <div id="ledger-rows">
-          <!-- Populated by inline script below -->
+        <div class="ledger-row"><div>2026-03-31T04:08:22.080151Z</div><div>86</div><div>ML</div><div>50.1%</div><div class="hash-mono">b458797b..2f832d7b</div></div>
+        <div class="ledger-row"><div>2026-03-31T03:52:04.624978Z</div><div>76</div><div>ML</div><div>50.5%</div><div class="hash-mono">a11d6418..19fa9e90</div></div>
+        <div class="ledger-row"><div>2026-03-23T13:16:25.719175Z</div><div>7</div><div>ML</div><div>22.6%</div><div class="hash-mono">61cb1457..90f38b33</div></div>
+        <div class="ledger-row"><div>2026-03-23T07:16:47.304049Z</div><div>37</div><div>ML</div><div>35.1%</div><div class="hash-mono">2b3e06d5..34f082e1</div></div>
+        <div class="ledger-row"><div>2026-03-23T01:15:14.531846Z</div><div>52</div><div>ML</div><div>37.8%</div><div class="hash-mono">475a206b..70f33b65</div></div>
+        <div class="ledger-row"><div>2026-03-22T23:14:51.707439Z</div><div>41</div><div>ML</div><div>45.9%</div><div class="hash-mono">f66a0fa7..b4cbe36b</div></div>
+        <div class="ledger-row"><div>2026-03-22T18:42:26.273935Z</div><div>11</div><div>ML</div><div>36.6%</div><div class="hash-mono">a645618b..a7243c7d</div></div>
+        <div class="ledger-row"><div>2026-03-22T12:59:34.773629Z</div><div>18</div><div>ML</div><div>57.4%</div><div class="hash-mono">afd4984f..2ea6d424</div></div>
+        <div class="ledger-row"><div>2026-03-22T06:57:08.910052Z</div><div>7</div><div>ML</div><div>41.6%</div><div class="hash-mono">94922256..dbdba297</div></div>
+        <div class="ledger-row"><div>2026-03-22T05:40:17.318866Z</div><div>4</div><div>ML</div><div>9.4%</div><div class="hash-mono">004314c4..1f9a70ef</div></div>
+        <div class="ledger-row"><div>2026-03-22T05:12:29.861938Z</div><div>5</div><div>ML</div><div>9.7%</div><div class="hash-mono">a793fdf4..66484a45</div></div>
+        <div class="ledger-row"><div>2026-03-22T04:11:35.843464Z</div><div>6</div><div>ML</div><div>10.9%</div><div class="hash-mono">dd40cf57..a2f3b3ee</div></div>
         </div>
       </div>
 
@@ -506,9 +511,11 @@
           Verify independently by downloading the ledger and recomputing.
         </p>
         <div id="hash-chain">
-          <noscript>
-            <p class="muted">Enable JavaScript or <a href="/data/tornado-ledger.jsonl">download the ledger</a> to verify hashes.</p>
-          </noscript>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border,#e5e7eb);font-size:12px;"><div><strong>2026-03-31T04:08:22.080151Z</strong></div><div class="hash-mono">hash: b458797b56f70a3b2a03939bd689c2f87ad558c21398d2a306e4bb342f832d7b</div><div class="hash-mono">prev: a11d6418..19fa9e90</div></div>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border,#e5e7eb);font-size:12px;"><div><strong>2026-03-31T03:52:04.624978Z</strong></div><div class="hash-mono">hash: a11d6418c7b906c842bc62b63530f3db6cf855f6ac28213b6895935319fa9e90</div><div class="hash-mono">prev: 61cb1457..90f38b33</div></div>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border,#e5e7eb);font-size:12px;"><div><strong>2026-03-23T13:16:25.719175Z</strong></div><div class="hash-mono">hash: 61cb1457f5bf3898fd2d961222c36441657d164b28b508e831abc8f190f38b33</div><div class="hash-mono">prev: 2b3e06d5..34f082e1</div></div>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border,#e5e7eb);font-size:12px;"><div><strong>2026-03-23T07:16:47.304049Z</strong></div><div class="hash-mono">hash: 2b3e06d5e3e74864f307c90df538a3a9d87911ce248cd06f0d36e84c34f082e1</div><div class="hash-mono">prev: 475a206b..70f33b65</div></div>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border,#e5e7eb);font-size:12px;"><div><strong>2026-03-23T01:15:14.531846Z</strong></div><div class="hash-mono">hash: 475a206bd17d9a6be6a54c75717f342e527ea2324f5720cf7b5f949c70f33b65</div><div class="hash-mono">prev: f66a0fa7..b4cbe36b</div></div>
         </div>
       </div>
     </section>
@@ -596,70 +603,6 @@
       <p class="footer-build">Built with Coherence Lang &middot; Zero client-side JS &middot; Zero npm dependencies &middot; Geolocation by Cloudflare Edge</p>
     </div>
   </footer>
-
-  <script>
-  // Ledger loader: fetch tornado-ledger.jsonl and render last 50 entries + hash chain
-  (function() {
-    var container = document.getElementById('ledger-rows');
-    var hashChain = document.getElementById('hash-chain');
-    if (!container) return;
-
-    fetch('/data/tornado-ledger.jsonl')
-      .then(function(r) { return r.text(); })
-      .then(function(text) {
-        var lines = text.trim().split('\n').filter(function(l) { return l.trim(); });
-        var entries = [];
-        for (var i = 0; i < lines.length; i++) {
-          try { entries.push(JSON.parse(lines[i])); } catch(e) {}
-        }
-        // Show last 50
-        var recent = entries.slice(-50).reverse();
-        var html = '';
-        for (var j = 0; j < recent.length; j++) {
-          var e = recent[j];
-          var ts = e.timestamp || e.ts || '—';
-          var nStorms = e.n_storms || e.storms_scored || '—';
-          var tier = e.scoring_tier || e.tier || 'ML';
-          var topP = e.top_probability != null ? (e.top_probability * 100).toFixed(1) + '%' : (e.top_p || '—');
-          var hash = e.hash || e.sha256 || '—';
-          var shortHash = hash.length > 16 ? hash.slice(0, 8) + '..' + hash.slice(-8) : hash;
-          html += '<div class="ledger-row">';
-          html += '<div>' + ts + '</div>';
-          html += '<div>' + nStorms + '</div>';
-          html += '<div>' + tier + '</div>';
-          html += '<div>' + topP + '</div>';
-          html += '<div class="hash-mono">' + shortHash + '</div>';
-          html += '</div>';
-        }
-        if (html) {
-          container.innerHTML = html;
-        } else {
-          container.innerHTML = '<p class="muted" style="padding:12px 0;">No ledger entries found. Predictions will appear here once the system is running.</p>';
-        }
-
-        // Hash chain display (last 5)
-        if (hashChain && entries.length > 0) {
-          var last5 = entries.slice(-5).reverse();
-          var chainHtml = '';
-          for (var k = 0; k < last5.length; k++) {
-            var he = last5[k];
-            var hts = he.timestamp || he.ts || '—';
-            var hh = he.hash || he.sha256 || '—';
-            var prev = he.prev_hash || he.previous_hash || '(genesis)';
-            chainHtml += '<div style="padding:8px 0;border-bottom:1px solid var(--border,#e5e7eb);font-size:12px;">';
-            chainHtml += '<div><strong>' + hts + '</strong></div>';
-            chainHtml += '<div class="hash-mono">hash: ' + hh + '</div>';
-            chainHtml += '<div class="hash-mono">prev: ' + (prev.length > 20 ? prev.slice(0,8) + '..' + prev.slice(-8) : prev) + '</div>';
-            chainHtml += '</div>';
-          }
-          hashChain.innerHTML = chainHtml;
-        }
-      })
-      .catch(function() {
-        container.innerHTML = '<p class="muted" style="padding:12px 0;">Could not load ledger. <a href="/data/tornado-ledger.jsonl">Download directly</a>.</p>';
-      });
-  })();
-  </script>
 
 </body>
 </html>
