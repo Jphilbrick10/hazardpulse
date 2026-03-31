@@ -902,6 +902,13 @@ def predict_tornado_probability(
     coherence_fields: dict[str, np.ndarray] | None,
     model: dict,
 ) -> dict:
+    # TODO: model deserialization from JSON requires from_dict() methods on
+    # GradientBoostedTrees, MetaStacker, and TornadoStormConfig. Currently
+    # masked because no pre-trained model file exists yet. When a model file
+    # is saved, the dict keys (e.g. model["gbt_full"], model["meta_stacker"])
+    # must be deserialized into their respective dataclass/object instances
+    # before use. Without from_dict(), this function will raise on attribute
+    # access (e.g. .predict()) against raw dicts.
     """Predict tornado probability for a single storm.
 
     Parameters

@@ -167,9 +167,8 @@ def fetch_hrrr_grid(
     if cached is not None:
         return cached
 
-    # Format the date for the S3 key  (YYYYMMDD -> YYYY/MM/DD)
-    formatted_date = f"{date_str[:4]}/{date_str[4:6]}/{date_str[6:8]}"
-    zarr_root = HRRR_ZARR_ROOT.format(date=formatted_date, hour=hour)
+    # Date stays as YYYYMMDD for the S3 key (e.g. hrrr.20240315/conus/...)
+    zarr_root = HRRR_ZARR_ROOT.format(date=date_str, hour=hour)
 
     grids: dict[str, np.ndarray] = {}
     for var_name, zarr_path in HRRR_VARS.items():

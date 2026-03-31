@@ -108,7 +108,7 @@ N_FEAT_FULL: int = N_FEAT_S + N_FEAT_C + N_FEAT_X        # 81
 # FEATURE NAMES -- every feature has a causal validity comment
 # ===================================================================
 
-# Block S: Full v8c Seismicity (60 features)
+# Block S: Full v8c Seismicity (61 features)
 # All derived from PAST seismicity at the sample location.
 BLOCK_S_NAMES: list[str] = [
     # b-value features (6)
@@ -1101,7 +1101,7 @@ class CatalogArrays:
 
 
 # ===================================================================
-# BLOCK S: FULL V8C SEISMICITY FEATURES (60 features, numpy-vectorized)
+# BLOCK S: FULL V8C SEISMICITY FEATURES (61 features, numpy-vectorized)
 # ===================================================================
 
 def compute_block_s(
@@ -1717,10 +1717,12 @@ def load_all_data(
 
             # Block C: coherence engine
             c_feats = compute_block_c(full_catalog, lat, lon, ref_epoch)
+            c_feats = np.nan_to_num(c_feats, nan=0.0)
             X_c[idx] = c_feats
 
             # Block X: cross-domain interactions
             x_feats = compute_block_x(X_s[idx], X_c[idx])
+            x_feats = np.nan_to_num(x_feats, nan=0.0)
             X_x[idx] = x_feats
 
             y[idx] = sample["label"]

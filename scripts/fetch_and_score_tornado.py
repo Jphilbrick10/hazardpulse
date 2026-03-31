@@ -136,11 +136,14 @@ def build_storm_tracks(
 
 
 def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    """Approximate haversine distance in km."""
+    """Haversine great-circle distance in km."""
     import math
-    dlat = (lat2 - lat1) * 111.0
-    dlon = (lon2 - lon1) * 111.0 * math.cos(math.radians((lat1 + lat2) / 2))
-    return math.sqrt(dlat ** 2 + dlon ** 2)
+    R = 6371.0  # Earth radius in km
+    lat1_r, lat2_r = math.radians(lat1), math.radians(lat2)
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat / 2) ** 2 + math.cos(lat1_r) * math.cos(lat2_r) * math.sin(dlon / 2) ** 2
+    return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
 def load_pretrained_model() -> dict | None:
@@ -185,8 +188,8 @@ def score_storm_analytic(
         grad_tau = coh.get("grad_tau", 0)
         torsion = coh.get("torsion", 0)
         alignment = coh.get("alignment", 0)
-        s_over_gamma = coh.get("s_over_gamma", 0)
-        da = coh.get("da", 0)
+        s_over_gamma = coh.get("S_over_Gamma", 0)
+        da = coh.get("Da", 0)
     else:
         tau = grad_tau = torsion = alignment = s_over_gamma = da = 0.0
 
@@ -273,11 +276,29 @@ def score_storms(
             model_scores = {"analytic_prob": prob}
             coherence_score = prob
         else:
-            # Tier 3: ProbSevere-only fallback
-            ps_tor = float(storm.get("ps_tor", 0)) / 100.0
-            prob = round(min(max(ps_tor, 0.0), 0.99), 4)
+            # Tier 3: ProbSevere-only composite (no ML, no HRRR)
+            # Use available ProbSevere features directly
+            import math as _math
+            mucape = float(storm.get("mucape", 0) or 0)
+            srh01 = float(storm.get("srh01", 0) or 0)
+            ebshear = float(storm.get("ebshear", 0) or 0)
+            maxllaz = float(storm.get("maxllaz", 0) or 0)
+            mesh = float(storm.get("mesh", 0) or 0)
+            flash_rate = float(storm.get("flash_rate", 0) or 0)
+
+            # Simple composite: STP-like product normalized
+            cape_term = min(mucape / 2000.0, 1.5)
+            srh_term = min(abs(srh01) / 200.0, 1.5)
+            shear_term = min(ebshear / 30.0, 1.5)
+            rotation_term = min(maxllaz / 0.01, 2.0)  # strong signal
+            hail_term = min(mesh / 1.0, 1.0)
+            lightning_term = min(flash_rate / 20.0, 1.0)
+
+            raw = cape_term * srh_term * shear_term * 0.3 + rotation_term * 0.5 + hail_term * 0.1 + lightning_term * 0.1
+            prob = 1.0 / (1.0 + _math.exp(-3.0 * (raw - 1.0)))  # sigmoid centered at raw=1
+            prob = round(min(max(prob, 0.0), 0.99), 4)
             risk = _risk_band(prob)
-            model_scores = {"ps_tor_raw": round(ps_tor, 4)}
+            model_scores = {"ps_composite_raw": round(raw, 4)}
 
         # Coherence diagnostics at storm location
         coherence_diag: dict = {}
@@ -1414,7 +1435,10 @@ def append_ledger(
         for s in scored_storms[:20]  # Cap at 20 for ledger size
     ]
 
-    # SHA-256 hash of this entry
+    # SHA-256 hash of this entry (computed BEFORE adding "hash" key).
+    # Verification: to recompute, exclude the "hash" key from the entry,
+    # then json.dumps(entry_without_hash, sort_keys=True, separators=(",",":"))
+    # and SHA-256 the result.
     payload = json.dumps(entry, sort_keys=True, separators=(",", ":"))
     entry["hash"] = hashlib.sha256(payload.encode("utf-8")).hexdigest()
 

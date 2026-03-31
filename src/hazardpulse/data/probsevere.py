@@ -295,23 +295,33 @@ def _parse_storms(data: dict) -> list[dict] | None:
             except (ValueError, TypeError):
                 return default
 
+        def _float_fallback(primary: str, fallback: str) -> float:
+            """Return _float(primary) if the key exists, else _float(fallback).
+
+            Unlike ``or``, this correctly preserves 0.0 values.
+            """
+            val = props.get(primary)
+            if val is not None and val != "N/A":
+                return _float(primary)
+            return _float(fallback)
+
         storm: dict = {
             "id": props.get("ID", 0),
             "lat": lat,
             "lon": lon,
             "ps": _float("PS"),
-            "ps_tor": _float("PROBTOR") or _float("PS_TOR"),
-            "ps_hail": _float("PROBHAIL") or _float("PS_HAIL"),
-            "ps_wind": _float("PROBWIND") or _float("PS_WIND"),
+            "ps_tor": _float_fallback("PROBTOR", "PS_TOR"),
+            "ps_hail": _float_fallback("PROBHAIL", "PS_HAIL"),
+            "ps_wind": _float_fallback("PROBWIND", "PS_WIND"),
             "mucape": _float("MUCAPE"),
             "mlcape": _float("MLCAPE"),
             "mlcin": _float("MLCIN"),
             "ebshear": _float("EBSHEAR"),
-            "srh01": _float("SRH01KM") or _float("SRH01"),
+            "srh01": _float_fallback("SRH01KM", "SRH01"),
             "mesh": _float("MESH"),
-            "vil_density": _float("VIL_DENSITY") or _float("VILD"),
-            "flash_rate": _float("FLASH_RATE") or _float("FLASHRATE"),
-            "flash_density": _float("FLASH_DENSITY") or _float("FLASHDENSITY"),
+            "vil_density": _float_fallback("VIL_DENSITY", "VILD"),
+            "flash_rate": _float_fallback("FLASH_RATE", "FLASHRATE"),
+            "flash_density": _float_fallback("FLASH_DENSITY", "FLASHDENSITY"),
             "maxllaz": _float("MAXLLAZ"),
             "p98llaz": _float("P98LLAZ"),
             "p98mlaz": _float("P98MLAZ"),
