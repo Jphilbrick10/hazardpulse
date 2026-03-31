@@ -32,3 +32,30 @@ Thumbs.db
 .idea/
 .vscode/
 *.code-workspace
+
+# === PROTECTED: Do not publish ===
+# Trained model weights
+results/models/
+*.model.json
+*.weights.npz
+
+# Raw cached data (HRRR, ProbSevere, soundings)
+.cache/
+cache/
+*.npz
+*.json.gz
+
+# API keys and secrets
+.env
+.env.*
+*.key
+*.pem
+.cdsapirc
+
+# Debug/internal logs
+*.log
+*.err.log
+
+# Local development
+.wrangler/
+dist_upload.zip
