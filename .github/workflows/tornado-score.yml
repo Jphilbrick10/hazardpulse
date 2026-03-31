@@ -76,3 +76,12 @@ jobs:
           Automated scoring via fetch_and_score_tornado.py.
           Model: hp-tornado-coherence-v1 | Sources: ProbSevere v3, HRRR, CFT"
           git push
+
+      - name: Deploy to Cloudflare Workers
+        if: steps.changes.outputs.changed == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4"
+          command: deploy
