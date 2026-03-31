@@ -7,7 +7,7 @@
   <meta name="description" content="Active and retired model versions, promotion history, and performance metrics for all HazardPulse hazard models.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.io/registry/">
-  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="stylesheet" href="/assets/styles.css?v=5">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -84,7 +84,43 @@
       </p>
     </section>
 
-    <section class="section" aria-labelledby="active-heading">
+    <div class="depth-content">
+      <div class="depth-toggle" role="radiogroup" aria-label="Content depth">
+        <input type="radio" name="depth" id="depth-simple" value="simple" checked>
+        <label for="depth-simple">Simple</label>
+        <input type="radio" name="depth" id="depth-technical" value="technical">
+        <label for="depth-technical">Technical</label>
+      </div>
+
+    <div data-depth="simple">
+      <section class="section">
+        <h2>Our models</h2>
+        <div class="card">
+          <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">HazardPulse uses four prediction models, each specialized for a different type of hazard:</p>
+          <div class="grid">
+            <div class="card col-6 hazard-eq">
+              <h3>Earthquake model</h3>
+              <p class="muted">Uses patterns in past earthquake activity to estimate future risk. 77% accuracy at ranking risk levels.</p>
+            </div>
+            <div class="card col-6 hazard-hu">
+              <h3>Hurricane model</h3>
+              <p class="muted">Uses ocean temperature, wind patterns, and satellite data to predict rapid intensification. 94% accuracy at ranking risk levels.</p>
+            </div>
+            <div class="card col-6 hazard-to">
+              <h3>Tornado model (day-ahead)</h3>
+              <p class="muted">Uses weather parameters to predict tornado environments 12-24 hours ahead. 64% accuracy (this is a hard problem).</p>
+            </div>
+            <div class="card col-6 hazard-to">
+              <h3>Tornado model (storm-level)</h3>
+              <p class="muted">Scores individual thunderstorms using radar rotation and atmospheric physics. 89% accuracy at ranking risk. Research status.</p>
+            </div>
+          </div>
+          <p class="muted" style="margin:12px 0 0;font-size:13px;">Models are only promoted after they beat the previous version on holdout data. Models that fail quality checks are rejected.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="section" aria-labelledby="active-heading" data-depth="technical">
       <h2 id="active-heading">Active models</h2>
       <div class="card">
         <table>
@@ -95,7 +131,7 @@
               <td>Earthquake</td>
               <td><span class="chip good">active</span></td>
               <td>2026-02-28</td>
-              <td>0.733</td>
+              <td>0.768</td>
               <td>0.182</td>
               <td>GBM + Bayesian cal.</td>
             </tr>
@@ -131,7 +167,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="history-heading">
+    <section class="section" aria-labelledby="history-heading" data-depth="technical">
       <h2 id="history-heading">Promotion / retirement history</h2>
       <div class="card">
         <table>
@@ -152,7 +188,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="retired-heading">
+    <section class="section" aria-labelledby="retired-heading" data-depth="technical">
       <h2 id="retired-heading">Retired models</h2>
       <div class="card">
         <table>
@@ -167,7 +203,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="policy-heading">
+    <section class="section" aria-labelledby="policy-heading" data-depth="technical">
       <h2 id="policy-heading">Promotion policy</h2>
       <div class="grid">
         <div class="card col-6">
@@ -193,8 +229,9 @@
       </div>
     </section>
 
-    <div class="cta-row" style="margin-bottom:32px;">
+    <div class="cta-row" style="margin-bottom:32px;" data-depth="technical">
       <a href="/data/model-registry.json" class="btn btn-secondary">Download registry (JSON)</a>
+    </div>
     </div>
   </main>
 

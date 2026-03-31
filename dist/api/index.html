@@ -7,7 +7,7 @@
   <meta name="description" content="HazardPulse API endpoints, schema contracts, versioning policy, and integration guide.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.io/api/">
-  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="stylesheet" href="/assets/styles.css?v=5">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -84,7 +84,26 @@
       </p>
     </section>
 
-    <section class="section" aria-labelledby="endpoints-heading">
+    <div class="depth-content">
+      <div class="depth-toggle" role="radiogroup" aria-label="Content depth">
+        <input type="radio" name="depth" id="depth-simple" value="simple" checked>
+        <label for="depth-simple">Simple</label>
+        <input type="radio" name="depth" id="depth-technical" value="technical">
+        <label for="depth-technical">Technical</label>
+      </div>
+
+    <div data-depth="simple">
+      <section class="section">
+        <div class="card">
+          <h2>For developers</h2>
+          <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">This page describes our programming interface (API) for software developers who want to build applications using HazardPulse data.</p>
+          <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">If you just want to check the forecasts, visit the <a href="/live/">Live forecasts</a> page instead.</p>
+          <p class="muted" style="margin:0;">Switch to Technical mode above to see the full API documentation.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="section" aria-labelledby="endpoints-heading" data-depth="technical">
       <h2 id="endpoints-heading">Core endpoints</h2>
       <div class="card">
         <table>
@@ -103,7 +122,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="streaming-heading">
+    <section class="section" aria-labelledby="streaming-heading" data-depth="technical">
       <h2 id="streaming-heading">Streaming endpoints</h2>
       <div class="card">
         <table>
@@ -120,7 +139,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="contracts-heading">
+    <section class="section" aria-labelledby="contracts-heading" data-depth="technical">
       <h2 id="contracts-heading">Data contracts</h2>
       <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
         All responses follow versioned contracts. Breaking changes require a version bump.
@@ -175,7 +194,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="principles-heading">
+    <section class="section" aria-labelledby="principles-heading" data-depth="technical">
       <h2 id="principles-heading">API principles</h2>
       <div class="grid">
         <div class="card col-6">
@@ -215,8 +234,9 @@
       </div>
     </section>
 
-    <div class="cta-row" style="margin-bottom:32px;">
+    <div class="cta-row" style="margin-bottom:32px;" data-depth="technical">
       <a href="/data/api-contracts.json" class="btn btn-secondary">Download contracts (JSON)</a>
+    </div>
     </div>
   </main>
 

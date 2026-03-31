@@ -7,7 +7,7 @@
   <meta name="description" content="Immutable prediction ledger, provenance envelopes, gate decisions, and replay artifacts. Every forecast is auditable end-to-end.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.io/evidence/">
-  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="stylesheet" href="/assets/styles.css?v=5">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -85,8 +85,52 @@
       </p>
     </section>
 
-    <!-- Prediction ledger -->
-    <section class="section" aria-labelledby="ledger-heading" id="ledger">
+    <div class="depth-content">
+      <div class="depth-toggle" role="radiogroup" aria-label="Content depth">
+        <input type="radio" name="depth" id="depth-simple" value="simple" checked>
+        <label for="depth-simple">Simple</label>
+        <input type="radio" name="depth" id="depth-technical" value="technical">
+        <label for="depth-technical">Technical</label>
+      </div>
+
+    <div data-depth="simple">
+      <section class="section">
+        <div class="card">
+          <h2>What is this page?</h2>
+          <p style="font-size:15px;line-height:1.6;margin:8px 0;">Every time HazardPulse publishes a forecast, we save a permanent record of:</p>
+          <ul style="font-size:15px;line-height:1.8;">
+            <li>What data went in (from USGS, NOAA, NHC, SPC)</li>
+            <li>What model produced the result (and which version)</li>
+            <li>Whether all quality checks passed</li>
+            <li>The exact probability that was published</li>
+          </ul>
+          <p style="font-size:15px;line-height:1.6;margin:8px 0 0;">This means you can verify any forecast we have ever made. Records are never deleted or changed.</p>
+        </div>
+      </section>
+      <section class="section">
+        <h2>Recent forecasts</h2>
+        <div class="grid">
+          <div class="card col-4 hazard-eq">
+            <h3>Earthquake</h3>
+            <p class="muted">27.4% chance of M6.0+ in 30 days</p>
+            <p class="muted" style="font-size:12px;">Model: hp-etas-v3.2.1 | Quality checks: <span class="chip good">passed</span></p>
+          </div>
+          <div class="card col-4 hazard-hu">
+            <h3>Hurricane</h3>
+            <p class="muted">41.8% chance of rapid intensification</p>
+            <p class="muted" style="font-size:12px;">Model: hp-hurricane-ri-v8.1 | Quality checks: <span class="chip good">passed</span></p>
+          </div>
+          <div class="card col-4 hazard-to">
+            <h3>Tornado</h3>
+            <p class="muted">18.6% tornado probability</p>
+            <p class="muted" style="font-size:12px;">Model: hp-tornado-meso-v1.4.2 | Quality checks: <span class="chip warn">data slightly stale</span></p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Prediction ledger (Technical) -->
+    <section class="section" aria-labelledby="ledger-heading" id="ledger" data-depth="technical">
       <h2 id="ledger-heading">Prediction ledger</h2>
       <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
         Append-only record of every published forecast. Entries are never deleted or modified.
@@ -139,8 +183,8 @@
       </div>
     </section>
 
-    <!-- Provenance envelopes -->
-    <section class="section" aria-labelledby="provenance-heading">
+    <!-- Provenance envelopes (Technical only) -->
+    <section class="section" aria-labelledby="provenance-heading" data-depth="technical">
       <h2 id="provenance-heading">Provenance envelopes</h2>
       <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
         Each forecast has a cryptographic envelope proving exactly what data and computation produced it.
@@ -182,8 +226,8 @@
       </div>
     </section>
 
-    <!-- Gate decisions -->
-    <section class="section" aria-labelledby="gates-heading" id="gates">
+    <!-- Gate decisions (Technical only) -->
+    <section class="section" aria-labelledby="gates-heading" id="gates" data-depth="technical">
       <h2 id="gates-heading">Gate decision ledger</h2>
       <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
         Every forecast passes through 13 hard gates before publication. Here are the latest decisions.
@@ -223,8 +267,8 @@
       </div>
     </section>
 
-    <!-- Replay index -->
-    <section class="section" aria-labelledby="replay-heading" id="replay">
+    <!-- Replay index (Technical only) -->
+    <section class="section" aria-labelledby="replay-heading" id="replay" data-depth="technical">
       <h2 id="replay-heading">Replay index</h2>
       <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
         Every forecast can be replayed deterministically. Download the frozen input artifact,
@@ -265,8 +309,8 @@
       </div>
     </section>
 
-    <!-- Export options -->
-    <section class="section" aria-labelledby="export-heading">
+    <!-- Export options (Technical only) -->
+    <section class="section" aria-labelledby="export-heading" data-depth="technical">
       <h2 id="export-heading">Export options</h2>
       <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Download evidence artifacts in your preferred format.</p>
       <div class="grid">
@@ -291,8 +335,8 @@
       </div>
     </section>
 
-    <!-- Chain integrity -->
-    <section class="section" aria-labelledby="integrity-heading">
+    <!-- Chain integrity (Technical only) -->
+    <section class="section" aria-labelledby="integrity-heading" data-depth="technical">
       <h2 id="integrity-heading">Chain integrity</h2>
       <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
         The evidence chain is verified every publish cycle. Here is the current integrity status.
@@ -316,6 +360,7 @@
         </div>
       </div>
     </section>
+    </div>
   </main>
 
   <footer class="footer" role="contentinfo">

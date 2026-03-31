@@ -7,7 +7,7 @@
   <meta name="description" content="How HazardPulse builds probabilistic hazard forecasts: data sources, model architectures, evaluation protocols, caveats, and governance gates.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.io/methods/">
-  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="stylesheet" href="/assets/styles.css?v=5">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -85,120 +85,175 @@
       </p>
     </section>
 
+    <div class="depth-content">
+      <div class="depth-toggle" role="radiogroup" aria-label="Content depth">
+        <input type="radio" name="depth" id="depth-simple" value="simple" checked>
+        <label for="depth-simple">Simple</label>
+        <input type="radio" name="depth" id="depth-technical" value="technical">
+        <label for="depth-technical">Technical</label>
+      </div>
+
     <!-- The equation -->
     <section class="section" aria-labelledby="eq-heading">
       <h2 id="eq-heading">The governing equation</h2>
-      <div class="equation-block">
-        P(event | data, model, gate=pass) &nbsp; ± &nbsp; confidence band
+      <div data-depth="simple">
+        <div class="card">
+          <p style="font-size:16px;line-height:1.6;margin:0;">We calculate: <strong>How likely is this hazard?</strong> plus a range showing how sure we are. If our quality checks fail, we do not publish.</p>
+        </div>
       </div>
-      <p class="muted">
-        Every forecast is a conditional probability: the chance of a hazard event
-        given the latest ingested data, a pinned model version, and confirmation that
-        all governance gates passed. The confidence band quantifies how much the estimate
-        could shift given data and model uncertainty. If any blocking gate fails, the
-        forecast is not published.
-      </p>
+      <div data-depth="technical">
+        <div class="equation-block">
+          P(event | data, model, gate=pass) &nbsp; &plusmn; &nbsp; confidence band
+        </div>
+        <p class="muted">
+          Every forecast is a conditional probability: the chance of a hazard event
+          given the latest ingested data, a pinned model version, and confirmation that
+          all governance gates passed. The confidence band quantifies how much the estimate
+          could shift given data and model uncertainty. If any blocking gate fails, the
+          forecast is not published.
+        </p>
+      </div>
     </section>
 
     <!-- Data sources -->
     <section class="section" aria-labelledby="sources-heading">
       <h2 id="sources-heading">Data sources</h2>
-      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
-        All input data comes from authoritative government and scientific agencies.
-        We do not generate our own observations.
-      </p>
-
-      <div class="data-source hazard-eq">
-        <strong>USGS ANSS Comprehensive Earthquake Catalog (ComCat)</strong>
-        <p class="muted">
-          Real-time and reviewed earthquake events. Updated continuously.
-          Feed latency: typically 1–5 minutes after event detection.
-          Used for: seismicity rates, b-value computation, event clustering, Coulomb stress updates.
-        </p>
+      <div data-depth="simple">
+        <div class="card">
+          <p class="muted" style="margin:0 0 12px;">We get all our data from official US government agencies:</p>
+          <ul style="margin:0;">
+            <li><strong>Earthquakes</strong> &mdash; US Geological Survey (USGS), updated continuously</li>
+            <li><strong>Hurricanes</strong> &mdash; NOAA weather models and National Hurricane Center, updated every 6 hours</li>
+            <li><strong>Tornadoes</strong> &mdash; Storm Prediction Center and NOAA radar, updated every 15 minutes to 1 hour</li>
+          </ul>
+        </div>
       </div>
-
-      <div class="data-source hazard-hu">
-        <strong>NOAA GFS (Global Forecast System)</strong>
-        <p class="muted">
-          Synoptic-scale atmospheric analysis and forecasts. Updated every 6 hours (00Z, 06Z, 12Z, 18Z).
-          Used for: deep-layer shear, SST, ocean heat content, upper-level divergence, moisture fields.
+      <div data-depth="technical">
+        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+          All input data comes from authoritative government and scientific agencies.
+          We do not generate our own observations.
         </p>
-      </div>
 
-      <div class="data-source hazard-hu">
-        <strong>NHC Advisories and SHIPS Guidance</strong>
-        <p class="muted">
-          Official tropical cyclone intensity/track advisories and Statistical Hurricane Intensity
-          Prediction Scheme outputs. Updated with each advisory cycle.
-          Used for: current intensity, track forecast, environmental predictors.
-        </p>
-      </div>
+        <div class="data-source hazard-eq">
+          <strong>USGS ANSS Comprehensive Earthquake Catalog (ComCat)</strong>
+          <p class="muted">
+            Real-time and reviewed earthquake events. Updated continuously.
+            Feed latency: typically 1&ndash;5 minutes after event detection.
+            Used for: seismicity rates, b-value computation, event clustering, Coulomb stress updates.
+          </p>
+        </div>
 
-      <div class="data-source hazard-to">
-        <strong>SPC Mesoanalysis</strong>
-        <p class="muted">
-          Storm Prediction Center real-time mesoscale analysis fields. Updated hourly.
-          Used for: CAPE, CIN, STP, SRH, composite parameters, LCL height.
-          Freshness threshold: 45 minutes. Beyond this, gate G1 triggers degrade.
-        </p>
-      </div>
+        <div class="data-source hazard-hu">
+          <strong>NOAA GFS (Global Forecast System)</strong>
+          <p class="muted">
+            Synoptic-scale atmospheric analysis and forecasts. Updated every 6 hours (00Z, 06Z, 12Z, 18Z).
+            Used for: deep-layer shear, SST, ocean heat content, upper-level divergence, moisture fields.
+          </p>
+        </div>
 
-      <div class="data-source hazard-to">
-        <strong>RAP / HRRR and MRMS</strong>
-        <p class="muted">
-          Rapid Refresh / High-Resolution Rapid Refresh model output and Multi-Radar Multi-Sensor
-          precipitation/rotation products. Updated hourly (RAP) and every 15 min (HRRR/MRMS).
-          Used for: convective initiation, mesocyclone detection, environmental verification.
-        </p>
+        <div class="data-source hazard-hu">
+          <strong>NHC Advisories and SHIPS Guidance</strong>
+          <p class="muted">
+            Official tropical cyclone intensity/track advisories and Statistical Hurricane Intensity
+            Prediction Scheme outputs. Updated with each advisory cycle.
+            Used for: current intensity, track forecast, environmental predictors.
+          </p>
+        </div>
+
+        <div class="data-source hazard-to">
+          <strong>SPC Mesoanalysis</strong>
+          <p class="muted">
+            Storm Prediction Center real-time mesoscale analysis fields. Updated hourly.
+            Used for: CAPE, CIN, STP, SRH, composite parameters, LCL height.
+            Freshness threshold: 45 minutes. Beyond this, gate G1 triggers degrade.
+          </p>
+        </div>
+
+        <div class="data-source hazard-to">
+          <strong>ProbSevere v3 via NOAA MRMS</strong>
+          <p class="muted">
+            Real-time storm-object attributes including radar rotation, atmospheric profiles,
+            and lightning data. Updated every 2 minutes.
+            Used for: storm-level tornado scoring via hp-tornado-coherence-v1.
+          </p>
+        </div>
+
+        <div class="data-source hazard-to">
+          <strong>RAP / HRRR and MRMS</strong>
+          <p class="muted">
+            Rapid Refresh / High-Resolution Rapid Refresh model output and Multi-Radar Multi-Sensor
+            precipitation/rotation products. Updated hourly (RAP) and every 15 min (HRRR/MRMS).
+            Used for: convective initiation, mesocyclone detection, environmental verification.
+          </p>
+        </div>
       </div>
     </section>
 
     <!-- Model architectures -->
     <section class="section" aria-labelledby="models-heading">
       <h2 id="models-heading">Model architectures</h2>
-      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
-        Each hazard has its own model tailored to the physics and data characteristics of that domain.
-      </p>
-
-      <div class="grid">
-        <div class="card col-4 hazard-eq">
-          <h3>Earthquake (hp-etas-v3.2.1)</h3>
-          <div class="kv"><span>Architecture</span><strong>Gradient-boosted ensemble + Bayesian calibration</strong></div>
-          <div class="kv"><span>Features</span><strong>42</strong></div>
-          <div class="kv"><span>Key inputs</span><strong>Seismicity rates, b-value, Coulomb stress, geodetic strain, catalog statistics</strong></div>
-          <div class="kv"><span>Training cutoff</span><strong>2026-02-15</strong></div>
-          <div class="kv"><span>Calibration method</span><strong>Isotonic regression on holdout</strong></div>
+      <div data-depth="simple">
+        <div class="grid">
+          <div class="card col-4 hazard-eq">
+            <h3>Earthquake</h3>
+            <p class="muted">A statistical model that learns from past earthquake patterns to estimate the chance of a significant earthquake in the next 30 days. Accuracy: 77% (AUC 0.768).</p>
+          </div>
+          <div class="card col-4 hazard-hu">
+            <h3>Hurricane</h3>
+            <p class="muted">Combines ocean temperature, wind patterns, and historical hurricane behavior to estimate the chance of rapid intensification (30+ knot increase in 24 hours). AUC: 0.938.</p>
+          </div>
+          <div class="card col-4 hazard-to">
+            <h3>Tornado</h3>
+            <p class="muted">Scores individual thunderstorms using radar rotation, atmospheric instability, and wind shear to estimate tornado probability. AUC: 0.894 (storm-object model).</p>
+          </div>
         </div>
+      </div>
+      <div data-depth="technical">
+        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+          Each hazard has its own model tailored to the physics and data characteristics of that domain.
+        </p>
 
-        <div class="card col-4 hazard-hu">
-          <h3>Hurricane RI (hp-hurricane-ri-v8.1)</h3>
-          <div class="kv"><span>Architecture</span><strong>50-bag logistic + histogram GBT (d3+d4) + Platt calibration</strong></div>
-          <div class="kv"><span>Features</span><strong>65</strong></div>
-          <div class="kv"><span>Key inputs</span><strong>Shear, SST (real NOAA), OHC, outflow, SHIPS predictors, satellite estimates</strong></div>
-          <div class="kv"><span>Training cutoff</span><strong>2026-03-13</strong></div>
-          <div class="kv"><span>Calibration method</span><strong>Platt scaling on holdout</strong></div>
-          <div class="kv"><span>AUC</span><strong>0.938 (advisory-time eval, 5 holdouts)</strong></div>
-        </div>
+        <div class="grid">
+          <div class="card col-4 hazard-eq">
+            <h3>Earthquake (hp-etas-v3.2.1)</h3>
+            <div class="kv"><span>Architecture</span><strong>Gradient-boosted ensemble + Bayesian calibration</strong></div>
+            <div class="kv"><span>Features</span><strong>42</strong></div>
+            <div class="kv"><span>Key inputs</span><strong>Seismicity rates, b-value, Coulomb stress, geodetic strain, catalog statistics</strong></div>
+            <div class="kv"><span>Training cutoff</span><strong>2026-02-15</strong></div>
+            <div class="kv"><span>Calibration method</span><strong>Isotonic regression on holdout</strong></div>
+            <div class="kv"><span>AUC</span><strong>0.768</strong></div>
+          </div>
 
-        <div class="card col-4 hazard-to">
-          <h3>Tornado formation (hp-tornado-meso-v1.4.2)</h3>
-          <div class="kv"><span>Architecture</span><strong>Random forest + Platt-scaled calibration</strong></div>
-          <div class="kv"><span>Features</span><strong>34</strong></div>
-          <div class="kv"><span>Key inputs</span><strong>STP, MLCAPE, MLCIN, deep shear, SRH, LCL height, composite parameters</strong></div>
-          <div class="kv"><span>Training cutoff</span><strong>2026-02-25</strong></div>
-          <div class="kv"><span>Calibration method</span><strong>Platt scaling on holdout</strong></div>
-          <div class="kv"><span>AUC</span><strong>0.644 (day-ahead formation)</strong></div>
-        </div>
+          <div class="card col-4 hazard-hu">
+            <h3>Hurricane RI (hp-hurricane-ri-v8.1)</h3>
+            <div class="kv"><span>Architecture</span><strong>50-bag logistic + histogram GBT (d3+d4) + Platt calibration</strong></div>
+            <div class="kv"><span>Features</span><strong>65</strong></div>
+            <div class="kv"><span>Key inputs</span><strong>Shear, SST (real NOAA), OHC, outflow, SHIPS predictors, satellite estimates</strong></div>
+            <div class="kv"><span>Training cutoff</span><strong>2026-03-13</strong></div>
+            <div class="kv"><span>Calibration method</span><strong>Platt scaling on holdout</strong></div>
+            <div class="kv"><span>AUC</span><strong>0.938 (advisory-time eval, 5 holdouts)</strong></div>
+          </div>
 
-        <div class="card col-4 hazard-to">
-          <h3>Tornado storm-object (hp-tornado-coherence-v1)</h3>
-          <div class="kv"><span>Architecture</span><strong>Coherence Field Theory scoring on ProbSevere storm objects</strong></div>
-          <div class="kv"><span>Features</span><strong>41</strong></div>
-          <div class="kv"><span>Key inputs</span><strong>ProbSevere attributes, CAPE, SRH, MaxLLAz, coherence field diagnostics</strong></div>
-          <div class="kv"><span>Training cutoff</span><strong>2026-03-15</strong></div>
-          <div class="kv"><span>Calibration method</span><strong>Platt scaling on 2024 strict temporal holdout</strong></div>
-          <div class="kv"><span>AUC</span><strong>0.894 (2024 test, strict temporal)</strong></div>
-          <div class="kv"><span>Status</span><strong>Research / Accumulating</strong></div>
+          <div class="card col-4 hazard-to">
+            <h3>Tornado formation (hp-tornado-meso-v1.4.2)</h3>
+            <div class="kv"><span>Architecture</span><strong>Random forest + Platt-scaled calibration</strong></div>
+            <div class="kv"><span>Features</span><strong>34</strong></div>
+            <div class="kv"><span>Key inputs</span><strong>STP, MLCAPE, MLCIN, deep shear, SRH, LCL height, composite parameters</strong></div>
+            <div class="kv"><span>Training cutoff</span><strong>2026-02-25</strong></div>
+            <div class="kv"><span>Calibration method</span><strong>Platt scaling on holdout</strong></div>
+            <div class="kv"><span>AUC</span><strong>0.644 (day-ahead formation)</strong></div>
+          </div>
+
+          <div class="card col-4 hazard-to">
+            <h3>Tornado storm-object (hp-tornado-coherence-v1)</h3>
+            <div class="kv"><span>Architecture</span><strong>Coherence Field Theory scoring on ProbSevere storm objects</strong></div>
+            <div class="kv"><span>Features</span><strong>41</strong></div>
+            <div class="kv"><span>Key inputs</span><strong>ProbSevere attributes, CAPE, SRH, MaxLLAz, coherence field diagnostics</strong></div>
+            <div class="kv"><span>Training cutoff</span><strong>2026-03-15</strong></div>
+            <div class="kv"><span>Calibration method</span><strong>Platt scaling on 2024 strict temporal holdout</strong></div>
+            <div class="kv"><span>AUC</span><strong>0.894 (2024 test, strict temporal)</strong></div>
+            <div class="kv"><span>Status</span><strong>Research / Accumulating</strong></div>
+          </div>
         </div>
       </div>
     </section>
@@ -206,31 +261,44 @@
     <!-- Evaluation protocol -->
     <section class="section" aria-labelledby="eval-heading">
       <h2 id="eval-heading">Evaluation protocol</h2>
-      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
-        Every forecast is evaluated against observed outcomes after its valid window closes.
-      </p>
-
-      <div class="grid">
-        <div class="card col-6">
-          <h3>Resolution process</h3>
-          <ul>
-            <li>Each forecast has a defined valid window (e.g., 30 days for earthquake, 24h for RI/tornado).</li>
-            <li>After the window closes, we check authoritative sources for the observed outcome.</li>
-            <li>Earthquake: USGS reviewed catalog. Hurricane: NHC best track. Tornado: SPC storm reports.</li>
-            <li>The outcome is recorded immutably in the verification ledger.</li>
-            <li>No manual overrides or retroactive adjustments.</li>
+      <div data-depth="simple">
+        <div class="card">
+          <p class="muted" style="margin:0 0 8px;">After each forecast window closes, we check what actually happened using official records:</p>
+          <ul style="margin:0;">
+            <li>Did the earthquake happen? We check the USGS catalog.</li>
+            <li>Did the hurricane intensify rapidly? We check the NHC best track.</li>
+            <li>Did a tornado form? We check the SPC storm reports.</li>
           </ul>
+          <p class="muted" style="margin:8px 0 0;">Results are published publicly so you can see our track record. We never edit past results.</p>
         </div>
-        <div class="card col-6">
-          <h3>Scoring metrics</h3>
-          <ul>
-            <li><strong>Brier score</strong> - Mean squared probability error. Lower is better. 0 = perfect.</li>
-            <li><strong>Brier skill score</strong> - Improvement over climatological baseline.</li>
-            <li><strong>AUC</strong> - Discrimination ability (ROC curve area).</li>
-            <li><strong>Log score</strong> - Information-theoretic proper scoring rule.</li>
-            <li><strong>Calibration</strong> - Agreement between predicted and observed rates by bin.</li>
-            <li><strong>Sharpness</strong> - How decisive forecasts are (spread of probabilities).</li>
-          </ul>
+      </div>
+      <div data-depth="technical">
+        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+          Every forecast is evaluated against observed outcomes after its valid window closes.
+        </p>
+
+        <div class="grid">
+          <div class="card col-6">
+            <h3>Resolution process</h3>
+            <ul>
+              <li>Each forecast has a defined valid window (e.g., 30 days for earthquake, 24h for RI/tornado).</li>
+              <li>After the window closes, we check authoritative sources for the observed outcome.</li>
+              <li>Earthquake: USGS reviewed catalog. Hurricane: NHC best track. Tornado: SPC storm reports.</li>
+              <li>The outcome is recorded immutably in the verification ledger.</li>
+              <li>No manual overrides or retroactive adjustments.</li>
+            </ul>
+          </div>
+          <div class="card col-6">
+            <h3>Scoring metrics</h3>
+            <ul>
+              <li><strong>Brier score</strong> - Mean squared probability error. Lower is better. 0 = perfect.</li>
+              <li><strong>Brier skill score</strong> - Improvement over climatological baseline.</li>
+              <li><strong>AUC</strong> - Discrimination ability (ROC curve area).</li>
+              <li><strong>Log score</strong> - Information-theoretic proper scoring rule.</li>
+              <li><strong>Calibration</strong> - Agreement between predicted and observed rates by bin.</li>
+              <li><strong>Sharpness</strong> - How decisive forecasts are (spread of probabilities).</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
@@ -238,57 +306,75 @@
     <!-- Caveats and boundaries -->
     <section class="section" aria-labelledby="caveats-heading">
       <h2 id="caveats-heading">Caveats and boundaries</h2>
-      <div class="card">
-        <ul>
-          <li><strong>These are not official forecasts.</strong> HazardPulse provides experimental research
-            outputs. Always follow guidance from USGS, NHC, NWS, and SPC.</li>
-          <li><strong>Models have known limitations.</strong> Earthquake probability in low-seismicity regions
-            has high uncertainty. Hurricane RI skill degrades for weak/disorganized systems.
-            Tornado forecasting at long lead times (&gt;12h) has low sharpness.</li>
-          <li><strong>Probabilities are not certainties.</strong> A 40% probability means 60% chance the
-            event does not happen. Interpret accordingly.</li>
-          <li><strong>Calibration is approximate.</strong> Reliability diagrams show systematic tendencies
-            but are computed on finite samples. Small bins have high sampling noise.</li>
-          <li><strong>Data freshness matters.</strong> If an input source is stale (exceeds threshold),
-            gate G1 triggers degrade, widening uncertainty bands and displaying a warning.</li>
-          <li><strong>Models are retrained periodically.</strong> Version changes can cause abrupt shifts
-            in probability that reflect improved skill, not real changes in hazard.</li>
-          <li><strong>Geographic scope is limited.</strong> Earthquake coverage focuses on well-instrumented
-            seismic networks. Hurricane RI applies to Atlantic and East Pacific named storms.
-            Tornado covers CONUS only.</li>
-        </ul>
+      <div data-depth="simple">
+        <div class="card">
+          <ul>
+            <li><strong>This is a research tool, not an official warning system.</strong> Always follow guidance from the National Weather Service at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</li>
+            <li><strong>A 40% probability does not mean it will happen.</strong> It means there is a 60% chance it will not.</li>
+            <li><strong>Our models are not perfect.</strong> We publish our accuracy scores so you can judge for yourself.</li>
+          </ul>
+        </div>
+      </div>
+      <div data-depth="technical">
+        <div class="card">
+          <ul>
+            <li><strong>These are not official forecasts.</strong> HazardPulse provides experimental research
+              outputs. Always follow guidance from USGS, NHC, NWS, and SPC.</li>
+            <li><strong>Models have known limitations.</strong> Earthquake probability in low-seismicity regions
+              has high uncertainty. Hurricane RI skill degrades for weak/disorganized systems.
+              Tornado forecasting at long lead times (&gt;12h) has low sharpness.</li>
+            <li><strong>Probabilities are not certainties.</strong> A 40% probability means 60% chance the
+              event does not happen. Interpret accordingly.</li>
+            <li><strong>Calibration is approximate.</strong> Reliability diagrams show systematic tendencies
+              but are computed on finite samples. Small bins have high sampling noise.</li>
+            <li><strong>Data freshness matters.</strong> If an input source is stale (exceeds threshold),
+              gate G1 triggers degrade, widening uncertainty bands and displaying a warning.</li>
+            <li><strong>Models are retrained periodically.</strong> Version changes can cause abrupt shifts
+              in probability that reflect improved skill, not real changes in hazard.</li>
+            <li><strong>Geographic scope is limited.</strong> Earthquake coverage focuses on well-instrumented
+              seismic networks. Hurricane RI applies to Atlantic and East Pacific named storms.
+              Tornado covers CONUS only.</li>
+          </ul>
+        </div>
       </div>
     </section>
 
     <!-- Governance -->
     <section class="section" aria-labelledby="gov-heading">
       <h2 id="gov-heading">Governance and gates</h2>
-      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
-        13 hard gates must pass before any forecast reaches you. This is not optional.
-      </p>
-      <div class="card">
-        <table>
-          <thead><tr><th>#</th><th>Gate</th><th>What it checks</th></tr></thead>
-          <tbody>
-            <tr><td>G0</td><td>Schema Validity</td><td>All fields present and correctly typed</td></tr>
-            <tr><td>G1</td><td>Source Freshness</td><td>Input data within acceptable latency</td></tr>
-            <tr><td>G2</td><td>Model Lineage Pinned</td><td>Model version matches registry</td></tr>
-            <tr><td>G3</td><td>Provenance Complete</td><td>All hashes present and chain intact</td></tr>
-            <tr><td>G4</td><td>Calibration Floor</td><td>Brier score below threshold</td></tr>
-            <tr><td>G5</td><td>Spatiotemporal Sanity</td><td>Scope within valid bounds</td></tr>
-            <tr><td>G6</td><td>Alert Harm Guard</td><td>No alarmist or misleading language</td></tr>
-            <tr><td>G7</td><td>Explanation Minimum</td><td>Why-changed panel has sufficient factors</td></tr>
-            <tr><td>G8</td><td>Replayability</td><td>Replay artifact emitted and hash-verified</td></tr>
-            <tr><td>G9</td><td>Public Projection Policy</td><td>Disclaimer attached to output</td></tr>
-            <tr><td>G10</td><td>Security Policy</td><td>HTTP headers and CSP valid</td></tr>
-            <tr><td>G11</td><td>Performance Budgets</td><td>Payload within size limits</td></tr>
-            <tr><td>G12</td><td>Trust Surface Sync</td><td>UI chips match actual gate state</td></tr>
-          </tbody>
-        </table>
-        <p class="muted" style="margin-top:12px;font-size:13px;">
-          <strong>pass</strong> = fully publish. <strong>degrade</strong> = publish with warning
-          banner and widened uncertainty. <strong>block</strong> = forecast is not published.
+      <div data-depth="simple">
+        <div class="card">
+          <p class="muted" style="margin:0;">Every forecast must pass <strong>13 automatic quality checks</strong> before you see it. These checks verify the data is fresh, the model is correct, the math is right, and the output is safe. If a check fails, the forecast either gets a warning label or is not published at all.</p>
+        </div>
+      </div>
+      <div data-depth="technical">
+        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+          13 hard gates must pass before any forecast reaches you. This is not optional.
         </p>
+        <div class="card">
+          <table>
+            <thead><tr><th>#</th><th>Gate</th><th>What it checks</th></tr></thead>
+            <tbody>
+              <tr><td>G0</td><td>Schema Validity</td><td>All fields present and correctly typed</td></tr>
+              <tr><td>G1</td><td>Source Freshness</td><td>Input data within acceptable latency</td></tr>
+              <tr><td>G2</td><td>Model Lineage Pinned</td><td>Model version matches registry</td></tr>
+              <tr><td>G3</td><td>Provenance Complete</td><td>All hashes present and chain intact</td></tr>
+              <tr><td>G4</td><td>Calibration Floor</td><td>Brier score below threshold</td></tr>
+              <tr><td>G5</td><td>Spatiotemporal Sanity</td><td>Scope within valid bounds</td></tr>
+              <tr><td>G6</td><td>Alert Harm Guard</td><td>No alarmist or misleading language</td></tr>
+              <tr><td>G7</td><td>Explanation Minimum</td><td>Why-changed panel has sufficient factors</td></tr>
+              <tr><td>G8</td><td>Replayability</td><td>Replay artifact emitted and hash-verified</td></tr>
+              <tr><td>G9</td><td>Public Projection Policy</td><td>Disclaimer attached to output</td></tr>
+              <tr><td>G10</td><td>Security Policy</td><td>HTTP headers and CSP valid</td></tr>
+              <tr><td>G11</td><td>Performance Budgets</td><td>Payload within size limits</td></tr>
+              <tr><td>G12</td><td>Trust Surface Sync</td><td>UI chips match actual gate state</td></tr>
+            </tbody>
+          </table>
+          <p class="muted" style="margin-top:12px;font-size:13px;">
+            <strong>pass</strong> = fully publish. <strong>degrade</strong> = publish with warning
+            banner and widened uncertainty. <strong>block</strong> = forecast is not published.
+          </p>
+        </div>
       </div>
     </section>
 
@@ -316,6 +402,7 @@
         </div>
       </div>
     </section>
+    </div>
   </main>
 
   <footer class="footer" role="contentinfo">

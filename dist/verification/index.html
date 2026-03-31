@@ -7,7 +7,7 @@
   <meta name="description" content="Rolling verification metrics for HazardPulse forecasts: Brier scores, calibration, reliability, and hazard-specific breakdowns.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.io/verification/">
-  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="stylesheet" href="/assets/styles.css?v=5">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -83,8 +83,50 @@
       </p>
     </section>
 
-    <!-- Global summary -->
-    <section class="section" aria-labelledby="summary-heading">
+    <div class="depth-content">
+      <div class="depth-toggle" role="radiogroup" aria-label="Content depth">
+        <input type="radio" name="depth" id="depth-simple" value="simple" checked>
+        <label for="depth-simple">Simple</label>
+        <input type="radio" name="depth" id="depth-technical" value="technical">
+        <label for="depth-technical">Technical</label>
+      </div>
+
+    <div data-depth="simple">
+      <section class="section">
+        <h2>How accurate are we?</h2>
+        <div class="grid">
+          <div class="card col-4 hazard-eq">
+            <h3>Earthquake</h3>
+            <p style="font-size:15px;line-height:1.5;margin:0 0 8px;">Our earthquake model correctly distinguishes higher-risk from lower-risk periods about <strong>77% of the time</strong> (AUC 0.768). When we say there is a 20% chance, events happen about 17-23% of the time.</p>
+            <p class="muted" style="font-size:13px;margin:0;">Model: hp-etas-v3.2.1 | 363 forecasts evaluated</p>
+          </div>
+          <div class="card col-4 hazard-hu">
+            <h3>Hurricane</h3>
+            <p style="font-size:15px;line-height:1.5;margin:0 0 8px;">Our hurricane rapid intensification model is our strongest, correctly ranking risk about <strong>94% of the time</strong> (AUC 0.938). Calibration is within 3.4% across all probability bins.</p>
+            <p class="muted" style="font-size:13px;margin:0;">Model: hp-hurricane-ri-v8.1 | 303 forecasts evaluated</p>
+          </div>
+          <div class="card col-4 hazard-to">
+            <h3>Tornado</h3>
+            <p style="font-size:15px;line-height:1.5;margin:0 0 8px;">Day-ahead tornado formation is hard to predict (AUC 0.644). Our newer storm-object model scores individual storms with <strong>89% discrimination</strong> (AUC 0.894) but is still in research status.</p>
+            <p class="muted" style="font-size:13px;margin:0;">Models: hp-tornado-meso-v1.4.2, hp-tornado-coherence-v1</p>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <h2>False alarms</h2>
+        <div class="card">
+          <p style="font-size:15px;line-height:1.6;margin:0 0 8px;">We track every time we predicted a high risk that did not materialize:</p>
+          <ul style="font-size:15px;line-height:1.8;margin:0;">
+            <li><strong>Earthquake:</strong> 46.7% false alarm rate (improving)</li>
+            <li><strong>Hurricane:</strong> 31.6% false alarm rate (improving)</li>
+            <li><strong>Tornado:</strong> 43.9% false alarm rate (worsening - we are working on this)</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <!-- Global summary (Technical) -->
+    <section class="section" aria-labelledby="summary-heading" data-depth="technical">
       <h2 id="summary-heading">System-wide summary (rolling 90 days)</h2>
       <div class="grid">
         <div class="card col-3">
@@ -110,15 +152,15 @@
       </div>
     </section>
 
-    <!-- Per-hazard breakdowns -->
-    <section class="section" aria-labelledby="eq-heading">
+    <!-- Per-hazard breakdowns (Technical) -->
+    <section class="section" aria-labelledby="eq-heading" data-depth="technical">
       <h2 id="eq-heading">Earthquake verification</h2>
       <div class="grid">
         <div class="card col-6">
           <h3>Scores</h3>
           <div class="kv"><span>Brier score</span><strong>0.142</strong></div>
           <div class="kv"><span>Brier skill score</span><strong>+0.18</strong></div>
-          <div class="kv"><span>AUC</span><strong>0.733</strong></div>
+          <div class="kv"><span>AUC</span><strong>0.768</strong></div>
           <div class="kv"><span>Log score</span><strong>-0.384</strong></div>
           <div class="kv"><span>Sharpness</span><strong>0.072</strong></div>
           <div class="kv"><span>Forecasts resolved</span><strong>363</strong></div>
@@ -168,7 +210,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="hu-heading">
+    <section class="section" aria-labelledby="hu-heading" data-depth="technical">
       <h2 id="hu-heading">Hurricane RI verification</h2>
       <div class="grid">
         <div class="card col-6">
@@ -224,7 +266,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="to-heading">
+    <section class="section" aria-labelledby="to-heading" data-depth="technical">
       <h2 id="to-heading">Tornado verification</h2>
       <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
         Two models are evaluated: the day-ahead formation model (hp-tornado-meso-v1.4.2, AUC 0.644)
@@ -292,7 +334,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="false-alarm-heading">
+    <section class="section" aria-labelledby="false-alarm-heading" data-depth="technical">
       <h2 id="false-alarm-heading">False alarm debt</h2>
       <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
         We track every false alarm - not to hide them, but to learn from them.
@@ -314,7 +356,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="method-heading">
+    <section class="section" aria-labelledby="method-heading" data-depth="technical">
       <h2 id="method-heading">How we verify</h2>
       <div class="grid">
         <div class="card col-6">
@@ -337,6 +379,7 @@
         </div>
       </div>
     </section>
+    </div>
   </main>
 
   <footer class="footer" role="contentinfo">

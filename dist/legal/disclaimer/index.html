@@ -7,7 +7,7 @@
   <meta name="description" content="Legal disclaimer, interpretation guidance, and official agency references for HazardPulse experimental hazard forecasts.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.io/legal/disclaimer/">
-  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="stylesheet" href="/assets/styles.css?v=5">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -83,7 +83,30 @@
       </p>
     </section>
 
-    <section class="section" aria-labelledby="nature-heading">
+    <div class="depth-content">
+      <div class="depth-toggle" role="radiogroup" aria-label="Content depth">
+        <input type="radio" name="depth" id="depth-simple" value="simple" checked>
+        <label for="depth-simple">Simple</label>
+        <input type="radio" name="depth" id="depth-technical" value="technical">
+        <label for="depth-technical">Technical</label>
+      </div>
+
+    <div data-depth="simple">
+      <section class="section">
+        <div class="card" style="background:var(--warn-bg);border-left:4px solid var(--warn);">
+          <h2 style="margin-top:0;">Important</h2>
+          <p style="font-size:16px;line-height:1.6;margin:0 0 12px;"><strong>HazardPulse is a research tool. It is not an official warning system.</strong></p>
+          <p style="font-size:15px;line-height:1.6;margin:0 0 12px;">For official weather warnings and emergency information, always go to:</p>
+          <ul style="font-size:15px;line-height:1.8;margin:0;">
+            <li><a href="https://www.weather.gov/" rel="noopener"><strong>weather.gov</strong></a> &mdash; National Weather Service (tornadoes, severe weather, all weather)</li>
+            <li><a href="https://earthquake.usgs.gov/" rel="noopener"><strong>earthquake.usgs.gov</strong></a> &mdash; USGS (earthquakes)</li>
+            <li><a href="https://www.nhc.noaa.gov/" rel="noopener"><strong>nhc.noaa.gov</strong></a> &mdash; National Hurricane Center (hurricanes)</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <section class="section" aria-labelledby="nature-heading" data-depth="technical">
       <h2 id="nature-heading">Nature of these outputs</h2>
       <div class="card">
         <p>
@@ -100,7 +123,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="not-heading">
+    <section class="section" aria-labelledby="not-heading" data-depth="technical">
       <h2 id="not-heading">What this platform does not do</h2>
       <div class="card">
         <ul>
@@ -144,7 +167,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="interpret-heading">
+    <section class="section" aria-labelledby="interpret-heading" data-depth="technical">
       <h2 id="interpret-heading">Interpreting probabilities</h2>
       <div class="card">
         <p>
@@ -164,7 +187,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="liability-heading">
+    <section class="section" aria-labelledby="liability-heading" data-depth="technical">
       <h2 id="liability-heading">Limitation of liability</h2>
       <div class="card">
         <p>
@@ -179,6 +202,7 @@
         </p>
       </div>
     </section>
+    </div>
   </main>
 
   <footer class="footer" role="contentinfo">

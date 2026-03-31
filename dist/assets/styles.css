@@ -699,6 +699,13 @@ li { margin-bottom: 6px; }
   margin: 0;
 }
 
+/* Inline data-depth spans (e.g. inside <summary> elements) */
+.depth-content span[data-depth="simple"],
+.depth-content span[data-depth="technical"] {
+  max-height: none;
+  display: none !important;
+}
+
 .depth-content:has(#depth-simple:checked) [data-depth="simple"],
 .depth-content:not(:has(input[type="radio"]:checked)) [data-depth="simple"] {
   max-height: 8000px;
@@ -706,10 +713,21 @@ li { margin-bottom: 6px; }
   margin-bottom: var(--s-md);
 }
 
+.depth-content:has(#depth-simple:checked) span[data-depth="simple"],
+.depth-content:not(:has(input[type="radio"]:checked)) span[data-depth="simple"] {
+  display: inline !important;
+  opacity: 1;
+}
+
 .depth-content:has(#depth-technical:checked) [data-depth="technical"] {
   max-height: 8000px;
   opacity: 1;
   margin-bottom: var(--s-md);
+}
+
+.depth-content:has(#depth-technical:checked) span[data-depth="technical"] {
+  display: inline !important;
+  opacity: 1;
 }
 
 /* ── Nav Dropdown ─────────────────────────────────────────────── */

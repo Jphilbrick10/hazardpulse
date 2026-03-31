@@ -7,7 +7,7 @@
   <meta name="description" content="HazardPulse operational status: data freshness, publish cadence, gate health, and incident notes.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.io/ops/status/">
-  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="stylesheet" href="/assets/styles.css?v=5">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -84,7 +84,26 @@
       </p>
     </section>
 
-    <section class="section" aria-labelledby="health-heading">
+    <div class="depth-content">
+      <div class="depth-toggle" role="radiogroup" aria-label="Content depth">
+        <input type="radio" name="depth" id="depth-simple" value="simple" checked>
+        <label for="depth-simple">Simple</label>
+        <input type="radio" name="depth" id="depth-technical" value="technical">
+        <label for="depth-technical">Technical</label>
+      </div>
+
+    <div data-depth="simple">
+      <section class="section">
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+            <div class="metric" style="color:var(--good)">Operational</div>
+          </div>
+          <p style="font-size:15px;line-height:1.6;margin:0;">HazardPulse is running normally. All data sources are fresh and all quality checks are passing. Forecasts are being updated on schedule.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="section" aria-labelledby="health-heading" data-depth="technical">
       <h2 id="health-heading">Current health</h2>
       <div class="grid">
         <div class="card col-3">
@@ -106,7 +125,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="freshness-heading">
+    <section class="section" aria-labelledby="freshness-heading" data-depth="technical">
       <h2 id="freshness-heading">Data freshness by source</h2>
       <div class="card">
         <table>
@@ -159,7 +178,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="cadence-heading">
+    <section class="section" aria-labelledby="cadence-heading" data-depth="technical">
       <h2 id="cadence-heading">Publish cadence</h2>
       <div class="grid">
         <div class="card col-4">
@@ -180,7 +199,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="gates-heading">
+    <section class="section" aria-labelledby="gates-heading" data-depth="technical">
       <h2 id="gates-heading">Gate health (7d rolling)</h2>
       <div class="card">
         <table>
@@ -204,7 +223,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="incidents-heading">
+    <section class="section" aria-labelledby="incidents-heading" data-depth="technical">
       <h2 id="incidents-heading">Incident log</h2>
       <div class="card">
         <table>
@@ -229,6 +248,7 @@
         </p>
       </div>
     </section>
+    </div>
   </main>
 
   <footer class="footer" role="contentinfo">
