@@ -35,6 +35,15 @@ SRC = Path(__file__).resolve().parents[1] / "src"
 sys.path.insert(0, str(SRC))
 
 from hazardpulse.data.hrrr import (  # noqa: E402
+    DX_KM,
+    GRID_DLAT,
+    GRID_DLON,
+    GRID_LATS,
+    GRID_LONS,
+    HRRR_N_LAT,
+    HRRR_N_LON,
+    LAT_MIN,
+    LON_MIN,
     fetch_hrrr_grid,
     load_cached_hrrr,
 )
@@ -46,6 +55,8 @@ from hazardpulse.tornado.coherence_engine import (  # noqa: E402
     compute_coherence_fields,
     compute_derived_hrrr,
     extract_coherence_at_point,
+    gaussian_smooth_2d,
+    solve_helmholtz_2d,
     test_singularity_at_point,
 )
 try:
@@ -144,6 +155,124 @@ def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     dlon = math.radians(lon2 - lon1)
     a = math.sin(dlat / 2) ** 2 + math.cos(lat1_r) * math.cos(lat2_r) * math.sin(dlon / 2) ** 2
     return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+
+def build_coherence_from_probsevere(
+    storms: list[dict],
+) -> dict[str, np.ndarray] | None:
+    """Build coherence fields from ProbSevere storm-embedded atmospheric data.
+
+    When HRRR data is unavailable, each ProbSevere storm still carries
+    MUCAPE, SRH01, EBSHEAR at its location.  This function interpolates
+    those sparse point values onto the 80 km CONUS grid, builds a
+    source term S, and solves the Helmholtz PDE to produce coherence
+    fields identical in structure to the HRRR-derived ones.
+
+    Returns None if no storms have usable atmospheric data.
+    """
+    if not storms:
+        return None
+
+    cape_field = np.zeros((HRRR_N_LAT, HRRR_N_LON), dtype=np.float32)
+    srh_field = np.zeros_like(cape_field)
+    shear_field = np.zeros_like(cape_field)
+    count_field = np.zeros_like(cape_field)
+
+    for storm in storms:
+        lat = float(storm.get("lat", 0) or 0)
+        lon = float(storm.get("lon", 0) or 0)
+        i = int((lat - LAT_MIN) / GRID_DLAT)
+        j = int((lon - LON_MIN) / GRID_DLON)
+        if 0 <= i < HRRR_N_LAT and 0 <= j < HRRR_N_LON:
+            cape_field[i, j] += float(storm.get("mucape", 0) or 0)
+            srh_field[i, j] += float(storm.get("srh01", 0) or 0)
+            shear_field[i, j] += float(storm.get("ebshear", 0) or 0)
+            count_field[i, j] += 1
+
+    # Average where multiple storms overlap
+    mask = count_field > 0
+    if not np.any(mask):
+        return None
+    cape_field[mask] /= count_field[mask]
+    srh_field[mask] /= count_field[mask]
+    shear_field[mask] /= count_field[mask]
+
+    # Build source term: S = CAPE/2000 + 0.3*|SRH|/200 + 0.2*shear/25
+    S_field = (
+        cape_field / 2000.0
+        + 0.3 * np.abs(srh_field) / 200.0
+        + 0.2 * shear_field / 25.0
+    ).astype(np.float32)
+
+    # Smooth the sparse source field so the PDE has spatial structure
+    S_field = gaussian_smooth_2d(S_field, sigma_cells=3.0)
+
+    # Damping: uniform moderate value (no CIN available from ProbSevere)
+    Gamma_field = np.full_like(S_field, 0.25, dtype=np.float32)
+
+    # Diffusivity: uniform
+    D_field = np.ones_like(S_field, dtype=np.float32)
+
+    # Screening wavenumber
+    kappa_field = np.sqrt(Gamma_field / np.maximum(D_field, 1e-6)).astype(
+        np.float32
+    )
+
+    # Solve Helmholtz PDE
+    tau = solve_helmholtz_2d(S_field, kappa_field, dx=1.0, D=D_field)
+
+    # Spatial derivatives
+    from hazardpulse.tornado.coherence_engine import (
+        _gradient_2d,
+        compute_curl_2d,
+    )
+
+    grad_y, grad_x = _gradient_2d(tau)
+    grad_tau = np.sqrt(grad_x ** 2 + grad_y ** 2).astype(np.float32)
+
+    # Torsion: shear * curl(tau) / 25
+    curl_tau = compute_curl_2d(tau)
+    torsion = (shear_field * curl_tau / 25.0).astype(np.float32)
+
+    # Alignment: use SRH as proxy for shear direction alignment
+    grad_mag_safe = grad_tau + 1e-6
+    alignment = (np.abs(srh_field) * grad_tau / 200.0).astype(np.float32)
+
+    # S / Gamma ratio
+    S_over_Gamma = (S_field / np.maximum(Gamma_field, 0.01)).astype(
+        np.float32
+    )
+
+    # Damkohler
+    Da = (
+        Gamma_field * (DX_KM ** 2) / np.maximum(D_field * 100.0, 1e-6)
+    ).astype(np.float32)
+
+    # E_coh: simplified (no T_sfc available)
+    E_coh = np.zeros_like(tau)
+
+    # Singularity count
+    cond1 = (S_over_Gamma > 1.0).astype(np.float32)
+    cond2 = (grad_tau > 0.5).astype(np.float32)
+    cond3 = (np.abs(torsion) > 0.1).astype(np.float32)
+    cond4 = (alignment > 0).astype(np.float32)
+    cond5 = (Da > 10.0).astype(np.float32)
+    singularity_count = (cond1 + cond2 + cond3 + cond4 + cond5).astype(
+        np.float32
+    )
+
+    return {
+        "tau": tau,
+        "grad_tau": grad_tau,
+        "torsion": torsion,
+        "alignment": alignment,
+        "S_field": S_field,
+        "Gamma_field": Gamma_field,
+        "S_over_Gamma": S_over_Gamma,
+        "Da": Da,
+        "E_coh": E_coh,
+        "singularity_count": singularity_count,
+    }
 
 
 def load_pretrained_model() -> dict | None:
@@ -445,11 +574,30 @@ def write_outputs(
     scored_storms: list[dict],
     now: dt.datetime,
     scoring_tier: str = "tier3_ps_only",
+    coherence_source: str = "none",
 ) -> None:
     """Write scored results to dist/data/."""
 
     # Determine scoring tier label for display
     tier_labels = TIER_LABELS
+
+    # Read recent ledger entries to embed in output
+    recent_predictions: list[dict] = []
+    if LEDGER_PATH.exists():
+        try:
+            lines = LEDGER_PATH.read_text(encoding="utf-8").strip().split("\n")
+            for line in lines[-10:]:
+                if line.strip():
+                    entry = json.loads(line)
+                    recent_predictions.append({
+                        "timestamp": entry.get("timestamp", ""),
+                        "n_storms": entry.get("n_storms", 0),
+                        "max_prob": entry.get("top_probability", 0),
+                        "hash": entry.get("hash", "")[:16] + "...",
+                    })
+            recent_predictions.reverse()
+        except Exception:
+            pass
 
     # Write live-tornadoes.json
     output = {
@@ -462,7 +610,9 @@ def write_outputs(
         "model_version": MODEL_VERSION,
         "scoring_tier": scoring_tier,
         "scoring_tier_label": tier_labels.get(scoring_tier, scoring_tier),
+        "coherence_source": coherence_source,
         "n_active_storms": len(scored_storms),
+        "recent_predictions": recent_predictions,
         "storms": scored_storms,
     }
     storms_path = DIST / "data" / "live-tornadoes.json"
@@ -486,12 +636,14 @@ def write_outputs(
                     hazard["model_version"] = MODEL_VERSION
                     hazard["n_active_storms"] = len(scored_storms)
                     hazard["coherence_score"] = top.get("coherence_score", 0)
+                    hazard["coherence_source"] = coherence_source
                 else:
                     hazard["probability"] = 0.0
                     hazard["risk_band"] = "minimal"
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = MODEL_VERSION
                     hazard["n_active_storms"] = 0
+                    hazard["coherence_source"] = "none"
                 break
         pulse["updated_at"] = now.isoformat() + "Z"
         pulse_path.write_text(
@@ -628,18 +780,139 @@ def _render_storm_rows(storms: list[dict]) -> str:
         )
         lines.append(f'          </summary>')
         lines.append(f'          <div class="event-detail" style="padding:12px 10px;">')
-        lines.append(f'            <div class="kv"><span>ProbSevere score</span><strong>{s.get("ps", 0):.0f}</strong></div>')
-        lines.append(f'            <div class="kv"><span>PS tornado score</span><strong>{s.get("ps_tor", 0):.0f}</strong></div>')
-        lines.append(f'            <div class="kv"><span>Effective bulk shear</span><strong>{s.get("ebshear", 0):.0f} kt</strong></div>')
-        lines.append(f'            <div class="kv"><span>MESH</span><strong>{s.get("mesh", 0):.1f} in</strong></div>')
-        lines.append(f'            <div class="kv"><span>Flash rate</span><strong>{s.get("flash_rate", 0):.0f} /min</strong></div>')
+
+        # --- LOCATION & TIMING ---
+        lines.append(f'            <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>')
+        lines.append(f'            <div class="kv"><span>Coordinates</span><strong>{s["lat"]:.3f}°N, {abs(s["lon"]):.3f}°W</strong></div>')
+        lines.append(f'            <div class="kv"><span>Valid time</span><strong>{_format_time(s.get("valid_time", ""))}</strong></div>')
+        me = float(s.get("motion_east", 0) or 0)
+        ms = float(s.get("motion_south", 0) or 0)
+        import math as _math
+        speed_ms = _math.sqrt(me**2 + ms**2)
+        speed_mph = speed_ms * 2.237
+        direction = ""
+        if speed_ms > 1:
+            angle = _math.degrees(_math.atan2(me, -ms)) % 360
+            dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+            direction = dirs[int((angle + 11.25) / 22.5) % 16]
+        lines.append(f'            <div class="kv"><span>Storm motion</span><strong>{speed_mph:.0f} mph {direction}</strong></div>')
+        lines.append(f'            <div class="kv"><span>Storm size</span><strong>{s.get("size", 0):.0f} km²</strong></div>')
         lines.append(f'            <div class="kv"><span>Track length</span><strong>{s.get("track_length", 0)} time steps</strong></div>')
         lines.append(f'            <div class="kv"><span>Scoring tier</span><strong>{_esc(s.get("scoring_tier", "--"))}</strong></div>')
-        lines.append(f'            <div class="kv"><span>Valid time</span><strong>{_format_time(s.get("valid_time", ""))}</strong></div>')
-        lines.append(
-            f'            <div class="kv"><span>Motion</span><strong>'
-            f'{s.get("motion_east", 0):.1f} E, {s.get("motion_south", 0):.1f} S m/s</strong></div>'
-        )
+
+        # --- ATMOSPHERIC STATE ---
+        lines.append(f'            <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">')
+        lines.append(f'            <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Atmospheric State (from ProbSevere)</div>')
+        cape = float(s.get("mucape", 0) or 0)
+        mlcape = float(s.get("mlcape", 0) or 0)
+        cin = float(s.get("mlcin", 0) or 0)
+        srh = float(s.get("srh01", 0) or 0)
+        shear = float(s.get("ebshear", 0) or 0)
+        pwat = float(s.get("pwat", 0) or 0)
+        wbz = s.get("wetbulb_0c_hgt", 0) or 0
+        cape_label = "Extreme" if cape > 3000 else "High" if cape > 2000 else "Moderate" if cape > 1000 else "Low" if cape > 500 else "Marginal"
+        srh_label = "Extreme" if abs(srh) > 300 else "High" if abs(srh) > 200 else "Moderate" if abs(srh) > 100 else "Low"
+        shear_label = "Extreme" if shear > 50 else "High" if shear > 35 else "Moderate" if shear > 20 else "Low"
+        lines.append(f'            <div class="kv"><span>MUCAPE</span><strong>{cape:.0f} J/kg ({cape_label})</strong></div>')
+        lines.append(f'            <div class="kv"><span>MLCAPE</span><strong>{mlcape:.0f} J/kg</strong></div>')
+        lines.append(f'            <div class="kv"><span>MLCIN</span><strong>{cin:.0f} J/kg</strong></div>')
+        lines.append(f'            <div class="kv"><span>0-1km SRH</span><strong>{srh:.0f} m²/s² ({srh_label})</strong></div>')
+        lines.append(f'            <div class="kv"><span>Effective bulk shear</span><strong>{shear:.0f} kt ({shear_label})</strong></div>')
+        lines.append(f'            <div class="kv"><span>Precipitable water</span><strong>{pwat:.1f} in</strong></div>')
+        lines.append(f'            <div class="kv"><span>Wet bulb 0°C height</span><strong>{wbz} kft</strong></div>')
+
+        # STP estimate
+        cape_t = min(cape / 1500.0, 2.0)
+        srh_t = min(abs(srh) / 150.0, 2.0)
+        shear_t = min(shear / 20.0, 2.0)
+        stp_est = cape_t * srh_t * shear_t
+        stp_label = "Significant tornado environment" if stp_est > 3 else "Tornado possible" if stp_est > 1 else "Marginal" if stp_est > 0.5 else "Low"
+        lines.append(f'            <div class="kv"><span>STP estimate</span><strong>{stp_est:.1f} ({stp_label})</strong></div>')
+
+        # --- RADAR SIGNATURES ---
+        lines.append(f'            <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">')
+        lines.append(f'            <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>')
+        maxllaz = float(s.get("maxllaz", 0) or 0)
+        p98llaz = float(s.get("p98llaz", 0) or 0)
+        p98mlaz = float(s.get("p98mlaz", 0) or 0)
+        mesh = float(s.get("mesh", 0) or 0)
+        vil = float(s.get("vil_density", 0) or 0)
+        rot_label = "Strong rotation" if maxllaz > 0.01 else "Moderate rotation" if maxllaz > 0.005 else "Weak rotation" if maxllaz > 0.003 else "No significant rotation"
+        lines.append(f'            <div class="kv"><span>Max low-level AzShear</span><strong>{maxllaz:.4f} s⁻¹ ({rot_label})</strong></div>')
+        lines.append(f'            <div class="kv"><span>P98 low-level AzShear</span><strong>{p98llaz:.4f} s⁻¹</strong></div>')
+        lines.append(f'            <div class="kv"><span>P98 mid-level AzShear</span><strong>{p98mlaz:.4f} s⁻¹</strong></div>')
+        lines.append(f'            <div class="kv"><span>MESH (max hail)</span><strong>{mesh:.2f} in</strong></div>')
+        lines.append(f'            <div class="kv"><span>VIL density</span><strong>{vil:.2f} g/m³</strong></div>')
+
+        # --- LIGHTNING ---
+        lines.append(f'            <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">')
+        lines.append(f'            <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>')
+        fr = float(s.get("flash_rate", 0) or 0)
+        fd = float(s.get("flash_density", 0) or 0)
+        lja = float(s.get("lja", 0) or 0)
+        fr_label = "Intense" if fr > 50 else "Active" if fr > 20 else "Moderate" if fr > 5 else "Quiet"
+        lines.append(f'            <div class="kv"><span>Flash rate</span><strong>{fr:.0f} /min ({fr_label})</strong></div>')
+        lines.append(f'            <div class="kv"><span>Flash density</span><strong>{fd:.2f}</strong></div>')
+        lines.append(f'            <div class="kv"><span>Lightning jump (LJA)</span><strong>{lja:.1f}</strong></div>')
+
+        # --- PROBSEVERE SCORES ---
+        lines.append(f'            <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">')
+        lines.append(f'            <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">ProbSevere Scores</div>')
+        lines.append(f'            <div class="kv"><span>ProbSevere (any severe)</span><strong>{s.get("ps", 0):.0f}%</strong></div>')
+        lines.append(f'            <div class="kv"><span>ProbSevere tornado</span><strong>{s.get("ps_tor", 0):.0f}%</strong></div>')
+
+        # --- COHERENCE FIELD THEORY ---
+        coh = s.get("coherence_diagnostics", {})
+        lines.append(f'            <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">')
+        lines.append(f'            <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>')
+        if coh:
+            tau = float(coh.get("tau", 0) or 0)
+            grad = float(coh.get("grad_tau", 0) or 0)
+            torsion = float(coh.get("torsion", 0) or 0)
+            alignment = float(coh.get("alignment", 0) or 0)
+            sg = float(coh.get("S_over_Gamma", 0) or 0)
+            da = float(coh.get("Da", 0) or 0)
+            sing = int(coh.get("singularity_conditions_met", 0) or 0)
+
+            tau_label = "Strong coherence" if tau > 0.5 else "Moderate" if tau > 0.2 else "Weak" if tau > 0.05 else "Minimal"
+            sg_label = "Source exceeds damping" if sg > 1 else "Near balance" if sg > 0.5 else "Damping dominant"
+            sing_label = "CRITICAL" if sing >= 4 else "Elevated" if sing >= 3 else "Marginal" if sing >= 2 else "Low"
+
+            lines.append(f'            <div class="kv"><span>Coherence amplitude (τ)</span><strong>{tau:.4f} ({tau_label})</strong></div>')
+            lines.append(f'            <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>{grad:.4f}</strong></div>')
+            lines.append(f'            <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>{torsion:.4f}</strong></div>')
+            lines.append(f'            <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>{alignment:.4f}</strong></div>')
+            lines.append(f'            <div class="kv"><span>S / Γ ratio</span><strong>{sg:.2f} ({sg_label})</strong></div>')
+            lines.append(f'            <div class="kv"><span>Damköhler number</span><strong>{da:.2f}</strong></div>')
+            lines.append(f'            <div class="kv"><span>Singularity conditions</span><strong>{sing} / 5 ({sing_label})</strong></div>')
+            lines.append(f'            <div class="kv"><span>Coherence source</span><strong>{_esc(s.get("coherence_source", "unknown"))}</strong></div>')
+        else:
+            lines.append(f'            <div class="kv"><span>Status</span><strong>Coherence data unavailable for this storm</strong></div>')
+
+        # --- WHY THIS PROBABILITY ---
+        lines.append(f'            <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">')
+        lines.append(f'            <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>')
+        prob = float(s.get("tornado_probability", 0) or 0)
+        reasons = []
+        if maxllaz > 0.01:
+            reasons.append("Strong low-level rotation detected (AzShear > 0.01)")
+        elif maxllaz > 0.005:
+            reasons.append("Moderate low-level rotation (AzShear > 0.005)")
+        if cape > 1500 and abs(srh) > 150:
+            reasons.append(f"High instability + helicity environment (CAPE {cape:.0f}, SRH {srh:.0f})")
+        if stp_est > 1:
+            reasons.append(f"Significant tornado parameter elevated (STP {stp_est:.1f})")
+        if fr > 20:
+            reasons.append(f"Active lightning ({fr:.0f}/min) indicates strong updraft")
+        if coh and float(coh.get("alignment", 0) or 0) > 0.1:
+            reasons.append("Wind shear aligned with coherence gradient (alignment term active)")
+        if coh and int(coh.get("singularity_conditions_met", 0) or 0) >= 3:
+            reasons.append(f"Multiple coherence singularity conditions met ({sing}/5)")
+        if not reasons:
+            reasons.append("Storm shows marginal severe weather signatures")
+        for r in reasons:
+            lines.append(f'            <div style="margin:4px 0;font-size:13px;">• {_esc(r)}</div>')
+
         lines.append(f'          </div>')
         lines.append(f'        </details>')
     return "\n".join(lines)
@@ -721,6 +994,7 @@ def render_tornado_page(
     now: dt.datetime,
     scoring_tier: str = "tier3_ps_only",
     coherence_fields: object = None,
+    coherence_source: str = "none",
 ) -> str:
     """Generate complete static HTML for the tornado live page.
 
@@ -752,18 +1026,29 @@ def render_tornado_page(
         "official NWS guidance. See weather.gov for official alerts."
     )
 
+    # Coherence source label
+    coh_source_labels = {
+        "hrrr": "HRRR 80 km grid",
+        "probsevere": "ProbSevere atmospheric fallback",
+        "none": "Unavailable",
+    }
+    coh_source_label = coh_source_labels.get(coherence_source, coherence_source)
+
     # Status bar
     status_html = f"""
       <section class="section">
         <div class="grid">
-          <div class="card col-4">
+          <div class="card col-3">
             <div class="kv"><span>Last update</span><strong>{_esc(updated_str)}</strong></div>
           </div>
-          <div class="card col-4">
+          <div class="card col-3">
             <div class="kv"><span>Scoring model</span><strong>{_esc(tier_label)}</strong></div>
           </div>
-          <div class="card col-4">
+          <div class="card col-3">
             <div class="kv"><span>Active storms</span><strong>{len(scored_storms)} storms</strong></div>
+          </div>
+          <div class="card col-3">
+            <div class="kv"><span>Coherence source</span><strong>{_esc(coh_source_label)}</strong></div>
           </div>
         </div>
       </section>"""
@@ -1535,6 +1820,109 @@ def append_ledger(
 # ---------------------------------------------------------------------------
 
 
+def render_verification_ledger() -> None:
+    """Update the verification page's ledger section with static entries.
+
+    Reads the last 20 ledger entries from tornado-ledger.jsonl and bakes
+    them directly into the verification page HTML, replacing the JS-dependent
+    loader.  Zero JavaScript required.
+    """
+    verif_path = DIST / "verification" / "tornado" / "index.html"
+    if not verif_path.exists():
+        print("  Warning: verification/tornado/index.html not found, skipping ledger update")
+        return
+
+    html = verif_path.read_text(encoding="utf-8")
+
+    # Read ledger entries
+    entries: list[dict] = []
+    if LEDGER_PATH.exists():
+        try:
+            lines = LEDGER_PATH.read_text(encoding="utf-8").strip().split("\n")
+            for line in lines:
+                if line.strip():
+                    entries.append(json.loads(line))
+        except Exception:
+            pass
+
+    # Build static ledger rows (last 20, reversed)
+    recent = entries[-20:]
+    recent.reverse()
+
+    ledger_rows: list[str] = []
+    for e in recent:
+        ts = e.get("timestamp", "--")
+        n_storms = e.get("n_storms", "--")
+        tier = e.get("scoring_tier", "ML")
+        top_p = e.get("top_probability")
+        top_p_str = f"{top_p * 100:.1f}%" if top_p is not None else "--"
+        h = e.get("hash", "--")
+        short_hash = h[:8] + ".." + h[-8:] if len(h) > 16 else h
+        ledger_rows.append(
+            f'        <div class="ledger-row">'
+            f'<div>{_esc(ts)}</div>'
+            f'<div>{n_storms}</div>'
+            f'<div>{_esc(str(tier))}</div>'
+            f'<div>{top_p_str}</div>'
+            f'<div class="hash-mono">{_esc(short_hash)}</div>'
+            f'</div>'
+        )
+
+    if not ledger_rows:
+        ledger_content = '        <p class="muted" style="padding:12px 0;">No ledger entries yet. Predictions will appear here once the system runs.</p>'
+    else:
+        ledger_content = "\n".join(ledger_rows)
+
+    # Build hash chain display (last 5)
+    last5 = entries[-5:]
+    last5.reverse()
+    chain_rows: list[str] = []
+    for he in last5:
+        hts = he.get("timestamp", "--")
+        hh = he.get("hash", "--")
+        prev = he.get("prev_hash", "(genesis)")
+        short_prev = prev[:8] + ".." + prev[-8:] if len(prev) > 20 else prev
+        chain_rows.append(
+            f'        <div style="padding:8px 0;border-bottom:1px solid var(--border,#e5e7eb);font-size:12px;">'
+            f'<div><strong>{_esc(hts)}</strong></div>'
+            f'<div class="hash-mono">hash: {_esc(hh)}</div>'
+            f'<div class="hash-mono">prev: {_esc(short_prev)}</div>'
+            f'</div>'
+        )
+    chain_content = "\n".join(chain_rows) if chain_rows else '<p class="muted">No entries yet.</p>'
+
+    # Replace the ledger-rows div content (between the div tags)
+    import re
+
+    # Replace the noscript + div#ledger-rows section
+    html = re.sub(
+        r'<noscript>\s*<p class="muted"[^<]*The ledger loads from.*?</noscript>\s*'
+        r'<div id="ledger-rows">.*?</div>',
+        f'<div id="ledger-rows">\n{ledger_content}\n        </div>',
+        html,
+        flags=re.DOTALL,
+    )
+
+    # Replace the hash-chain noscript + content
+    html = re.sub(
+        r'<div id="hash-chain">\s*<noscript>.*?</noscript>\s*</div>',
+        f'<div id="hash-chain">\n{chain_content}\n        </div>',
+        html,
+        flags=re.DOTALL,
+    )
+
+    # Remove the trailing <script> block that fetches the ledger via JS
+    html = re.sub(
+        r'\s*<script>\s*// Ledger loader:.*?</script>',
+        '',
+        html,
+        flags=re.DOTALL,
+    )
+
+    verif_path.write_text(html, encoding="utf-8")
+    print(f"  Updated {verif_path} (ledger baked in, zero JS)")
+
+
 def _climatological_stp(lat: float, lon: float, month: int) -> float:
     """Estimate STP from latitude, longitude, and month when HRRR unavailable.
 
@@ -1590,8 +1978,6 @@ def compute_day_ahead_susceptibility(
     list[dict]
         Top 10 grid cells ranked by susceptibility probability.
     """
-    from hazardpulse.data.hrrr import GRID_LATS, GRID_LONS, HRRR_N_LAT, HRRR_N_LON
-
     cells: list[dict] = []
 
     for i in range(HRRR_N_LAT):
@@ -1708,15 +2094,16 @@ def main() -> None:
         else:
             print("  No ProbSevere data available.")
             print("  Writing empty state...")
-            write_outputs([], now, scoring_tier="tier3_ps_only")
+            write_outputs([], now, scoring_tier="tier3_ps_only", coherence_source="none")
             append_ledger([], now)
             # Render static pages with empty storm list
-            tornado_html = render_tornado_page([], now, scoring_tier="tier3_ps_only")
+            tornado_html = render_tornado_page([], now, scoring_tier="tier3_ps_only", coherence_source="none")
             tornado_page = DIST / "live" / "tornado" / "index.html"
             tornado_page.parent.mkdir(parents=True, exist_ok=True)
             tornado_page.write_text(tornado_html, encoding="utf-8")
             print(f"  Wrote {tornado_page} (no storms, zero JS)")
             render_homepage_cards([], now, scoring_tier="tier3_ps_only")
+            render_verification_ledger()
             print()
             print("Done. No storms to score.")
             return
@@ -1726,15 +2113,16 @@ def main() -> None:
 
     if n_storms_latest == 0:
         print("  No active storms in latest time step.")
-        write_outputs([], now, scoring_tier="tier3_ps_only")
+        write_outputs([], now, scoring_tier="tier3_ps_only", coherence_source="none")
         append_ledger([], now)
         # Render static pages with empty storm list
-        tornado_html = render_tornado_page([], now, scoring_tier="tier3_ps_only")
+        tornado_html = render_tornado_page([], now, scoring_tier="tier3_ps_only", coherence_source="none")
         tornado_page = DIST / "live" / "tornado" / "index.html"
         tornado_page.parent.mkdir(parents=True, exist_ok=True)
         tornado_page.write_text(tornado_html, encoding="utf-8")
         print(f"  Wrote {tornado_page} (no storms, zero JS)")
         render_homepage_cards([], now, scoring_tier="tier3_ps_only")
+        render_verification_ledger()
         print()
         print("Done. No storms to score.")
         return
@@ -1763,16 +2151,36 @@ def main() -> None:
     print()
     print("Step 3: Computing coherence fields...")
     coherence_fields: dict[str, np.ndarray] | None = None
+    coherence_source: str = "none"
     if hrrr is not None:
         try:
             coherence_fields = compute_coherence_fields(hrrr, month=now.month)
             tau_max = float(coherence_fields["tau"].max())
             sing_max = float(coherence_fields["singularity_count"].max())
-            print(f"  tau_max={tau_max:.4f}, singularity_max={sing_max:.0f}")
+            coherence_source = "hrrr"
+            print(f"  HRRR coherence: tau_max={tau_max:.4f}, singularity_max={sing_max:.0f}")
         except Exception as e:
             print(f"  Warning: Coherence field computation failed: {e}")
-    else:
-        print("  Skipped (no HRRR data)")
+
+    # Fallback: build coherence from ProbSevere atmospheric data
+    if coherence_fields is None and time_steps:
+        latest_storms = time_steps[-1].get("storms", [])
+        if latest_storms:
+            print("  No HRRR -- building coherence fields from ProbSevere atmospheric data...")
+            try:
+                coherence_fields = build_coherence_from_probsevere(latest_storms)
+                if coherence_fields is not None:
+                    tau_max = float(coherence_fields["tau"].max())
+                    sing_max = float(coherence_fields["singularity_count"].max())
+                    coherence_source = "probsevere"
+                    print(f"  ProbSevere coherence: tau_max={tau_max:.4f}, singularity_max={sing_max:.0f}")
+                else:
+                    print("  ProbSevere coherence: no storms with usable atmospheric data")
+            except Exception as e:
+                print(f"  Warning: ProbSevere coherence fallback failed: {e}")
+
+    if coherence_fields is None:
+        print("  No coherence fields available (neither HRRR nor ProbSevere)")
 
     # Step 4: Determine scoring tier
     print()
@@ -1796,11 +2204,12 @@ def main() -> None:
     elif coherence_fields is not None:
         # Tier 2: Use analytic coherence model (no ML needed)
         scoring_tier = "tier2_analytic"
-        print(f"  -> Tier 2: Analytic coherence model (no ML, uses HRRR)")
+        source_label = "HRRR" if coherence_source == "hrrr" else "ProbSevere fallback"
+        print(f"  -> Tier 2: Analytic coherence model (no ML, coherence from {source_label})")
     else:
         # Tier 3: ProbSevere-only fallback
         scoring_tier = "tier3_ps_only"
-        print(f"  -> Tier 3: ProbSevere-only fallback (no ML, no HRRR)")
+        print(f"  -> Tier 3: ProbSevere-only fallback (no ML, no coherence fields)")
 
     # Step 5: Score active storms
     print()
@@ -1832,7 +2241,7 @@ def main() -> None:
     # Step 6: Write outputs
     print()
     print("Step 6: Writing outputs...")
-    write_outputs(scored, now, scoring_tier=scoring_tier)
+    write_outputs(scored, now, scoring_tier=scoring_tier, coherence_source=coherence_source)
     append_ledger(scored, now)
 
     # Step 7: Render static HTML pages (zero JavaScript)
@@ -1841,6 +2250,7 @@ def main() -> None:
     tornado_html = render_tornado_page(
         scored, now, scoring_tier=scoring_tier,
         coherence_fields=coherence_fields,
+        coherence_source=coherence_source,
     )
     tornado_page = DIST / "live" / "tornado" / "index.html"
     tornado_page.parent.mkdir(parents=True, exist_ok=True)
@@ -1848,6 +2258,9 @@ def main() -> None:
     print(f"  Wrote {tornado_page} ({len(scored)} storms baked in, zero JS)")
 
     render_homepage_cards(scored, now, scoring_tier=scoring_tier)
+
+    # Update verification page ledger (static, no JS)
+    render_verification_ledger()
 
     print()
     print(f"Done. Scored {len(scored)} storms.")
