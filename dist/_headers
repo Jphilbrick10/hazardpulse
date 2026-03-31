@@ -12,6 +12,12 @@
   X-JS-Runtime: none
   X-Build-Mode: classic-truth-surface
 
+/live/*
+  Cache-Control: public, max-age=120
+
+/verification/*
+  Cache-Control: public, max-age=120
+
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
