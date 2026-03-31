@@ -169,6 +169,88 @@ def load_pretrained_model() -> dict | None:
         return None
 
 
+# ---------------------------------------------------------------------------
+# Pre-trained GBT model loading (from definitive_model.save_model output)
+# ---------------------------------------------------------------------------
+
+PRETRAINED_GBT_PATH = RESULTS / "models" / "tornado_gbt_v1.json"
+
+
+def load_pretrained_gbt() -> dict | None:
+    """Load the pre-trained GBT model saved by definitive_model --save-model.
+
+    Returns a dict with keys 'model_data', 'feature_names', 'normalization'
+    if found, otherwise None. Falls through to Tier 2/3 gracefully.
+    """
+    if not PRETRAINED_GBT_PATH.exists():
+        return None
+    try:
+        with open(PRETRAINED_GBT_PATH, "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+        if data.get("model_format") != "hazardpulse_gbt_v1":
+            print(f"  Warning: Unknown model format in {PRETRAINED_GBT_PATH.name}")
+            return None
+        print(f"  Loaded pre-trained GBT ({data['n_trees']} trees, "
+              f"{len(data['feature_names'])} features) from {PRETRAINED_GBT_PATH.name}")
+        return data
+    except Exception as e:
+        print(f"  Warning: Failed to load pre-trained GBT: {e}")
+        return None
+
+
+def predict_with_pretrained(
+    gbt_data: dict,
+    raw_features: dict[str, float],
+) -> float:
+    """Score a single storm using the pre-trained GBT model.
+
+    Parameters
+    ----------
+    gbt_data : dict
+        Model payload from load_pretrained_gbt().
+    raw_features : dict
+        Feature name -> raw (unnormalized) value for this storm.
+
+    Returns
+    -------
+    float
+        Predicted tornado probability in [0, 1].
+    """
+    import math as _math
+
+    feature_names = gbt_data["feature_names"]
+    means = gbt_data["normalization"]["means"]
+    stds = gbt_data["normalization"]["stds"]
+
+    # Build normalized feature vector in correct order
+    x = []
+    for i, name in enumerate(feature_names):
+        raw = raw_features.get(name, 0.0)
+        x.append((raw - means[i]) / stds[i])
+
+    # Walk each tree and accumulate predictions
+    F = gbt_data["init_pred"]
+    lr = gbt_data["learning_rate"]
+    for tree in gbt_data["trees"]:
+        node = tree
+        while not node.get("leaf", False):
+            feat_idx = node["feat"]
+            if feat_idx < len(x) and x[feat_idx] <= node["thresh"]:
+                node = node["left"]
+            else:
+                node = node["right"]
+        F += lr * node["val"]
+
+    # Numerically stable sigmoid
+    F = max(-88.0, min(88.0, F))
+    if F >= 0:
+        prob = 1.0 / (1.0 + _math.exp(-F))
+    else:
+        ef = _math.exp(F)
+        prob = ef / (1.0 + ef)
+    return prob
+
+
 def score_storm_analytic(
     storm: dict,
     coherence_fields: dict[str, np.ndarray] | None,
@@ -1448,6 +1530,150 @@ def append_ledger(
 
 
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# Day-ahead susceptibility scoring
+# ---------------------------------------------------------------------------
+
+
+def _climatological_stp(lat: float, lon: float, month: int) -> float:
+    """Estimate STP from latitude, longitude, and month when HRRR unavailable.
+
+    Uses a simple climatological proxy:
+    - Peak tornado season (Apr-Jun) in central US (30-40N, -100 to -90W)
+    - Returns a rough STP estimate in [0, 2].
+    """
+    # Seasonal factor: peaks in May
+    month_weight = {
+        1: 0.1, 2: 0.15, 3: 0.35, 4: 0.7, 5: 1.0, 6: 0.8,
+        7: 0.4, 8: 0.3, 9: 0.2, 10: 0.15, 11: 0.2, 12: 0.1,
+    }.get(month, 0.1)
+
+    # Geographic factor: peak in central plains
+    lat_factor = max(0.0, 1.0 - abs(lat - 35.0) / 15.0)
+    lon_factor = max(0.0, 1.0 - abs(lon - (-95.0)) / 20.0)
+    geo_weight = lat_factor * lon_factor
+
+    return 2.0 * month_weight * geo_weight
+
+
+def _sigmoid_scalar(z: float) -> float:
+    """Numerically stable sigmoid for a single float."""
+    import math as _m
+    z = max(-88.0, min(88.0, z))
+    if z >= 0:
+        return 1.0 / (1.0 + _m.exp(-z))
+    ef = _m.exp(z)
+    return ef / (1.0 + ef)
+
+
+def compute_day_ahead_susceptibility(
+    hrrr: dict[str, np.ndarray] | None,
+    coherence_fields: dict[str, np.ndarray] | None,
+    now: dt.datetime,
+) -> list[dict]:
+    """Compute day-ahead tornado susceptibility on the 80km HRRR grid.
+
+    For each grid cell, estimates P(tornado in next 24h) using STP.
+    Falls back to climatological STP if HRRR is unavailable.
+
+    Parameters
+    ----------
+    hrrr : dict or None
+        HRRR grid arrays (cape, srh01, shear06, stp, etc.).
+    coherence_fields : dict or None
+        Coherence field arrays (tau, etc.).
+    now : datetime
+        Current UTC time.
+
+    Returns
+    -------
+    list[dict]
+        Top 10 grid cells ranked by susceptibility probability.
+    """
+    from hazardpulse.data.hrrr import GRID_LATS, GRID_LONS, HRRR_N_LAT, HRRR_N_LON
+
+    cells: list[dict] = []
+
+    for i in range(HRRR_N_LAT):
+        for j in range(HRRR_N_LON):
+            lat = float(GRID_LATS[i])
+            lon = float(GRID_LONS[j])
+
+            if hrrr is not None:
+                cape = float(hrrr.get("cape", np.zeros((HRRR_N_LAT, HRRR_N_LON)))[i, j])
+                srh01 = float(hrrr.get("srh01", np.zeros((HRRR_N_LAT, HRRR_N_LON)))[i, j])
+                shear06 = float(hrrr.get("shear06", np.zeros((HRRR_N_LAT, HRRR_N_LON)))[i, j])
+                stp = float(hrrr.get("stp", np.zeros((HRRR_N_LAT, HRRR_N_LON)))[i, j])
+            else:
+                # Climatological fallback
+                stp = _climatological_stp(lat, lon, now.month)
+                cape = 1500.0 * stp  # rough proxy
+                srh01 = 150.0 * stp
+                shear06 = 25.0 * stp
+
+            # STP-based probability
+            stp_prob = _sigmoid_scalar(2.0 * (stp - 1.0))
+
+            # Get coherence tau if available
+            tau = 0.0
+            if coherence_fields is not None:
+                tau_grid = coherence_fields.get("tau")
+                if tau_grid is not None:
+                    tau = float(tau_grid[i, j])
+
+            # Risk band
+            if stp_prob >= 0.50:
+                risk = "very_high"
+            elif stp_prob >= 0.30:
+                risk = "high"
+            elif stp_prob >= 0.15:
+                risk = "elevated"
+            elif stp_prob >= 0.05:
+                risk = "marginal"
+            else:
+                risk = "minimal"
+
+            cells.append({
+                "lat": round(lat, 2),
+                "lon": round(lon, 2),
+                "probability": round(stp_prob, 4),
+                "stp": round(stp, 2),
+                "cape": round(cape, 0),
+                "srh01": round(srh01, 0),
+                "shear06": round(shear06, 0),
+                "tau": round(tau, 4),
+                "risk_band": risk,
+            })
+
+    # Sort by probability descending, take top 10
+    cells.sort(key=lambda c: c["probability"], reverse=True)
+    top_cells = cells[:10]
+
+    # Write output
+    output = {
+        "disclaimer": (
+            "RESEARCH ONLY. NOT an operational warning system. "
+            "Does NOT replace NWS tornado warnings. Always follow "
+            "official NWS guidance. See weather.gov for official alerts."
+        ),
+        "updated_at": now.isoformat() + "Z",
+        "model": "hp-tornado-susceptibility-v1",
+        "forecast_period": "next 24 hours",
+        "data_source": "HRRR 18Z analysis" if hrrr is not None else "climatological estimates",
+        "top_cells": top_cells,
+    }
+
+    susc_path = DIST / "data" / "live-susceptibility.json"
+    susc_path.parent.mkdir(parents=True, exist_ok=True)
+    susc_path.write_text(
+        json.dumps(output, indent=2) + "\n", encoding="utf-8"
+    )
+    print(f"  Wrote {susc_path} ({len(top_cells)} cells)")
+
+    return top_cells
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -1552,13 +1778,21 @@ def main() -> None:
     print()
     print("Step 4: Determining scoring tier...")
     model: dict | None = None
+    pretrained_gbt: dict | None = None
     scoring_tier: str = "tier3_ps_only"
 
-    # Tier 1: Try loading a pre-trained ML model
-    model = load_pretrained_model()
-    if model is not None:
+    # Tier 1: Try loading pre-trained GBT (from definitive_model --save-model)
+    pretrained_gbt = load_pretrained_gbt()
+    if pretrained_gbt is not None:
         scoring_tier = "tier1_ml"
-        print(f"  -> Tier 1: Pre-trained ML model")
+        print(f"  -> Tier 1: Pre-trained GBT model (definitive_model)")
+    else:
+        # Fallback: try legacy model format
+        model = load_pretrained_model()
+
+    if model is not None and pretrained_gbt is None:
+        scoring_tier = "tier1_ml"
+        print(f"  -> Tier 1: Pre-trained ML model (legacy)")
     elif coherence_fields is not None:
         # Tier 2: Use analytic coherence model (no ML needed)
         scoring_tier = "tier2_analytic"
@@ -1582,6 +1816,18 @@ def main() -> None:
             f"[{s['risk_band']}] -- CAPE={s['mucape']:.0f}, "
             f"SRH={s['srh01']:.0f}, MaxLLAz={s['maxllaz']:.4f}"
         )
+
+    # Step 5b: Day-ahead susceptibility scoring
+    print()
+    print("Step 5b: Computing day-ahead susceptibility...")
+    try:
+        top_cells = compute_day_ahead_susceptibility(hrrr, coherence_fields, now)
+        if top_cells:
+            best = top_cells[0]
+            print(f"  Top cell: ({best['lat']}, {best['lon']}) "
+                  f"P={best['probability']:.1%} STP={best['stp']:.1f}")
+    except Exception as e:
+        print(f"  Warning: Susceptibility scoring failed: {e}")
 
     # Step 6: Write outputs
     print()

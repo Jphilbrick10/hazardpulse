@@ -2079,7 +2079,119 @@ def main(
         print("=" * 72)
         sys.stdout.flush()
 
+    # Attach trained artifacts so callers can save them
+    results["_models"] = models
+    results["_normalizers"] = normalizers
+
     return results
+
+
+# ===================================================================
+# MODEL SERIALIZATION -- SAVE / LOAD FOR LIVE SCORING
+# ===================================================================
+
+
+def _tree_to_json(node: dict) -> dict:
+    """Convert a GBT tree node to JSON-safe dict (recursive)."""
+    if node.get("leaf", False):
+        return {"leaf": True, "val": float(node["val"])}
+    return {
+        "leaf": False,
+        "feat": int(node["feat"]),
+        "thresh": float(node["thresh"]),
+        "left": _tree_to_json(node["left"]),
+        "right": _tree_to_json(node["right"]),
+    }
+
+
+def save_model(
+    model: GradientBoostedTrees,
+    normalizer: FeatureNormalizer,
+    feature_names: list[str],
+    path: str | Path,
+    variant: str = "full",
+) -> None:
+    """Serialize a trained GBT + normalizer to a JSON file.
+
+    The output is pure JSON with no numpy types, so it can be loaded
+    by the live scoring pipeline without training dependencies.
+
+    Parameters
+    ----------
+    model : GradientBoostedTrees
+        Trained model instance.
+    normalizer : FeatureNormalizer
+        Fitted normalizer (means/stds from training set).
+    feature_names : list[str]
+        Ordered feature names matching the model's expected input.
+    path : str or Path
+        Output file path (.json).
+    variant : str
+        Model variant label (e.g. "full", "enhanced", "baseline").
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    payload = {
+        "disclaimer": (
+            "RESEARCH ONLY. NOT an operational warning system. "
+            "Does NOT replace NWS tornado warnings."
+        ),
+        "model_format": "hazardpulse_gbt_v1",
+        "variant": variant,
+        "init_pred": float(model.init_pred),
+        "learning_rate": float(model.lr),
+        "n_trees": len(model.trees),
+        "trees": [_tree_to_json(t) for t in model.trees],
+        "feature_names": list(feature_names),
+        "normalization": {
+            "means": [float(x) for x in normalizer.mean],
+            "stds": [float(x) for x in normalizer.std],
+        },
+    }
+
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(payload, fh, indent=2)
+
+    print(f"  Saved model ({len(model.trees)} trees, {len(feature_names)} features) -> {path}")
+
+
+def load_model(path: str | Path) -> tuple[GradientBoostedTrees, FeatureNormalizer, list[str]]:
+    """Load a saved GBT model from JSON.
+
+    Parameters
+    ----------
+    path : str or Path
+        Path to the JSON model file produced by ``save_model()``.
+
+    Returns
+    -------
+    tuple of (GradientBoostedTrees, FeatureNormalizer, list[str])
+        The reconstructed model, normalizer, and feature name list.
+    """
+    path = Path(path)
+    with open(path, "r", encoding="utf-8") as fh:
+        data = json.load(fh)
+
+    assert data.get("model_format") == "hazardpulse_gbt_v1", (
+        f"Unknown model format: {data.get('model_format')}"
+    )
+
+    gbt = GradientBoostedTrees(
+        n_trees=data["n_trees"],
+        learning_rate=data["learning_rate"],
+    )
+    gbt.init_pred = data["init_pred"]
+    gbt.lr = data["learning_rate"]
+    gbt.trees = data["trees"]  # Already in dict form, same as internal repr
+
+    norm = FeatureNormalizer()
+    norm.mean = np.array(data["normalization"]["means"], dtype=np.float32)
+    norm.std = np.array(data["normalization"]["stds"], dtype=np.float32)
+
+    feature_names = data["feature_names"]
+
+    return gbt, norm, feature_names
 
 
 # ===================================================================
@@ -2109,10 +2221,27 @@ if __name__ == "__main__":
         action="store_true",
         help="Suppress progress output",
     )
+    parser.add_argument(
+        "--save-model",
+        type=str,
+        default=None,
+        metavar="PATH",
+        help="Save the trained full-variant GBT model to PATH (JSON). "
+             "Example: results/models/tornado_gbt_v1.json",
+    )
 
     args = parser.parse_args()
-    main(
+    results = main(
         spc_csv_path=args.spc_csv,
         output_dir=args.output_dir,
         verbose=not args.quiet,
     )
+
+    if args.save_model and "_models" in results and "_normalizers" in results:
+        save_model(
+            model=results["_models"]["full"],
+            normalizer=results["_normalizers"]["full"],
+            feature_names=ALL_FEATURE_NAMES_FULL,
+            path=args.save_model,
+            variant="full",
+        )

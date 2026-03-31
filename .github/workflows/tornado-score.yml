@@ -2,9 +2,10 @@ name: Tornado Scoring (Severe Season)
 
 on:
   schedule:
-    # Run every 6 hours to accumulate data while building the site.
-    # Increase to hourly or 15-min when going live to public.
-    - cron: "0 */6 * * *"
+    # Run every 2 hours for timely severe weather coverage.
+    # During active outbreaks, use workflow_dispatch for manual triggers
+    # to increase frequency beyond the cron schedule.
+    - cron: "0 */2 * * *"
   workflow_dispatch:
     inputs:
       date:
@@ -62,14 +63,14 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          git diff --quiet dist/data/live-tornadoes.json dist/data/live-pulse.json dist/data/tornado-ledger.jsonl 2>/dev/null && echo "changed=false" >> "$GITHUB_OUTPUT" || echo "changed=true" >> "$GITHUB_OUTPUT"
+          git diff --quiet dist/data/live-tornadoes.json dist/data/live-pulse.json dist/data/tornado-ledger.jsonl dist/data/live-susceptibility.json 2>/dev/null && echo "changed=false" >> "$GITHUB_OUTPUT" || echo "changed=true" >> "$GITHUB_OUTPUT"
 
       - name: Commit and push updated data
         if: steps.changes.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f dist/data/live-tornadoes.json dist/data/live-pulse.json dist/data/tornado-ledger.jsonl
+          git add -f dist/data/live-tornadoes.json dist/data/live-pulse.json dist/data/tornado-ledger.jsonl dist/data/live-susceptibility.json
           git commit -m "data: tornado scoring update $(date -u +%Y-%m-%dT%H:%MZ)
 
           Automated scoring via fetch_and_score_tornado.py.
