@@ -2132,8 +2132,11 @@ def main() -> None:
     print("Step 2: Fetching HRRR 18Z analysis...")
     hrrr: dict[str, np.ndarray] | None = None
 
-    # Try current day 18Z, then 12Z, then yesterday 18Z
-    for hour in (18, 12):
+    # Try most recent available HRRR hour (current hour rounded down, then earlier)
+    current_hour = now.hour
+    hours_to_try = sorted(set([current_hour, current_hour - 1, 18, 15, 12, 9, 6]), reverse=True)
+    hours_to_try = [h for h in hours_to_try if 0 <= h <= 23]
+    for hour in hours_to_try:
         hrrr = load_cached_hrrr(date_str, hour=hour)
         if hrrr is not None:
             print(f"  Loaded HRRR {hour}Z from cache")
@@ -2141,8 +2144,13 @@ def main() -> None:
 
     if hrrr is None:
         try:
-            hrrr = fetch_hrrr_grid(date_str, hour=18)
-            print("  Fetched HRRR 18Z from AWS")
+            for fh in hours_to_try[:3]:
+                try:
+                    hrrr = fetch_hrrr_grid(date_str, hour=fh)
+                    print(f"  Fetched HRRR {fh}Z from AWS")
+                    break
+                except Exception:
+                    continue
         except Exception as e:
             print(f"  Warning: HRRR fetch failed: {e}")
             print("  Proceeding without HRRR (ProbSevere fallback mode)")
@@ -2163,7 +2171,9 @@ def main() -> None:
             print(f"  Warning: Coherence field computation failed: {e}")
 
     # Fallback: build coherence from ProbSevere atmospheric data
-    if coherence_fields is None and time_steps:
+    # Trigger if coherence is None OR if tau is all zeros (HRRR had no useful data)
+    tau_is_zero = (coherence_fields is not None and float(coherence_fields["tau"].max()) < 0.001)
+    if (coherence_fields is None or tau_is_zero) and time_steps:
         latest_storms = time_steps[-1].get("storms", [])
         if latest_storms:
             print("  No HRRR -- building coherence fields from ProbSevere atmospheric data...")
