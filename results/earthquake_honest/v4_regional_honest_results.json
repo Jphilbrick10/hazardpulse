@@ -1,0 +1,538 @@
+{
+  "regional_results": {
+    "japan": {
+      "model_used": "japan",
+      "metrics": {
+        "auc": 0.877104377104377,
+        "pr_auc": 0.4801723528996256,
+        "brier": 0.10812886233732796,
+        "bss": 0.23090161047944335,
+        "bootstrap_ci": {
+          "mean": 0.8773227285746916,
+          "ci_lo": 0.7825443786982248,
+          "ci_hi": 0.9528075182093039,
+          "std": 0.04447461756886387
+        },
+        "n_positive": 11,
+        "n_negative": 54,
+        "base_rate": 0.16923076923076924
+      }
+    },
+    "cascadia": {
+      "model_used": "cascadia",
+      "metrics": {
+        "auc": 1.0,
+        "pr_auc": 1.0,
+        "brier": 0.16016524208081878,
+        "bss": 0.14578537556896654,
+        "bootstrap_ci": {
+          "mean": 0.949,
+          "ci_lo": 0.5,
+          "ci_hi": 1.0,
+          "std": 0.1513241553751416
+        },
+        "n_positive": 2,
+        "n_negative": 6,
+        "base_rate": 0.25
+      }
+    },
+    "san_andreas": {
+      "model_used": "rest_of_world (fallback)",
+      "metrics": {
+        "auc": 1.0,
+        "pr_auc": 1.0,
+        "brier": 0.10865515550221833,
+        "bss": 0.3713523145943082,
+        "bootstrap_ci": {
+          "mean": 0.94725,
+          "ci_lo": 0.5,
+          "ci_hi": 1.0,
+          "std": 0.1535982991442288
+        },
+        "n_positive": 2,
+        "n_negative": 7,
+        "base_rate": 0.2222222222222222
+      }
+    },
+    "alaska": {
+      "model_used": "rest_of_world (fallback)",
+      "metrics": {
+        "auc": 1.0,
+        "pr_auc": 1.0,
+        "brier": 0.08179479835608627,
+        "bss": 0.41107745183617883,
+        "bootstrap_ci": {
+          "mean": 0.94825,
+          "ci_lo": 0.5,
+          "ci_hi": 1.0,
+          "std": 0.1523054086367257
+        },
+        "n_positive": 2,
+        "n_negative": 10,
+        "base_rate": 0.16666666666666666
+      }
+    },
+    "chile": {
+      "model_used": "chile",
+      "metrics": {
+        "auc": 0.931077694235589,
+        "pr_auc": 0.7791706240063282,
+        "brier": 0.09650481486479114,
+        "bss": 0.39037497276514777,
+        "bootstrap_ci": {
+          "mean": 0.931556804430794,
+          "ci_lo": 0.8587480353425937,
+          "ci_hi": 0.9830579096045197,
+          "std": 0.03184181860867452
+        },
+        "n_positive": 14,
+        "n_negative": 57,
+        "base_rate": 0.19718309859154928
+      }
+    },
+    "mediterranean": {
+      "model_used": "mediterranean",
+      "metrics": {
+        "auc": 0.9393939393939393,
+        "pr_auc": 0.8666666666666667,
+        "brier": 0.16731230802029598,
+        "bss": 0.006266291758242004,
+        "bootstrap_ci": {
+          "mean": 0.8289295011536083,
+          "ci_lo": 0.3628787878787879,
+          "ci_hi": 1.0,
+          "std": 0.1954669674034368
+        },
+        "n_positive": 3,
+        "n_negative": 11,
+        "base_rate": 0.21428571428571427
+      }
+    },
+    "indonesia": {
+      "model_used": "indonesia",
+      "metrics": {
+        "auc": 0.8895692567567568,
+        "pr_auc": 0.6067180076291108,
+        "brier": 0.1104544891987112,
+        "bss": 0.365049943320331,
+        "bootstrap_ci": {
+          "mean": 0.8898410856554504,
+          "ci_lo": 0.8353003283096403,
+          "ci_hi": 0.9365271768150014,
+          "std": 0.02557839447837354
+        },
+        "n_positive": 37,
+        "n_negative": 128,
+        "base_rate": 0.22424242424242424
+      }
+    },
+    "rest_of_world": {
+      "model_used": "rest_of_world",
+      "metrics": {
+        "auc": 0.90554781552531,
+        "pr_auc": 0.6873935601787998,
+        "brier": 0.1273856736209118,
+        "bss": 0.2787963136865146,
+        "bootstrap_ci": {
+          "mean": 0.9056484400055503,
+          "ci_lo": 0.8883038982081045,
+          "ci_hi": 0.921775715144674,
+          "std": 0.008321694998119328
+        },
+        "n_positive": 258,
+        "n_negative": 868,
+        "base_rate": 0.2291296625222025
+      }
+    }
+  },
+  "global_combined": {
+    "regional_ensemble": {
+      "auc": 0.8984718535157553,
+      "pr_auc": 0.6162433790793287,
+      "brier": 0.12522173448097138,
+      "bss": 0.2896852302549865,
+      "bootstrap_ci": {
+        "mean": 0.8986599871686717,
+        "ci_lo": 0.8817082096022683,
+        "ci_hi": 0.9148544036751665,
+        "std": 0.008579921900985997
+      },
+      "n_positive": 295,
+      "n_negative": 996,
+      "base_rate": 0.22850503485670023
+    },
+    "global_baseline": {
+      "auc": 0.9074433326526443,
+      "pr_auc": 0.6996577026424501,
+      "brier": 0.11605939643081976,
+      "bss": 0.3416581890180549,
+      "bootstrap_ci": {
+        "mean": 0.9075782454662012,
+        "ci_lo": 0.8916676492434337,
+        "ci_hi": 0.922694642375945,
+        "std": 0.007874484306710052
+      },
+      "n_positive": 295,
+      "n_negative": 996,
+      "base_rate": 0.22850503485670023
+    }
+  },
+  "global_baseline": {},
+  "feature_importance": {
+    "japan": {
+      "plate_boundary_dist": 0.23414634146341465,
+      "quiescence_7d": 0.13658536585365855,
+      "elong": 0.07804878048780488,
+      "regional_m6_rate": 0.06341463414634146,
+      "rate_180d": 0.04878048780487805,
+      "t_c_estimate": 0.04390243902439024,
+      "nn_change": 0.03902439024390244,
+      "mom_accel": 0.03414634146341464,
+      "rate_90d": 0.02926829268292683,
+      "mom_30d": 0.024390243902439025
+    },
+    "cascadia": {
+      "plate_boundary_dist": 0.3157894736842105,
+      "rate_365d": 0.15789473684210525,
+      "elong": 0.10526315789473684,
+      "spatial_conc": 0.05263157894736842,
+      "mag_var_chg": 0.05263157894736842,
+      "regional_m6_rate": 0.05263157894736842,
+      "divergence_rate": 0.05263157894736842,
+      "depth_mean": 0.05263157894736842,
+      "rate_90d": 0.05263157894736842,
+      "rate_30d": 0.05263157894736842
+    },
+    "chile": {
+      "plate_boundary_dist": 0.1789709172259508,
+      "elong": 0.05592841163310962,
+      "mom_30d": 0.0447427293064877,
+      "rate_7d": 0.0447427293064877,
+      "divergence_rate": 0.040268456375838924,
+      "quiescence_7d": 0.03803131991051454,
+      "t_c_estimate": 0.03803131991051454,
+      "rate_14d": 0.03803131991051454,
+      "spatial_conc": 0.035794183445190156,
+      "foreshock_frac": 0.029082774049217
+    },
+    "mediterranean": {
+      "plate_boundary_dist": 1.0,
+      "regional_m6_rate": 0.0,
+      "tectonic_collision": 0.0,
+      "tectonic_transform": 0.0,
+      "tectonic_subduction": 0.0,
+      "tau_x_strain": 0.0,
+      "singularity_count": 0.0,
+      "t_c_estimate": 0.0,
+      "divergence_rate": 0.0,
+      "Da": 0.0
+    },
+    "indonesia": {
+      "plate_boundary_dist": 0.11742424242424243,
+      "regional_m6_rate": 0.05397727272727273,
+      "quiescence_7d": 0.04924242424242424,
+      "b_shallow": 0.03787878787878788,
+      "b_deep": 0.03598484848484849,
+      "frac_shallow": 0.035037878787878785,
+      "divergence_rate": 0.035037878787878785,
+      "mag_var_chg": 0.03409090909090909,
+      "b_overall": 0.03314393939393939,
+      "nn_change": 0.03314393939393939
+    },
+    "rest_of_world": {
+      "quiescence_7d": 0.18421052631578946,
+      "plate_boundary_dist": 0.17543859649122806,
+      "mom_30d": 0.05263157894736842,
+      "rate_14d": 0.05263157894736842,
+      "maxmag_30d": 0.043859649122807015,
+      "nn_change": 0.043859649122807015,
+      "bath_ratio": 0.03508771929824561,
+      "depth_trend": 0.03508771929824561,
+      "maxmag_90d": 0.03508771929824561,
+      "rate_90d": 0.03508771929824561
+    }
+  },
+  "comparison": {
+    "regional_ensemble_auc": 0.8984718535157553,
+    "global_baseline_auc": 0.9074433326526443,
+    "lift": -0.008971479136889005,
+    "significance": {
+      "delta_auc": -0.008971479136889005,
+      "ci_lo": -0.01812835999607546,
+      "ci_hi": 0.0009237155494800733,
+      "p_value": 0.9665
+    },
+    "excluded_insufficient_data": [
+      "japan",
+      "cascadia",
+      "san_andreas",
+      "alaska",
+      "chile",
+      "mediterranean"
+    ]
+  },
+  "metadata": {
+    "model_version": "v4_regional",
+    "honest_mode": true,
+    "evaluation_parameters": {
+      "magnitude_threshold": 6.0,
+      "label_radius_km": 100.0,
+      "forward_window_days": 90.0,
+      "control_ratio": 5
+    },
+    "timestamp": "2026-04-01T19:21:56Z",
+    "elapsed_seconds": 3255.9,
+    "regions": [
+      "japan",
+      "cascadia",
+      "san_andreas",
+      "alaska",
+      "chile",
+      "mediterranean",
+      "indonesia",
+      "rest_of_world"
+    ],
+    "n_features": 55,
+    "feature_names": [
+      "rate_7d",
+      "rate_14d",
+      "rate_30d",
+      "rate_90d",
+      "rate_180d",
+      "rate_365d",
+      "b_overall",
+      "b_shallow",
+      "b_deep",
+      "nn_spatial",
+      "nn_temporal",
+      "st_nn",
+      "nn_change",
+      "mom_30d",
+      "mom_90d",
+      "mom_accel",
+      "mom_deficit",
+      "inv_omori",
+      "bath_ratio",
+      "foreshock_frac",
+      "maxmag_30d",
+      "maxmag_90d",
+      "mag_var_chg",
+      "depth_mean",
+      "depth_trend",
+      "frac_shallow",
+      "spatial_conc",
+      "elong",
+      "quiescence_7d",
+      "iet_delta_aic",
+      "vel_anom_h",
+      "vel_anom_v",
+      "strain_rate",
+      "strain_rate_anom",
+      "transient_30d",
+      "transient_90d",
+      "transient_180d",
+      "transient_coherence",
+      "dist_nearest_fault",
+      "fault_slip_rate",
+      "n_gnss_100km",
+      "locking_proxy",
+      "tau",
+      "grad_tau",
+      "S_over_Gamma",
+      "Da",
+      "divergence_rate",
+      "t_c_estimate",
+      "singularity_count",
+      "tau_x_strain",
+      "tectonic_subduction",
+      "tectonic_transform",
+      "tectonic_collision",
+      "plate_boundary_dist",
+      "regional_m6_rate"
+    ],
+    "gbt_config": {
+      "n_trees": 200,
+      "max_depth": 4,
+      "learning_rate": 0.03,
+      "subsample": 0.6,
+      "early_stop_patience": 40
+    },
+    "temporal_splits": {
+      "train": "2005-2017",
+      "val": "2018-2019",
+      "test": "2020-2024"
+    },
+    "data_meta": {
+      "japan": {
+        "n_train": 357,
+        "n_val": 45,
+        "n_test": 65,
+        "train_pos": 62,
+        "train_neg": 295,
+        "test_pos": 11,
+        "test_neg": 54,
+        "tectonic_type": "subduction",
+        "magnitude_threshold": 6.0,
+        "label_radius_km": 100.0,
+        "forward_window_days": 90.0,
+        "control_ratio": 5,
+        "base_rate": 0.16666666666666666
+      },
+      "cascadia": {
+        "n_train": 56,
+        "n_val": 6,
+        "n_test": 8,
+        "train_pos": 9,
+        "train_neg": 47,
+        "test_pos": 2,
+        "test_neg": 6,
+        "tectonic_type": "subduction",
+        "magnitude_threshold": 6.0,
+        "label_radius_km": 100.0,
+        "forward_window_days": 90.0,
+        "control_ratio": 5,
+        "base_rate": 0.16666666666666666
+      },
+      "san_andreas": {
+        "n_train": 17,
+        "n_val": 4,
+        "n_test": 9,
+        "train_pos": 2,
+        "train_neg": 15,
+        "test_pos": 2,
+        "test_neg": 7,
+        "tectonic_type": "transform",
+        "magnitude_threshold": 6.0,
+        "label_radius_km": 100.0,
+        "forward_window_days": 90.0,
+        "control_ratio": 5,
+        "base_rate": 0.16666666666666666
+      },
+      "alaska": {
+        "n_train": 32,
+        "n_val": 9,
+        "n_test": 12,
+        "train_pos": 6,
+        "train_neg": 26,
+        "test_pos": 2,
+        "test_neg": 10,
+        "tectonic_type": "subduction",
+        "magnitude_threshold": 6.0,
+        "label_radius_km": 100.0,
+        "forward_window_days": 90.0,
+        "control_ratio": 5,
+        "base_rate": 0.16666666666666666
+      },
+      "chile": {
+        "n_train": 303,
+        "n_val": 50,
+        "n_test": 71,
+        "train_pos": 52,
+        "train_neg": 251,
+        "test_pos": 14,
+        "test_neg": 57,
+        "tectonic_type": "subduction",
+        "magnitude_threshold": 6.0,
+        "label_radius_km": 100.0,
+        "forward_window_days": 90.0,
+        "control_ratio": 5,
+        "base_rate": 0.16666666666666666
+      },
+      "mediterranean": {
+        "n_train": 102,
+        "n_val": 6,
+        "n_test": 14,
+        "train_pos": 17,
+        "train_neg": 85,
+        "test_pos": 3,
+        "test_neg": 11,
+        "tectonic_type": "collision",
+        "magnitude_threshold": 6.0,
+        "label_radius_km": 100.0,
+        "forward_window_days": 90.0,
+        "control_ratio": 5,
+        "base_rate": 0.16666666666666666
+      },
+      "indonesia": {
+        "n_train": 626,
+        "n_val": 72,
+        "n_test": 165,
+        "train_pos": 105,
+        "train_neg": 521,
+        "test_pos": 37,
+        "test_neg": 128,
+        "tectonic_type": "subduction",
+        "magnitude_threshold": 6.0,
+        "label_radius_km": 100.0,
+        "forward_window_days": 90.0,
+        "control_ratio": 5,
+        "base_rate": 0.16666666666666666
+      },
+      "rest_of_world": {
+        "n_train": 4632,
+        "n_val": 601,
+        "n_test": 1126,
+        "train_pos": 782,
+        "train_neg": 3850,
+        "test_pos": 258,
+        "test_neg": 868,
+        "tectonic_type": "mixed",
+        "magnitude_threshold": 6.0,
+        "label_radius_km": 100.0,
+        "forward_window_days": 90.0,
+        "control_ratio": 5,
+        "base_rate": 0.16666666666666666
+      }
+    },
+    "train_meta": {
+      "japan": {
+        "skipped": false,
+        "n_trees_used": 44,
+        "stopped_early": true,
+        "best_val_loss": 0.3236052095890045
+      },
+      "cascadia": {
+        "skipped": false,
+        "n_trees_used": 19,
+        "stopped_early": true,
+        "best_val_loss": 0.38896557688713074
+      },
+      "san_andreas": {
+        "skipped": true,
+        "reason": "insufficient_data"
+      },
+      "alaska": {
+        "skipped": true,
+        "reason": "insufficient_data"
+      },
+      "chile": {
+        "skipped": false,
+        "n_trees_used": 88,
+        "stopped_early": true,
+        "best_val_loss": 0.2783394157886505
+      },
+      "mediterranean": {
+        "skipped": false,
+        "n_trees_used": 1,
+        "stopped_early": true,
+        "best_val_loss": 0.18418805301189423
+      },
+      "indonesia": {
+        "skipped": false,
+        "n_trees_used": 158,
+        "stopped_early": true,
+        "best_val_loss": 0.3146095871925354
+      },
+      "rest_of_world": {
+        "skipped": false,
+        "n_trees_used": 13,
+        "stopped_early": true,
+        "best_val_loss": 0.3547608554363251
+      }
+    },
+    "global_baseline_meta": {
+      "n_trees_used": 19,
+      "stopped_early": true
+    }
+  }
+}
