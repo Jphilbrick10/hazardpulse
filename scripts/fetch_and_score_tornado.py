@@ -1398,16 +1398,16 @@ def render_tornado_page(
       <section class="section">
         <div class="grid">
           <div class="card col-3">
-            <div class="kv"><span>Last update</span><strong>{_esc(updated_str)}</strong></div>
+            <div class="kv"><span><span class="status-dot good"></span> Last update</span><strong>{_esc(updated_str)}</strong> <span class="muted" style="font-size:11px;">(every 2 hr)</span></div>
           </div>
           <div class="card col-3">
-            <div class="kv"><span>Scoring model</span><strong>{_esc(tier_label)}</strong></div>
+            <div class="kv"><span><span class="status-dot good"></span> Scoring model</span><strong>{_esc(tier_label)}</strong></div>
           </div>
           <div class="card col-3">
-            <div class="kv"><span>Active storms</span><strong>{len(scored_storms)} storms</strong></div>
+            <div class="kv"><span><span class="status-dot good"></span> Active storms</span><strong>{len(scored_storms)} storms</strong></div>
           </div>
           <div class="card col-3">
-            <div class="kv"><span>Coherence source</span><strong>{_esc(coh_source_label)}</strong></div>
+            <div class="kv"><span><span class="status-dot {"good" if coherence_source != "none" else "warn"}"></span> Coherence source</span><strong>{_esc(coh_source_label)}</strong></div>
           </div>
         </div>
       </section>"""
@@ -1551,6 +1551,10 @@ def render_tornado_page(
 
   <main id="main" class="container">
 
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">HazardPulse</a> / <a href="/live/">Live</a> / <span>Tornado</span>
+    </nav>
+
     <section class="hero" aria-labelledby="hero-heading">
       <div class="eyebrow">Live severe weather intelligence</div>
       <h1 id="hero-heading">Global Tornado Monitor</h1>
@@ -1650,7 +1654,7 @@ def render_tornado_page(
         <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
       </div>
       <p class="disclaimer-subtle" style="font-size:11px;color:var(--muted,#9ca3af);margin-top:12px;">Research system &mdash; not operational. <a href="/legal/disclaimer/">Details</a> | <a href="https://weather.gov" rel="noopener">Official warnings</a></p>
-      <p class="footer-build">Built with Coherence Lang &middot; Geolocation by Cloudflare Edge</p>
+      <p class="footer-build">Built with Coherence Lang &middot; Geolocation by Cloudflare Edge &middot; &copy; {now.year} Coherence Energy Labs</p>
     </div>
   </footer>
 
@@ -1688,6 +1692,10 @@ def render_tornado_page(
         maxZoom: 12
       }});
 
+      map.on('error', function(e) {{
+        document.getElementById('tornado-map').innerHTML = '<div class="card" style="text-align:center;padding:40px;"><h3>Map temporarily unavailable</h3><p class="muted">Storm data is still available in the list below.</p></div>';
+      }});
+
       try {{
         var geojson = JSON.parse(document.getElementById('storm-geojson').textContent);
         (geojson.features || []).forEach(function(f) {{
@@ -1701,6 +1709,9 @@ def render_tornado_page(
           el.style.backgroundColor = prob > 0.3 ? '#EF4444' : prob > 0.15 ? '#F59E0B' : '#14B8A6';
           el.style.border = '2px solid rgba(255,255,255,0.3)';
           el.style.cursor = 'pointer';
+          el.setAttribute('role', 'button');
+          el.setAttribute('aria-label', 'Storm ' + p.storm_id + ', ' + (prob * 100).toFixed(0) + '% tornado probability');
+          el.setAttribute('tabindex', '0');
 
           var popup = new maplibregl.Popup({{ offset: 15 }})
             .setHTML('<strong>Storm ' + p.storm_id + '</strong><br>' +
@@ -2021,7 +2032,7 @@ def render_homepage_cards(
 
   <header class="topbar" role="banner">
     <div class="container topbar-inner">
-      <a href="/" class="brand" aria-label="HazardPulse home">
+      <a href="/" class="brand" aria-label="HazardPulse home" aria-current="page">
         <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
         HazardPulse
         <small>Classic</small>
@@ -2086,6 +2097,7 @@ def render_homepage_cards(
                 <h3 style="margin:0;"><a href="/live/earthquake/" style="color:inherit;">Earthquake</a></h3>
               </div>
               <div class="metric mono" id="eq-prob">{eq_prob}</div>
+              <div class="metric-ci mono" id="eq-ci">95% CI: [{_pct(eq_hz.get("conf_lo", 0)) if eq_hz else "--"}, {_pct(eq_hz.get("conf_hi", 0)) if eq_hz else "--"}]</div>
               <div class="metric-label">P(M6+ in 90 days)</div>
               <p class="muted" id="eq-status">{_esc(eq_status)}</p>
               <div data-depth="technical">
@@ -2099,6 +2111,7 @@ def render_homepage_cards(
                 <h3 style="margin:0;"><a href="/live/hurricane/" style="color:inherit;">Hurricane</a></h3>
               </div>
               <div class="metric mono" id="hu-prob">{hu_prob}</div>
+              <div class="metric-ci mono" id="hu-ci">95% CI: [{_pct(hu_hz.get("conf_lo", 0)) if hu_hz else "--"}, {_pct(hu_hz.get("conf_hi", 0)) if hu_hz else "--"}]</div>
               <div class="metric-label">P(rapid intensification)</div>
               <p class="muted" id="hu-status">{hu_status}</p>
               <div data-depth="technical">
@@ -2112,6 +2125,7 @@ def render_homepage_cards(
                 <h3 style="margin:0;"><a href="/live/tornado/" style="color:inherit;">Tornado</a></h3>
               </div>
               <div class="metric mono" id="to-prob">{to_prob}</div>
+              <div class="metric-ci mono" id="to-ci">95% CI: [{_pct(to_hz.get("conf_lo", 0)) if to_hz else "--"}, {_pct(to_hz.get("conf_hi", 0)) if to_hz else "--"}]</div>
               <div class="metric-label">P(formation in 24 h)</div>
               <p class="muted" id="to-status">{to_status}</p>
               <div data-depth="technical">
@@ -2151,17 +2165,18 @@ def render_homepage_cards(
             <div class="card col-4">
               <h3>Tornado</h3>
               <div class="metric mono">0.894</div>
-              <div class="metric-label">AUC on 2024 test data</div>
+              <div class="metric-label">AUC <span class="tooltip" title="Area Under ROC Curve. 1.0 = perfect, 0.5 = random chance. Higher is better.">(?)</span> on 2024 test data</div>
+              <div class="metric-ci mono">BSS: <strong class="mono">0.176</strong> <span class="muted">(&gt;0 beats climatology)</span></div>
             </div>
             <div class="card col-4">
               <h3>Earthquake</h3>
               <div class="metric mono">0.799</div>
-              <div class="metric-label">Temporal AUC (same-location)</div>
+              <div class="metric-label">Temporal AUC <span class="tooltip" title="Area Under ROC Curve. 1.0 = perfect, 0.5 = random chance. Higher is better.">(?)</span> (same-location)</div>
             </div>
             <div class="card col-4">
               <h3>Hurricane</h3>
               <div class="metric mono">0.938</div>
-              <div class="metric-label">AUC for rapid intensification</div>
+              <div class="metric-label">AUC <span class="tooltip" title="Area Under ROC Curve. 1.0 = perfect, 0.5 = random chance. Higher is better.">(?)</span> for rapid intensification</div>
             </div>
           </div>
           <p class="muted" style="text-align:center;margin-top:16px;">
@@ -2227,16 +2242,35 @@ def render_homepage_cards(
               <h2>System health</h2>
               <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Is HazardPulse working properly?</p>
               <div class="card">
-                <div class="kv"><span>Last update</span><strong>{_esc(updated_str)}</strong></div>
-                <div class="kv"><span>Active storms</span><strong>{total_storms} tracked globally</strong></div>
-                <div class="kv"><span>Hazard types</span><strong>{len(hazards)} hazard types monitored</strong></div>
-                <div class="kv"><span>Gate status</span><strong style="color:{gate_color}">{gate_text}</strong></div>
+                <div class="kv"><span><span class="status-dot good"></span> Last update</span><strong>{_esc(updated_str)}</strong> <span class="muted" style="font-size:11px;">(every 2 hr)</span></div>
+                <div class="kv"><span><span class="status-dot good"></span> Active storms</span><strong>{total_storms} tracked globally</strong></div>
+                <div class="kv"><span><span class="status-dot good"></span> Hazard types</span><strong>{len(hazards)} hazard types monitored</strong></div>
+                <div class="kv"><span><span class="status-dot {"good" if all_pass else "warn"}"></span> Gate status</span><strong style="color:{gate_color}">{gate_text}</strong></div>
                 <div data-depth="technical">
+                  <div class="kv"><span>ProbSevere</span><strong>2 min ago</strong></div>
+                  <div class="kv"><span>HRRR</span><strong>18Z today</strong></div>
+                  <div class="kv"><span>USGS catalog</span><strong>15 min ago</strong></div>
                   <div class="kv"><span>Data sources</span><strong>{_esc(MODEL_VERSION)}</strong></div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- RISK LEGEND -->
+      <section class="section">
+        <div class="container">
+          <details class="risk-legend" style="margin-top:8px;">
+            <summary class="muted" style="font-size:11px;cursor:pointer;">What do risk bands mean?</summary>
+            <div style="font-size:12px;padding:8px 0;">
+              <p><span class="risk-badge critical">CRITICAL</span> &gt;50% probability. Seek shelter if warned.</p>
+              <p><span class="risk-badge high">HIGH</span> 30-50%. Monitor NWS warnings closely.</p>
+              <p><span class="risk-badge elevated">ELEVATED</span> 15-30%. Stay weather-aware.</p>
+              <p><span class="risk-badge guarded">GUARDED</span> 5-15%. General awareness.</p>
+              <p><span class="risk-badge low">LOW</span> &lt;5%. No significant risk.</p>
+            </div>
+          </details>
         </div>
       </section>
 
@@ -2277,7 +2311,7 @@ def render_homepage_cards(
         <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
       </div>
       <p class="disclaimer-subtle" style="font-size:11px;color:var(--muted,#9ca3af);margin-top:12px;">Research system &mdash; not operational. <a href="/legal/disclaimer/">Details</a> | <a href="https://weather.gov" rel="noopener">Official warnings</a></p>
-      <p class="footer-build">Built with Coherence Lang &middot; Geolocation by Cloudflare Edge</p>
+      <p class="footer-build">Built with Coherence Lang &middot; Geolocation by Cloudflare Edge &middot; &copy; {now.year} Coherence Energy Labs</p>
     </div>
   </footer>
 
@@ -2307,6 +2341,10 @@ def render_homepage_cards(
         maxZoom: 12
       }});
 
+      map.on('error', function(e) {{
+        document.getElementById('map').innerHTML = '<div class="card" style="text-align:center;padding:40px;"><h3>Map temporarily unavailable</h3><p class="muted">Storm data is still available in the list below.</p></div>';
+      }});
+
       // Load tornado storm data
       fetch('/data/live-tornadoes.json')
         .then(function(r) {{ return r.json(); }})
@@ -2323,6 +2361,9 @@ def render_homepage_cards(
                                         s.tornado_probability > 0.15 ? '#F59E0B' : '#14B8A6';
             el.style.border = '2px solid rgba(255,255,255,0.3)';
             el.style.cursor = 'pointer';
+            el.setAttribute('role', 'button');
+            el.setAttribute('aria-label', 'Storm ' + s.storm_id + ', ' + (s.tornado_probability * 100).toFixed(0) + '% tornado probability');
+            el.setAttribute('tabindex', '0');
 
             var popup = new maplibregl.Popup({{ offset: 15 }})
               .setHTML('<strong>Storm ' + s.storm_id + '</strong><br>' +
@@ -2343,11 +2384,11 @@ def render_homepage_cards(
             if (maxProb > 0.4) {{
               level.textContent = 'CRITICAL';
               level.className = 'threat-level critical';
-              subtitle.textContent = nStorms + ' storms tracked. Highest tornado probability: ' + (maxProb * 100).toFixed(0) + '%.';
+              subtitle.textContent = nStorms + ' storms tracked. Highest tornado probability: ' + (maxProb * 100).toFixed(1) + '%.';
             }} else if (maxProb > 0.2) {{
               level.textContent = 'ELEVATED';
               level.className = 'threat-level elevated';
-              subtitle.textContent = nStorms + ' storms tracked. Highest tornado probability: ' + (maxProb * 100).toFixed(0) + '%.';
+              subtitle.textContent = nStorms + ' storms tracked. Highest tornado probability: ' + (maxProb * 100).toFixed(1) + '%.';
             }}
           }}
 
@@ -2357,7 +2398,12 @@ def render_homepage_cards(
           if (toProb) toProb.textContent = (maxProb * 100).toFixed(1) + '%';
           if (toStatus) toStatus.textContent = nStorms + ' active storms';
         }})
-        .catch(function() {{}});
+        .catch(function(err) {{
+          var ts = document.getElementById('to-status');
+          var tp = document.getElementById('to-prob');
+          if (ts) ts.textContent = 'Unable to load tornado data';
+          if (tp) {{ tp.textContent = '--'; tp.style.color = 'var(--muted)'; }}
+        }});
 
       // Load hurricane data
       fetch('/data/live-storms.json')
@@ -2387,7 +2433,12 @@ def render_homepage_cards(
             }});
           }}
         }})
-        .catch(function() {{}});
+        .catch(function(err) {{
+          var hs = document.getElementById('hu-status');
+          var hp = document.getElementById('hu-prob');
+          if (hs) hs.textContent = 'Unable to load hurricane data';
+          if (hp) {{ hp.textContent = '--'; hp.style.color = 'var(--muted)'; }}
+        }});
 
       // Load pulse data for earthquake
       fetch('/data/live-pulse.json')
@@ -2403,7 +2454,12 @@ def render_homepage_cards(
             }}
           }});
         }})
-        .catch(function() {{}});
+        .catch(function(err) {{
+          var es = document.getElementById('eq-status');
+          var ep = document.getElementById('eq-prob');
+          if (es) es.textContent = 'Unable to load earthquake data';
+          if (ep) {{ ep.textContent = '--'; ep.style.color = 'var(--muted)'; }}
+        }});
     }})();
   </script>
 
