@@ -94,6 +94,7 @@ RESULTS = Path(__file__).resolve().parents[1] / "results"
 LEDGER_PATH = DIST / "data" / "tornado-ledger.jsonl"
 
 MODEL_VERSION = "tornado_storm_v1_0"
+PRIMARY_DOMAIN = "https://hazardpulse.com"
 
 
 # ---------------------------------------------------------------------------
@@ -663,6 +664,8 @@ def write_outputs(
                 if scored_storms:
                     top = scored_storms[0]  # Already sorted by probability
                     hazard["probability"] = top["tornado_probability"]
+                    hazard["conf_lo"] = None
+                    hazard["conf_hi"] = None
                     hazard["risk_band"] = top["risk_band"]
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = MODEL_VERSION
@@ -671,6 +674,8 @@ def write_outputs(
                     hazard["coherence_source"] = coherence_source
                 else:
                     hazard["probability"] = 0.0
+                    hazard["conf_lo"] = None
+                    hazard["conf_hi"] = None
                     hazard["risk_band"] = "minimal"
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = MODEL_VERSION
@@ -920,6 +925,30 @@ def _format_time(ts: str) -> str:
         return d.strftime("%a, %d %b %Y %H:%M:%S UTC")
     except Exception:
         return str(ts)
+
+
+def _read_json(path: Path) -> dict:
+    """Read a JSON object from disk, returning an empty dict on failure."""
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _confidence_text(probability: object, lo: object, hi: object) -> str:
+    """Format a sane confidence range, or explain that it is unavailable."""
+    try:
+        p = float(probability)
+        lo_v = float(lo)
+        hi_v = float(hi)
+    except (TypeError, ValueError):
+        return "Range unavailable"
+
+    if not (0.0 <= lo_v <= hi_v <= 1.0):
+        return "Range unavailable"
+    if not (lo_v <= p <= hi_v):
+        return "Range unavailable"
+    return f"{_pct(lo_v)} to {_pct(hi_v)}"
 
 
 def _lat_lon_to_svg(lat: float, lon: float) -> tuple[float, float]:
@@ -1572,6 +1601,20 @@ def render_tornado_page(
         <!-- Worker injects personalized severe weather threat content here based on IP geolocation -->
       </section>
 
+      <!-- SIMPLE: What should I do? -->
+      <div data-depth="simple">
+        <section class="section">
+          <div class="card" style="padding:24px;">
+            <h2 style="margin-bottom:12px;">What should I do?</h2>
+            <p style="font-size:16px;line-height:1.6;">
+              There are currently <strong>{len(scored_storms)} storm cells</strong> being tracked.
+              Monitor <a href="https://weather.gov">weather.gov</a> for official warnings in your area.
+              If a tornado warning is issued, seek shelter immediately in an interior room on the lowest floor.
+            </p>
+          </div>
+        </section>
+      </div>
+
       <!-- WORLD MAP -->
       <section class="section" aria-labelledby="worldmap-heading">
         <h2 id="worldmap-heading">Global tornado activity map</h2>
@@ -2080,7 +2123,10 @@ def render_homepage_cards(
     <section class="hero-observatory">
       <div class="container">
         <p class="eyebrow">GLOBAL HAZARD INTELLIGENCE</p>
-        <h1 class="threat-level {threat_class}" id="threat-level">{threat_text}</h1>
+        <h1 class="threat-level {threat_class}" id="threat-level">
+          <span data-depth="simple">{threat_text}</span>
+          <span data-depth="technical">{threat_text} &mdash; {_pct(max_prob)} peak probability</span>
+        </h1>
         <p class="hero-subtitle" id="hero-subtitle">{_esc(hero_sub)}</p>
       </div>
     </section>
@@ -2093,6 +2139,22 @@ def render_homepage_cards(
           <input type="radio" name="depth" id="depth-technical" value="technical">
           <label for="depth-technical">Technical</label>
         </div>
+      </div>
+
+      <!-- SIMPLE: What should I do? -->
+      <div data-depth="simple">
+        <section class="section">
+          <div class="container">
+            <div class="card" style="padding:24px;">
+              <h2 style="margin-bottom:12px;">What should I do?</h2>
+              <p style="font-size:16px;line-height:1.6;">
+                Monitor <a href="https://weather.gov">weather.gov</a> for official warnings in your area.
+                If a tornado warning is issued, seek shelter immediately in an interior room on the lowest floor.
+                For earthquakes, drop, cover, and hold on. For hurricanes, follow evacuation orders from local authorities.
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
 
       <!-- THREE HAZARD CARDS -->
@@ -2167,6 +2229,7 @@ def render_homepage_cards(
       </section>
 
       <!-- VERIFIED ACCURACY -->
+      <div data-depth="technical">
       <section class="section">
         <div class="container">
           <h2>Verified accuracy</h2>
@@ -2194,42 +2257,30 @@ def render_homepage_cards(
           </p>
         </div>
       </section>
+      </div>
 
       <!-- HOW IT WORKS -->
+      <div data-depth="technical">
       <section class="section" aria-labelledby="how-heading">
         <div class="container">
           <h2 id="how-heading">How it works</h2>
           <div class="grid">
             <div class="card col-4">
               <h3>1. Ingest</h3>
-              <div data-depth="simple">
-                <p class="muted">Real-time data from USGS, NOAA ProbSevere, HRRR, NHC, and 3,400+ GPS stations.</p>
-              </div>
-              <div data-depth="technical">
-                <p class="muted">Ingestion from USGS ComCat, ProbSevere v3 (2-min cycle), HRRR 80 km grid, NHC ATCF, JMA, EMSC, IMD. Schema v2.1 validated.</p>
-              </div>
+              <p class="muted">Ingestion from USGS ComCat, ProbSevere v3 (2-min cycle), HRRR 80 km grid, NHC ATCF, JMA, EMSC, IMD. Schema v2.1 validated.</p>
             </div>
             <div class="card col-4">
               <h3>2. Analyze</h3>
-              <div data-depth="simple">
-                <p class="muted">Coherence Field Theory transforms raw data through a Helmholtz PDE, extracting organization patterns invisible to standard methods.</p>
-              </div>
-              <div data-depth="technical">
-                <p class="muted">Helmholtz PDE solved on HRRR grid. Coherence amplitude (tau), gradient, torsion, alignment, singularity conditions extracted. GBT ensemble (41 features) produces calibrated probabilities.</p>
-              </div>
+              <p class="muted">Helmholtz PDE solved on HRRR grid. Coherence amplitude (tau), gradient, torsion, alignment, singularity conditions extracted. GBT ensemble (41 features) produces calibrated probabilities.</p>
             </div>
             <div class="card col-4">
               <h3>3. Predict</h3>
-              <div data-depth="simple">
-                <p class="muted">Gradient boosted trees produce calibrated probabilities. Every prediction is logged with SHA-256 hash chains.</p>
-              </div>
-              <div data-depth="technical">
-                <p class="muted">Hard gate constitution G0-G12. Each gate produces signed decision envelope. SHA-256 hash chain for full prediction audit trail. Degrade-and-explain on gate failure.</p>
-              </div>
+              <p class="muted">Hard gate constitution G0-G12. Each gate produces signed decision envelope. SHA-256 hash chain for full prediction audit trail. Degrade-and-explain on gate failure.</p>
             </div>
           </div>
         </div>
       </section>
+      </div>
 
       <!-- WHAT CHANGED & SYSTEM HEALTH -->
       <section class="section" aria-labelledby="why-heading">
@@ -2284,6 +2335,7 @@ def render_homepage_cards(
       </section>
 
       <!-- TECHNOLOGY -->
+      <div data-depth="technical">
       <section class="section">
         <div class="container" style="text-align:center;">
           <h2>Built on proven science</h2>
@@ -2311,6 +2363,7 @@ def render_homepage_cards(
           </div>
         </div>
       </section>
+      </div>
 
       <!-- CTA -->
       <section class="section" style="text-align:center;">
