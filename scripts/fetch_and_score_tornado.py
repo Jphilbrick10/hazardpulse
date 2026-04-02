@@ -427,6 +427,7 @@ def score_storms(
     model: dict | None,
     now: dt.datetime,
     scoring_tier: str = "tier3_ps_only",
+    coherence_source: str = "none",
 ) -> list[dict]:
     """Score all active storms from the latest ProbSevere time step.
 
@@ -497,17 +498,35 @@ def score_storms(
             mesh = float(storm.get("mesh", 0) or 0)
             flash_rate = float(storm.get("flash_rate", 0) or 0)
 
-            # Simple composite: STP-like product normalized
+            # Composite: rotation matters but atmospheric support gates max
             cape_term = min(mucape / 2000.0, 1.5)
             srh_term = min(abs(srh01) / 200.0, 1.5)
             shear_term = min(ebshear / 30.0, 1.5)
-            rotation_term = min(maxllaz / 0.01, 2.0)  # strong signal
             hail_term = min(mesh / 1.0, 1.0)
             lightning_term = min(flash_rate / 20.0, 1.0)
 
-            raw = cape_term * srh_term * shear_term * 0.3 + rotation_term * 0.5 + hail_term * 0.1 + lightning_term * 0.1
-            prob = 1.0 / (1.0 + _math.exp(-3.0 * (raw - 1.0)))  # sigmoid centered at raw=1
-            prob = round(min(max(prob, 0.0), 0.99), 4)
+            # Atmospheric gate: storms need real instability + shear
+            # to get above ~30% even with strong rotation
+            atm_support = min(
+                min(mucape / 1000.0, 1.0),       # need CAPE > 1000 for full support
+                min(abs(srh01) / 100.0, 1.0),     # need SRH > 100 for full support
+                min(ebshear / 20.0, 1.0),          # need shear > 20 for full support
+            )
+
+            # Rotation signal (still important, but gated)
+            rotation_signal = min(maxllaz / 0.01, 2.0)
+
+            # Combined: rotation matters but atmospheric support gates the max
+            raw = atm_support * (
+                rotation_signal * 0.4 +
+                cape_term * srh_term * shear_term * 0.3 +
+                hail_term * 0.15 +
+                lightning_term * 0.15
+            )
+            prob = 1.0 / (1.0 + _math.exp(-4.0 * (raw - 0.8)))  # sigmoid centered at raw=0.8
+
+            # Hard cap: never exceed 60% without ML model
+            prob = round(min(max(prob, 0.0), 0.60), 4)
             risk = _risk_band(prob)
             model_scores = {"ps_composite_raw": round(raw, 4)}
 
@@ -549,6 +568,7 @@ def score_storms(
             "coherence_score": coherence_score,
             "coherence_diagnostics": coherence_diag,
             "scoring_tier": scoring_tier,
+            "coherence_source": coherence_source,
             "model_version": MODEL_VERSION,
             "track_length": len(history),
         }
@@ -1152,22 +1172,38 @@ def _render_storm_rows(storms: list[dict]) -> str:
             lines.append(f'              <div class="kv"><span>Singularity conditions</span><strong>{sing} / 5 ({sing_label})</strong></div>')
             lines.append(f'              <div class="kv"><span>Coherence source</span><strong>{_esc(s.get("coherence_source", "unknown"))}</strong></div>')
 
-            # --- COHERENCE INTERPRETATION (new) ---
+            # --- COHERENCE INTERPRETATION (value-driven) ---
             lines.append(_hr)
             lines.append(_section_hdr("Coherence Interpretation"))
-            coh_interp = (
-                f"The coherence field shows {'elevated' if tau > 0.2 else 'modest'} organization "
-                f"(\u03c4={tau:.2f}) with the source term "
-                f"{'exceeding' if sg > 1 else 'near balance with'} damping (S/\u0393={sg:.2f}). "
-            )
+            interp_parts = []
+            if tau > 0.5:
+                interp_parts.append(f"Strong atmospheric coherence (\u03c4={tau:.2f}) indicates well-organized convective structure.")
+            elif tau > 0.1:
+                interp_parts.append(f"Moderate coherence (\u03c4={tau:.2f}) \u2014 some atmospheric organization present.")
+            else:
+                interp_parts.append(f"Weak coherence (\u03c4={tau:.2f}) \u2014 limited atmospheric organization.")
+
+            if sg > 1.0:
+                interp_parts.append(f"The source/damping ratio ({sg:.1f}) exceeds unity \u2014 energy input exceeds dissipation, favorable for storm intensification.")
+            elif sg > 0.5:
+                interp_parts.append(f"Source/damping ratio ({sg:.1f}) is approaching balance \u2014 storm may intensify if conditions persist.")
+            else:
+                interp_parts.append(f"Low source/damping ratio ({sg:.1f}) \u2014 dissipation dominates, limiting storm development.")
+
             if alignment > 0.1:
-                coh_interp += (
-                    f"The alignment term indicates low-level wind shear is coupling with the coherence gradient, "
-                    f"which the theory predicts is a precursor to tornado-scale vortex formation. "
-                )
-            if sing >= 3:
-                coh_interp += f"{sing}/5 singularity conditions met, indicating elevated vortex collapse potential."
-            lines.append(f'              <p style="margin:4px 0;font-size:13px;line-height:1.5;">{_esc(coh_interp)}</p>')
+                interp_parts.append("Wind shear is aligned with the coherence gradient, a signature the theory associates with tornadic transition.")
+            elif alignment > 0.01:
+                interp_parts.append("Partial shear-coherence alignment detected.")
+
+            if sing >= 4:
+                interp_parts.append(f"CRITICAL: {sing}/5 singularity conditions met \u2014 coherence theory indicates high tornado commitment potential.")
+            elif sing >= 3:
+                interp_parts.append(f"Elevated: {sing}/5 singularity conditions \u2014 approaching coherence commitment threshold.")
+            elif sing >= 2:
+                interp_parts.append(f"Marginal: {sing}/5 singularity conditions.")
+
+            for part in interp_parts:
+                lines.append(f'              <p style="margin:4px 0;font-size:13px;line-height:1.5;">{_esc(part)}</p>')
         else:
             lines.append(f'              <div class="kv"><span>Status</span><strong>Coherence data unavailable for this storm</strong></div>')
 
@@ -1416,7 +1452,12 @@ def render_tornado_page(
         <h2 id="tornado-map-heading">Storm locations</h2>
         <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Active ProbSevere storm objects. Click markers for details.</p>
         <div id="tornado-map" style="width:100%;height:400px;border-radius:var(--radius);overflow:hidden;"></div>
-        <noscript><p class="muted" style="margin-top:8px;">Enable JavaScript to view the interactive map.</p></noscript>
+        <noscript>
+          <div class="card" style="text-align:center;padding:var(--s-2xl,48px);">
+            <h3>Interactive map requires JavaScript</h3>
+            <p class="muted">Visit the <a href="/live/tornado/">tornado monitor</a> for a static view of active storms.</p>
+          </div>
+        </noscript>
       </section>"""
 
     page = f"""<!doctype html>
@@ -1551,14 +1592,6 @@ def render_tornado_page(
       <!-- INTERACTIVE MAP -->
 {map_html}
 
-      <!-- DISCLAIMER BANNER -->
-      <section class="section">
-        <div class="card" style="background:var(--warn-bg,#fff8e1);border-left:4px solid var(--warn,#c98a12);padding:12px 16px;">
-          <strong>Research Only</strong> --
-          {_esc(disclaimer)}
-        </div>
-      </section>
-
       <!-- STATUS BAR -->
 {status_html}
 
@@ -1616,12 +1649,7 @@ def render_tornado_page(
         <a href="https://www.nhc.noaa.gov/" rel="noopener">NHC</a>
         <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
       </div>
-      <p class="footer-disclaimer">
-        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
-        Always follow guidance from the USGS, National Hurricane Center (NHC), National Weather Service (NWS),
-        Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
-        with stated uncertainty - they are not certainties.
-      </p>
+      <p class="disclaimer-subtle" style="font-size:11px;color:var(--muted,#9ca3af);margin-top:12px;">Research system &mdash; not operational. <a href="/legal/disclaimer/">Details</a> | <a href="https://weather.gov" rel="noopener">Official warnings</a></p>
       <p class="footer-build">Built with Coherence Lang &middot; Geolocation by Cloudflare Edge</p>
     </div>
   </footer>
@@ -2102,7 +2130,10 @@ def render_homepage_cards(
           <p class="muted">Active hazard zones across the world. Click markers for details.</p>
           <div id="map" style="width:100%;height:500px;border-radius:var(--radius);overflow:hidden;"></div>
           <noscript>
-            <p class="muted" style="margin-top:8px;">Enable JavaScript to view the interactive map. Hazard data is still available in the cards above.</p>
+            <div class="card" style="text-align:center;padding:var(--s-2xl,48px);">
+              <h3>Interactive map requires JavaScript</h3>
+              <p class="muted">Visit the <a href="/live/tornado/">tornado monitor</a> for a static view of active storms.</p>
+            </div>
           </noscript>
           <div class="map-legend" style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;">
             <span><span class="hazard-dot eq"></span> Earthquake</span>
@@ -2245,12 +2276,7 @@ def render_homepage_cards(
         <a href="https://www.nhc.noaa.gov/" rel="noopener">NHC</a>
         <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
       </div>
-      <p class="footer-disclaimer">
-        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
-        Always follow guidance from the USGS, National Hurricane Center (NHC), National Weather Service (NWS),
-        Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
-        with stated uncertainty - they are not certainties.
-      </p>
+      <p class="disclaimer-subtle" style="font-size:11px;color:var(--muted,#9ca3af);margin-top:12px;">Research system &mdash; not operational. <a href="/legal/disclaimer/">Details</a> | <a href="https://weather.gov" rel="noopener">Official warnings</a></p>
       <p class="footer-build">Built with Coherence Lang &middot; Geolocation by Cloudflare Edge</p>
     </div>
   </footer>
@@ -2851,6 +2877,7 @@ def main() -> None:
     scored = score_storms(
         time_steps, hrrr, coherence_fields, model, now,
         scoring_tier=scoring_tier,
+        coherence_source=coherence_source,
     )
 
     for s in scored[:10]:
