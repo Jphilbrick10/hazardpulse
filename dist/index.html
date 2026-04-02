@@ -97,7 +97,7 @@
       <div class="container">
         <p class="eyebrow">GLOBAL HAZARD INTELLIGENCE</p>
         <h1 class="threat-level critical" id="threat-level">CRITICAL</h1>
-        <p class="hero-subtitle" id="hero-subtitle">82 hazard events tracked. Highest probability: 56.0%.</p>
+        <p class="hero-subtitle" id="hero-subtitle">88 hazard events tracked. Highest probability: 56.2%.</p>
       </div>
     </section>
 
@@ -124,7 +124,7 @@
               <div class="metric mono" id="eq-prob">48.0%</div>
               <div class="metric-ci mono" id="eq-ci">95% CI: [21.2%, 33.0%]</div>
               <div class="metric-label">P(M6+ in 90 days)</div>
-              <p class="muted" id="eq-status"><span class="risk-badge high">Very High</span></p>
+              <p class="muted" id="eq-status">Very High</p>
               <div data-depth="technical">
                 <div class="kv"><span>Model</span><strong>eq_coherence_v1_0</strong></div>
               </div>
@@ -136,9 +136,9 @@
                 <h3 style="margin:0;"><a href="/live/hurricane/" style="color:inherit;">Hurricane</a></h3>
               </div>
               <div class="metric mono" id="hu-prob">37.2%</div>
-              <div class="metric-ci mono" id="hu-ci">95% CI: [28.0%, 46.5%]</div>
+              <div class="metric-ci mono" id="hu-ci">95% CI: [31.0%, 43.5%]</div>
               <div class="metric-label">P(rapid intensification)</div>
-              <p class="muted" id="hu-status"><span class="risk-badge elevated">Elevated</span> Hurricane Alice (Category 1)</p>
+              <p class="muted" id="hu-status">Hurricane Alice (Category 1)</p>
               <div data-depth="technical">
                 <div class="kv"><span>Model</span><strong>hurricane_ri_v8_1</strong></div>
               </div>
@@ -149,10 +149,10 @@
                 <span class="hazard-dot to"></span>
                 <h3 style="margin:0;"><a href="/live/tornado/" style="color:inherit;">Tornado</a></h3>
               </div>
-              <div class="metric mono" id="to-prob">56.0%</div>
-              <div class="metric-ci mono" id="to-ci">95% CI: [48.0%, 64.0%]</div>
+              <div class="metric mono" id="to-prob">56.2%</div>
+              <div class="metric-ci mono" id="to-ci">95% CI: [14.8%, 22.9%]</div>
               <div class="metric-label">P(formation in 24 h)</div>
-              <p class="muted" id="to-status"><span class="risk-badge critical">Critical</span> 81 active storms</p>
+              <p class="muted" id="to-status">87 active storms</p>
               <div data-depth="technical">
                 <div class="kv"><span>Model</span><strong>tornado_storm_v1_0</strong></div>
                 <div class="kv"><span>Scoring</span><strong>Analytic coherence model (physics-only, no ML)</strong></div>
@@ -191,7 +191,7 @@
               <h3>Tornado</h3>
               <div class="metric mono">0.894</div>
               <div class="metric-label">AUC <span class="tooltip" title="Area Under ROC Curve. 1.0 = perfect, 0.5 = random chance. Higher is better.">(?)</span> on 2024 test data</div>
-              <div class="metric-ci mono">BSS: <strong class="mono">0.176</strong> <span class="muted">(>0 beats climatology)</span></div>
+              <div class="metric-ci mono">BSS: <strong class="mono">0.176</strong> <span class="muted">(&gt;0 beats climatology)</span></div>
             </div>
             <div class="card col-4">
               <h3>Earthquake</h3>
@@ -256,14 +256,14 @@
               <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Plain-language summary of what's driving the numbers since last update.</p>
               <div class="card">
                 <div data-depth="simple">
-                  <div class="kv"><span>Tornado (↓2.1%)</span><strong>81 storms tracked, 56.0% peak probability. <span class="risk-badge critical">Critical</span></strong></div>
-                  <div class="kv"><span>Earthquake (↑+1.9%)</span><strong>48.0% chance of M6+ in 90 days. <span class="risk-badge high">High</span></strong></div>
-                  <div class="kv"><span>Hurricane (↑+2.4%)</span><strong>Alice (Cat 1) with 37.2% rapid intensification risk. <span class="risk-badge elevated">Elevated</span></strong></div>
+                  <div class="kv"><span>Tornado (↓2.1%)</span><strong>87 active storms tracked. Risk band: Very High. Probability 56.2%.</strong></div>
+                <div class="kv"><span>Earthquake (↑+1.9%)</span><strong>Probability at 48.0%. Risk band: Very High.</strong></div>
+                <div class="kv"><span>Hurricane (↑+2.4%)</span><strong>Hurricane Alice (Category 1) with 37.2% RI probability. Risk band: Elevated.</strong></div>
                 </div>
                 <div data-depth="technical">
-                  <div class="kv"><span>Tornado (↓2.1%)</span><strong>tornado_storm_v1_0 | 81 storms | Prob 56.0% | CAPE 3200 J/kg peak</strong></div>
-                  <div class="kv"><span>Earthquake (↑+1.9%)</span><strong>eq_fcst_20260402_1400 | Prob 48.0% [21.2%, 33.0%] CI</strong></div>
-                  <div class="kv"><span>Hurricane (↑+2.4%)</span><strong>hurricane_ri_v8_1 | RI prob 37.2% | SST 28.7&deg;C | shear 10 kt</strong></div>
+                  <div class="kv"><span>Tornado (↓2.1%)</span><strong>tornado_storm_v1_0. 87 storms. Prob 56.2%</strong></div>
+                <div class="kv"><span>Earthquake (↑+1.9%)</span><strong>Forecast eq_fcst_20260402_1400. Prob 48.0% [21.2%, 33.0%].</strong></div>
+                <div class="kv"><span>Hurricane (↑+2.4%)</span><strong>hurricane_ri_v8_1. RI prob 37.2%. SST 28.7°C, shear 10 kt.</strong></div>
                 </div>
               </div>
             </div>
@@ -271,8 +271,8 @@
               <h2>System health</h2>
               <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Is HazardPulse working properly?</p>
               <div class="card">
-                <div class="kv"><span><span class="status-dot good"></span> Last update</span><strong id="last-update-time">Thu, 02 Apr 2026 15:15:05 UTC</strong> <span class="muted" style="font-size:11px;">(every 2 hr)</span></div>
-                <div class="kv"><span><span class="status-dot good"></span> Active storms</span><strong>82 tracked globally</strong></div>
+                <div class="kv"><span><span class="status-dot good"></span> Last update</span><strong>Thu, 02 Apr 2026 15:48:57 UTC</strong> <span class="muted" style="font-size:11px;">(every 2 hr)</span></div>
+                <div class="kv"><span><span class="status-dot good"></span> Active storms</span><strong>88 tracked globally</strong></div>
                 <div class="kv"><span><span class="status-dot good"></span> Hazard types</span><strong>3 hazard types monitored</strong></div>
                 <div class="kv"><span><span class="status-dot good"></span> Gate status</span><strong style="color:var(--good)">All gates passed</strong></div>
                 <div data-depth="technical">
@@ -340,10 +340,9 @@
         <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
       </div>
       <p class="disclaimer-subtle" style="font-size:11px;color:var(--muted,#9ca3af);margin-top:12px;">Research system &mdash; not operational. <a href="/legal/disclaimer/">Details</a> | <a href="https://weather.gov" rel="noopener">Official warnings</a></p>
-      <p class="footer-build">Built with Coherence Lang &middot; Geolocation by Cloudflare Edge &middot; &copy; <span id="copyright-year">2026</span> Coherence Energy Labs</p>
+      <p class="footer-build">Built with Coherence Lang &middot; Geolocation by Cloudflare Edge &middot; &copy; 2026 Coherence Energy Labs</p>
     </div>
   </footer>
-  <script>var cy=document.getElementById('copyright-year');if(cy)cy.textContent=new Date().getFullYear();</script>
 
   <!-- MapLibre GL JS -->
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -371,7 +370,6 @@
         maxZoom: 12
       });
 
-      // Fix #11: Map error boundary
       map.on('error', function(e) {
         document.getElementById('map').innerHTML = '<div class="card" style="text-align:center;padding:40px;"><h3>Map temporarily unavailable</h3><p class="muted">Storm data is still available in the list below.</p></div>';
       });
@@ -428,17 +426,12 @@
           var toStatus = document.getElementById('to-status');
           if (toProb) toProb.textContent = (maxProb * 100).toFixed(1) + '%';
           if (toStatus) toStatus.textContent = nStorms + ' active storms';
-
-          // Fix #13: Hide skeleton cards after data loads
-          ['skeleton-1','skeleton-2','skeleton-3'].forEach(function(id) {
-            var el = document.getElementById(id);
-            if (el) el.style.display = 'none';
-          });
         })
         .catch(function(err) {
-          document.getElementById('to-status').textContent = 'Unable to load tornado data';
-          document.getElementById('to-prob').textContent = '--';
-          document.getElementById('to-prob').style.color = 'var(--muted)';
+          var ts = document.getElementById('to-status');
+          var tp = document.getElementById('to-prob');
+          if (ts) ts.textContent = 'Unable to load tornado data';
+          if (tp) { tp.textContent = '--'; tp.style.color = 'var(--muted)'; }
         });
 
       // Load hurricane data
@@ -461,9 +454,6 @@
                 el.style.borderRadius = '50%';
                 el.style.backgroundColor = '#10B981';
                 el.style.border = '2px solid rgba(255,255,255,0.3)';
-                el.setAttribute('role', 'button');
-                el.setAttribute('aria-label', (s.storm_name || 'Hurricane') + ', ' + ((s.ri_probability || 0) * 100).toFixed(1) + '% RI probability');
-                el.setAttribute('tabindex', '0');
 
                 new maplibregl.Marker({ element: el })
                   .setLngLat([s.lon, s.lat])
@@ -473,9 +463,10 @@
           }
         })
         .catch(function(err) {
-          document.getElementById('hu-status').textContent = 'Unable to load hurricane data';
-          document.getElementById('hu-prob').textContent = '--';
-          document.getElementById('hu-prob').style.color = 'var(--muted)';
+          var hs = document.getElementById('hu-status');
+          var hp = document.getElementById('hu-prob');
+          if (hs) hs.textContent = 'Unable to load hurricane data';
+          if (hp) { hp.textContent = '--'; hp.style.color = 'var(--muted)'; }
         });
 
       // Load pulse data for earthquake
@@ -493,9 +484,10 @@
           });
         })
         .catch(function(err) {
-          document.getElementById('eq-status').textContent = 'Unable to load earthquake data';
-          document.getElementById('eq-prob').textContent = '--';
-          document.getElementById('eq-prob').style.color = 'var(--muted)';
+          var es = document.getElementById('eq-status');
+          var ep = document.getElementById('eq-prob');
+          if (es) es.textContent = 'Unable to load earthquake data';
+          if (ep) { ep.textContent = '--'; ep.style.color = 'var(--muted)'; }
         });
     })();
   </script>
