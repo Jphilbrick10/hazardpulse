@@ -166,7 +166,10 @@
           <p class="muted">Active hazard zones across the world. Click markers for details.</p>
           <div id="map" style="width:100%;height:500px;border-radius:var(--radius);overflow:hidden;"></div>
           <noscript>
-            <p class="muted" style="margin-top:8px;">Enable JavaScript to view the interactive map. Hazard data is still available in the cards above.</p>
+            <div class="card" style="text-align:center;padding:var(--s-2xl,48px);">
+              <h3>Interactive map requires JavaScript</h3>
+              <p class="muted">Visit the <a href="/live/tornado/">tornado monitor</a> for a static view of active storms.</p>
+            </div>
           </noscript>
           <div class="map-legend" style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;">
             <span><span class="hazard-dot eq"></span> Earthquake</span>
@@ -264,7 +267,7 @@
               <h2>System health</h2>
               <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Is HazardPulse working properly?</p>
               <div class="card">
-                <div class="kv"><span>Last update</span><strong>Thu, 02 Apr 2026 14:52:41 UTC</strong></div>
+                <div class="kv"><span>Last update</span><strong>Thu, 02 Apr 2026 14:59:49 UTC</strong></div>
                 <div class="kv"><span>Active storms</span><strong>88 tracked globally</strong></div>
                 <div class="kv"><span>Hazard types</span><strong>3 hazard types monitored</strong></div>
                 <div class="kv"><span>Gate status</span><strong style="color:var(--good)">All gates passed</strong></div>
@@ -313,12 +316,7 @@
         <a href="https://www.nhc.noaa.gov/" rel="noopener">NHC</a>
         <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
       </div>
-      <p class="footer-disclaimer">
-        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
-        Always follow guidance from the USGS, National Hurricane Center (NHC), National Weather Service (NWS),
-        Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
-        with stated uncertainty - they are not certainties.
-      </p>
+      <p class="disclaimer-subtle" style="font-size:11px;color:var(--muted,#9ca3af);margin-top:12px;">Research system &mdash; not operational. <a href="/legal/disclaimer/">Details</a> | <a href="https://weather.gov" rel="noopener">Official warnings</a></p>
       <p class="footer-build">Built with Coherence Lang &middot; Geolocation by Cloudflare Edge</p>
     </div>
   </footer>
