@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tornado Monitor - HazardPulse</title>
   <meta name="description" content="24-hour tornado formation probability for global severe convection zones. Top cells ranked by STP/SCP indices with full evidence.">
-  <meta name="theme-color" content="#f6f9ff">
+  <meta name="theme-color" content="#FAFBFE">
   <link rel="canonical" href="https://hazardpulse.io/live/tornado/">
-  <link rel="stylesheet" href="/assets/styles.css?v=6">
+  <link rel="stylesheet" href="/assets/styles.css?v=7">
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
@@ -55,9 +55,13 @@
   <header class="topbar" role="banner">
     <div class="container topbar-inner">
       <a href="/" class="brand" aria-label="HazardPulse home">
-        <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
+        <svg class="brand-mark" width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="12" stroke="var(--primary)" stroke-width="2" fill="none"/>
+          <circle cx="14" cy="14" r="6" fill="var(--primary)" opacity="0.3"/>
+          <circle cx="14" cy="14" r="2" fill="var(--primary)"/>
+          <path d="M14 2 Q20 8, 14 14 Q8 20, 14 26" stroke="var(--primary)" stroke-width="1.5" fill="none" opacity="0.5"/>
+        </svg>
         HazardPulse
-        <small>Classic</small>
       </a>
       <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
       <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
@@ -753,7 +757,7 @@
       <section class="section">
         <div class="grid">
           <div class="card col-3">
-            <div class="kv"><span><span class="status-dot good"></span> Last update</span><strong>Thu, 02 Apr 2026 16:53:47 UTC</strong> <span class="muted" style="font-size:11px;">(every 2 hr)</span></div>
+            <div class="kv"><span><span class="status-dot good"></span> Last update</span><strong>Thu, 02 Apr 2026 17:02:10 UTC</strong> <span class="muted" style="font-size:11px;">(every 2 hr)</span></div>
           </div>
           <div class="card col-3">
             <div class="kv"><span><span class="status-dot good"></span> Scoring model</span><strong>Analytic coherence model (physics-only, no ML)</strong></div>
@@ -2668,30 +2672,45 @@
   </main>
 
   <footer class="footer" role="contentinfo">
-    <div class="container footer-inner">
-      <div class="footer-col">
-        <h4>Platform</h4>
-        <a href="/live/">Live forecasts</a>
-        <a href="/verification/">Verification</a>
-        <a href="/evidence/">Evidence</a>
-        <a href="/methods/">Methods</a>
+    <div class="container">
+      <div class="grid" style="gap:var(--s-xl);">
+        <div class="col-3 footer-col">
+          <h4>Platform</h4>
+          <a href="/live/">Live Intelligence</a>
+          <a href="/verification/">Model Accuracy</a>
+          <a href="/evidence/">Prediction Archive</a>
+          <a href="/api/">Developer API</a>
+        </div>
+        <div class="col-3 footer-col">
+          <h4>Science</h4>
+          <a href="/methods/">Methodology</a>
+          <a href="/registry/">Model Registry</a>
+          <a href="https://github.com/Jphilbrick10/hazardpulse">Open Source</a>
+        </div>
+        <div class="col-3 footer-col">
+          <h4>Resources</h4>
+          <a href="https://weather.gov" rel="noopener">NWS Official</a>
+          <a href="https://earthquake.usgs.gov" rel="noopener">USGS Earthquakes</a>
+          <a href="https://nhc.noaa.gov" rel="noopener">NHC Hurricanes</a>
+          <a href="/ops/status/">System Status</a>
+        </div>
+        <div class="col-3 footer-col">
+          <h4>Company</h4>
+          <a href="https://coherenceenergylabs.com">Coherence Energy Labs</a>
+          <a href="mailto:josh@coherenceenergylabs.com">Contact</a>
+          <a href="/legal/disclaimer/">Terms &amp; Disclaimer</a>
+          <a href="/COMMERCIAL_LICENSE.md">Commercial License</a>
+        </div>
       </div>
-      <div class="footer-col">
-        <h4>Data</h4>
-        <a href="/registry/">Model registry</a>
-        <a href="/api/">API contracts</a>
-        <a href="/ops/status/">System status</a>
-        <a href="/feed.xml">RSS feed</a>
+      <hr style="border:0;border-top:1px solid var(--line);margin:24px 0 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <p class="muted" style="font-size:11px;margin:0;">
+          &copy; 2026 Coherence Energy Labs. AGPL-3.0 &middot; <a href="/COMMERCIAL_LICENSE.md">Commercial licensing</a> available.
+        </p>
+        <p class="muted" style="font-size:11px;margin:0;">
+          Always follow official <a href="https://weather.gov">NWS</a> and <a href="https://earthquake.usgs.gov">USGS</a> guidance.
+        </p>
       </div>
-      <div class="footer-col">
-        <h4>Legal</h4>
-        <a href="/legal/disclaimer/">Disclaimer</a>
-        <a href="https://earthquake.usgs.gov/" rel="noopener">USGS</a>
-        <a href="https://www.nhc.noaa.gov/" rel="noopener">NHC</a>
-        <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
-      </div>
-      <p class="disclaimer-subtle" style="font-size:11px;color:var(--muted,#9ca3af);margin-top:12px;">Research system &mdash; not operational. <a href="/legal/disclaimer/">Details</a> | <a href="https://weather.gov" rel="noopener">Official warnings</a></p>
-      <p class="footer-build">Built with Coherence Lang &middot; Geolocation by Cloudflare Edge &middot; &copy; 2026 Coherence Energy Labs</p>
     </div>
   </footer>
 
