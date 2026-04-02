@@ -97,7 +97,7 @@
       <div class="container">
         <p class="eyebrow">GLOBAL HAZARD INTELLIGENCE</p>
         <h1 class="threat-level critical" id="threat-level">CRITICAL</h1>
-        <p class="hero-subtitle" id="hero-subtitle">88 storms tracked. Highest tornado probability: 65%.</p>
+        <p class="hero-subtitle" id="hero-subtitle">88 hazard events tracked. Highest probability: 94.3%.</p>
       </div>
     </section>
 
@@ -147,9 +147,9 @@
                 <span class="hazard-dot to"></span>
                 <h3 style="margin:0;"><a href="/live/tornado/" style="color:inherit;">Tornado</a></h3>
               </div>
-              <div class="metric mono" id="to-prob">65.4%</div>
+              <div class="metric mono" id="to-prob">94.3%</div>
               <div class="metric-label">P(formation in 24 h)</div>
-              <p class="muted" id="to-status">88 active storms</p>
+              <p class="muted" id="to-status">87 active storms</p>
               <div data-depth="technical">
                 <div class="kv"><span>Model</span><strong>tornado_storm_v1_0</strong></div>
                 <div class="kv"><span>Scoring</span><strong>Analytic coherence model (physics-only, no ML)</strong></div>
@@ -234,6 +234,43 @@
               </div>
               <div data-depth="technical">
                 <p class="muted">Hard gate constitution G0-G12. Each gate produces signed decision envelope. SHA-256 hash chain for full prediction audit trail. Degrade-and-explain on gate failure.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WHAT CHANGED & SYSTEM HEALTH -->
+      <section class="section" aria-labelledby="why-heading">
+        <div class="container">
+          <div class="grid">
+            <div class="col-8">
+              <h2 id="why-heading">What changed and why</h2>
+              <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Plain-language summary of what's driving the numbers since last update.</p>
+              <div class="card">
+                <div data-depth="simple">
+                  <div class="kv"><span>Tornado (↓2.1%)</span><strong>87 active storms tracked. Risk band: Very High. Probability 94.3%.</strong></div>
+                <div class="kv"><span>Earthquake (↑+1.9%)</span><strong>Probability at 48.0%. Risk band: Very High.</strong></div>
+                <div class="kv"><span>Hurricane (↑+2.4%)</span><strong>Hurricane Alice (Category 1) with 37.2% RI probability. Risk band: Elevated.</strong></div>
+                </div>
+                <div data-depth="technical">
+                  <div class="kv"><span>Tornado (↓2.1%)</span><strong>tornado_storm_v1_0. 87 storms. Prob 94.3%</strong></div>
+                <div class="kv"><span>Earthquake (↑+1.9%)</span><strong>Forecast eq_fcst_20260402_1400. Prob 48.0% [21.2%, 33.0%].</strong></div>
+                <div class="kv"><span>Hurricane (↑+2.4%)</span><strong>hurricane_ri_v8_1. RI prob 37.2%. SST 28.7°C, shear 10 kt.</strong></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <h2>System health</h2>
+              <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Is HazardPulse working properly?</p>
+              <div class="card">
+                <div class="kv"><span>Last update</span><strong>Thu, 02 Apr 2026 14:34:16 UTC</strong></div>
+                <div class="kv"><span>Active storms</span><strong>88 tracked globally</strong></div>
+                <div class="kv"><span>Hazard types</span><strong>3 hazard types monitored</strong></div>
+                <div class="kv"><span>Gate status</span><strong style="color:var(--good)">All gates passed</strong></div>
+                <div data-depth="technical">
+                  <div class="kv"><span>Data sources</span><strong>tornado_storm_v1_0</strong></div>
+                </div>
               </div>
             </div>
           </div>
@@ -341,7 +378,7 @@
               .addTo(map);
           });
 
-          // Update hero threat level dynamically
+          // Update hero threat level dynamically (in case data is newer than baked HTML)
           var level = document.getElementById('threat-level');
           var subtitle = document.getElementById('hero-subtitle');
           if (level && subtitle) {
@@ -362,10 +399,7 @@
           if (toProb) toProb.textContent = (maxProb * 100).toFixed(1) + '%';
           if (toStatus) toStatus.textContent = nStorms + ' active storms';
         })
-        .catch(function() {
-          var ts = document.getElementById('to-status');
-          if (ts) ts.textContent = 'Data unavailable';
-        });
+        .catch(function() {});
 
       // Load hurricane data
       fetch('/data/live-storms.json')
@@ -393,11 +427,6 @@
                   .addTo(map);
               }
             });
-          } else {
-            var hp = document.getElementById('hu-prob');
-            var hs = document.getElementById('hu-status');
-            if (hp) hp.textContent = '--';
-            if (hs) hs.textContent = 'No active storms';
           }
         })
         .catch(function() {});
