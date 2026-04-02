@@ -12,9 +12,9 @@
 /* ── Design Tokens (Light default — Observatory Mode) ─────────── */
 :root {
   /* Surfaces */
-  --bg: #f6f9ff;
+  --bg: #FAFBFE;
   --bg-alt: #eef4ff;
-  --bg-glass: rgba(246,249,255,.85);
+  --bg-glass: rgba(250,251,254,.85);
   --panel: #ffffff;
   --panel-solid: #ffffff;
   --panel-hover: #f0f5ff;
@@ -138,6 +138,11 @@ body:has(.theme-toggle:checked) {
 body:has(.theme-toggle:checked) a { color: #8ab8ff; }
 body:has(.theme-toggle:checked) code { background: #0a1120; }
 body:has(.theme-toggle:checked) .topbar { background: var(--bg-glass); }
+body:has(.theme-toggle:checked) h1 { color: var(--text); }
+body:has(.theme-toggle:checked) h2 { color: var(--text); }
+body:has(.theme-toggle:checked) h3 { color: var(--text); }
+body:has(.theme-toggle:checked) .metric { color: var(--text); }
+body:has(.theme-toggle:checked) .hero-observatory { background: transparent; }
 
 /* ── Smooth transitions everywhere ───────────────────────────── */
 * {
@@ -251,10 +256,14 @@ a:hover { text-decoration: underline; }
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(10, 15, 26, 0.85);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.92);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(20px) saturate(1.5);
-  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   contain: layout style;
 }
 body:has(.theme-toggle:checked) .topbar {
@@ -273,10 +282,10 @@ body:has(.theme-toggle:checked) .topbar {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: 0.2px;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -0.02em;
   color: var(--text);
   text-decoration: none;
   white-space: nowrap;
@@ -307,16 +316,19 @@ nav.nav {
 nav.nav a {
   padding: 6px 12px;
   border-radius: var(--radius-sm);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
+  letter-spacing: 0.01em;
   color: var(--text-secondary);
-  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+  opacity: 0.7;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease), opacity 0.15s;
 }
 nav.nav a:hover,
 nav.nav a[aria-current] {
   background: var(--bg-alt);
   color: var(--text);
   text-decoration: none;
+  opacity: 1;
 }
 nav.nav a[aria-current] {
   border-bottom: 2px solid var(--primary);
@@ -359,21 +371,23 @@ nav.nav a[aria-current] {
 h1 {
   margin: 0 0 14px;
   font-size: var(--text-hero);
-  font-weight: 800;
+  font-weight: 900;
   line-height: 1.12;
   letter-spacing: -0.02em;
-  color: var(--text);
+  color: #0F1629;
 }
 h2 {
   margin: 0 0 12px;
   font-size: var(--text-xl);
   font-weight: 700;
   line-height: 1.2;
+  color: #1A2744;
 }
 h3 {
   margin: 0 0 var(--s-sm);
   font-size: var(--text-lg);
   font-weight: 600;
+  color: #2D3F5E;
 }
 
 .subtitle {
@@ -388,6 +402,7 @@ h3 {
   padding: var(--s-3xl) 0 var(--s-xl);
   view-transition-name: hero-title;
   text-align: center;
+  background: linear-gradient(180deg, #F0F4FF 0%, #FAFBFE 100%);
 }
 .hero-observatory .eyebrow {
   margin-bottom: var(--s-md);
@@ -442,18 +457,18 @@ h3 {
 
 /* ── Cards (Glassmorphism) ───────────────────────────────────── */
 .card {
-  background: var(--panel);
+  background: #FFFFFF;
   backdrop-filter: blur(16px) saturate(1.2);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: var(--radius);
   padding: var(--s-lg);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.03);
-  transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
   contain: layout style paint;
 }
 .card:hover {
-  box-shadow: var(--shadow-card-hover);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
   transform: translateY(-2px);
 }
 
@@ -535,6 +550,7 @@ h3 {
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.1;
+  color: #0F1629;
 }
 .metric-label {
   font-size: var(--text-sm);
@@ -1171,6 +1187,48 @@ li { margin-bottom: 6px; }
   }
 }
 
+@media (max-width: 768px) {
+  .hero-observatory {
+    padding: 48px 16px 32px;
+  }
+  .threat-level {
+    font-size: 36px !important;
+  }
+  .hero-subtitle {
+    font-size: 14px;
+  }
+  .grid {
+    gap: 12px;
+  }
+  .card {
+    padding: 16px;
+  }
+  #map, #tornado-map {
+    height: 280px !important;
+    border-radius: 8px;
+  }
+  .event-row summary {
+    min-height: 48px;
+    padding: 12px;
+  }
+  footer .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .nav-menu {
+    gap: 8px;
+  }
+  .metric {
+    font-size: clamp(24px, 6vw, 36px);
+  }
+  .breadcrumb {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .risk-legend {
+    width: 100%;
+  }
+}
+
 @media (max-width: 600px) {
   .grid { gap: var(--s-sm); }
   .card { padding: var(--s-md); }
@@ -1178,6 +1236,18 @@ li { margin-bottom: 6px; }
   .hero { padding: var(--s-xl) 0 var(--s-md); }
   .ranked-table { font-size: 13px; }
   .ranked-table th, .ranked-table td { padding: 6px; }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 12px;
+  }
+  footer .grid {
+    grid-template-columns: 1fr;
+  }
+  .threat-level {
+    font-size: 28px !important;
+  }
 }
 
 .table-scroll {
@@ -1904,6 +1974,23 @@ body[data-alert="warning"] .your-area-section .card {
 /* ── Storm detail card transition ────────────────────────────── */
 .event-row-details[open] .event-detail {
   animation: card-reveal 0.3s var(--ease) both;
+}
+
+/* ── Brand mark ──────────────────────────────────────────────── */
+.brand-mark {
+  flex-shrink: 0;
+  animation: brand-pulse 4s ease-in-out infinite;
+}
+@keyframes brand-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* ── Footer grid layout ─────────────────────────────────────── */
+.footer .grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-xl);
 }
 
 /* ═══════════════════════════════════════════════════════════════
