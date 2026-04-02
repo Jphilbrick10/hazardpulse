@@ -20,6 +20,7 @@ Same architecture as the tornado scorer.
 
 from __future__ import annotations
 
+import argparse
 import csv
 import datetime as dt
 import hashlib
@@ -1073,82 +1074,557 @@ def append_ledger(
 # Main pipeline
 # ---------------------------------------------------------------------------
 
+REPLAY_DIR = DIST / "data" / "replay"
+REPLAY_INDEX_PATH = DIST / "data" / "evidence" / "replay-index.json"
+FEATURE_HISTORY_DAYS = 400
+RECENT_ACTIVITY_DAYS = 30
+FORECAST_HORIZON_DAYS = 30
+TARGET_MAGNITUDE = 6.0
+MIN_CELL_EVENTS = 5
 
-def main() -> None:
-    """Run the earthquake scoring pipeline."""
-    now = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None)
-    print(f"HazardPulse Earthquake Scoring Pipeline -- {now.isoformat()}Z")
+
+def fetch_usgs_catalog(
+    days: int = RECENT_ACTIVITY_DAYS,
+    end_time: dt.datetime | None = None,
+    *,
+    min_magnitude: float = 2.5,
+) -> list[dict]:
+    """Fetch USGS earthquake catalog for the last N days."""
+    from hazardpulse.earthquake.prospective import fetch_usgs_catalog_range
+
+    if end_time is None:
+        end_time = dt.datetime.now(dt.timezone.utc)
+    if end_time.tzinfo is None:
+        end_time = end_time.replace(tzinfo=dt.timezone.utc)
+    end_time = end_time.astimezone(dt.timezone.utc)
+    start_time = end_time - dt.timedelta(days=days)
+
+    print(f"  Fetching USGS catalog: M{min_magnitude:.1f}+, {days} days...")
+    events = fetch_usgs_catalog_range(
+        start_time,
+        end_time,
+        min_magnitude=min_magnitude,
+        namespace="earthquake_live",
+        verbose=False,
+    )
+    print(f"  Fetched {len(events)} events from USGS catalog")
+    return events
+
+
+def score_grid_cells(
+    history_events: list[dict],
+    candidate_events: list[dict] | None = None,
+    grid_fields: dict[str, np.ndarray] | None = None,
+    now: dt.datetime | None = None,
+) -> list[dict]:
+    """Score active grid cells using causal history and recent activity."""
+    if now is None:
+        now = dt.datetime.now(dt.timezone.utc)
+    ref_epoch = now.replace(tzinfo=dt.timezone.utc).timestamp()
+
+    if candidate_events is None:
+        candidate_events = history_events
+
+    cell_bins = bin_events_to_grid(candidate_events)
+    scored_cells: list[dict] = []
+
+    for (row, col), cell_events in cell_bins.items():
+        if len(cell_events) < MIN_CELL_EVENTS:
+            continue
+
+        lat, lon = grid_cell_to_latlon(row, col)
+        features = extract_coherence_features(
+            history_events,
+            lat,
+            lon,
+            radius_km=300.0,
+            time_window_days=365.0,
+            ref_epoch=ref_epoch,
+            grid_fields=grid_fields,
+        )
+        sing = test_earthquake_singularity(features)
+
+        base_prob = sing.conditions_met * 0.08
+        rate_accel = features.get("rate_acceleration", 1.0)
+        if not math.isnan(rate_accel) and rate_accel > 1.0:
+            base_prob *= min(rate_accel, 3.0) / 1.5
+        b_val = features.get("b_value", 1.0)
+        if not math.isnan(b_val) and b_val < 0.85:
+            base_prob *= 1.2
+        prob = min(max(base_prob, 0.0), 0.95)
+
+        max_mag = max(
+            (event["mag"] for event in cell_events if event.get("mag") is not None),
+            default=0.0,
+        )
+        risk = _risk_band(prob)
+        scored_cells.append(
+            {
+                "row": row,
+                "col": col,
+                "lat": round(lat, 2),
+                "lon": round(lon, 2),
+                "n_events": len(cell_events),
+                "max_mag": round(max_mag, 1),
+                "probability": round(prob, 4),
+                "risk_band": risk,
+                "b_value": round(features.get("b_value", float("nan")), 3),
+                "b_trend": round(features.get("b_trend", float("nan")), 4),
+                "ell_km": round(features.get("ell", float("nan")), 1),
+                "ell_trend": round(features.get("ell_trend", float("nan")), 2),
+                "rate_acceleration": round(
+                    features.get("rate_acceleration", float("nan")),
+                    2,
+                ),
+                "delta_aic_iet": round(
+                    features.get("delta_aic_iet", float("nan")),
+                    2,
+                ),
+                "S_over_Gamma": round(features.get("S_over_Gamma", float("nan")), 3),
+                "days_to_criticality": round(
+                    features.get("days_to_criticality", float("nan")),
+                    1,
+                ),
+                "conditions_met": sing.conditions_met,
+                "singularity_detail": {
+                    "ell_elevated": sing.ell_elevated,
+                    "b_depressed": sing.b_depressed,
+                    "iet_lorentzian": sing.iet_lorentzian,
+                    "rate_accelerating": sing.rate_accelerating,
+                    "loading_exceeds_healing": sing.loading_exceeds_healing,
+                },
+                "tau_local": round(features.get("tau_local", float("nan")), 4),
+                "grad_tau_local": round(
+                    features.get("grad_tau_local", float("nan")),
+                    4,
+                ),
+                "depth_trend": round(features.get("depth_trend", float("nan")), 2),
+                "spatial_concentration": round(
+                    features.get("spatial_concentration", float("nan")),
+                    1,
+                ),
+                "model_version": MODEL_VERSION,
+            }
+        )
+
+    scored_cells.sort(
+        key=lambda cell: (cell["probability"], cell["conditions_met"]),
+        reverse=True,
+    )
+    return scored_cells
+
+
+def _make_json_serializable(obj):
+    """Convert NumPy scalars and NaNs into plain JSON-safe values."""
+    if isinstance(obj, (np.integer,)):
+        return int(obj)
+    if isinstance(obj, (np.floating,)):
+        value = float(obj)
+        return value if math.isfinite(value) else None
+    if isinstance(obj, (np.bool_,)):
+        return bool(obj)
+    if isinstance(obj, float):
+        return obj if math.isfinite(obj) else None
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    if isinstance(obj, dict):
+        return {key: _make_json_serializable(value) for key, value in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_make_json_serializable(value) for value in obj]
+    return obj
+
+
+def write_outputs(
+    scored_cells: list[dict],
+    now: dt.datetime,
+    *,
+    forecast_id: str,
+    pulse_path: Path = DIST / "data" / "live-pulse.json",
+) -> None:
+    """Write scored results to dist/data/."""
+    from hazardpulse.earthquake.prospective import format_utc_z
+
+    if pulse_path.exists():
+        pulse = json.loads(pulse_path.read_text(encoding="utf-8"))
+        for hazard in pulse.get("hazards", []):
+            if hazard.get("key") == "eq":
+                if scored_cells:
+                    top = scored_cells[0]
+                    hazard["probability"] = top["probability"]
+                    hazard["risk_band"] = top["risk_band"]
+                    hazard["gate_status"] = "pass"
+                    hazard["model_version"] = MODEL_VERSION
+                    hazard["forecast_id"] = forecast_id
+                else:
+                    hazard["probability"] = 0.0
+                    hazard["risk_band"] = "minimal"
+                    hazard["gate_status"] = "pass"
+                    hazard["model_version"] = MODEL_VERSION
+                    hazard["forecast_id"] = forecast_id
+                break
+        pulse["updated_at"] = format_utc_z(now)
+        pulse_path.write_text(json.dumps(pulse, indent=2) + "\n", encoding="utf-8")
+        print(f"  Updated {pulse_path}")
+
+
+def write_replay_artifact(
+    scored_cells: list[dict],
+    now: dt.datetime,
+    *,
+    forecast_id: str,
+    n_history_events: int,
+    n_recent_events: int,
+    replay_dir: Path = REPLAY_DIR,
+    update_index: bool = True,
+) -> Path:
+    """Write a frozen replay artifact for later prospective scoring."""
+    from hazardpulse.earthquake.prospective import format_utc_z
+
+    replay_dir.mkdir(parents=True, exist_ok=True)
+    replay_path = replay_dir / f"{forecast_id}.json"
+    artifact = {
+        "forecast_id": forecast_id,
+        "hazard": "earthquake",
+        "issued_at": format_utc_z(now),
+        "model_version": MODEL_VERSION,
+        "forecast_horizon_days": FORECAST_HORIZON_DAYS,
+        "target_magnitude_min": TARGET_MAGNITUDE,
+        "feature_history_days": FEATURE_HISTORY_DAYS,
+        "recent_activity_days": RECENT_ACTIVITY_DAYS,
+        "min_events_per_active_cell": MIN_CELL_EVENTS,
+        "forecast_domain": {
+            "name": "global_2deg_grid",
+            "lat_min": LAT_MIN,
+            "lat_max": LAT_MAX,
+            "lon_min": LON_MIN,
+            "lon_max": LON_MAX,
+            "dlat": GRID_DLAT,
+            "dlon": GRID_DLON,
+            "n_lat": N_LAT,
+            "n_lon": N_LON,
+            "default_probability": 0.0,
+        },
+        "source_catalog": {
+            "provider": "USGS FDSNWS",
+            "min_magnitude": 2.5,
+            "window_start": format_utc_z(now - dt.timedelta(days=FEATURE_HISTORY_DAYS)),
+            "window_end": format_utc_z(now),
+            "n_events": n_history_events,
+            "n_recent_events": n_recent_events,
+        },
+        "n_active_cells": len(scored_cells),
+        "top_probability": scored_cells[0]["probability"] if scored_cells else 0.0,
+        "active_cells": scored_cells,
+    }
+    replay_path.write_text(
+        json.dumps(_make_json_serializable(artifact), indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(f"  Wrote {replay_path}")
+
+    if update_index:
+        update_replay_index(forecast_id, replay_path)
+    return replay_path
+
+
+def update_replay_index(
+    forecast_id: str,
+    replay_path: Path,
+    *,
+    replay_index_path: Path = REPLAY_INDEX_PATH,
+) -> None:
+    """Upsert the earthquake replay artifact into the shared replay index."""
+    from hazardpulse.earthquake.prospective import format_utc_z
+
+    replay_index_path.parent.mkdir(parents=True, exist_ok=True)
+    items: list[dict] = []
+    if replay_index_path.exists():
+        try:
+            payload = json.loads(replay_index_path.read_text(encoding="utf-8"))
+            items = list(payload.get("items", []))
+        except Exception:
+            items = []
+
+    try:
+        artifact_ref = "/" + replay_path.relative_to(DIST).as_posix()
+    except ValueError:
+        artifact_ref = str(replay_path)
+
+    items = [item for item in items if item.get("forecast_id") != forecast_id]
+    items.append({"forecast_id": forecast_id, "replay_artifact": artifact_ref})
+    items.sort(key=lambda item: item.get("forecast_id", ""))
+    replay_index_path.write_text(
+        json.dumps(
+            {
+                "generated_at": format_utc_z(dt.datetime.now(dt.timezone.utc)),
+                "items": items,
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    print(f"  Updated {replay_index_path}")
+
+
+def append_ledger(
+    scored_cells: list[dict],
+    now: dt.datetime,
+    *,
+    forecast_id: str,
+    ledger_path: Path = LEDGER_PATH,
+    replay_path: Path | None = None,
+) -> None:
+    """Append prediction to the ledger without duplicate forecast ids."""
+    from hazardpulse.earthquake.prospective import format_utc_z
+
+    ledger_path.parent.mkdir(parents=True, exist_ok=True)
+    existing_lines: list[str] = []
+    prev_hash = "0" * 64
+    if ledger_path.exists():
+        existing_lines = [
+            line
+            for line in ledger_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        for line in existing_lines:
+            try:
+                prior = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if prior.get("forecast_id") == forecast_id:
+                print(
+                    f"  Ledger already contains {forecast_id}; "
+                    f"skipping duplicate append for {ledger_path}"
+                )
+                return
+        if existing_lines:
+            try:
+                prev_hash = json.loads(existing_lines[-1]).get("hash", prev_hash)
+            except json.JSONDecodeError:
+                pass
+
+    entry = {
+        "forecast_id": forecast_id,
+        "timestamp": format_utc_z(now),
+        "model_version": MODEL_VERSION,
+        "n_cells_scored": len(scored_cells),
+        "top_probability": scored_cells[0]["probability"] if scored_cells else 0.0,
+        "top_conditions": scored_cells[0]["conditions_met"] if scored_cells else 0,
+        "prev_hash": prev_hash,
+    }
+    if replay_path is not None:
+        try:
+            entry["replay_artifact"] = "/" + replay_path.relative_to(DIST).as_posix()
+        except ValueError:
+            entry["replay_artifact"] = str(replay_path)
+    entry["top_cells"] = [
+        {
+            "lat": cell["lat"],
+            "lon": cell["lon"],
+            "probability": cell["probability"],
+            "conditions_met": cell["conditions_met"],
+            "max_mag": cell["max_mag"],
+        }
+        for cell in scored_cells[:5]
+    ]
+    payload = json.dumps(entry, sort_keys=True)
+    entry["hash"] = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    with open(ledger_path, "a", encoding="utf-8") as handle:
+        handle.write(json.dumps(entry) + "\n")
+    print(f"  Appended to {ledger_path}")
+
+
+def build_arg_parser():
+    """Build the CLI argument parser for the replay-aware forecast runner."""
+    parser = argparse.ArgumentParser(
+        description="Generate a frozen earthquake forecast artifact.",
+    )
+    parser.add_argument("--issue-time", default=None, help="UTC issue time (ISO-8601).")
+    parser.add_argument("--replay-dir", type=Path, default=REPLAY_DIR)
+    parser.add_argument("--ledger-path", type=Path, default=LEDGER_PATH)
+    parser.add_argument("--skip-site", action="store_true")
+    parser.add_argument("--skip-live-pulse", action="store_true")
+    parser.add_argument("--skip-replay-index", action="store_true")
+    return parser
+
+
+def run_pipeline(
+    *,
+    issue_time: dt.datetime | None = None,
+    replay_dir: Path = REPLAY_DIR,
+    ledger_path: Path = LEDGER_PATH,
+    skip_site: bool = False,
+    skip_live_pulse: bool = False,
+    skip_replay_index: bool = False,
+) -> dict:
+    """Run the replay-aware earthquake scoring pipeline."""
+    from hazardpulse.earthquake.prospective import (
+        forecast_id_for_time,
+        format_utc_z,
+        parse_utc_datetime,
+    )
+
+    now = (
+        issue_time.astimezone(dt.timezone.utc)
+        if issue_time is not None
+        else dt.datetime.now(dt.timezone.utc)
+    ).replace(minute=0, second=0, microsecond=0)
+    forecast_id = forecast_id_for_time(now)
+
+    print(f"HazardPulse Earthquake Scoring Pipeline -- {format_utc_z(now)}")
+    print(f"Forecast ID: {forecast_id}")
     print()
+    print(
+        f"Step 1: Fetching USGS earthquake catalog "
+        f"(M2.5+, {FEATURE_HISTORY_DAYS} days history)..."
+    )
+    history_events = fetch_usgs_catalog(days=FEATURE_HISTORY_DAYS, end_time=now)
+    recent_cutoff = now - dt.timedelta(days=RECENT_ACTIVITY_DAYS)
+    recent_events = [
+        event
+        for event in history_events
+        if parse_utc_datetime(event["time"]) >= recent_cutoff
+    ]
 
-    # Step 1: Fetch USGS earthquake catalog
-    print("Step 1: Fetching USGS earthquake catalog (M2.5+, 30 days)...")
-    events = fetch_usgs_catalog(days=30)
+    if not history_events:
+        replay_path = write_replay_artifact(
+            [],
+            now,
+            forecast_id=forecast_id,
+            n_history_events=0,
+            n_recent_events=0,
+            replay_dir=replay_dir,
+            update_index=not skip_replay_index,
+        )
+        if not skip_live_pulse:
+            write_outputs([], now, forecast_id=forecast_id)
+        append_ledger(
+            [],
+            now,
+            forecast_id=forecast_id,
+            ledger_path=ledger_path,
+            replay_path=replay_path,
+        )
+        if not skip_site:
+            page_now = now.replace(tzinfo=None)
+            eq_html = render_earthquake_page([], page_now, n_events_total=0)
+            eq_html = eq_html.replace(
+                f"/data/replay/eq_fcst_{page_now.strftime('%Y%m%d')}_0300.json",
+                f"/data/replay/{forecast_id}.json",
+            )
+            eq_page = DIST / "live" / "earthquake" / "index.html"
+            eq_page.parent.mkdir(parents=True, exist_ok=True)
+            eq_page.write_text(eq_html, encoding="utf-8")
+        return {
+            "forecast_id": forecast_id,
+            "issued_at": format_utc_z(now),
+            "n_history_events": 0,
+            "n_recent_events": 0,
+            "n_active_cells": 0,
+            "replay_path": str(replay_path),
+        }
 
-    if not events:
-        print("  No events fetched. Writing empty state...")
-        write_outputs([], now)
-        append_ledger([], now)
-        eq_html = render_earthquake_page([], now, n_events_total=0)
-        eq_page = DIST / "live" / "earthquake" / "index.html"
-        eq_page.parent.mkdir(parents=True, exist_ok=True)
-        eq_page.write_text(eq_html, encoding="utf-8")
-        print(f"  Wrote {eq_page} (no data, zero JS)")
-        print()
-        print("Done. No events to score.")
-        return
-
-    n_events_total = len(events)
-    print(f"  {n_events_total} events fetched")
-
-    # Step 2: Compute seismic coherence field (Helmholtz PDE)
+    print(f"  {len(history_events)} history events fetched")
+    print(f"  {len(recent_events)} recent events kept for active-cell discovery")
     print()
     print("Step 2: Computing seismic coherence field (Helmholtz PDE)...")
     grid_fields: dict[str, np.ndarray] | None = None
     try:
         grid_fields = compute_seismic_coherence_field(
-            events, time_window_days=365.0,
+            history_events,
+            time_window_days=365.0,
         )
-        tau_max = float(grid_fields["tau"].max())
-        print(f"  tau_max = {tau_max:.4f}")
-    except Exception as e:
-        print(f"  Warning: Coherence field computation failed: {e}")
+        print(f"  tau_max = {float(grid_fields['tau'].max()):.4f}")
+    except Exception as exc:
+        print(f"  Warning: Coherence field computation failed: {exc}")
         print("  Proceeding with point-based features only")
 
-    # Step 3: Score all active grid cells
     print()
     print("Step 3: Scoring active grid cells...")
-    scored = score_grid_cells(events, grid_fields=grid_fields, now=now)
+    scored = score_grid_cells(
+        history_events,
+        candidate_events=recent_events,
+        grid_fields=grid_fields,
+        now=now,
+    )
     print(f"  {len(scored)} cells scored")
 
-    for c in scored[:10]:
-        cond = c["conditions_met"]
+    for cell in scored[:10]:
         print(
-            f"  [{c['lat']:.0f}N, {c['lon']:.0f}E] "
-            f"P={c['probability']:.1%} conditions={cond}/5 "
-            f"b={_fmt(c['b_value'], '.3f')} "
-            f"ell={_fmt(c['ell_km'], '.0f')}km "
-            f"events={c['n_events']} Mmax={c['max_mag']:.1f}"
+            f"  [{cell['lat']:.0f}N, {cell['lon']:.0f}E] "
+            f"P={cell['probability']:.1%} conditions={cell['conditions_met']}/5 "
+            f"b={_fmt(cell['b_value'], '.3f')} "
+            f"ell={_fmt(cell['ell_km'], '.0f')}km "
+            f"events={cell['n_events']} Mmax={cell['max_mag']:.1f}"
         )
 
-    # Step 4: Write outputs
     print()
     print("Step 4: Writing outputs...")
-    write_outputs(scored, now)
-    append_ledger(scored, now)
-
-    # Step 5: Render static HTML page (zero JavaScript)
-    print()
-    print("Step 5: Rendering static HTML page (zero JS)...")
-    eq_html = render_earthquake_page(
-        scored, now, n_events_total=n_events_total,
+    replay_path = write_replay_artifact(
+        scored,
+        now,
+        forecast_id=forecast_id,
+        n_history_events=len(history_events),
+        n_recent_events=len(recent_events),
+        replay_dir=replay_dir,
+        update_index=not skip_replay_index,
     )
-    eq_page = DIST / "live" / "earthquake" / "index.html"
-    eq_page.parent.mkdir(parents=True, exist_ok=True)
-    eq_page.write_text(eq_html, encoding="utf-8")
-    print(f"  Wrote {eq_page} ({len(scored)} cells baked in, zero JS)")
+    if not skip_live_pulse:
+        write_outputs(scored, now, forecast_id=forecast_id)
+    append_ledger(
+        scored,
+        now,
+        forecast_id=forecast_id,
+        ledger_path=ledger_path,
+        replay_path=replay_path,
+    )
+
+    if not skip_site:
+        print()
+        print("Step 5: Rendering static HTML page (zero JS)...")
+        page_now = now.replace(tzinfo=None)
+        eq_html = render_earthquake_page(scored, page_now, n_events_total=len(recent_events))
+        eq_html = eq_html.replace(
+            f"/data/replay/eq_fcst_{page_now.strftime('%Y%m%d')}_0300.json",
+            f"/data/replay/{forecast_id}.json",
+        )
+        eq_page = DIST / "live" / "earthquake" / "index.html"
+        eq_page.parent.mkdir(parents=True, exist_ok=True)
+        eq_page.write_text(eq_html, encoding="utf-8")
+        print(f"  Wrote {eq_page} ({len(scored)} cells baked in, zero JS)")
 
     print()
-    print(f"Done. Scored {len(scored)} cells from {n_events_total} events.")
+    print(
+        f"Done. Scored {len(scored)} cells from {len(recent_events)} recent "
+        f"events and {len(history_events)} history events."
+    )
+    return {
+        "forecast_id": forecast_id,
+        "issued_at": format_utc_z(now),
+        "n_history_events": len(history_events),
+        "n_recent_events": len(recent_events),
+        "n_active_cells": len(scored),
+        "top_probability": scored[0]["probability"] if scored else 0.0,
+        "replay_path": str(replay_path),
+    }
+
+
+def main() -> None:
+    """Run the replay-aware earthquake scoring pipeline."""
+    from hazardpulse.earthquake.prospective import parse_utc_datetime
+
+    parser = build_arg_parser()
+    args = parser.parse_args()
+    issue_time = parse_utc_datetime(args.issue_time) if args.issue_time else None
+    run_pipeline(
+        issue_time=issue_time,
+        replay_dir=args.replay_dir,
+        ledger_path=args.ledger_path,
+        skip_site=args.skip_site,
+        skip_live_pulse=args.skip_live_pulse,
+        skip_replay_index=args.skip_replay_index,
+    )
 
 
 if __name__ == "__main__":

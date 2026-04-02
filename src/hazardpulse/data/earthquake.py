@@ -65,26 +65,59 @@ def _coerce_usgs_row(row: dict[str, str]) -> dict:
     return out
 
 
+def _load_download_module():
+    """Load the standalone downloader script as an importable module."""
+    import importlib.util
+
+    download_script = PROJECT_ROOT / "scripts" / "download_earthquake_data.py"
+    if not download_script.exists():
+        return None
+
+    spec = importlib.util.spec_from_file_location(
+        "hazardpulse_download_earthquake_data",
+        download_script,
+    )
+    if spec is None or spec.loader is None:
+        return None
+
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def bootstrap_usgs_catalog(min_year: int, max_year: int) -> list[int]:
+    """Download any missing cached USGS year files for the requested span."""
+    missing_years = [
+        year
+        for year in range(min_year, max_year + 1)
+        if not (USGS_DIR / f"usgs_catalog_{year}.csv").exists()
+    ]
+    if not missing_years:
+        return []
+
+    downloader = _load_download_module()
+    if downloader is None:
+        return []
+
+    downloaded_years: list[int] = []
+    for year in missing_years:
+        try:
+            downloader.download_usgs_year(year)
+        except Exception:
+            continue
+        if (USGS_DIR / f"usgs_catalog_{year}.csv").exists():
+            downloaded_years.append(year)
+    return downloaded_years
+
+
 def load_usgs_catalog(
     min_year: int = 2000,
     max_year: int = 2025,
     min_mag: float = 2.5,
 ) -> list[dict]:
-    """Load cached USGS earthquake catalog.
+    """Load cached USGS earthquake catalog, auto-bootstrapping missing years."""
+    bootstrap_usgs_catalog(min_year=min_year, max_year=max_year)
 
-    Parameters
-    ----------
-    min_year, max_year : int
-        Range of years to include (inclusive).
-    min_mag : float
-        Minimum magnitude filter (applied on load).
-
-    Returns
-    -------
-    list[dict]
-        Each dict has keys: time, latitude, longitude, depth, mag,
-        magType, place, type, id.  Numeric fields are float/int.
-    """
     events: list[dict] = []
     for year in range(min_year, max_year + 1):
         path = USGS_DIR / f"usgs_catalog_{year}.csv"
