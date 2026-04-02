@@ -677,27 +677,30 @@ def analytic_tornado_probability(
 
     # Condition 6: Radar-detected rotation.  maxllaz > 0.003 s^-1 is the
     # standard operational mesocyclone detection threshold.
-    # Coefficient 2.0/0.01: strong weight; observed rotation is the single
-    # best predictor of imminent tornadogenesis.
-    logit += 2.0 * max(
-        0.0, maxllaz - config.singularity_rotation_threshold
-    ) / 0.01
+    # CAPPED at 1.5 to prevent dominating the score.
+    rotation_contrib = min(
+        2.0 * max(0.0, maxllaz - config.singularity_rotation_threshold) / 0.01,
+        1.5,  # cap: rotation alone cannot push above ~50%
+    )
+    logit += rotation_contrib
 
     # Condition 7: Environmental helicity.  SRH > 100 m^2/s^2 indicates
     # a supercell-supportive wind profile.
-    # Coefficient 1.0/200: moderate weight; environment is permissive,
-    # not deterministic.
-    logit += 1.0 * max(
-        0.0, srh01 - config.singularity_srh_threshold
-    ) / 200.0
+    # CAPPED at 1.0 to prevent extreme SRH from dominating.
+    srh_contrib = min(
+        1.0 * max(0.0, srh01 - config.singularity_srh_threshold) / 200.0,
+        1.0,  # cap: SRH alone cannot push above ~40%
+    )
+    logit += srh_contrib
 
     # Bias term: shifts the sigmoid so that when no conditions are met,
     # the base probability is ~7.6% (sigmoid(-2.5) ~ 0.076).
-    # This roughly matches the climatological false-alarm-adjusted
-    # base rate for storms flagged by ProbSevere.
     logit -= 2.5
 
-    return 1.0 / (1.0 + math.exp(-logit))
+    prob = 1.0 / (1.0 + math.exp(-max(-10.0, min(10.0, logit))))
+
+    # Hard cap at 60% for analytic model (not ML-calibrated)
+    return min(prob, 0.60)
 
 
 # ===================================================================
