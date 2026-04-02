@@ -7,7 +7,7 @@
   <meta name="description" content="30-day M6.0+ earthquake probability for global seismic zones. Grid cells ranked by coherence field singularity conditions with full evidence.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.io/live/earthquake/">
-  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="stylesheet" href="/assets/styles.css?v=6">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -44,6 +44,7 @@
   </script>
 </head>
 <body>
+  <div class="live-bar"></div>
 
   <div class="emergency-banner" role="alert" aria-live="assertive">
     <!-- Populated by Cloudflare Worker when seismic threat detected near user -->
@@ -80,7 +81,7 @@
         <a href="/api/">API</a>
       </nav>
       <div class="theme-switch">
-        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to light mode">
         <label for="theme-toggle">Dark</label>
       </div>
     </div>

@@ -383,6 +383,23 @@ h3 {
   font-size: var(--text-lg);
 }
 
+/* ── Hero Observatory (mission control) ─────────────────────── */
+.hero-observatory {
+  padding: var(--s-3xl) 0 var(--s-xl);
+  view-transition-name: hero-title;
+  text-align: center;
+}
+.hero-observatory .eyebrow {
+  margin-bottom: var(--s-md);
+}
+.hero-subtitle {
+  color: var(--text-secondary);
+  font-size: var(--text-lg);
+  max-width: 640px;
+  margin: var(--s-md) auto 0;
+  line-height: 1.6;
+}
+
 /* ── Hero metric styling ─────────────────────────────────────── */
 .threat-level {
   font-family: 'JetBrains Mono', var(--font-mono);
@@ -390,10 +407,23 @@ h3 {
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1;
+  margin: 0;
 }
 .threat-level.clear { color: var(--good); }
 .threat-level.elevated { color: var(--warn); }
 .threat-level.critical { color: var(--bad); }
+
+/* ── Map section ─────────────────────────────────────────────── */
+.map-section .map-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+.map-section .map-legend .hazard-dot {
+  margin-right: 4px;
+}
 
 /* ── Grid ─────────────────────────────────────────────────────── */
 .grid {
@@ -1751,18 +1781,80 @@ body[data-alert="warning"] .your-area-section .card {
   .map-legend { gap: var(--s-sm); font-size: 10px; }
 }
 
+/* ── Map responsive ───────────────────────────────────────────── */
+#map, #tornado-map {
+  width: 100%;
+  min-height: 300px;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+@media (max-width: 600px) {
+  #map, #tornado-map {
+    height: 250px !important;
+    min-height: 250px;
+  }
+}
+
+/* ── Hero responsive ─────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .hero-observatory {
+    padding: var(--s-xl) 0 var(--s-md);
+  }
+  .threat-level {
+    font-size: clamp(28px, 8vw, 40px) !important;
+  }
+}
+
+/* ── Map marker interactions ─────────────────────────────────── */
+.map-marker-to, .map-marker-hu, .map-marker-eq {
+  transition: transform 0.2s ease;
+}
+.map-marker-to:hover, .map-marker-hu:hover, .map-marker-eq:hover {
+  transform: scale(1.3);
+  z-index: 10;
+}
+
+/* ── MapLibre popup styling ──────────────────────────────────── */
+.maplibregl-popup-content {
+  background: var(--panel-solid) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: var(--s-md) !important;
+  font-family: var(--font) !important;
+  font-size: var(--text-sm) !important;
+  box-shadow: var(--shadow-elevated) !important;
+}
+.maplibregl-popup-close-button {
+  color: var(--muted) !important;
+  font-size: 18px !important;
+}
+.maplibregl-popup-anchor-top .maplibregl-popup-tip {
+  border-bottom-color: var(--panel-solid) !important;
+}
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+  border-top-color: var(--panel-solid) !important;
+}
+
+/* ── Storm detail card transition ────────────────────────────── */
+.event-row-details[open] .event-detail {
+  animation: card-reveal 0.3s var(--ease) both;
+}
+
 /* ── Print styles ─────────────────────────────────────────────── */
 @media print {
-  .topbar, .theme-switch, .skip-link, .cta-row, .btn, .footer, .depth-toggle, .nav-hamburger, .emergency-banner, .live-bar { display: none !important; }
-  body { background: #fff; color: #000; font-size: 12pt; }
+  .live-bar, .topbar, footer, .depth-toggle { display: none !important; }
+  #map, #tornado-map { display: none !important; }
+  body { background: white !important; color: black !important; font-size: 12pt; }
   body::before { display: none !important; }
   .grid { display: block; }
   .col-4, .col-6, .col-8, .col-12 { width: 100%; }
-  .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; margin-bottom: 12pt; backdrop-filter: none; }
+  .card { backdrop-filter: none !important; background: white !important; border: 1px solid #ddd !important; box-shadow: none; break-inside: avoid; margin-bottom: 12pt; }
   .chip { border: 1px solid #999; }
   a { color: #000; text-decoration: underline; }
   a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: #666; }
   .world-map-wrapper { box-shadow: none; border: 1px solid #ccc; }
   .depth-content [data-depth] { max-height: none !important; opacity: 1 !important; overflow: visible !important; margin-bottom: 8pt !important; }
+  .theme-switch, .skip-link, .cta-row, .btn, .footer, .nav-hamburger, .emergency-banner { display: none !important; }
   @page { margin: 1.5cm; }
 }

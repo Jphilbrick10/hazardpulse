@@ -218,6 +218,7 @@
   </style>
 </head>
 <body>
+  <div class="live-bar"></div>
 
   <div class="disclaimer-banner" role="alert" aria-live="assertive">
     RESEARCH SYSTEM &mdash; NOT OPERATIONAL.
@@ -324,29 +325,29 @@
           <tbody>
             <tr>
               <td>Baseline (ProbSevere only)</td>
-              <td>0.803</td>
-              <td>[0.792, 0.819]</td>
-              <td>0.355</td>
-              <td>0.125</td>
-              <td>+0.099</td>
+              <td class="mono">0.803</td>
+              <td class="mono">[0.792, 0.819]</td>
+              <td class="mono">0.355</td>
+              <td class="mono">0.125</td>
+              <td class="mono">+0.099</td>
               <td>&mdash;</td>
             </tr>
             <tr>
               <td>Enhanced (+HRRR atmosphere)</td>
-              <td>0.878</td>
-              <td>[0.867, 0.889]</td>
-              <td>0.561</td>
-              <td>0.113</td>
-              <td>+0.187</td>
+              <td class="mono">0.878</td>
+              <td class="mono">[0.867, 0.889]</td>
+              <td class="mono">0.561</td>
+              <td class="mono">0.113</td>
+              <td class="mono">+0.187</td>
               <td>+0.075 over baseline, p&lt;0.0001</td>
             </tr>
             <tr class="best-row">
               <td>Full (+Coherence Field Theory)</td>
-              <td>0.894</td>
-              <td>[0.883, 0.904]</td>
-              <td>0.606</td>
-              <td>0.114</td>
-              <td>+0.180</td>
+              <td class="mono">0.894</td>
+              <td class="mono">[0.883, 0.904]</td>
+              <td class="mono">0.606</td>
+              <td class="mono">0.114</td>
+              <td class="mono">+0.180</td>
               <td>+0.016 over enhanced, p&lt;0.0001</td>
             </tr>
           </tbody>
@@ -413,14 +414,14 @@
           <tbody>
             <tr class="best-row">
               <td><strong>HazardPulse (ours)</strong></td>
-              <td>0.894 AUC</td>
+              <td><span class="mono">0.894</span> AUC</td>
               <td>ProbSevere + HRRR + CFT</td>
               <td>2026</td>
               <td>Storm-object, 60-min forward, 2024 test</td>
             </tr>
             <tr>
               <td>TorNet CNN (MIT)</td>
-              <td>0.874 AUC</td>
+              <td><span class="mono">0.874</span> AUC</td>
               <td>Full dual-pol radar imagery</td>
               <td>AIES 2025</td>
               <td>+0.020 AUC advantage; we need no radar imagery</td>

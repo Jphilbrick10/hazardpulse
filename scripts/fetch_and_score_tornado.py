@@ -622,6 +622,20 @@ def write_outputs(
     )
     print(f"  Wrote {storms_path} ({len(scored_storms)} storms)")
 
+    # Write GeoJSON for MapLibre
+    geojson_path = DIST / "data" / "tornado-storms.geojson"
+    geojson_path.write_text(_render_geojson(scored_storms), encoding="utf-8")
+    print(f"  Wrote {geojson_path} ({len(scored_storms)} features)")
+
+    # Write HTMX fragment (storm rows only, no page wrapper)
+    fragment_path = DIST / "data" / "tornado-fragment.html"
+    fragment_path.write_text(
+        _render_storm_rows(scored_storms) if scored_storms else
+        '<div class="card" style="text-align:center;padding:24px;"><p class="muted">No active storms.</p></div>',
+        encoding="utf-8",
+    )
+    print(f"  Wrote {fragment_path}")
+
     # Update live-pulse.json tornado entry
     pulse_path = DIST / "data" / "live-pulse.json"
     if pulse_path.exists():
@@ -897,6 +911,25 @@ def _lat_lon_to_svg(lat: float, lon: float) -> tuple[float, float]:
     return (x, y)
 
 
+def _render_geojson(storms: list[dict]) -> str:
+    """Render storms as a GeoJSON FeatureCollection for MapLibre."""
+    features = []
+    for s in storms:
+        features.append({
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [s["lon"], s["lat"]]},
+            "properties": {
+                "storm_id": s["storm_id"],
+                "probability": s["tornado_probability"],
+                "risk_band": s["risk_band"],
+                "mucape": s.get("mucape", 0),
+                "srh01": s.get("srh01", 0),
+                "maxllaz": s.get("maxllaz", 0),
+            }
+        })
+    return json.dumps({"type": "FeatureCollection", "features": features})
+
+
 def _render_svg_markers(storms: list[dict]) -> str:
     """Generate SVG marker elements for storm positions on the map."""
     lines: list[str] = []
@@ -975,13 +1008,13 @@ def _render_storm_rows(storms: list[dict]) -> str:
         lines.append(
             f'            <span data-depth="technical" style="display:inline;">'
             f' <strong>{_esc(str(s["storm_id"]))}</strong>'
-            f' {s["lat"]:.2f}, {s["lon"]:.2f}'
-            f' <strong style="color:{risk_color}">{_pct(prob)}</strong>'
+            f' <span class="mono">{s["lat"]:.2f}, {s["lon"]:.2f}</span>'
+            f' <strong class="mono" style="color:{risk_color}">{_pct(prob)}</strong>'
             f' <span class="chip" style="background:{risk_color};color:#fff;font-size:11px;padding:2px 8px;">'
             f'{_esc(risk_label)}</span>'
-            f' CAPE: {s.get("mucape", 0):.0f}'
+            f' <span class="mono">CAPE: {s.get("mucape", 0):.0f}'
             f' | SRH: {s.get("srh01", 0):.0f}'
-            f' | MaxLLAz: {s.get("maxllaz", 0):.4f}'
+            f' | MaxLLAz: {s.get("maxllaz", 0):.4f}</span>'
             f'</span>'
         )
         lines.append(f'          </summary>')
@@ -1343,7 +1376,10 @@ def render_tornado_page(
         </div>
       </section>"""
 
-    # Storms section
+    # Inline GeoJSON for MapLibre
+    inline_geojson = _render_geojson(scored_storms) if scored_storms else '{"type":"FeatureCollection","features":[]}'
+
+    # Storms section (with HTMX auto-refresh wrapper)
     if scored_storms:
         storm_rows = _render_storm_rows(scored_storms)
         storms_html = f"""
@@ -1351,18 +1387,37 @@ def render_tornado_page(
         <h2 id="systems-heading">Active storms by tornado probability</h2>
         <p class="muted" style="margin-top:-8px;margin-bottom:16px;">ProbSevere storm objects scored with coherence field analysis. Ranked by estimated tornado probability. Click any row to expand details.</p>
 
+        <div id="storm-list"
+             hx-get="/data/tornado-fragment.html"
+             hx-trigger="every 120s"
+             hx-swap="innerHTML transition:true">
 {storm_rows}
+        </div>
       </section>"""
         dive_html = _render_coherence_deep_dive(scored_storms[0])
     else:
         storms_html = """
       <section class="section">
-        <div class="card" style="text-align:center;padding:48px 24px;">
-          <h3 style="color:var(--text-secondary);">No active severe weather</h3>
-          <p class="muted">No ProbSevere storm objects detected at last scan. Check back during active convective weather.</p>
+        <div id="storm-list"
+             hx-get="/data/tornado-fragment.html"
+             hx-trigger="every 120s"
+             hx-swap="innerHTML transition:true">
+          <div class="card" style="text-align:center;padding:48px 24px;">
+            <h3 style="color:var(--text-secondary);">No active severe weather</h3>
+            <p class="muted">No ProbSevere storm objects detected at last scan. Check back during active convective weather.</p>
+          </div>
         </div>
       </section>"""
         dive_html = ""
+
+    # MapLibre map section
+    map_html = """
+      <section class="section" aria-labelledby="tornado-map-heading">
+        <h2 id="tornado-map-heading">Storm locations</h2>
+        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Active ProbSevere storm objects. Click markers for details.</p>
+        <div id="tornado-map" style="width:100%;height:400px;border-radius:var(--radius);overflow:hidden;"></div>
+        <noscript><p class="muted" style="margin-top:8px;">Enable JavaScript to view the interactive map.</p></noscript>
+      </section>"""
 
     page = f"""<!doctype html>
 <html lang="en">
@@ -1373,7 +1428,8 @@ def render_tornado_page(
   <meta name="description" content="24-hour tornado formation probability for global severe convection zones. Top cells ranked by STP/SCP indices with full evidence.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.io/live/tornado/">
-  <link rel="stylesheet" href="/assets/styles.css?v=5">
+  <link rel="stylesheet" href="/assets/styles.css?v=6">
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -1492,6 +1548,9 @@ def render_tornado_page(
         </div>
       </section>
 
+      <!-- INTERACTIVE MAP -->
+{map_html}
+
       <!-- DISCLAIMER BANNER -->
       <section class="section">
         <div class="card" style="background:var(--warn-bg,#fff8e1);border-left:4px solid var(--warn,#c98a12);padding:12px 16px;">
@@ -1563,9 +1622,72 @@ def render_tornado_page(
         Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
         with stated uncertainty - they are not certainties.
       </p>
-      <p class="footer-build">Built with Coherence Lang · Zero client-side JavaScript · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
+      <p class="footer-build">Built with Coherence Lang &middot; Geolocation by Cloudflare Edge</p>
     </div>
   </footer>
+
+  <!-- Inline storm GeoJSON for MapLibre -->
+  <script id="storm-geojson" type="application/json">
+{inline_geojson}
+  </script>
+
+  <!-- HTMX for auto-refresh -->
+  <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js" defer></script>
+
+  <!-- MapLibre GL JS -->
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script>
+    (function() {{
+      var mapEl = document.getElementById('tornado-map');
+      if (!mapEl || typeof maplibregl === 'undefined') return;
+
+      var map = new maplibregl.Map({{
+        container: 'tornado-map',
+        style: {{
+          version: 8,
+          sources: {{
+            'osm': {{
+              type: 'raster',
+              tiles: ['https://tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png'],
+              tileSize: 256,
+              attribution: '&copy; OpenStreetMap contributors'
+            }}
+          }},
+          layers: [{{ id: 'osm', type: 'raster', source: 'osm' }}]
+        }},
+        center: [-95, 38],
+        zoom: 4,
+        maxZoom: 12
+      }});
+
+      try {{
+        var geojson = JSON.parse(document.getElementById('storm-geojson').textContent);
+        (geojson.features || []).forEach(function(f) {{
+          var p = f.properties;
+          var prob = p.probability || 0;
+          var coords = f.geometry.coordinates;
+          var el = document.createElement('div');
+          el.style.width = (12 + prob * 30) + 'px';
+          el.style.height = (12 + prob * 30) + 'px';
+          el.style.borderRadius = '50%';
+          el.style.backgroundColor = prob > 0.3 ? '#EF4444' : prob > 0.15 ? '#F59E0B' : '#14B8A6';
+          el.style.border = '2px solid rgba(255,255,255,0.3)';
+          el.style.cursor = 'pointer';
+
+          var popup = new maplibregl.Popup({{ offset: 15 }})
+            .setHTML('<strong>Storm ' + p.storm_id + '</strong><br>' +
+                     'Probability: <span class="mono">' + (prob * 100).toFixed(1) + '%</span><br>' +
+                     'CAPE: <span class="mono">' + (p.mucape || 0) + '</span> J/kg<br>' +
+                     'SRH: <span class="mono">' + (p.srh01 || 0) + '</span> m&sup2;/s&sup2;');
+
+          new maplibregl.Marker({{ element: el }})
+            .setLngLat(coords)
+            .setPopup(popup)
+            .addTo(map);
+        }});
+      }} catch(e) {{}}
+    }})();
+  </script>
 
 </body>
 </html>
@@ -1767,6 +1889,50 @@ def render_homepage_cards(
     else:
         svg_home = ""
 
+    # Compute max probability and n_storms for hero threat level
+    max_prob = 0.0
+    for hz in hazards:
+        p = hz.get("probability", 0)
+        if p > max_prob:
+            max_prob = p
+
+    if max_prob > 0.4:
+        threat_text = "CRITICAL"
+        threat_class = "critical"
+        hero_sub = f"{total_storms} hazard events tracked. Highest probability: {_pct(max_prob)}."
+    elif max_prob > 0.2:
+        threat_text = "ELEVATED"
+        threat_class = "elevated"
+        hero_sub = f"{total_storms} hazard events tracked. Highest probability: {_pct(max_prob)}."
+    elif total_storms > 0:
+        threat_text = "GUARDED"
+        threat_class = "clear"
+        hero_sub = f"{total_storms} hazard events tracked. No high-probability threats."
+    else:
+        threat_text = "ALL CLEAR"
+        threat_class = "clear"
+        hero_sub = "No significant natural hazard threats detected globally."
+
+    # Tornado card values
+    to_hz = next((h for h in hazards if h.get("key") == "to"), {})
+    to_prob = _pct(to_hz.get("probability", 0)) if to_hz else "--"
+    to_n = to_hz.get("n_active_storms", 0) if to_hz else 0
+    to_status = f"{to_n} active storms" if to_n else "No active storms"
+
+    # Earthquake card values
+    eq_hz = next((h for h in hazards if h.get("key") == "eq"), {})
+    eq_prob = _pct(eq_hz.get("probability", 0)) if eq_hz else "--"
+    eq_status = risk_labels_all.get(eq_hz.get("risk_band", ""), "monitoring") if eq_hz else "monitoring"
+
+    # Hurricane card values
+    hu_hz = next((h for h in hazards if h.get("key") == "hu"), {})
+    hu_prob = _pct(hu_hz.get("probability", 0)) if hu_hz else "--"
+    if hurricanes.get("storms"):
+        s0 = hurricanes["storms"][0]
+        hu_status = f'{_esc(s0.get("storm_name", "Active storm"))} ({_esc(s0.get("category", "--"))})'
+    else:
+        hu_status = "No active storms"
+
     # Now build the full homepage
     homepage = f"""<!doctype html>
 <html lang="en">
@@ -1777,7 +1943,8 @@ def render_homepage_cards(
   <meta name="description" content="Live probabilistic hazard forecasts for earthquakes, hurricanes, and tornadoes worldwide. Transparent uncertainty, verifiable evidence.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.io/">
-  <link rel="stylesheet" href="/assets/styles.css?v=5">
+  <link rel="stylesheet" href="/assets/styles.css?v=6">
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -1815,6 +1982,8 @@ def render_homepage_cards(
   </script>
 </head>
 <body>
+
+  <div class="live-bar"></div>
 
   <div class="emergency-banner" role="alert" aria-live="assertive">
     <!-- Populated by Cloudflare Worker when threat detected near user -->
@@ -1857,160 +2026,199 @@ def render_homepage_cards(
     </div>
   </header>
 
-  <main id="main" class="container">
+  <main id="main">
 
-    <section class="hero" aria-labelledby="hero-heading">
-      <div class="eyebrow">Global hazard intelligence</div>
-      <h1 id="hero-heading">Know your risk. Check the proof.</h1>
-      <p class="subtitle">
-        HazardPulse tracks earthquakes, hurricanes, and tornadoes worldwide. Every forecast
-        shows how likely, how confident, and exactly what evidence backs it - so you can verify it yourself.
-      </p>
-      <div class="cta-row">
-        <a href="/live/" class="btn btn-primary">See live forecasts</a>
-        <a href="/evidence/" class="btn btn-secondary">Check the evidence</a>
-        <a href="/methods/" class="btn btn-secondary">How we do this</a>
+    <!-- HERO: Threat Level -->
+    <section class="hero-observatory">
+      <div class="container">
+        <p class="eyebrow">GLOBAL HAZARD INTELLIGENCE</p>
+        <h1 class="threat-level {threat_class}" id="threat-level">{threat_text}</h1>
+        <p class="hero-subtitle" id="hero-subtitle">{_esc(hero_sub)}</p>
       </div>
     </section>
 
     <div class="depth-content">
-      <div class="depth-toggle" role="radiogroup" aria-label="Content depth">
-        <input type="radio" name="depth" id="depth-simple" value="simple" checked>
-        <label for="depth-simple">Simple</label>
-        <input type="radio" name="depth" id="depth-technical" value="technical">
-        <label for="depth-technical">Technical</label>
+      <div class="container">
+        <div class="depth-toggle" role="radiogroup" aria-label="Content depth">
+          <input type="radio" name="depth" id="depth-simple" value="simple" checked>
+          <label for="depth-simple">Simple</label>
+          <input type="radio" name="depth" id="depth-technical" value="technical">
+          <label for="depth-technical">Technical</label>
+        </div>
       </div>
 
-      <!-- YOUR AREA - populated by Cloudflare Worker via HTMLRewriter -->
-      <section class="your-area-section section" aria-labelledby="your-area-heading">
-        <!-- Worker injects personalized content here based on IP geolocation -->
-      </section>
-
-      <!-- WORLD MAP -->
-      <section class="section" aria-labelledby="worldmap-heading">
-        <h2 id="worldmap-heading">Global hazard map</h2>
-        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Active hazard zones across the world. Hover a marker for details. Click to see full analysis.</p>
-
-        <div class="world-map-wrapper">
-          {svg_home}
-
-          <div class="map-legend">
-            <span class="map-legend-item"><span class="map-legend-dot eq"></span> Earthquake zone</span>
-            <span class="map-legend-item"><span class="map-legend-dot hu"></span> Tropical system</span>
-            <span class="map-legend-item"><span class="map-legend-dot to"></span> Tornado cell</span>
-            <span class="map-legend-item"><span class="map-legend-dot user"></span> Your location</span>
-          </div>
-          <p class="muted" style="margin-top:8px;font-size:11px;text-align:center;">RESEARCH SYSTEM &mdash; Not operational. See <a href="https://www.weather.gov/" rel="noopener">weather.gov</a> for official warnings.</p>
-        </div>
-      </section>
-
-      <!-- TOP 3 GLOBAL HAZARDS -->
-      <section class="section" aria-labelledby="pulse-heading">
-        <h2 id="pulse-heading">Highest risk right now</h2>
-        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">The three highest-risk hazards we're tracking globally, ranked by probability. Updated every 3 hours.</p>
-
-        <div class="grid">
-{cards_html}
-        </div>
-      </section>
-
-      <!-- WHAT CHANGED & SYSTEM HEALTH -->
-      <section class="section" aria-labelledby="why-heading">
-        <div class="grid">
-          <div class="col-8">
-            <h2 id="why-heading">What changed and why</h2>
-            <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Plain-language summary of what's driving the numbers since last update.</p>
-            <div class="card">
-              <div data-depth="simple">
-                {simple_content}
+      <!-- THREE HAZARD CARDS -->
+      <section class="section">
+        <div class="container">
+          <div class="grid" id="hazard-cards">
+            <!-- Earthquake card -->
+            <div class="card col-4 hazard-eq">
+              <div class="card-header" style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                <span class="hazard-dot eq"></span>
+                <h3 style="margin:0;"><a href="/live/earthquake/" style="color:inherit;">Earthquake</a></h3>
               </div>
+              <div class="metric mono" id="eq-prob">{eq_prob}</div>
+              <div class="metric-label">P(M6+ in 90 days)</div>
+              <p class="muted" id="eq-status">{_esc(eq_status)}</p>
               <div data-depth="technical">
-                {tech_content}
+                <div class="kv"><span>Model</span><strong>{_esc(eq_hz.get("model_version", "--") if eq_hz else "--")}</strong></div>
+              </div>
+            </div>
+            <!-- Hurricane card -->
+            <div class="card col-4 hazard-hu">
+              <div class="card-header" style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                <span class="hazard-dot hu"></span>
+                <h3 style="margin:0;"><a href="/live/hurricane/" style="color:inherit;">Hurricane</a></h3>
+              </div>
+              <div class="metric mono" id="hu-prob">{hu_prob}</div>
+              <div class="metric-label">P(rapid intensification)</div>
+              <p class="muted" id="hu-status">{hu_status}</p>
+              <div data-depth="technical">
+                <div class="kv"><span>Model</span><strong>{_esc(hu_hz.get("model_version", "--") if hu_hz else "--")}</strong></div>
+              </div>
+            </div>
+            <!-- Tornado card -->
+            <div class="card col-4 hazard-to">
+              <div class="card-header" style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                <span class="hazard-dot to"></span>
+                <h3 style="margin:0;"><a href="/live/tornado/" style="color:inherit;">Tornado</a></h3>
+              </div>
+              <div class="metric mono" id="to-prob">{to_prob}</div>
+              <div class="metric-label">P(formation in 24 h)</div>
+              <p class="muted" id="to-status">{to_status}</p>
+              <div data-depth="technical">
+                <div class="kv"><span>Model</span><strong>{_esc(MODEL_VERSION)}</strong></div>
+                <div class="kv"><span>Scoring</span><strong>{_esc(tier_label)}</strong></div>
               </div>
             </div>
           </div>
-          <div class="col-4">
-            <h2>System health</h2>
-            <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Is HazardPulse working properly?</p>
-            <div class="card">
-              <div class="kv"><span>Last update</span><strong>{_esc(updated_str)}</strong></div>
-              <div class="kv"><span>Active storms</span><strong>{total_storms} tracked globally</strong></div>
-              <div class="kv"><span>Hazard types</span><strong>{len(hazards)} hazard types monitored</strong></div>
-              <div class="kv"><span>Gate status</span><strong style="color:{gate_color}">{gate_text}</strong></div>
-              <div data-depth="technical">
-                <div class="kv"><span>Data sources</span><strong>{_esc(MODEL_VERSION)}</strong></div>
-              </div>
+        </div>
+      </section>
+
+      <!-- INTERACTIVE MAP -->
+      <section class="section map-section">
+        <div class="container">
+          <h2>Global hazard map</h2>
+          <p class="muted">Active hazard zones across the world. Click markers for details.</p>
+          <div id="map" style="width:100%;height:500px;border-radius:var(--radius);overflow:hidden;"></div>
+          <noscript>
+            <p class="muted" style="margin-top:8px;">Enable JavaScript to view the interactive map. Hazard data is still available in the cards above.</p>
+          </noscript>
+          <div class="map-legend" style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;">
+            <span><span class="hazard-dot eq"></span> Earthquake</span>
+            <span><span class="hazard-dot hu"></span> Hurricane</span>
+            <span><span class="hazard-dot to"></span> Tornado</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- VERIFIED ACCURACY -->
+      <section class="section">
+        <div class="container">
+          <h2>Verified accuracy</h2>
+          <div class="grid">
+            <div class="card col-4">
+              <h3>Tornado</h3>
+              <div class="metric mono">0.894</div>
+              <div class="metric-label">AUC on 2024 test data</div>
+            </div>
+            <div class="card col-4">
+              <h3>Earthquake</h3>
+              <div class="metric mono">0.799</div>
+              <div class="metric-label">Temporal AUC (same-location)</div>
+            </div>
+            <div class="card col-4">
+              <h3>Hurricane</h3>
+              <div class="metric mono">0.938</div>
+              <div class="metric-label">AUC for rapid intensification</div>
             </div>
           </div>
+          <p class="muted" style="text-align:center;margin-top:16px;">
+            Every prediction is hash-chained and independently verifiable.
+            <a href="/verification/">Check the evidence &rarr;</a>
+          </p>
         </div>
       </section>
 
       <!-- HOW IT WORKS -->
       <section class="section" aria-labelledby="how-heading">
-        <h2 id="how-heading">How it works</h2>
-        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Four steps between raw data and the numbers you see above.</p>
-        <div class="grid">
-          <div class="card col-3">
-            <h3>1. Collect</h3>
-            <div data-depth="simple">
-              <p class="muted">We pull real-time data from the USGS (earthquakes), National Hurricane Center (storms), Storm Prediction Center (tornadoes), JMA (Japan), and IMD (India).</p>
+        <div class="container">
+          <h2 id="how-heading">How it works</h2>
+          <div class="grid">
+            <div class="card col-4">
+              <h3>1. Ingest</h3>
+              <div data-depth="simple">
+                <p class="muted">Real-time data from USGS, NOAA ProbSevere, HRRR, NHC, and 3,400+ GPS stations.</p>
+              </div>
+              <div data-depth="technical">
+                <p class="muted">Ingestion from USGS ComCat, ProbSevere v3 (2-min cycle), HRRR 80 km grid, NHC ATCF, JMA, EMSC, IMD. Schema v2.1 validated.</p>
+              </div>
             </div>
-            <div data-depth="technical">
-              <p class="muted">Ingestion from USGS ComCat, NHC ATCF, SPC mesoscale, JMA seismic catalog, EMSC, IMD cyclone bulletins. Validated against schema v2.1, timestamped with provenance envelope.</p>
+            <div class="card col-4">
+              <h3>2. Analyze</h3>
+              <div data-depth="simple">
+                <p class="muted">Coherence Field Theory transforms raw data through a Helmholtz PDE, extracting organization patterns invisible to standard methods.</p>
+              </div>
+              <div data-depth="technical">
+                <p class="muted">Helmholtz PDE solved on HRRR grid. Coherence amplitude (tau), gradient, torsion, alignment, singularity conditions extracted. GBT ensemble (41 features) produces calibrated probabilities.</p>
+              </div>
             </div>
-          </div>
-          <div class="card col-3">
-            <h3>2. Calculate</h3>
-            <div data-depth="simple">
-              <p class="muted">Statistical models estimate how likely each hazard is, and calculate a confidence range showing how sure we are.</p>
-            </div>
-            <div data-depth="technical">
-              <p class="muted">Ensemble inference across registered models (ETAS, SHIPS-RII, DTOPS, SPC-calibrated meso). Bayesian credible intervals via MCMC (n=10,000). Deterministic execution on Coherence runtime.</p>
-            </div>
-          </div>
-          <div class="card col-3">
-            <h3>3. Verify</h3>
-            <div data-depth="simple">
-              <p class="muted">Every forecast goes through 13 automatic checks for accuracy, freshness, and safety before it's published.</p>
-            </div>
-            <div data-depth="technical">
-              <p class="muted">Hard gate constitution: G0 (schema) through G12 (calibration drift). Each gate produces a signed decision envelope. Degrade-and-explain on failure - never silent publishing.</p>
-            </div>
-          </div>
-          <div class="card col-3">
-            <h3>4. Show you</h3>
-            <div data-depth="simple">
-              <p class="muted">If all checks pass, the forecast goes live with a link to the evidence that created it - so you can verify it yourself.</p>
-            </div>
-            <div data-depth="technical">
-              <p class="muted">Static site generation from SiteWorld graph. Each page deterministically compiled from .cl source with content-addressed assets. Full replay bundle published per cycle.</p>
+            <div class="card col-4">
+              <h3>3. Predict</h3>
+              <div data-depth="simple">
+                <p class="muted">Gradient boosted trees produce calibrated probabilities. Every prediction is logged with SHA-256 hash chains.</p>
+              </div>
+              <div data-depth="technical">
+                <p class="muted">Hard gate constitution G0-G12. Each gate produces signed decision envelope. SHA-256 hash chain for full prediction audit trail. Degrade-and-explain on gate failure.</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- DON'T TAKE OUR WORD -->
-      <section class="section" aria-labelledby="verify-heading">
-        <h2 id="verify-heading">Don't take our word for it</h2>
-        <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Every claim on this site can be checked.</p>
-        <div class="grid">
-          <div class="card col-4">
-            <h3>See the evidence</h3>
-            <p class="muted">Every forecast links to the exact data and model that produced it. Nothing is hidden.</p>
-            <a href="/evidence/" class="btn btn-secondary" style="margin-top:8px;">Browse evidence</a>
-          </div>
-          <div class="card col-4">
-            <h3>Check our track record</h3>
-            <p class="muted">How often are we right? We publish our accuracy scores publicly, broken down by hazard type and region.</p>
-            <a href="/verification/" class="btn btn-secondary" style="margin-top:8px;">See accuracy</a>
-          </div>
-          <div class="card col-4">
-            <h3>Replay any forecast</h3>
-            <p class="muted">Download the input data and re-run any past forecast yourself. Same data in, same result out - guaranteed.</p>
-            <a href="/evidence/#replay" class="btn btn-secondary" style="margin-top:8px;">Try it</a>
+      <!-- WHAT CHANGED & SYSTEM HEALTH -->
+      <section class="section" aria-labelledby="why-heading">
+        <div class="container">
+          <div class="grid">
+            <div class="col-8">
+              <h2 id="why-heading">What changed and why</h2>
+              <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Plain-language summary of what's driving the numbers since last update.</p>
+              <div class="card">
+                <div data-depth="simple">
+                  {simple_content}
+                </div>
+                <div data-depth="technical">
+                  {tech_content}
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <h2>System health</h2>
+              <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Is HazardPulse working properly?</p>
+              <div class="card">
+                <div class="kv"><span>Last update</span><strong>{_esc(updated_str)}</strong></div>
+                <div class="kv"><span>Active storms</span><strong>{total_storms} tracked globally</strong></div>
+                <div class="kv"><span>Hazard types</span><strong>{len(hazards)} hazard types monitored</strong></div>
+                <div class="kv"><span>Gate status</span><strong style="color:{gate_color}">{gate_text}</strong></div>
+                <div data-depth="technical">
+                  <div class="kv"><span>Data sources</span><strong>{_esc(MODEL_VERSION)}</strong></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+      <!-- DISCLAIMER -->
+      <section class="section" style="text-align:center;">
+        <div class="container">
+          <p class="muted" style="font-size:var(--text-sm);">
+            <strong>RESEARCH SYSTEM &mdash; Not operational.</strong>
+            See <a href="https://weather.gov">weather.gov</a> for official warnings.
+          </p>
+        </div>
+      </section>
+
     </div>
   </main>
 
@@ -2043,15 +2251,141 @@ def render_homepage_cards(
         Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
         with stated uncertainty - they are not certainties.
       </p>
-      <p class="footer-build">Built with Coherence Lang · Zero client-side JavaScript · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
+      <p class="footer-build">Built with Coherence Lang &middot; Geolocation by Cloudflare Edge</p>
     </div>
   </footer>
+
+  <!-- MapLibre GL JS -->
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script>
+    (function() {{
+      var mapEl = document.getElementById('map');
+      if (!mapEl || typeof maplibregl === 'undefined') return;
+
+      var map = new maplibregl.Map({{
+        container: 'map',
+        style: {{
+          version: 8,
+          sources: {{
+            'osm': {{
+              type: 'raster',
+              tiles: ['https://tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png'],
+              tileSize: 256,
+              attribution: '&copy; OpenStreetMap contributors'
+            }}
+          }},
+          layers: [{{ id: 'osm', type: 'raster', source: 'osm' }}]
+        }},
+        center: [-95, 38],
+        zoom: 3,
+        maxZoom: 12
+      }});
+
+      // Load tornado storm data
+      fetch('/data/live-tornadoes.json')
+        .then(function(r) {{ return r.json(); }})
+        .then(function(data) {{
+          var maxProb = 0;
+          var nStorms = data.n_active_storms || 0;
+          (data.storms || []).forEach(function(s) {{
+            if (s.tornado_probability > maxProb) maxProb = s.tornado_probability;
+            var el = document.createElement('div');
+            el.style.width = (12 + s.tornado_probability * 30) + 'px';
+            el.style.height = (12 + s.tornado_probability * 30) + 'px';
+            el.style.borderRadius = '50%';
+            el.style.backgroundColor = s.tornado_probability > 0.3 ? '#EF4444' :
+                                        s.tornado_probability > 0.15 ? '#F59E0B' : '#14B8A6';
+            el.style.border = '2px solid rgba(255,255,255,0.3)';
+            el.style.cursor = 'pointer';
+
+            var popup = new maplibregl.Popup({{ offset: 15 }})
+              .setHTML('<strong>Storm ' + s.storm_id + '</strong><br>' +
+                       'Probability: <span class="mono">' + (s.tornado_probability * 100).toFixed(1) + '%</span><br>' +
+                       'CAPE: <span class="mono">' + (s.mucape || 0) + '</span> J/kg<br>' +
+                       '<a href="/live/tornado/#storm-1">View details &rarr;</a>');
+
+            new maplibregl.Marker({{ element: el }})
+              .setLngLat([s.lon, s.lat])
+              .setPopup(popup)
+              .addTo(map);
+          }});
+
+          // Update hero threat level dynamically (in case data is newer than baked HTML)
+          var level = document.getElementById('threat-level');
+          var subtitle = document.getElementById('hero-subtitle');
+          if (level && subtitle) {{
+            if (maxProb > 0.4) {{
+              level.textContent = 'CRITICAL';
+              level.className = 'threat-level critical';
+              subtitle.textContent = nStorms + ' storms tracked. Highest tornado probability: ' + (maxProb * 100).toFixed(0) + '%.';
+            }} else if (maxProb > 0.2) {{
+              level.textContent = 'ELEVATED';
+              level.className = 'threat-level elevated';
+              subtitle.textContent = nStorms + ' storms tracked. Highest tornado probability: ' + (maxProb * 100).toFixed(0) + '%.';
+            }}
+          }}
+
+          // Update tornado card
+          var toProb = document.getElementById('to-prob');
+          var toStatus = document.getElementById('to-status');
+          if (toProb) toProb.textContent = (maxProb * 100).toFixed(1) + '%';
+          if (toStatus) toStatus.textContent = nStorms + ' active storms';
+        }})
+        .catch(function() {{}});
+
+      // Load hurricane data
+      fetch('/data/live-storms.json')
+        .then(function(r) {{ return r.json(); }})
+        .then(function(data) {{
+          var storms = data.storms || [];
+          if (storms.length > 0) {{
+            var top = storms[0];
+            var huProb = document.getElementById('hu-prob');
+            var huStatus = document.getElementById('hu-status');
+            if (huProb) huProb.textContent = ((top.ri_probability || 0) * 100).toFixed(1) + '%';
+            if (huStatus) huStatus.textContent = (top.storm_name || 'Active') + ' (' + (top.category || '--') + ')';
+
+            storms.forEach(function(s) {{
+              if (s.lat && s.lon) {{
+                var el = document.createElement('div');
+                el.style.width = '16px';
+                el.style.height = '16px';
+                el.style.borderRadius = '50%';
+                el.style.backgroundColor = '#10B981';
+                el.style.border = '2px solid rgba(255,255,255,0.3)';
+
+                new maplibregl.Marker({{ element: el }})
+                  .setLngLat([s.lon, s.lat])
+                  .addTo(map);
+              }}
+            }});
+          }}
+        }})
+        .catch(function() {{}});
+
+      // Load pulse data for earthquake
+      fetch('/data/live-pulse.json')
+        .then(function(r) {{ return r.json(); }})
+        .then(function(data) {{
+          var hazards = data.hazards || [];
+          hazards.forEach(function(h) {{
+            if (h.key === 'eq') {{
+              var eqProb = document.getElementById('eq-prob');
+              var eqStatus = document.getElementById('eq-status');
+              if (eqProb) eqProb.textContent = ((h.probability || 0) * 100).toFixed(1) + '%';
+              if (eqStatus) eqStatus.textContent = h.risk_band || 'monitoring';
+            }}
+          }});
+        }})
+        .catch(function() {{}});
+    }})();
+  </script>
 
 </body>
 </html>
 """
     homepage_path.write_text(homepage, encoding="utf-8")
-    print(f"  Wrote {homepage_path} (zero JS, all data baked in)")
+    print(f"  Wrote {homepage_path} (MapLibre + data baked in)")
 
 
 def append_ledger(

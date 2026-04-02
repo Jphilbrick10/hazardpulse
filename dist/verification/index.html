@@ -36,6 +36,7 @@
   </script>
 </head>
 <body>
+  <div class="live-bar"></div>
   <div class="emergency-banner" role="alert" aria-live="assertive"></div>
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -130,22 +131,22 @@
       <h2 id="summary-heading">System-wide summary (rolling 90 days)</h2>
       <div class="grid">
         <div class="card col-3">
-          <div class="metric">0.143</div>
+          <div class="metric mono">0.143</div>
           <div class="metric-label">Mean Brier score</div>
           <p class="muted" style="font-size:12px;margin-top:4px;">Lower is better. 0 = perfect, 0.25 = no skill.</p>
         </div>
         <div class="card col-3">
-          <div class="metric">0.772</div>
+          <div class="metric mono">0.772</div>
           <div class="metric-label">Mean AUC</div>
           <p class="muted" style="font-size:12px;margin-top:4px;">Area under ROC curve. 1.0 = perfect discrimination.</p>
         </div>
         <div class="card col-3">
-          <div class="metric">+0.17</div>
+          <div class="metric mono">+0.17</div>
           <div class="metric-label">Mean Brier skill score</div>
           <p class="muted" style="font-size:12px;margin-top:4px;">Improvement over climatological baseline.</p>
         </div>
         <div class="card col-3">
-          <div class="metric">2.8%</div>
+          <div class="metric mono">2.8%</div>
           <div class="metric-label">Mean calibration error</div>
           <p class="muted" style="font-size:12px;margin-top:4px;">Average abs difference between predicted and observed rates.</p>
         </div>
@@ -158,12 +159,12 @@
       <div class="grid">
         <div class="card col-6">
           <h3>Scores</h3>
-          <div class="kv"><span>Brier score</span><strong>0.142</strong></div>
-          <div class="kv"><span>Brier skill score</span><strong>+0.18</strong></div>
-          <div class="kv"><span>AUC</span><strong>0.768</strong></div>
-          <div class="kv"><span>Log score</span><strong>-0.384</strong></div>
-          <div class="kv"><span>Sharpness</span><strong>0.072</strong></div>
-          <div class="kv"><span>Forecasts resolved</span><strong>363</strong></div>
+          <div class="kv"><span>Brier score</span><strong class="mono">0.142</strong></div>
+          <div class="kv"><span>Brier skill score</span><strong class="mono">+0.18</strong></div>
+          <div class="kv"><span>AUC</span><strong class="mono">0.768</strong></div>
+          <div class="kv"><span>Log score</span><strong class="mono">-0.384</strong></div>
+          <div class="kv"><span>Sharpness</span><strong class="mono">0.072</strong></div>
+          <div class="kv"><span>Forecasts resolved</span><strong class="mono">363</strong></div>
         </div>
         <div class="card col-6">
           <h3>Calibration (reliability)</h3>
@@ -215,12 +216,12 @@
       <div class="grid">
         <div class="card col-6">
           <h3>Scores</h3>
-          <div class="kv"><span>Brier score</span><strong>0.168</strong></div>
-          <div class="kv"><span>Brier skill score</span><strong>+0.22</strong></div>
-          <div class="kv"><span>AUC</span><strong>0.938</strong></div>
-          <div class="kv"><span>Log score</span><strong>-0.421</strong></div>
-          <div class="kv"><span>Sharpness</span><strong>0.089</strong></div>
-          <div class="kv"><span>Forecasts resolved</span><strong>303</strong></div>
+          <div class="kv"><span>Brier score</span><strong class="mono">0.168</strong></div>
+          <div class="kv"><span>Brier skill score</span><strong class="mono">+0.22</strong></div>
+          <div class="kv"><span>AUC</span><strong class="mono">0.938</strong></div>
+          <div class="kv"><span>Log score</span><strong class="mono">-0.421</strong></div>
+          <div class="kv"><span>Sharpness</span><strong class="mono">0.089</strong></div>
+          <div class="kv"><span>Forecasts resolved</span><strong class="mono">303</strong></div>
         </div>
         <div class="card col-6">
           <h3>Calibration (reliability)</h3>
@@ -275,12 +276,12 @@
       <div class="grid">
         <div class="card col-6">
           <h3>Scores (day-ahead formation: hp-tornado-meso-v1.4.2)</h3>
-          <div class="kv"><span>Brier score</span><strong>0.231</strong></div>
-          <div class="kv"><span>Brier skill score</span><strong>+0.12</strong></div>
-          <div class="kv"><span>AUC</span><strong>0.644</strong></div>
-          <div class="kv"><span>Log score</span><strong>-0.342</strong></div>
-          <div class="kv"><span>Sharpness</span><strong>0.054</strong></div>
-          <div class="kv"><span>Forecasts resolved</span><strong>453</strong></div>
+          <div class="kv"><span>Brier score</span><strong class="mono">0.231</strong></div>
+          <div class="kv"><span>Brier skill score</span><strong class="mono">+0.12</strong></div>
+          <div class="kv"><span>AUC</span><strong class="mono">0.644</strong></div>
+          <div class="kv"><span>Log score</span><strong class="mono">-0.342</strong></div>
+          <div class="kv"><span>Sharpness</span><strong class="mono">0.054</strong></div>
+          <div class="kv"><span>Forecasts resolved</span><strong class="mono">453</strong></div>
         </div>
         <div class="card col-6">
           <h3>Calibration (reliability)</h3>
@@ -327,8 +328,8 @@
         <div class="card col-12">
           <h3>Storm-object coherence model (hp-tornado-coherence-v1)</h3>
           <p class="muted" style="margin-bottom:8px;">Scores ProbSevere storm objects using Coherence Field Theory diagnostics. Research status — accumulating verification data.</p>
-          <div class="kv"><span>AUC</span><strong>0.894 (2024 strict temporal holdout)</strong></div>
-          <div class="kv"><span>Features</span><strong>41</strong></div>
+          <div class="kv"><span>AUC</span><strong><span class="mono">0.894</span> (2024 strict temporal holdout)</strong></div>
+          <div class="kv"><span>Features</span><strong class="mono">41</strong></div>
           <div class="kv"><span>Status</span><strong>Research / Accumulating</strong></div>
         </div>
       </div>
