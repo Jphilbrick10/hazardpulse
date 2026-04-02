@@ -96,8 +96,8 @@
     <section class="hero-observatory">
       <div class="container">
         <p class="eyebrow">GLOBAL HAZARD INTELLIGENCE</p>
-        <h1 class="threat-level clear" id="threat-level">MONITORING</h1>
-        <p class="hero-subtitle" id="hero-subtitle">Loading hazard data...</p>
+        <h1 class="threat-level critical" id="threat-level">CRITICAL</h1>
+        <p class="hero-subtitle" id="hero-subtitle">82 hazard events tracked. Highest probability: 56.0%.</p>
       </div>
     </section>
 
@@ -267,7 +267,7 @@
               <h2>System health</h2>
               <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Is HazardPulse working properly?</p>
               <div class="card">
-                <div class="kv"><span>Last update</span><strong>Thu, 02 Apr 2026 15:10:25 UTC</strong></div>
+                <div class="kv"><span>Last update</span><strong>Thu, 02 Apr 2026 15:15:05 UTC</strong></div>
                 <div class="kv"><span>Active storms</span><strong>82 tracked globally</strong></div>
                 <div class="kv"><span>Hazard types</span><strong>3 hazard types monitored</strong></div>
                 <div class="kv"><span>Gate status</span><strong style="color:var(--good)">All gates passed</strong></div>
@@ -380,26 +380,14 @@
           var level = document.getElementById('threat-level');
           var subtitle = document.getElementById('hero-subtitle');
           if (level && subtitle) {
-            if (maxProb > 0.50) {
-              level.textContent = 'HIGH';
+            if (maxProb > 0.4) {
+              level.textContent = 'CRITICAL';
               level.className = 'threat-level critical';
               subtitle.textContent = nStorms + ' storms tracked. Highest tornado probability: ' + (maxProb * 100).toFixed(0) + '%.';
-            } else if (maxProb > 0.30) {
+            } else if (maxProb > 0.2) {
               level.textContent = 'ELEVATED';
               level.className = 'threat-level elevated';
-              subtitle.textContent = nStorms + ' storms tracked. Elevated tornado risk.';
-            } else if (maxProb > 0.15) {
-              level.textContent = 'GUARDED';
-              level.className = 'threat-level clear';
-              subtitle.textContent = nStorms + ' storms tracked. Moderate severe weather.';
-            } else if (nStorms > 0) {
-              level.textContent = 'MONITORING';
-              level.className = 'threat-level clear';
-              subtitle.textContent = nStorms + ' storms tracked. No significant tornado threats.';
-            } else {
-              level.textContent = 'ALL CLEAR';
-              level.className = 'threat-level clear';
-              subtitle.textContent = 'No active severe weather detected.';
+              subtitle.textContent = nStorms + ' storms tracked. Highest tornado probability: ' + (maxProb * 100).toFixed(0) + '%.';
             }
           }
 
