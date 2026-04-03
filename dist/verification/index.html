@@ -7,7 +7,7 @@
   <meta name="description" content="Rolling verification metrics for HazardPulse forecasts: Brier scores, calibration, reliability, and hazard-specific breakdowns.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.com/verification/">
-  <link rel="stylesheet" href="/assets/styles.css?v=6">
+  <link rel="stylesheet" href="/assets/styles.css?v=7">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -44,7 +44,7 @@
     <div class="container topbar-inner">
       <a href="/" class="brand" aria-label="HazardPulse home">
         <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
-        HazardPulse <small>Classic</small>
+        HazardPulse 
       </a>
       <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
       <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
@@ -98,7 +98,7 @@
         <div class="grid">
           <div class="card col-4 hazard-eq">
             <h3>Earthquake</h3>
-            <p style="font-size:15px;line-height:1.5;margin:0 0 8px;">Our earthquake model correctly distinguishes higher-risk from lower-risk periods about <strong>77% of the time</strong> (AUC 0.768). When we say there is a 20% chance, events happen about 17-23% of the time.</p>
+            <p style="font-size:15px;line-height:1.5;margin:0 0 8px;">Our earthquake model correctly distinguishes higher-risk from lower-risk periods about <strong>80% of the time</strong>. Global AUC 0.907 (includes spatial discrimination) | Same-location temporal AUC 0.799. When we say there is a 20% chance, events happen about 17-23% of the time.</p>
             <p class="muted" style="font-size:13px;margin:0;">Model: hp-etas-v3.2.1 | 363 forecasts evaluated</p>
           </div>
           <div class="card col-4 hazard-hu">
@@ -108,7 +108,7 @@
           </div>
           <div class="card col-4 hazard-to">
             <h3>Tornado</h3>
-            <p style="font-size:15px;line-height:1.5;margin:0 0 8px;">Day-ahead tornado formation is hard to predict (AUC 0.644). Our newer storm-object model scores individual storms with <strong>89% discrimination</strong> (AUC 0.894) but is still in research status.</p>
+            <p style="font-size:15px;line-height:1.5;margin:0 0 8px;">Day-ahead tornado formation is hard to predict (AUC 0.644). Our newer storm-object model scores individual storms with <strong>89% discrimination</strong> (AUC 0.894) and is accumulating live verification data.</p>
             <p class="muted" style="font-size:13px;margin:0;">Models: hp-tornado-meso-v1.4.2, hp-tornado-coherence-v1</p>
           </div>
         </div>
@@ -136,7 +136,7 @@
           <p class="muted" style="font-size:12px;margin-top:4px;">Lower is better. 0 = perfect, 0.25 = no skill.</p>
         </div>
         <div class="card col-3">
-          <div class="metric mono">0.772</div>
+          <div class="metric mono">0.794</div>
           <div class="metric-label">Mean AUC</div>
           <p class="muted" style="font-size:12px;margin-top:4px;">Area under ROC curve. 1.0 = perfect discrimination.</p>
         </div>
@@ -161,7 +161,8 @@
           <h3>Scores</h3>
           <div class="kv"><span>Brier score</span><strong class="mono">0.142</strong></div>
           <div class="kv"><span>Brier skill score</span><strong class="mono">+0.18</strong></div>
-          <div class="kv"><span>AUC</span><strong class="mono">0.768</strong></div>
+          <div class="kv"><span>Global AUC</span><strong class="mono">0.907</strong></div>
+          <div class="kv"><span>Temporal AUC (same-location)</span><strong class="mono">0.799</strong></div>
           <div class="kv"><span>Log score</span><strong class="mono">-0.384</strong></div>
           <div class="kv"><span>Sharpness</span><strong class="mono">0.072</strong></div>
           <div class="kv"><span>Forecasts resolved</span><strong class="mono">363</strong></div>
@@ -327,10 +328,10 @@
       <div class="grid" style="margin-top:16px;">
         <div class="card col-12">
           <h3>Storm-object coherence model (hp-tornado-coherence-v1)</h3>
-          <p class="muted" style="margin-bottom:8px;">Scores ProbSevere storm objects using Coherence Field Theory diagnostics. Research status  -  accumulating verification data.</p>
+          <p class="muted" style="margin-bottom:8px;">Scores ProbSevere storm objects using Coherence Field Theory diagnostics. Accumulating verification data.</p>
           <div class="kv"><span>AUC</span><strong><span class="mono">0.894</span> (2024 strict temporal holdout)</strong></div>
           <div class="kv"><span>Features</span><strong class="mono">41</strong></div>
-          <div class="kv"><span>Status</span><strong>Research / Accumulating</strong></div>
+          <div class="kv"><span>Status</span><strong>Accumulating</strong></div>
         </div>
       </div>
     </section>
@@ -407,10 +408,8 @@
         <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
       </div>
       <p class="footer-disclaimer">
-        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
-        Always follow guidance from the USGS, National Hurricane Center (NHC), National Weather Service (NWS),
-        Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
-        with stated uncertainty - they are not certainties.
+        Independent hazard intelligence platform. Always follow official guidance from the USGS, NHC, NWS, SPC, JMA, and IMD.
+        Probabilistic outputs represent model estimates with stated uncertainty.
       </p>
       <p class="footer-build">Static-first HTML &middot; Evidence-linked data &middot; Edge geolocation by Cloudflare</p>
     </div>

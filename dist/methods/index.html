@@ -7,7 +7,7 @@
   <meta name="description" content="How HazardPulse builds probabilistic hazard forecasts: data sources, model architectures, evaluation protocols, caveats, and governance gates.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.com/methods/">
-  <link rel="stylesheet" href="/assets/styles.css?v=6">
+  <link rel="stylesheet" href="/assets/styles.css?v=7">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -45,7 +45,7 @@
     <div class="container topbar-inner">
       <a href="/" class="brand" aria-label="HazardPulse home">
         <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
-        HazardPulse <small>Classic</small>
+        HazardPulse 
       </a>
       <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
       <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
@@ -197,7 +197,7 @@
         <div class="grid">
           <div class="card col-4 hazard-eq">
             <h3>Earthquake</h3>
-            <p class="muted">A statistical model that learns from past earthquake patterns to estimate the chance of a significant earthquake in the next 30 days. Accuracy: 77% (AUC 0.768).</p>
+            <p class="muted">A statistical model that learns from past earthquake patterns to estimate the chance of a significant earthquake in the next 30 days. Global AUC 0.907 | Temporal AUC 0.799.</p>
           </div>
           <div class="card col-4 hazard-hu">
             <h3>Hurricane</h3>
@@ -222,7 +222,8 @@
             <div class="kv"><span>Key inputs</span><strong>Seismicity rates, b-value, Coulomb stress, geodetic strain, catalog statistics</strong></div>
             <div class="kv"><span>Training cutoff</span><strong>2026-02-15</strong></div>
             <div class="kv"><span>Calibration method</span><strong>Isotonic regression on holdout</strong></div>
-            <div class="kv"><span>AUC</span><strong>0.768</strong></div>
+            <div class="kv"><span>Global AUC</span><strong>0.907</strong></div>
+            <div class="kv"><span>Temporal AUC</span><strong>0.799</strong></div>
           </div>
 
           <div class="card col-4 hazard-hu">
@@ -253,7 +254,7 @@
             <div class="kv"><span>Training cutoff</span><strong>2026-03-15</strong></div>
             <div class="kv"><span>Calibration method</span><strong>Platt scaling on 2024 strict temporal holdout</strong></div>
             <div class="kv"><span>AUC</span><strong>0.894 (2024 test, strict temporal)</strong></div>
-            <div class="kv"><span>Status</span><strong>Research / Accumulating</strong></div>
+            <div class="kv"><span>Status</span><strong>Accumulating</strong></div>
           </div>
         </div>
       </div>
@@ -310,7 +311,7 @@
       <div data-depth="simple">
         <div class="card">
           <ul>
-            <li><strong>This is a research tool, not an official warning system.</strong> Always follow guidance from the National Weather Service at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</li>
+            <li><strong>Always follow official NWS/USGS guidance.</strong> Visit the National Weather Service at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</li>
             <li><strong>A 40% probability does not mean it will happen.</strong> It means there is a 60% chance it will not.</li>
             <li><strong>Our models are not perfect.</strong> We publish our accuracy scores so you can judge for yourself.</li>
           </ul>
@@ -319,8 +320,8 @@
       <div data-depth="technical">
         <div class="card">
           <ul>
-            <li><strong>These are not official forecasts.</strong> HazardPulse provides experimental research
-              outputs. Always follow guidance from USGS, NHC, NWS, and SPC.</li>
+            <li><strong>These are not official forecasts.</strong> HazardPulse is an independent hazard intelligence
+              platform. Always follow guidance from USGS, NHC, NWS, and SPC.</li>
             <li><strong>Models have known limitations.</strong> Earthquake probability in low-seismicity regions
               has high uncertainty. Hurricane RI skill degrades for weak/disorganized systems.
               Tornado forecasting at long lead times (&gt;12h) has low sharpness.</li>
@@ -386,8 +387,8 @@
         <div class="card col-6">
           <h3>What this is</h3>
           <ul>
-            <li>Experimental probabilistic research output</li>
-            <li>A tool for understanding risk, not a replacement for official warnings</li>
+            <li>Independent probabilistic hazard intelligence</li>
+            <li>A platform for understanding risk, not a replacement for official warnings</li>
             <li>Transparent about uncertainty and limitations</li>
             <li>Fully auditable through public evidence chain</li>
           </ul>
@@ -430,10 +431,8 @@
         <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
       </div>
       <p class="footer-disclaimer">
-        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
-        Always follow guidance from the USGS, National Hurricane Center (NHC), National Weather Service (NWS),
-        Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
-        with stated uncertainty - they are not certainties.
+        Independent hazard intelligence platform. Always follow official guidance from the USGS, NHC, NWS, SPC, JMA, and IMD.
+        Probabilistic outputs represent model estimates with stated uncertainty.
       </p>
       <p class="footer-build">Static-first HTML &middot; Evidence-linked data &middot; Edge geolocation by Cloudflare</p>
     </div>

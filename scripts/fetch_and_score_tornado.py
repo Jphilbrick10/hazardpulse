@@ -1,6 +1,6 @@
-# IMPORTANT: This software is for RESEARCH PURPOSES ONLY.
-# It is NOT an operational tornado warning system.
-# It does NOT replace official NWS tornado warnings.
+# Independent hazard intelligence platform.
+# Always follow official NWS tornado warnings.
+# See weather.gov for authoritative data.
 # Always follow guidance from the National Weather Service (weather.gov).
 # False negatives (missed tornadoes) WILL occur. Do NOT rely on this
 # system for safety-critical decisions.
@@ -1422,7 +1422,7 @@ def render_tornado_page(
     """Generate complete static HTML for the tornado live page.
 
     All data is embedded directly in the HTML. Zero JavaScript.
-    Follows the HazardPulse Classic Truth Surface spec.
+    Follows the HazardPulse Truth Surface spec.
     """
     tier_label = TIER_LABELS.get(scoring_tier, scoring_tier)
     updated_str = _format_time(now.isoformat() + "Z")
@@ -2772,7 +2772,7 @@ def render_live_overview_page(now: dt.datetime, scoring_tier: str) -> None:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Live Forecasts - HazardPulse</title>
-  <meta name="description" content="Static live overview for the current earthquake, hurricane, and tornado research forecasts.">
+  <meta name="description" content="Static live overview for the current earthquake, hurricane, and tornado forecasts.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/live/">
   <link rel="stylesheet" href="/assets/styles.css?v=7">
@@ -2780,11 +2780,11 @@ def render_live_overview_page(now: dt.datetime, scoring_tier: str) -> None:
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Live Forecasts - HazardPulse">
-  <meta property="og:description" content="Static live overview for the current earthquake, hurricane, and tornado research forecasts.">
+  <meta property="og:description" content="Static live overview for the current earthquake, hurricane, and tornado forecasts.">
   <meta property="og:url" content="{PRIMARY_DOMAIN}/live/">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Live Forecasts - HazardPulse">
-  <meta name="twitter:description" content="Static live overview for the current earthquake, hurricane, and tornado research forecasts.">
+  <meta name="twitter:description" content="Static live overview for the current earthquake, hurricane, and tornado forecasts.">
 </head>
 <body>
   <div class="live-bar"></div>
@@ -2795,7 +2795,6 @@ def render_live_overview_page(now: dt.datetime, scoring_tier: str) -> None:
       <a href="/" class="brand" aria-label="HazardPulse home">
         <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
         HazardPulse
-        <small>Classic</small>
       </a>
       <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
       <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
@@ -2827,7 +2826,7 @@ def render_live_overview_page(now: dt.datetime, scoring_tier: str) -> None:
   <main id="main" class="container">
     <section class="hero">
       <div class="eyebrow">Static live overview</div>
-      <h1>Current research forecasts</h1>
+      <h1>Current forecasts</h1>
       <p class="subtitle">
         This page is generated directly from the latest saved artifacts in <code>/data</code>.
         It does not invent storms, hide missing data, or display confidence ranges that the models did not produce.
@@ -2903,8 +2902,7 @@ def render_live_overview_page(now: dt.datetime, scoring_tier: str) -> None:
         <a href="/COMMERCIAL_LICENSE.md">Commercial License</a>
       </div>
       <p class="footer-disclaimer">
-        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
-        Always follow guidance from the USGS, NHC, NWS, SPC, and your local emergency authorities.
+        Independent hazard intelligence platform. Always follow official guidance from the USGS, NHC, NWS, SPC, and your local emergency authorities.
       </p>
       <p class="footer-build">Static-first HTML &middot; Live data under <code>/data</code> &middot; Edge geolocation by Cloudflare</p>
     </div>
@@ -3107,7 +3105,7 @@ def render_homepage_cards(
         <p class="eyebrow">GLOBAL HAZARD INTELLIGENCE</p>
         <h1 class="threat-level elevated">Static-first live dashboard</h1>
         <p class="hero-subtitle">{_esc(hero_text)}</p>
-        <p class="muted">Updated {_esc(updated_at)} &middot; Experimental research outputs only</p>
+        <p class="muted">Updated {_esc(updated_at)} &middot; Independent hazard intelligence platform</p>
       </div>
     </section>
 

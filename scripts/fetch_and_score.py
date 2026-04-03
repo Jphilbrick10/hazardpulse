@@ -568,7 +568,6 @@ def render_hurricane_page(
       <a href="/" class="brand" aria-label="HazardPulse home">
         <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
         HazardPulse
-        <small>Classic</small>
       </a>
       <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
       <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
@@ -605,7 +604,7 @@ def render_hurricane_page(
         This page is rendered from the current tropical cyclone feed. When there are no active storms,
         it says so plainly instead of showing synthetic examples.
       </p>
-      <p class="muted">Updated {_esc(_format_time(now))} &middot; Model: hurricane_ri_v8_1 &middot; Experimental research output only</p>
+      <p class="muted">Updated {_esc(_format_time(now))} &middot; Model: hurricane_ri_v8_1 &middot; Independent hazard intelligence platform</p>
     </section>
 
     <section class="section">
@@ -643,8 +642,7 @@ def render_hurricane_page(
         <a href="/COMMERCIAL_LICENSE.md">Commercial License</a>
       </div>
       <p class="footer-disclaimer">
-        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
-        Always follow guidance from the NHC, JTWC, WMO RSMCs, and local emergency authorities.
+        Independent hazard intelligence platform. Always follow official guidance from the NHC, JTWC, WMO RSMCs, and local emergency authorities.
       </p>
       <p class="footer-build">Static-first HTML &middot; Live data under <code>/data</code> &middot; Edge geolocation by Cloudflare</p>
     </div>

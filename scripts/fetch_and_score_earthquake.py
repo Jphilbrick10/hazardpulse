@@ -1,6 +1,6 @@
-# IMPORTANT: This software is for RESEARCH PURPOSES ONLY.
-# It is NOT an operational earthquake prediction system.
-# It does NOT replace official USGS or national seismological agency warnings.
+# Independent hazard intelligence platform.
+# Always follow official USGS and national seismological agency guidance.
+# See earthquake.usgs.gov for authoritative data.
 # Always follow guidance from your national geological survey (USGS, JMA, etc.).
 # False negatives (missed earthquakes) WILL occur. Do NOT rely on this
 # system for safety-critical decisions.
@@ -700,7 +700,7 @@ def render_earthquake_page(
     """Generate complete static HTML for the earthquake live page.
 
     All data is embedded directly in the HTML. Zero JavaScript.
-    Follows the HazardPulse Classic Truth Surface spec.
+    Follows the HazardPulse Truth Surface spec.
     """
     updated_str = _format_time(now.isoformat() + "Z")
 
@@ -726,9 +726,9 @@ def render_earthquake_page(
 
     # Build disclaimer
     disclaimer = (
-        "RESEARCH ONLY. NOT an operational earthquake prediction system. "
-        "Does NOT replace USGS, JMA, or any national geological survey warnings. "
-        "Always follow official guidance. See earthquake.usgs.gov for authoritative data."
+        "Independent hazard intelligence platform. "
+        "Always follow official USGS and national geological survey guidance. "
+        "See earthquake.usgs.gov for authoritative data."
     )
 
     # Status bar
@@ -782,7 +782,7 @@ def render_earthquake_page(
   <meta name="description" content="30-day M6.0+ earthquake probability for global seismic zones. Grid cells ranked by coherence field singularity conditions with full evidence.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/live/earthquake/">
-  <link rel="stylesheet" href="/assets/styles.css?v=4">
+  <link rel="stylesheet" href="/assets/styles.css?v=7">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -831,7 +831,6 @@ def render_earthquake_page(
       <a href="/" class="brand" aria-label="HazardPulse home">
         <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
         HazardPulse
-        <small>Classic</small>
       </a>
       <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
       <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
@@ -904,7 +903,6 @@ def render_earthquake_page(
       <!-- DISCLAIMER BANNER -->
       <section class="section">
         <div class="card" style="background:var(--warn-bg,#fff8e1);border-left:4px solid var(--warn,#c98a12);padding:12px 16px;">
-          <strong>Research Only</strong> --
           {_esc(disclaimer)}
         </div>
       </section>
@@ -967,10 +965,8 @@ def render_earthquake_page(
         <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
       </div>
       <p class="footer-disclaimer">
-        HazardPulse provides experimental research outputs only. These are not official forecasts or warnings.
-        Always follow guidance from the USGS, National Hurricane Center (NHC), National Weather Service (NWS),
-        Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
-        with stated uncertainty - they are not certainties.
+        Independent hazard intelligence platform. Always follow official guidance from the USGS, NHC, NWS, SPC, JMA, and IMD.
+        Probabilistic outputs represent model estimates with stated uncertainty.
       </p>
       <p class="footer-build">Static-first HTML &middot; Evidence-linked data &middot; Edge geolocation by Cloudflare</p>
     </div>

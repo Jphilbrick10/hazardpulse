@@ -356,7 +356,7 @@
   </g>
 
   <!-- Tectonic plate boundaries -->
-  <g class="tectonic-overlays" style="display:none" aria-label="Tectonic plate boundaries">
+  <g class="tectonic-overlays" aria-label="Tectonic plate boundaries">
     <polyline class="tectonic-line" points="0.0,101.3 53.3,93.3 106.7,85.3 133.3,106.7 160.0,133.3 173.3,154.7 200.0,186.7 213.3,200.0 240.0,200.0 266.7,213.3 280.0,226.7 266.7,253.3 261.3,293.3 280.0,346.7 293.3,386.7 298.7,400.0"/>
     <polyline class="tectonic-line" points="506.7,333.3 520.0,320.0 546.7,320.0 560.0,306.7 573.3,293.3 586.7,272.0 600.0,253.3 613.3,213.3 626.7,200.0 640.0,173.3 653.3,146.7 666.7,133.3 672.0,120.0"/>
     <polyline class="tectonic-line" points="720.0,226.7 733.3,253.3 746.7,266.7 760.0,253.3 773.3,240.0 786.7,226.7 800.0,213.3 813.3,200.0 826.7,186.7 840.0,173.3 853.3,160.0 858.7,146.7"/>
@@ -381,7 +381,7 @@
   </g>
 
   <!-- Tornado regions -->
-  <g class="tornado-overlays" style="display:none" aria-label="Known tornado-prone regions">
+  <g class="tornado-overlays" aria-label="Known tornado-prone regions">
     <polygon class="tornado-region" points="208.0,138.7 226.7,138.7 229.3,152.0 213.3,152.0"/>
     <text class="grid-label" x="219.3" y="145.3" text-anchor="middle" font-size="6" opacity="0.4">Tornado Alley</text>
     <polygon class="tornado-region" points="234.7,144.0 256.0,144.0 256.0,157.3 234.7,157.3"/>
@@ -394,16 +394,7 @@
 
   <!-- Hazard markers (page-specific, inserted per page) -->
   <g class="hazard-markers">
-    <a href="/live/hurricane/#storm-1" aria-label="Hurricane Alice - 37.2% RI probability">
-      <circle class="hz-pulse hz-pulse-hu hz-pulse-delay-1" cx="308.0" cy="187.3" r="4"/>
-      <circle class="hz-pulse hz-pulse-hu hz-pulse-delay-2" cx="308.0" cy="187.3" r="4"/>
-      <circle class="hz-marker hz-marker-hu" cx="308.0" cy="187.3" r="6.2" filter="url(#glow-hu)"/>
-      <g class="map-tooltip">
-        <rect class="tooltip-bg" x="318.0" y="169.3" width="92" height="22" rx="3"/>
-        <text class="tooltip-text" x="320.0" y="179.3">Hurricane Alice</text>
-        <text class="tooltip-sub" x="320.0" y="188.3">37.2% RI · Cat 1</text>
-      </g>
-    </a>
+    <!-- Markers go here per page -->
   </g>
 
   <!-- User location marker (positioned by Worker CSS vars) -->
