@@ -191,11 +191,15 @@ function errorEnvelope(code, message, status = 404) {
 }
 
 function assetRequest(pathname) {
-  return new Request(`https://assets${pathname}`);
+  return new Request(new URL(pathname, PRIMARY_DOMAIN).toString());
 }
 
 async function fetchAsset(env, pathname) {
-  return env.ASSETS.fetch(assetRequest(pathname));
+  try {
+    return await env.ASSETS.fetch(assetRequest(pathname));
+  } catch {
+    return new Response(null, { status: 404 });
+  }
 }
 
 async function fetchAssetJson(env, pathname) {

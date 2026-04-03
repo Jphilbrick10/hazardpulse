@@ -58,6 +58,9 @@ const env = {
   ASSETS: {
     async fetch(request) {
       const url = new URL(request.url);
+      if (url.hostname !== "hazardpulse.com") {
+        throw new Error(`unexpected asset host: ${url.hostname}`);
+      }
       const filePath = resolveAssetPath(url.pathname);
       if (!existsSync(filePath)) {
         return new Response("not found", { status: 404 });
