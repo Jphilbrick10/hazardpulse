@@ -204,7 +204,7 @@ async function fetchAsset(env, pathname) {
   } catch {}
 
   try {
-    return await fetch(request);
+    return await fetch(new Request(new URL(pathname, PRIMARY_DOMAIN).toString()));
   } catch {
     return new Response(null, { status: 404 });
   }
