@@ -1530,10 +1530,10 @@ body:has(.theme-toggle:checked)[data-alert="warning"] .topbar {
 
 /* Oceans and background */
 .world-map .ocean {
-  fill: #0a1628;
+  fill: #e8f0fe;
   transition: fill var(--dur) var(--ease);
 }
-body:has(.theme-toggle:checked) .world-map .ocean { fill: #e8f0fe; }
+body:has(.theme-toggle:checked) .world-map .ocean { fill: #0a1628; }
 
 /* Grid lines (equator, tropics, meridians) */
 .world-map .grid-line {
@@ -1552,12 +1552,12 @@ body:has(.theme-toggle:checked) .world-map .ocean { fill: #e8f0fe; }
 
 /* Continents / countries */
 .world-map .land {
-  fill: #162038;
-  stroke: #243050;
+  fill: #dce6f2;
+  stroke: #c4d0e0;
   stroke-width: 0.4;
   transition: fill var(--dur) var(--ease), stroke var(--dur) var(--ease);
 }
-body:has(.theme-toggle:checked) .world-map .land { fill: #dce6f2; stroke: var(--line); }
+body:has(.theme-toggle:checked) .world-map .land { fill: #162038; stroke: #243050; }
 
 .world-map .land:hover {
   fill: var(--panel-hover);
