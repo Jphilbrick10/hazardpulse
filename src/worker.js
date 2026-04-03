@@ -31,6 +31,44 @@ const AGENCY_LINKS = {
     '<a href="https://www.weather.gov/" rel="noopener">NWS</a>',
 };
 
+function isFiniteCoordinate(value) {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function hasReliableGeo(geo) {
+  if (!geo) return false;
+  if (!isFiniteCoordinate(geo.latitude) || !isFiniteCoordinate(geo.longitude)) {
+    return false;
+  }
+  if (geo.latitude < -90 || geo.latitude > 90) return false;
+  if (geo.longitude < -180 || geo.longitude > 180) return false;
+  if (Math.abs(geo.latitude) < 0.25 && Math.abs(geo.longitude) < 0.25) {
+    return false;
+  }
+  return Boolean(
+    geo.city || geo.country || geo.region || geo.timezone || geo.continent
+  );
+}
+
+function normalizeGeo(cf = {}) {
+  const latitude =
+    cf.latitude !== undefined && cf.latitude !== null ? Number(cf.latitude) : null;
+  const longitude =
+    cf.longitude !== undefined && cf.longitude !== null ? Number(cf.longitude) : null;
+
+  const geo = {
+    latitude: isFiniteCoordinate(latitude) ? latitude : null,
+    longitude: isFiniteCoordinate(longitude) ? longitude : null,
+    city: cf.city || null,
+    country: cf.country || null,
+    region: cf.region || null,
+    continent: cf.continent || null,
+    timezone: cf.timezone || null,
+  };
+  geo.isReliable = hasReliableGeo(geo);
+  return geo;
+}
+
 function withSecurityHeaders(
   response,
   { cacheControl, xRobotsTag, contentSecurityPolicy, vary } = {}
@@ -55,6 +93,11 @@ function withSecurityHeaders(
   secured.headers.set("X-Frame-Options", "DENY");
   secured.headers.set("X-Build-Mode", "observatory-v7");
   if (cacheControl) secured.headers.set("Cache-Control", cacheControl);
+  if (cacheControl && cacheControl.includes("no-store")) {
+    secured.headers.set("CDN-Cache-Control", "no-store");
+    secured.headers.set("Cloudflare-CDN-Cache-Control", "no-store");
+    secured.headers.set("Surrogate-Control", "no-store");
+  }
   if (xRobotsTag) secured.headers.set("X-Robots-Tag", xRobotsTag);
   if (vary) secured.headers.set("Vary", vary);
   return secured;
@@ -191,9 +234,7 @@ function errorEnvelope(code, message, status = 404) {
 }
 
 function assetRequest(pathname) {
-  return new Request(new URL(pathname, PRIMARY_DOMAIN).toString(), {
-    headers: { "X-HazardPulse-Asset-Request": "1" },
-  });
+  return new Request(new URL(pathname, PRIMARY_DOMAIN).toString());
 }
 
 async function fetchAsset(env, pathname) {
@@ -214,7 +255,8 @@ async function fetchAssetJson(env, pathname) {
   const response = await fetchAsset(env, pathname);
   if (!response.ok) return null;
   try {
-    return await response.json();
+    const text = await response.text();
+    return JSON.parse(text.replace(/^\uFEFF/, ""));
   } catch {
     return null;
   }
@@ -270,8 +312,15 @@ class BodyHandler {
     try {
       const { geo, threat } = this;
       el.setAttribute("data-alert", threat.alertLevel);
-      el.setAttribute("data-lat", geo.latitude !== null ? geo.latitude : "");
-      el.setAttribute("data-lon", geo.longitude !== null ? geo.longitude : "");
+      el.setAttribute("data-geo-valid", geo.isReliable ? "true" : "false");
+      el.setAttribute(
+        "data-lat",
+        geo.isReliable && geo.latitude !== null ? geo.latitude : ""
+      );
+      el.setAttribute(
+        "data-lon",
+        geo.isReliable && geo.longitude !== null ? geo.longitude : ""
+      );
       el.setAttribute("data-city", escapeHtml(geo.city) || "");
       el.setAttribute("data-country", escapeHtml(geo.country) || "");
       el.setAttribute("data-continent", escapeHtml(geo.continent) || "");
@@ -284,13 +333,16 @@ class BodyHandler {
 
       const mapW = 960;
       const mapH = 480;
-      const hasCoords = geo.latitude !== null && geo.longitude !== null;
-      const ux = hasCoords ? eqProjectX(geo.longitude, mapW).toFixed(1) : "480";
-      const uy = hasCoords ? eqProjectY(geo.latitude, mapH).toFixed(1) : "240";
+      const hasCoords =
+        geo.isReliable && geo.latitude !== null && geo.longitude !== null;
+      const ux = hasCoords ? eqProjectX(geo.longitude, mapW).toFixed(1) : "-9999";
+      const uy = hasCoords ? eqProjectY(geo.latitude, mapH).toFixed(1) : "-9999";
 
       el.setAttribute(
         "style",
-        `--user-x:${ux}px;--user-y:${uy}px;--user-lat:${geo.latitude || 0};--user-lon:${geo.longitude || 0}`
+        `--user-x:${ux}px;--user-y:${uy}px;--user-lat:${
+          hasCoords ? geo.latitude : ""
+        };--user-lon:${hasCoords ? geo.longitude : ""}`
       );
     } catch {
       // noop
@@ -307,6 +359,9 @@ class EmergencyBannerHandler {
   element(el) {
     try {
       const { threat, geo } = this;
+      if (!geo.isReliable) {
+        return;
+      }
       if (
         !threat.nearest ||
         threat.alertLevel === "none" ||
@@ -376,7 +431,19 @@ class YourAreaHandler {
   element(el) {
     try {
       const { threat, geo } = this;
-      const city = escapeHtml(geo.city) || "your area";
+      if (!geo.isReliable) {
+        el.setInnerContent(
+          `
+          <h2 id="your-area-heading">Your area</h2>
+          <p class="muted">Approximate location is currently unavailable, so local distance estimates are hidden for this session.</p>
+          <div class="card"><p class="muted">The global hazard view is still live. We only render a personal location marker when edge geolocation resolves cleanly.</p></div>
+        `,
+          { html: true }
+        );
+        return;
+      }
+
+      const city = escapeHtml(geo.city) || escapeHtml(geo.region) || "your area";
       const country = escapeHtml(geo.country) || "";
       const locationStr = country ? `${city}, ${country}` : city;
 
@@ -733,16 +800,7 @@ export default {
       return withSecurityHeaders(response);
     }
 
-    const cf = request.cf || {};
-    const geo = {
-      latitude: cf.latitude ? Number(cf.latitude) : null,
-      longitude: cf.longitude ? Number(cf.longitude) : null,
-      city: cf.city || null,
-      country: cf.country || null,
-      region: cf.region || null,
-      continent: cf.continent || null,
-      timezone: cf.timezone || null,
-    };
+    const geo = normalizeGeo(request.cf || {});
 
     const [earthquakeZones, hurricaneZones, tornadoZones] = await Promise.all([
       loadLiveEarthquakeZones(env),
@@ -752,7 +810,7 @@ export default {
     const allZones = [...earthquakeZones, ...hurricaneZones, ...tornadoZones];
 
     let threat = { alertLevel: "none", nearest: null, nearestDist: null };
-    if (geo.latitude !== null && geo.longitude !== null) {
+    if (geo.isReliable) {
       threat = computeThreatLevel(geo.latitude, geo.longitude, allZones);
     }
 
@@ -770,3 +828,12 @@ export default {
     });
   },
 };
+
+if (typeof globalThis !== "undefined") {
+  globalThis.__hazardpulse_worker_test = {
+    BodyHandler,
+    YourAreaHandler,
+    hasReliableGeo,
+    normalizeGeo,
+  };
+}

@@ -67,7 +67,9 @@ const context = vm.createContext({
 
 vm.runInContext(transformedSource, context, { filename: "worker.js" });
 const worker = context.globalThis.__worker_default;
+const workerTest = context.globalThis.__hazardpulse_worker_test;
 assert(worker && typeof worker.fetch === "function");
+assert(workerTest);
 
 const env = {
   ASSETS: {
@@ -75,9 +77,6 @@ const env = {
       const url = new URL(request.url);
       if (url.hostname !== "hazardpulse.com") {
         throw new Error(`unexpected asset host: ${url.hostname}`);
-      }
-      if (request.headers.get("X-HazardPulse-Asset-Request") === "1") {
-        return new Response("not found", { status: 404 });
       }
       const filePath = resolveAssetPath(url.pathname);
       if (!existsSync(filePath)) {
@@ -118,6 +117,58 @@ function assertHtmlSecurityHeaders(
 const homeResponse = await worker.fetch(new Request("https://hazardpulse.com/"), env);
 assertHtmlSecurityHeaders(homeResponse);
 assert.match(await homeResponse.text(), /HazardPulse/);
+
+assert.equal(
+  workerTest.hasReliableGeo({
+    latitude: 0,
+    longitude: 0,
+    city: null,
+    country: null,
+    region: null,
+    timezone: null,
+    continent: null,
+  }),
+  false
+);
+assert.equal(
+  workerTest.hasReliableGeo({
+    latitude: 40.7128,
+    longitude: -74.006,
+    city: "New York",
+    country: "US",
+    region: "New York",
+    timezone: "America/New_York",
+    continent: "NA",
+  }),
+  true
+);
+
+const invalidGeo = workerTest.normalizeGeo({ latitude: "0", longitude: "0" });
+const invalidBodyAttrs = new Map();
+new workerTest.BodyHandler(invalidGeo, {
+  alertLevel: "none",
+  nearest: null,
+  nearestDist: null,
+}).element({
+  setAttribute(name, value) {
+    invalidBodyAttrs.set(name, value);
+  },
+});
+assert.equal(invalidBodyAttrs.get("data-geo-valid"), "false");
+assert.equal(invalidBodyAttrs.get("data-lat"), "");
+assert.equal(invalidBodyAttrs.get("data-lon"), "");
+assert.match(invalidBodyAttrs.get("style") || "", /--user-x:-9999px/);
+
+let unavailableAreaHtml = "";
+new workerTest.YourAreaHandler(
+  { alertLevel: "none", nearest: null, nearestDist: null },
+  invalidGeo
+).element({
+  setInnerContent(html) {
+    unavailableAreaHtml = html;
+  },
+});
+assert.match(unavailableAreaHtml, /Approximate location is currently unavailable/);
 
 await expectJsonRoute("/api/v1/live/pulse", (data) => {
   assert.ok(Array.isArray(data.hazards));

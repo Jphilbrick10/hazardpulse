@@ -694,6 +694,8 @@ def render_earthquake_page(
     scored_cells: list[dict],
     now: dt.datetime,
     n_events_total: int = 0,
+    *,
+    forecast_id: str | None = None,
 ) -> str:
     """Generate complete static HTML for the earthquake live page.
 
@@ -933,7 +935,7 @@ def render_earthquake_page(
           <div class="card col-4">
             <h3>Replay any forecast</h3>
             <p class="muted">Download the input data and re-run any past forecast yourself. Same data in, same result out - guaranteed.</p>
-            <a href="/data/replay/eq_fcst_{now.strftime('%Y%m%d')}_0300.json" class="btn btn-secondary" style="margin-top:8px;">Download replay</a>
+            <a href="/data/replay/{_esc(forecast_id or f'eq_fcst_{now.strftime("%Y%m%d")}_0300')}.json" class="btn btn-secondary" style="margin-top:8px;">Download replay</a>
           </div>
         </div>
       </section>
@@ -1514,10 +1516,11 @@ def run_pipeline(
         )
         if not skip_site:
             page_now = now.replace(tzinfo=None)
-            eq_html = render_earthquake_page([], page_now, n_events_total=0)
-            eq_html = eq_html.replace(
-                f"/data/replay/eq_fcst_{page_now.strftime('%Y%m%d')}_0300.json",
-                f"/data/replay/{forecast_id}.json",
+            eq_html = render_earthquake_page(
+                [],
+                page_now,
+                n_events_total=0,
+                forecast_id=forecast_id,
             )
             eq_page = DIST / "live" / "earthquake" / "index.html"
             eq_page.parent.mkdir(parents=True, exist_ok=True)
@@ -1590,10 +1593,11 @@ def run_pipeline(
         print()
         print("Step 5: Rendering static HTML page (zero JS)...")
         page_now = now.replace(tzinfo=None)
-        eq_html = render_earthquake_page(scored, page_now, n_events_total=len(recent_events))
-        eq_html = eq_html.replace(
-            f"/data/replay/eq_fcst_{page_now.strftime('%Y%m%d')}_0300.json",
-            f"/data/replay/{forecast_id}.json",
+        eq_html = render_earthquake_page(
+            scored,
+            page_now,
+            n_events_total=len(recent_events),
+            forecast_id=forecast_id,
         )
         eq_page = DIST / "live" / "earthquake" / "index.html"
         eq_page.parent.mkdir(parents=True, exist_ok=True)

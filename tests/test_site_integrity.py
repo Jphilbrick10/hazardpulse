@@ -145,6 +145,29 @@ def test_worker_is_in_deploy_path() -> None:
     assert 'main = "./src/worker.js"' in wrangler_toml
 
 
+def test_personalized_live_pages_are_not_publicly_cached() -> None:
+    headers = _read_text("dist/_headers")
+    assert "/live/*" in headers
+    assert "Cache-Control: private, no-cache, no-store, must-revalidate" in headers
+    assert "/data/*" in headers
+    assert "X-Robots-Tag: noindex, nofollow" in headers
+
+
+def test_live_earthquake_forecast_references_existing_replay() -> None:
+    pulse = json.loads(_read_text("dist/data/live-pulse.json"))
+    eq = next(h for h in pulse["hazards"] if h["key"] == "eq")
+    forecast_id = eq.get("forecast_id")
+    assert forecast_id, "earthquake forecast_id should be present"
+    replay_path = ROOT / "dist" / "data" / "replay" / f"{forecast_id}.json"
+    assert replay_path.exists(), replay_path
+
+    earthquake_page = _read_text("dist/live/earthquake/index.html")
+    assert f"/data/replay/{forecast_id}.json" in earthquake_page
+
+    index_page = _read_text("dist/index.html")
+    assert forecast_id in index_page
+
+
 def test_worker_api_smoke() -> None:
     result = subprocess.run(
         ["node", str(ROOT / "tests" / "worker_api_check.mjs")],

@@ -10,8 +10,14 @@
   X-Robots-Tag: index, follow
   X-Build-Mode: observatory-v7
 
+/ 
+  Cache-Control: private, no-cache, no-store, must-revalidate
+
+/index.html
+  Cache-Control: private, no-cache, no-store, must-revalidate
+
 /live/*
-  Cache-Control: public, max-age=120
+  Cache-Control: private, no-cache, no-store, must-revalidate
 
 /verification/*
   Cache-Control: public, max-age=120
@@ -22,3 +28,4 @@
 /data/*
   Cache-Control: public, max-age=300
   Access-Control-Allow-Origin: *
+  X-Robots-Tag: noindex, nofollow

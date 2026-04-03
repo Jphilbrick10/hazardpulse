@@ -1672,8 +1672,16 @@ body:has(.theme-toggle:checked) .world-map .land { fill: #dce6f2; stroke: var(--
 
 /* User location marker (positioned by CSS custom properties from Worker) */
 .world-map .user-marker {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-9999px, -9999px);
+  transition: transform 0.5s var(--ease-spring), opacity 0.2s ease;
+}
+
+body[data-geo-valid="true"] .world-map .user-marker {
+  opacity: 1;
+  visibility: visible;
   transform: translate(var(--user-x, 480px), var(--user-y, 240px));
-  transition: transform 0.5s var(--ease-spring);
 }
 
 .world-map .user-pin {
