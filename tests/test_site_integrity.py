@@ -237,6 +237,34 @@ def test_public_html_theme_toggle_labels_are_consistent() -> None:
         assert 'aria-label="Switch to light mode"' not in text, html_path
 
 
+def test_public_pages_ship_theme_bootstrap_assets() -> None:
+    for rel_path in [
+        "dist/404.html",
+        "dist/index.html",
+        "dist/api/index.html",
+        "dist/evidence/index.html",
+        "dist/legal/disclaimer/index.html",
+        "dist/live/index.html",
+        "dist/live/earthquake/index.html",
+        "dist/live/hurricane/index.html",
+        "dist/live/tornado/index.html",
+        "dist/methods/index.html",
+        "dist/ops/status/index.html",
+        "dist/registry/index.html",
+        "dist/verification/index.html",
+        "dist/verification/tornado/index.html",
+    ]:
+        text = _read_text(rel_path)
+        assert '<script src="/assets/site-shell.js?v=2"></script>' in text, rel_path
+        assert '<link rel="stylesheet" href="/assets/styles.css?v=9">' in text, rel_path
+
+
+def test_stylesheet_dark_mode_uses_theme_attribute() -> None:
+    stylesheet = _read_text("dist/assets/styles.css")
+    assert 'body[data-theme="dark"]' in stylesheet
+    assert "body:has(.theme-toggle:checked)" not in stylesheet
+
+
 def test_sitemap_lastmod_matches_live_publish_date() -> None:
     pulse = json.loads(_read_text("dist/data/live-pulse.json"))
     publish_date = pulse["updated_at"][:10]

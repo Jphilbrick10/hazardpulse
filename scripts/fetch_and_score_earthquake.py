@@ -1019,7 +1019,8 @@ def render_earthquake_page(
   <meta name="description" content="30-day M6.0+ earthquake probability for global seismic zones. Grid cells ranked by coherence field singularity conditions with full evidence.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/live/earthquake/">
-  <link rel="stylesheet" href="/assets/styles.css?v=8">
+  <script src="/assets/site-shell.js?v=2"></script>
+  <link rel="stylesheet" href="/assets/styles.css?v=9">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">

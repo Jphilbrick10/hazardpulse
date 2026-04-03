@@ -10,7 +10,6 @@ const API_VERSION = "v1";
 const PRIMARY_DOMAIN = "https://hazardpulse.com";
 const INTERNAL_ASSET_HEADER = "x-hazardpulse-internal-asset";
 const THEME_COOKIE_NAME = "hp_theme";
-const SITE_SHELL_SRC = "/assets/site-shell.js?v=1";
 const ALERT_THRESHOLDS = { critical: 50, severe: 150, warning: 400, watch: 800 };
 const HTML_CACHE_CONTROL = "private, no-cache, no-store, must-revalidate";
 const HTML_CONTENT_SECURITY_POLICY =
@@ -417,16 +416,6 @@ class ThemeToggleHandler {
       } else {
         el.setAttribute("aria-label", "Switch to dark mode");
       }
-    } catch {
-      // noop
-    }
-  }
-}
-
-class HeadHandler {
-  element(el) {
-    try {
-      el.append(`<script src="${SITE_SHELL_SRC}" defer></script>`, { html: true });
     } catch {
       // noop
     }
@@ -915,7 +904,6 @@ export default {
     }
 
     const transformed = new HTMLRewriter()
-      .on("head", new HeadHandler())
       .on("body", new BodyHandler(geo, threat))
       .on(".theme-toggle", new ThemeToggleHandler(themePreference))
       .on(".user-marker", new UserMarkerHandler(geo))
@@ -935,7 +923,6 @@ export default {
 if (typeof globalThis !== "undefined") {
   globalThis.__hazardpulse_worker_test = {
     BodyHandler,
-    HeadHandler,
     ThemeToggleHandler,
     UserMarkerHandler,
     YourAreaHandler,

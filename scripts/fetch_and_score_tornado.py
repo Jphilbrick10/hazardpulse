@@ -1640,7 +1640,8 @@ def render_tornado_page(
   <meta name="description" content="24-hour tornado formation probability for global severe convection zones. Top cells ranked by STP/SCP indices with full evidence.">
   <meta name="theme-color" content="#FAFBFE">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/live/tornado/">
-  <link rel="stylesheet" href="/assets/styles.css?v=8">
+  <script src="/assets/site-shell.js?v=2"></script>
+  <link rel="stylesheet" href="/assets/styles.css?v=9">
   <link href="/assets/vendor/maplibre-gl.css" rel="stylesheet">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
@@ -2116,7 +2117,8 @@ def _legacy_render_homepage_cards(
   <meta name="description" content="Live probabilistic hazard forecasts for earthquakes, hurricanes, and tornadoes worldwide. Transparent uncertainty, verifiable evidence.">
   <meta name="theme-color" content="#FAFBFE">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/">
-  <link rel="stylesheet" href="/assets/styles.css?v=8">
+  <script src="/assets/site-shell.js?v=2"></script>
+  <link rel="stylesheet" href="/assets/styles.css?v=9">
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
@@ -2821,7 +2823,8 @@ def render_live_overview_page(now: dt.datetime, scoring_tier: str) -> None:
   <meta name="description" content="Static live overview for the current earthquake, hurricane, and tornado forecasts.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/live/">
-  <link rel="stylesheet" href="/assets/styles.css?v=8">
+  <script src="/assets/site-shell.js?v=2"></script>
+  <link rel="stylesheet" href="/assets/styles.css?v=9">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <meta property="og:type" content="website">
@@ -3160,7 +3163,8 @@ def render_homepage_cards(
   <meta name="description" content="Static-first hazard intelligence for earthquakes, hurricanes, and tornadoes with evidence-linked artifacts and honest uncertainty handling.">
   <meta name="theme-color" content="#FAFBFE">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/">
-  <link rel="stylesheet" href="/assets/styles.css?v=8">
+  <script src="/assets/site-shell.js?v=2"></script>
+  <link rel="stylesheet" href="/assets/styles.css?v=9">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">

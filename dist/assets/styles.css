@@ -1,15 +1,15 @@
-/* ═══════════════════════════════════════════════════════════════
-   HazardPulse Design System — Observatory Mode v6
+﻿/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   HazardPulse Design System â€” Observatory Mode v6
    Zero JS. CSS-only theming, transitions, scroll animations.
-   ═══════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ── Fonts ───────────────────────────────────────────────────── */
+/* â”€â”€ Fonts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-/* ── View Transitions ─────────────────────────────────────────── */
+/* â”€â”€ View Transitions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @view-transition { navigation: auto; }
 
-/* ── Design Tokens (Light default — Observatory Mode) ─────────── */
+/* â”€â”€ Design Tokens (Light default â€” Observatory Mode) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 :root {
   /* Surfaces */
   --bg: #FAFBFE;
@@ -25,7 +25,7 @@
   --line-subtle: #e8eef8;
   --focus-ring: #E09515;
 
-  /* Primary brand — Amber */
+  /* Primary brand â€” Amber */
   --primary: #D48A10;
   --primary-hover: #B87408;
   --primary-light: rgba(212, 138, 16, .25);
@@ -75,7 +75,7 @@
   --radius-sm: 8px;
   --radius-pill: 999px;
 
-  /* Shadows — light mode */
+  /* Shadows â€” light mode */
   --shadow-card: 0 1px 3px rgba(26,39,68,.06), 0 1px 2px rgba(26,39,68,.04);
   --shadow-card-hover: 0 4px 12px rgba(26,39,68,.1);
   --shadow-elevated: 0 8px 24px rgba(26,39,68,.12);
@@ -91,8 +91,9 @@
   --font-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", monospace;
 }
 
-/* ── Dark theme (toggled on) — Observatory Mode ─────────────── */
-body:has(.theme-toggle:checked) {
+/* â”€â”€ Dark theme (toggled on) â€” Observatory Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html[data-theme="dark"] body,
+body[data-theme="dark"] {
   --bg: #0A0F1A;
   --bg-alt: #0E1528;
   --bg-glass: rgba(10, 15, 26, 0.88);
@@ -135,16 +136,24 @@ body:has(.theme-toggle:checked) {
   --shadow-elevated: 0 12px 48px rgba(0, 0, 0, 0.5);
 }
 
-body:has(.theme-toggle:checked) a { color: #8ab8ff; }
-body:has(.theme-toggle:checked) code { background: #0a1120; }
-body:has(.theme-toggle:checked) .topbar { background: var(--bg-glass); }
-body:has(.theme-toggle:checked) h1 { color: var(--text); }
-body:has(.theme-toggle:checked) h2 { color: var(--text); }
-body:has(.theme-toggle:checked) h3 { color: var(--text); }
-body:has(.theme-toggle:checked) .metric { color: var(--text); }
-body:has(.theme-toggle:checked) .hero-observatory { background: transparent; }
+html[data-theme="dark"] body a,
+body[data-theme="dark"] a { color: #8ab8ff; }
+html[data-theme="dark"] body code,
+body[data-theme="dark"] code { background: #0a1120; }
+html[data-theme="dark"] body .topbar,
+body[data-theme="dark"] .topbar { background: var(--bg-glass); }
+html[data-theme="dark"] body h1,
+body[data-theme="dark"] h1 { color: var(--text); }
+html[data-theme="dark"] body h2,
+body[data-theme="dark"] h2 { color: var(--text); }
+html[data-theme="dark"] body h3,
+body[data-theme="dark"] h3 { color: var(--text); }
+html[data-theme="dark"] body .metric,
+body[data-theme="dark"] .metric { color: var(--text); }
+html[data-theme="dark"] body .hero-observatory,
+body[data-theme="dark"] .hero-observatory { background: transparent; }
 
-/* ── Smooth transitions everywhere ───────────────────────────── */
+/* â”€â”€ Smooth transitions everywhere â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 * {
   transition: background-color var(--dur) var(--ease),
               border-color var(--dur) var(--ease),
@@ -152,7 +161,7 @@ body:has(.theme-toggle:checked) .hero-observatory { background: transparent; }
               box-shadow var(--dur) var(--ease);
 }
 
-/* ── Reset ────────────────────────────────────────────────────── */
+/* â”€â”€ Reset â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -165,7 +174,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Subtle grid background pattern ──────────────────────────── */
+/* â”€â”€ Subtle grid background pattern â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 body::before {
   content: '';
   position: fixed;
@@ -177,7 +186,8 @@ body::before {
   pointer-events: none;
   z-index: -1;
 }
-body:has(.theme-toggle:checked)::before {
+html[data-theme="dark"] body::before,
+body[data-theme="dark"]::before {
   background-image:
     linear-gradient(rgba(245, 166, 35, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(245, 166, 35, 0.02) 1px, transparent 1px);
@@ -196,12 +206,12 @@ a:hover { text-decoration: underline; }
   outline-offset: 3px;
 }
 
-/* ── Mono utility ────────────────────────────────────────────── */
+/* â”€â”€ Mono utility â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mono, .metric, [data-mono] {
   font-family: 'JetBrains Mono', var(--font-mono);
 }
 
-/* ── Reduced motion ───────────────────────────────────────────── */
+/* â”€â”€ Reduced motion â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -215,7 +225,7 @@ a:hover { text-decoration: underline; }
   }
 }
 
-/* ── Skip link ────────────────────────────────────────────────── */
+/* â”€â”€ Skip link â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .skip-link {
   position: absolute;
   top: -100px;
@@ -231,7 +241,7 @@ a:hover { text-decoration: underline; }
 }
 .skip-link:focus { top: 12px; }
 
-/* ── Liveness indicator bar ──────────────────────────────────── */
+/* â”€â”€ Liveness indicator bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .live-bar {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -245,13 +255,13 @@ a:hover { text-decoration: underline; }
   100% { transform: translateX(100%); }
 }
 
-/* ── Layout ───────────────────────────────────────────────────── */
+/* â”€â”€ Layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .container {
   width: min(1200px, 92vw);
   margin: 0 auto;
 }
 
-/* ── Topbar (glassmorphism) ───────────────────────────────────── */
+/* â”€â”€ Topbar (glassmorphism) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .topbar {
   position: sticky;
   top: 0;
@@ -266,7 +276,7 @@ a:hover { text-decoration: underline; }
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   contain: layout style;
 }
-body:has(.theme-toggle:checked) .topbar {
+body[data-theme="dark"] .topbar {
   background: var(--bg-glass);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -353,7 +363,7 @@ nav.nav a[aria-current] {
   white-space: nowrap;
 }
 
-/* ── Hero ─────────────────────────────────────────────────────── */
+/* â”€â”€ Hero â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .hero {
   padding: var(--s-3xl) 0 var(--s-xl);
   view-transition-name: hero-title;
@@ -397,7 +407,7 @@ h3 {
   font-size: var(--text-lg);
 }
 
-/* ── Hero Observatory (mission control) ─────────────────────── */
+/* â”€â”€ Hero Observatory (mission control) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .hero-observatory {
   padding: var(--s-3xl) 0 var(--s-xl);
   view-transition-name: hero-title;
@@ -415,7 +425,7 @@ h3 {
   line-height: 1.6;
 }
 
-/* ── Hero metric styling ─────────────────────────────────────── */
+/* â”€â”€ Hero metric styling â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .threat-level {
   font-family: 'JetBrains Mono', var(--font-mono);
   font-size: clamp(36px, 2.5rem + 2vw, 56px);
@@ -428,7 +438,7 @@ h3 {
 .threat-level.elevated { color: var(--warn); }
 .threat-level.critical { color: var(--bad); }
 
-/* ── Map section ─────────────────────────────────────────────── */
+/* â”€â”€ Map section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .map-section .map-legend {
   display: flex;
   gap: 16px;
@@ -440,7 +450,7 @@ h3 {
   margin-right: 4px;
 }
 
-/* ── Grid ─────────────────────────────────────────────────────── */
+/* â”€â”€ Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -455,7 +465,7 @@ h3 {
   border-top: 1px solid var(--line-subtle);
 }
 
-/* ── Cards (Glassmorphism) ───────────────────────────────────── */
+/* â”€â”€ Cards (Glassmorphism) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .card {
   background: #FFFFFF;
   backdrop-filter: blur(16px) saturate(1.2);
@@ -472,7 +482,7 @@ h3 {
   transform: translateY(-2px);
 }
 
-/* ── Card links (clickable cards) ─────────────────────────────── */
+/* â”€â”€ Card links (clickable cards) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .card-link {
   display: block;
   color: var(--text);
@@ -501,7 +511,7 @@ h3 {
   transition: color var(--dur) var(--ease);
 }
 
-/* ── Animations ───────────────────────────────────────────────── */
+/* â”€â”€ Animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -529,7 +539,7 @@ h3 {
   }
 }
 
-/* ── View transition customization ────────────────────────────── */
+/* â”€â”€ View transition customization â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 ::view-transition-old(root) {
   animation: 200ms var(--ease) both fade-out;
 }
@@ -544,7 +554,7 @@ h3 {
   animation-duration: 250ms;
 }
 
-/* ── Metrics ──────────────────────────────────────────────────── */
+/* â”€â”€ Metrics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .metric {
   font-size: var(--text-2xl);
   font-weight: 800;
@@ -559,7 +569,7 @@ h3 {
 }
 .muted { color: var(--muted); }
 
-/* ── Chips ────────────────────────────────────────────────────── */
+/* â”€â”€ Chips â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .chip {
   display: inline-flex;
   align-items: center;
@@ -582,19 +592,19 @@ h3 {
   margin-top: 12px;
 }
 
-/* ── Grid columns ─────────────────────────────────────────────── */
+/* â”€â”€ Grid columns â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .col-12 { grid-column: span 12; }
 .col-8  { grid-column: span 8; }
 .col-6  { grid-column: span 6; }
 .col-4  { grid-column: span 4; }
 .col-3  { grid-column: span 3; }
 
-/* ── Hazard accents ───────────────────────────────────────────── */
+/* â”€â”€ Hazard accents â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .hazard-eq { border-left: 3px solid var(--eq); }
 .hazard-hu { border-left: 3px solid var(--hu); }
 .hazard-to { border-left: 3px solid var(--to); }
 
-/* ── Key-value rows ───────────────────────────────────────────── */
+/* â”€â”€ Key-value rows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .kv {
   display: flex;
   justify-content: space-between;
@@ -608,7 +618,7 @@ h3 {
 .kv span { color: var(--muted); }
 .kv strong { font-weight: 600; text-align: right; }
 
-/* ── Buttons ──────────────────────────────────────────────────── */
+/* â”€â”€ Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -633,7 +643,7 @@ h3 {
   margin-top: var(--s-lg);
 }
 
-/* ── Equation block ───────────────────────────────────────────── */
+/* â”€â”€ Equation block â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .equation-block {
   background: var(--bg-alt);
   border: 1px solid var(--line);
@@ -647,7 +657,7 @@ h3 {
   margin: var(--s-md) 0;
 }
 
-/* ── Tables ───────────────────────────────────────────────────── */
+/* â”€â”€ Tables â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -666,7 +676,7 @@ th {
   letter-spacing: 0.5px;
 }
 
-/* ── Code ─────────────────────────────────────────────────────── */
+/* â”€â”€ Code â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 code {
   background: var(--bg-alt);
   border: 1px solid var(--line);
@@ -676,11 +686,11 @@ code {
   font-family: var(--font-mono);
 }
 
-/* ── Lists ────────────────────────────────────────────────────── */
+/* â”€â”€ Lists â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 ul { padding-left: 20px; }
 li { margin-bottom: 6px; }
 
-/* ── Ledger entry ─────────────────────────────────────────────── */
+/* â”€â”€ Ledger entry â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .ledger-entry {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -693,7 +703,7 @@ li { margin-bottom: 6px; }
   box-shadow: var(--shadow-card-hover);
 }
 
-/* ── Section head ─────────────────────────────────────────────── */
+/* â”€â”€ Section head â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .section-head {
   display: flex;
   justify-content: space-between;
@@ -702,7 +712,7 @@ li { margin-bottom: 6px; }
   margin-bottom: var(--s-lg);
 }
 
-/* ── Data source card ─────────────────────────────────────────── */
+/* â”€â”€ Data source card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .data-source {
   background: var(--bg-alt);
   border: 1px solid var(--line);
@@ -715,7 +725,7 @@ li { margin-bottom: 6px; }
 .data-source strong { display: block; margin-bottom: 2px; }
 .data-source .muted { font-size: var(--text-sm); }
 
-/* ── Footer ───────────────────────────────────────────────────── */
+/* â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .footer {
   border-top: 1px solid var(--line);
   margin-top: var(--s-2xl);
@@ -761,7 +771,7 @@ li { margin-bottom: 6px; }
   letter-spacing: 0.5px;
 }
 
-/* ── Depth Toggle (Simple / Technical) ────────────────────────── */
+/* â”€â”€ Depth Toggle (Simple / Technical) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .depth-content {
   position: relative;
 }
@@ -859,13 +869,13 @@ li { margin-bottom: 6px; }
   flex-direction: column;
 }
 
-/* ── Nav Dropdown ─────────────────────────────────────────────── */
+/* â”€â”€ Nav Dropdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .nav-dropdown {
   position: relative;
 }
 
 .nav-dropdown > a::after {
-  content: " ▾";
+  content: " â–¾";
   font-size: 10px;
   opacity: .5;
 }
@@ -924,7 +934,7 @@ li { margin-bottom: 6px; }
 .nav-dropdown-menu .hazard-dot.hu { background: var(--hu); }
 .nav-dropdown-menu .hazard-dot.to { background: var(--to); }
 
-/* ── Mobile Hamburger ─────────────────────────────────────────── */
+/* â”€â”€ Mobile Hamburger â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .nav-hamburger {
   display: none;
   flex-direction: column;
@@ -965,7 +975,7 @@ li { margin-bottom: 6px; }
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ── Card Hero / Secondary ────────────────────────────────────── */
+/* â”€â”€ Card Hero / Secondary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .card-hero {
   grid-column: span 12;
   display: grid;
@@ -1011,7 +1021,7 @@ li { margin-bottom: 6px; }
 
 .rank-badge.rank-1 { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-/* ── SVG Maps ─────────────────────────────────────────────────── */
+/* â”€â”€ SVG Maps â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .hazard-map {
   width: 100%;
   max-width: 600px;
@@ -1103,7 +1113,7 @@ li { margin-bottom: 6px; }
   transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
 
-body:has(.theme-toggle:checked) .event-row-details {
+body[data-theme="dark"] .event-row-details {
   background: linear-gradient(180deg, rgba(17,26,46,.92), rgba(11,18,32,.96));
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
 }
@@ -1350,8 +1360,8 @@ body:has(.theme-toggle:checked) .event-row-details {
   box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
 }
 
-body:has(.theme-toggle:checked) .signal-card,
-body:has(.theme-toggle:checked) .detail-panel {
+body[data-theme="dark"] .signal-card,
+body[data-theme="dark"] .detail-panel {
   background: linear-gradient(180deg, rgba(20,31,54,.86), rgba(13,20,36,.92));
   box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
 }
@@ -1424,7 +1434,7 @@ body:has(.theme-toggle:checked) .detail-panel {
   margin-top: 8px;
 }
 
-/* ── Top 10 Table ─────────────────────────────────────────────── */
+/* â”€â”€ Top 10 Table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .ranked-table {
   width: 100%;
   border-collapse: separate;
@@ -1470,7 +1480,7 @@ body:has(.theme-toggle:checked) .detail-panel {
 .trend-down { color: var(--good); }
 .trend-flat { color: var(--muted); }
 
-/* ── Responsive ───────────────────────────────────────────────── */
+/* â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 920px) {
   .col-8, .col-6, .col-4, .col-3 { grid-column: span 12; }
   .card-hero { grid-column: span 12; grid-template-columns: 1fr; }
@@ -1594,11 +1604,11 @@ body:has(.theme-toggle:checked) .detail-panel {
   -webkit-overflow-scrolling: touch;
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    EMERGENCY ALERT SYSTEM
    Triggered by data-alert attribute on <body> injected by Worker.
    Levels: critical > severe > warning > watch > none
-   ═══════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 /* -- Emergency Banner (hidden by default) -- */
 .emergency-banner {
@@ -1700,7 +1710,7 @@ body[data-alert="critical"] .topbar {
 }
 
 body[data-alert="critical"] .brand::after {
-  content: "⚠ ALERT";
+  content: "âš  ALERT";
   margin-left: var(--s-sm);
   font-size: var(--text-xs);
   font-weight: 800;
@@ -1748,7 +1758,7 @@ body[data-alert="severe"] .topbar {
 }
 
 body[data-alert="severe"] .brand::after {
-  content: "⚠ NEARBY HAZARD";
+  content: "âš  NEARBY HAZARD";
   margin-left: var(--s-sm);
   font-size: var(--text-xs);
   font-weight: 700;
@@ -1759,7 +1769,7 @@ body[data-alert="severe"] .brand::after {
 }
 
 body[data-alert="warning"] .brand::after {
-  content: "⚠ ADVISORY";
+  content: "âš  ADVISORY";
   margin-left: var(--s-sm);
   font-size: var(--text-xs);
   font-weight: 700;
@@ -1795,55 +1805,55 @@ body:not([data-alert]) .emergency-banner {
 }
 
 /* Light theme alert overrides */
-body:has(.theme-toggle:checked)[data-alert="critical"] {
+body[data-theme="dark"][data-alert="critical"] {
   --alert-bg: #fef2f2;
   --alert-border: #fca5a5;
 }
-body:has(.theme-toggle:checked)[data-alert="critical"]::before {
+body[data-theme="dark"][data-alert="critical"]::before {
   border-color: #ef4444;
   box-shadow: inset 0 0 30px rgba(239,68,68,.2);
 }
 
-body:has(.theme-toggle:checked)[data-alert="critical"] .topbar {
+body[data-theme="dark"][data-alert="critical"] .topbar {
   background: linear-gradient(180deg, rgba(239,68,68,.15) 0%, var(--bg-glass) 100%);
 }
 
-body:has(.theme-toggle:checked)[data-alert="critical"] .brand::after {
+body[data-theme="dark"][data-alert="critical"] .brand::after {
   background: #fef2f2;
 }
-body:has(.theme-toggle:checked)[data-alert="severe"] .brand::after {
+body[data-theme="dark"][data-alert="severe"] .brand::after {
   background: #fff7ed;
 }
-body:has(.theme-toggle:checked)[data-alert="warning"] .brand::after {
+body[data-theme="dark"][data-alert="warning"] .brand::after {
   background: #fffbeb;
 }
 
-body:has(.theme-toggle:checked)[data-alert="critical"] .your-area-section .card {
+body[data-theme="dark"][data-alert="critical"] .your-area-section .card {
   background: #fef2f2;
   border-color: #fca5a5;
 }
-body:has(.theme-toggle:checked)[data-alert="severe"] .your-area-section .card {
+body[data-theme="dark"][data-alert="severe"] .your-area-section .card {
   background: #fff7ed;
   border-color: #fdba74;
 }
-body:has(.theme-toggle:checked)[data-alert="warning"] .your-area-section .card {
+body[data-theme="dark"][data-alert="warning"] .your-area-section .card {
   background: #fffbeb;
   border-color: #fcd34d;
 }
 
-body:has(.theme-toggle:checked)[data-alert="severe"] .topbar {
+body[data-theme="dark"][data-alert="severe"] .topbar {
   background: linear-gradient(180deg, rgba(234,88,12,.12) 0%, var(--bg-glass) 100%);
   border-bottom-color: #ea580c;
 }
-body:has(.theme-toggle:checked)[data-alert="warning"] .topbar {
+body[data-theme="dark"][data-alert="warning"] .topbar {
   border-bottom-color: #d97706;
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    WORLD MAP SVG SYSTEM
    Equirectangular projection, 960x480 viewBox.
    User marker position is injected as an SVG transform by the Worker.
-   ═══════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 .world-map-wrapper {
   width: 100%;
@@ -1871,7 +1881,7 @@ body:has(.theme-toggle:checked)[data-alert="warning"] .topbar {
   fill: #e8f0fe;
   transition: fill var(--dur) var(--ease);
 }
-body:has(.theme-toggle:checked) .world-map .ocean { fill: #0a1628; }
+body[data-theme="dark"] .world-map .ocean { fill: #0a1628; }
 
 /* Grid lines (equator, tropics, meridians) */
 .world-map .grid-line {
@@ -1895,7 +1905,7 @@ body:has(.theme-toggle:checked) .world-map .ocean { fill: #0a1628; }
   stroke-width: 0.4;
   transition: fill var(--dur) var(--ease), stroke var(--dur) var(--ease);
 }
-body:has(.theme-toggle:checked) .world-map .land { fill: #162038; stroke: #243050; }
+body[data-theme="dark"] .world-map .land { fill: #162038; stroke: #243050; }
 
 .world-map .land:hover {
   fill: var(--panel-hover);
@@ -1937,7 +1947,7 @@ body:has(.theme-toggle:checked) .world-map .land { fill: #162038; stroke: #24305
   opacity: .5;
 }
 
-/* Hazard markers — hover on <a> parent to prevent jitter */
+/* Hazard markers â€” hover on <a> parent to prevent jitter */
 .world-map .hazard-markers a {
   cursor: pointer;
 }
@@ -2165,7 +2175,7 @@ body[data-geo-valid="true"] .world-map .user-marker[transform] {
 }
 
 .your-area-section h2::before {
-  content: "📍";
+  content: "ðŸ“";
   font-size: 1.2em;
 }
 
@@ -2196,7 +2206,7 @@ body[data-alert="warning"] .your-area-section .card {
   .map-legend { gap: var(--s-sm); font-size: 10px; }
 }
 
-/* ── Map responsive ───────────────────────────────────────────── */
+/* â”€â”€ Map responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 #map, #tornado-map {
   width: 100%;
   min-height: 300px;
@@ -2210,7 +2220,7 @@ body[data-alert="warning"] .your-area-section .card {
   }
 }
 
-/* ── Hero responsive ─────────────────────────────────────────── */
+/* â”€â”€ Hero responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 600px) {
   .hero-observatory {
     padding: var(--s-xl) 0 var(--s-md);
@@ -2220,7 +2230,7 @@ body[data-alert="warning"] .your-area-section .card {
   }
 }
 
-/* ── Map marker interactions ─────────────────────────────────── */
+/* â”€â”€ Map marker interactions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .map-marker-to, .map-marker-hu, .map-marker-eq {
   transition: transform 0.2s ease;
 }
@@ -2229,7 +2239,7 @@ body[data-alert="warning"] .your-area-section .card {
   z-index: 10;
 }
 
-/* ── MapLibre popup styling ──────────────────────────────────── */
+/* â”€â”€ MapLibre popup styling â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .maplibregl-popup-content {
   background: var(--panel-solid) !important;
   color: var(--text) !important;
@@ -2251,7 +2261,7 @@ body[data-alert="warning"] .your-area-section .card {
   border-top-color: var(--panel-solid) !important;
 }
 
-/* ── Status indicator dots (#1) ───────────────────────────────── */
+/* â”€â”€ Status indicator dots (#1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .status-dot {
   display: inline-block;
   width: 8px;
@@ -2264,7 +2274,7 @@ body[data-alert="warning"] .your-area-section .card {
 .status-dot.warn { background: var(--warn); box-shadow: 0 0 4px var(--warn); }
 .status-dot.bad  { background: var(--bad);  box-shadow: 0 0 4px var(--bad);  }
 
-/* ── Risk band badges (#2) ───────────────────────────────────── */
+/* â”€â”€ Risk band badges (#2) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .risk-badge {
   display: inline-block;
   font-size: 10px;
@@ -2280,14 +2290,14 @@ body[data-alert="warning"] .your-area-section .card {
 .risk-badge.high     { background: var(--bad-bg);  color: var(--bad);  border: 1px solid var(--bad-border);  }
 .risk-badge.critical { background: var(--bad-bg);  color: var(--bad);  border: 1px solid var(--bad-border);  }
 
-/* ── Confidence interval sub-line (#3) ───────────────────────── */
+/* â”€â”€ Confidence interval sub-line (#3) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .metric-ci {
   font-size: var(--text-xs);
   color: var(--muted);
   margin-top: -4px;
 }
 
-/* ── Breadcrumb navigation (#6) ──────────────────────────────── */
+/* â”€â”€ Breadcrumb navigation (#6) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .breadcrumb {
   font-size: var(--text-xs);
   color: var(--muted);
@@ -2297,7 +2307,7 @@ body[data-alert="warning"] .your-area-section .card {
 .breadcrumb a:hover { color: var(--primary); }
 .breadcrumb span { color: var(--text); }
 
-/* ── Tooltip helper (#19) ────────────────────────────────────── */
+/* â”€â”€ Tooltip helper (#19) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .tooltip {
   cursor: help;
   border-bottom: 1px dotted var(--muted);
@@ -2305,23 +2315,23 @@ body[data-alert="warning"] .your-area-section .card {
   color: var(--muted);
 }
 
-/* ── MapLibre attribution (#16) ──────────────────────────────── */
+/* â”€â”€ MapLibre attribution (#16) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .maplibregl-ctrl-attrib-inner {
   font-size: 9px !important;
   opacity: 0.4 !important;
 }
 
-/* ── Staggered card reveal (#17) ─────────────────────────────── */
+/* â”€â”€ Staggered card reveal (#17) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .hazard-eq { animation-delay: 0.1s; }
 .hazard-hu { animation-delay: 0.2s; }
 .hazard-to { animation-delay: 0.3s; }
 
-/* ── Storm detail card transition ────────────────────────────── */
+/* â”€â”€ Storm detail card transition â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .event-row-details[open] .event-detail {
   animation: card-reveal 0.3s var(--ease) both;
 }
 
-/* ── Brand mark ──────────────────────────────────────────────── */
+/* â”€â”€ Brand mark â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .brand-mark {
   flex-shrink: 0;
   animation: brand-pulse 4s ease-in-out infinite;
@@ -2331,21 +2341,21 @@ body[data-alert="warning"] .your-area-section .card {
   50% { opacity: 0.7; }
 }
 
-/* ── Footer grid layout ─────────────────────────────────────── */
+/* â”€â”€ Footer grid layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .footer .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--s-xl);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   DARK MODE — MISSION CONTROL VISUAL LAYER (2030 Edition)
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   DARK MODE â€” MISSION CONTROL VISUAL LAYER (2030 Edition)
    SpaceX meets Apple Vision Pro meets Bloomberg Terminal.
    All effects scoped to dark mode only.
-   ═══════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ── 1. Deep space background with ambient color bleed ───────── */
-body:has(.theme-toggle:checked) {
+/* â”€â”€ 1. Deep space background with ambient color bleed â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] {
   background-color: #060A14;
   background-image:
     radial-gradient(ellipse at 20% 50%, rgba(20, 184, 166, 0.03) 0%, transparent 50%),
@@ -2353,8 +2363,8 @@ body:has(.theme-toggle:checked) {
     radial-gradient(ellipse at 50% 100%, rgba(16, 185, 129, 0.02) 0%, transparent 50%);
 }
 
-/* ── 2. Glass panels — 3-layer depth system ──────────────────── */
-body:has(.theme-toggle:checked) .card {
+/* â”€â”€ 2. Glass panels â€” 3-layer depth system â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .card {
   background: rgba(12, 18, 32, 0.6);
   backdrop-filter: blur(20px) saturate(1.3);
   -webkit-backdrop-filter: blur(20px) saturate(1.3);
@@ -2364,7 +2374,7 @@ body:has(.theme-toggle:checked) .card {
     0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
-body:has(.theme-toggle:checked) .card:hover {
+body[data-theme="dark"] .card:hover {
   border-color: rgba(245, 166, 35, 0.15);
   box-shadow:
     0 0 0 1px rgba(245, 166, 35, 0.1) inset,
@@ -2372,22 +2382,22 @@ body:has(.theme-toggle:checked) .card:hover {
     0 0 20px rgba(245, 166, 35, 0.03);
 }
 
-/* ── 3. Metric glow effects ──────────────────────────────────── */
-body:has(.theme-toggle:checked) .metric {
+/* â”€â”€ 3. Metric glow effects â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .metric {
   text-shadow: 0 0 30px currentColor;
 }
 
-body:has(.theme-toggle:checked) .threat-level.critical {
+body[data-theme="dark"] .threat-level.critical {
   text-shadow: 0 0 40px rgba(239, 68, 68, 0.5), 0 0 80px rgba(239, 68, 68, 0.2);
 }
-body:has(.theme-toggle:checked) .threat-level.elevated {
+body[data-theme="dark"] .threat-level.elevated {
   text-shadow: 0 0 40px rgba(245, 158, 11, 0.4), 0 0 80px rgba(245, 158, 11, 0.15);
 }
-body:has(.theme-toggle:checked) .threat-level.clear {
+body[data-theme="dark"] .threat-level.clear {
   text-shadow: 0 0 40px rgba(20, 184, 166, 0.4), 0 0 80px rgba(20, 184, 166, 0.15);
 }
 
-/* ── 4. Breathing animation on live data ─────────────────────── */
+/* â”€â”€ 4. Breathing animation on live data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes breathe {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.7; }
@@ -2398,16 +2408,16 @@ body:has(.theme-toggle:checked) .threat-level.clear {
   50% { box-shadow: 0 0 12px var(--good), 0 0 24px rgba(20, 184, 166, 0.3); }
 }
 
-body:has(.theme-toggle:checked) .live-indicator {
+body[data-theme="dark"] .live-indicator {
   animation: breathe 3s ease-in-out infinite;
 }
 
-body:has(.theme-toggle:checked) .status-dot.good {
+body[data-theme="dark"] .status-dot.good {
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
-/* ── 5. Topbar — frosted glass with amber glow line ──────────── */
-body:has(.theme-toggle:checked) .topbar {
+/* â”€â”€ 5. Topbar â€” frosted glass with amber glow line â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .topbar {
   background: rgba(6, 10, 20, 0.8);
   backdrop-filter: blur(24px) saturate(1.5);
   -webkit-backdrop-filter: blur(24px) saturate(1.5);
@@ -2415,7 +2425,7 @@ body:has(.theme-toggle:checked) .topbar {
   box-shadow: 0 1px 0 rgba(245, 166, 35, 0.1);
 }
 
-/* ── 6. Live bar — neon sweep ────────────────────────────────── */
+/* â”€â”€ 6. Live bar â€” neon sweep â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes neon-sweep {
   0% { transform: translateX(-100%); opacity: 0; }
   10% { opacity: 1; }
@@ -2423,7 +2433,7 @@ body:has(.theme-toggle:checked) .topbar {
   100% { transform: translateX(100%); opacity: 0; }
 }
 
-body:has(.theme-toggle:checked) .live-bar {
+body[data-theme="dark"] .live-bar {
   background: linear-gradient(90deg,
     transparent 0%,
     rgba(245, 166, 35, 0.8) 50%,
@@ -2431,13 +2441,13 @@ body:has(.theme-toggle:checked) .live-bar {
   animation: neon-sweep 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-/* ── 7. Hero observatory — dramatic radial aura ──────────────── */
-body:has(.theme-toggle:checked) .hero-observatory {
+/* â”€â”€ 7. Hero observatory â€” dramatic radial aura â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .hero-observatory {
   padding: 80px 0 48px;
   position: relative;
 }
 
-body:has(.theme-toggle:checked) .hero-observatory::before {
+body[data-theme="dark"] .hero-observatory::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -2449,76 +2459,76 @@ body:has(.theme-toggle:checked) .hero-observatory::before {
   pointer-events: none;
 }
 
-body:has(.theme-toggle:checked) .threat-level {
+body[data-theme="dark"] .threat-level {
   font-size: clamp(40px, 5vw + 1rem, 72px);
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1;
 }
 
-/* ── 8. Hazard card accent lines — left border glow ──────────── */
-body:has(.theme-toggle:checked) .hazard-eq {
+/* â”€â”€ 8. Hazard card accent lines â€” left border glow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .hazard-eq {
   border-left: 3px solid var(--eq);
   box-shadow: -4px 0 12px rgba(20, 184, 166, 0.1);
 }
-body:has(.theme-toggle:checked) .hazard-hu {
+body[data-theme="dark"] .hazard-hu {
   border-left: 3px solid var(--hu);
   box-shadow: -4px 0 12px rgba(16, 185, 129, 0.1);
 }
-body:has(.theme-toggle:checked) .hazard-to {
+body[data-theme="dark"] .hazard-to {
   border-left: 3px solid var(--to);
   box-shadow: -4px 0 12px rgba(245, 158, 11, 0.1);
 }
 
-/* ── 9. Grid background — wider, more futuristic ─────────────── */
-body:has(.theme-toggle:checked)::before {
+/* â”€â”€ 9. Grid background â€” wider, more futuristic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"]::before {
   background-image:
     linear-gradient(rgba(245, 166, 35, 0.015) 1px, transparent 1px),
     linear-gradient(90deg, rgba(245, 166, 35, 0.015) 1px, transparent 1px);
   background-size: 80px 80px;
 }
 
-/* ── 10. Map containers — glowing border ─────────────────────── */
-body:has(.theme-toggle:checked) #map,
-body:has(.theme-toggle:checked) #tornado-map {
+/* â”€â”€ 10. Map containers â€” glowing border â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] #map,
+body[data-theme="dark"] #tornado-map {
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0, 0, 0, 0.3);
 }
 
-/* ── 11. Chip/badge glow ─────────────────────────────────────── */
-body:has(.theme-toggle:checked) .chip.good {
+/* â”€â”€ 11. Chip/badge glow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .chip.good {
   box-shadow: 0 0 8px rgba(20, 184, 166, 0.2);
 }
-body:has(.theme-toggle:checked) .chip.warn {
+body[data-theme="dark"] .chip.warn {
   box-shadow: 0 0 8px rgba(245, 158, 11, 0.2);
 }
-body:has(.theme-toggle:checked) .chip.bad {
+body[data-theme="dark"] .chip.bad {
   box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
 }
 
-/* ── 12. Selection color ─────────────────────────────────────── */
-body:has(.theme-toggle:checked) ::selection {
+/* â”€â”€ 12. Selection color â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] ::selection {
   background: rgba(245, 166, 35, 0.3);
   color: #fff;
 }
 
-/* ── 13. Link hover — glow underline ─────────────────────────── */
-body:has(.theme-toggle:checked) a:hover {
+/* â”€â”€ 13. Link hover â€” glow underline â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] a:hover {
   text-decoration: none;
   text-shadow: 0 0 8px rgba(245, 166, 35, 0.3);
 }
 
-/* ── 14. Button upgrade — gradient + elevated glow ───────────── */
-body:has(.theme-toggle:checked) .btn-primary {
+/* â”€â”€ 14. Button upgrade â€” gradient + elevated glow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .btn-primary {
   background: linear-gradient(135deg, var(--primary) 0%, #E09515 100%);
   box-shadow: 0 2px 12px rgba(245, 166, 35, 0.3);
 }
-body:has(.theme-toggle:checked) .btn-primary:hover {
+body[data-theme="dark"] .btn-primary:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 20px rgba(245, 166, 35, 0.4);
 }
 
-/* ── 15. Staggered card entrance — glass appear ──────────────── */
+/* â”€â”€ 15. Staggered card entrance â€” glass appear â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes glass-appear {
   from {
     opacity: 0;
@@ -2527,37 +2537,37 @@ body:has(.theme-toggle:checked) .btn-primary:hover {
   }
 }
 
-body:has(.theme-toggle:checked) .card {
+body[data-theme="dark"] .card {
   animation: glass-appear 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
-body:has(.theme-toggle:checked) .grid .card:nth-child(1) { animation-delay: 0.1s; }
-body:has(.theme-toggle:checked) .grid .card:nth-child(2) { animation-delay: 0.2s; }
-body:has(.theme-toggle:checked) .grid .card:nth-child(3) { animation-delay: 0.3s; }
-body:has(.theme-toggle:checked) .grid .card:nth-child(4) { animation-delay: 0.4s; }
-body:has(.theme-toggle:checked) .grid .card:nth-child(5) { animation-delay: 0.5s; }
-body:has(.theme-toggle:checked) .grid .card:nth-child(6) { animation-delay: 0.6s; }
+body[data-theme="dark"] .grid .card:nth-child(1) { animation-delay: 0.1s; }
+body[data-theme="dark"] .grid .card:nth-child(2) { animation-delay: 0.2s; }
+body[data-theme="dark"] .grid .card:nth-child(3) { animation-delay: 0.3s; }
+body[data-theme="dark"] .grid .card:nth-child(4) { animation-delay: 0.4s; }
+body[data-theme="dark"] .grid .card:nth-child(5) { animation-delay: 0.5s; }
+body[data-theme="dark"] .grid .card:nth-child(6) { animation-delay: 0.6s; }
 
-/* ── 16. World map wrapper — elevated glow ───────────────────── */
-body:has(.theme-toggle:checked) .world-map-wrapper {
+/* â”€â”€ 16. World map wrapper â€” elevated glow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .world-map-wrapper {
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.04) inset,
     0 0 40px rgba(0, 0, 0, 0.6),
     0 0 80px rgba(245, 166, 35, 0.02);
 }
 
-/* ── 17. Ledger entry — subtle glass ─────────────────────────── */
-body:has(.theme-toggle:checked) .ledger-entry {
+/* â”€â”€ 17. Ledger entry â€” subtle glass â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .ledger-entry {
   background: rgba(12, 18, 32, 0.5);
   border-color: rgba(255, 255, 255, 0.05);
 }
-body:has(.theme-toggle:checked) .ledger-entry:hover {
+body[data-theme="dark"] .ledger-entry:hover {
   border-color: rgba(245, 166, 35, 0.1);
   box-shadow:
     0 0 0 1px rgba(245, 166, 35, 0.06) inset,
     0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
-/* ── 18. Status dots — enhanced pulse glow ───────────────────── */
+/* â”€â”€ 18. Status dots â€” enhanced pulse glow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes pulse-dot-warn {
   0%, 100% { box-shadow: 0 0 4px var(--warn); }
   50% { box-shadow: 0 0 12px var(--warn), 0 0 24px rgba(245, 158, 11, 0.3); }
@@ -2567,33 +2577,33 @@ body:has(.theme-toggle:checked) .ledger-entry:hover {
   50% { box-shadow: 0 0 12px var(--bad), 0 0 24px rgba(239, 68, 68, 0.3); }
 }
 
-body:has(.theme-toggle:checked) .status-dot.warn {
+body[data-theme="dark"] .status-dot.warn {
   animation: pulse-dot-warn 2s ease-in-out infinite;
 }
-body:has(.theme-toggle:checked) .status-dot.bad {
+body[data-theme="dark"] .status-dot.bad {
   animation: pulse-dot-bad 1.5s ease-in-out infinite;
 }
 
-/* ── 19. Nav links — subtle glow on hover ────────────────────── */
-body:has(.theme-toggle:checked) nav.nav a:hover,
-body:has(.theme-toggle:checked) nav.nav a[aria-current] {
+/* â”€â”€ 19. Nav links â€” subtle glow on hover â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] nav.nav a:hover,
+body[data-theme="dark"] nav.nav a[aria-current] {
   background: rgba(245, 166, 35, 0.08);
   box-shadow: 0 0 12px rgba(245, 166, 35, 0.06);
 }
 
-/* ── 20. Risk badge glow ─────────────────────────────────────── */
-body:has(.theme-toggle:checked) .risk-badge.critical {
+/* â”€â”€ 20. Risk badge glow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .risk-badge.critical {
   box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
 }
-body:has(.theme-toggle:checked) .risk-badge.high {
+body[data-theme="dark"] .risk-badge.high {
   box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
 }
-body:has(.theme-toggle:checked) .risk-badge.elevated {
+body[data-theme="dark"] .risk-badge.elevated {
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
 }
 
-/* ── 21. Equation block — code terminal glow ─────────────────── */
-body:has(.theme-toggle:checked) .equation-block {
+/* â”€â”€ 21. Equation block â€” code terminal glow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .equation-block {
   background: rgba(8, 12, 24, 0.8);
   border-color: rgba(245, 166, 35, 0.1);
   box-shadow:
@@ -2603,20 +2613,20 @@ body:has(.theme-toggle:checked) .equation-block {
   text-shadow: 0 0 20px rgba(245, 166, 35, 0.3);
 }
 
-/* ── 22. Table rows — hover scanline effect ──────────────────── */
-body:has(.theme-toggle:checked) .ranked-table tbody tr:hover td {
+/* â”€â”€ 22. Table rows â€” hover scanline effect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .ranked-table tbody tr:hover td {
   background: rgba(245, 166, 35, 0.04);
   box-shadow: inset 0 0 20px rgba(245, 166, 35, 0.02);
 }
 
-/* ── 23. Footer — fade into void ─────────────────────────────── */
-body:has(.theme-toggle:checked) .footer {
+/* â”€â”€ 23. Footer â€” fade into void â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .footer {
   border-top-color: rgba(255, 255, 255, 0.04);
   background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
 }
 
-/* ── 24. Dropdown menu — glass panel ─────────────────────────── */
-body:has(.theme-toggle:checked) .nav-dropdown-menu {
+/* â”€â”€ 24. Dropdown menu â€” glass panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .nav-dropdown-menu {
   background: rgba(10, 15, 28, 0.95);
   backdrop-filter: blur(24px) saturate(1.4);
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
@@ -2626,19 +2636,19 @@ body:has(.theme-toggle:checked) .nav-dropdown-menu {
     0 12px 48px rgba(0, 0, 0, 0.6);
 }
 
-/* ── 25. Data source cards — glass treatment ─────────────────── */
-body:has(.theme-toggle:checked) .data-source {
+/* â”€â”€ 25. Data source cards â€” glass treatment â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body[data-theme="dark"] .data-source {
   background: rgba(12, 18, 32, 0.4);
   border-color: rgba(255, 255, 255, 0.04);
 }
-body:has(.theme-toggle:checked) .data-source:hover {
+body[data-theme="dark"] .data-source:hover {
   border-color: rgba(255, 255, 255, 0.08);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.03) inset,
     0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
-/* ── Print styles ─────────────────────────────────────────────── */
+/* â”€â”€ Print styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media print {
   .live-bar, .topbar, footer, .depth-toggle { display: none !important; }
   #map, #tornado-map { display: none !important; }
@@ -2655,3 +2665,4 @@ body:has(.theme-toggle:checked) .data-source:hover {
   .theme-switch, .skip-link, .cta-row, .btn, .footer, .nav-hamburger, .emergency-banner { display: none !important; }
   @page { margin: 1.5cm; }
 }
+

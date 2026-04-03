@@ -126,6 +126,7 @@ const siteShellResponse = await worker.fetch(
 );
 assert.equal(siteShellResponse.status, 200);
 assert.match(siteShellResponse.headers.get("Content-Type") || "", /javascript/);
+assert.match(await siteShellResponse.text(), /data-theme/);
 
 assert.equal(
   workerTest.hasReliableGeo({
