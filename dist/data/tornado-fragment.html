@@ -1,23 +1,55 @@
         <details class="event-row-details" id="storm-1">
           <summary class="event-row">
-            <span class="rank-badge rank-1">1</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Upper Midwest</strong> <span class="chip" style="background:#7f1d1d;color:#fff;font-size:11px;padding:2px 8px;">CRITICAL</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198269</strong> <span class="mono">42.27, -93.17</span> <strong class="mono" style="color:#d32f2f">56.0%</strong> <span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">Very High</span> <span class="mono">CAPE: 636 | SRH: 403 | MaxLLAz: 0.0310</span></span>
+            <span class="event-row-leading"><span class="rank-badge rank-1">1</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Upper Midwest</span><span class="chip" style="background:#7f1d1d;color:#fff;font-size:11px;padding:2px 8px;">CRITICAL</span></span><span class="event-row-subline">56.0% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198269</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">Very High</span></span><span class="event-row-subline">42.27 N, 93.17 W | CAPE 636 J/kg | SRH 403 | AzShear 0.0310</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#d32f2f;">56.0%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#7f1d1d;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">CRITICAL</span>
-                <strong style="font-size:16px;">Upper Midwest</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Upper Midwest</h3>
+                  <p class="detail-copy">This storm has strong rotation detected, strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#7f1d1d;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">CRITICAL</span>
+                  <div class="detail-score" style="color:#d32f2f;">56.0%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has strong rotation detected, strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Seek shelter immediately if NWS issues a tornado warning for your area. Have your emergency plan ready.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Seek shelter immediately if NWS issues a tornado warning for your area. Have your emergency plan ready.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Strong rotation 0.031 s^-1</span>
+                <span class="signal-pill">0-1 km SRH 403</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Upper Midwest</strong><small>42.27 N, 93.17 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+12.2E / -13.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198269</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198269</h3>
+                  <p class="detail-copy">This storm has strong rotation detected, strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#d32f2f;color:#fff;font-size:12px;padding:4px 10px;">Very High</span>
+                  <div class="detail-score" style="color:#d32f2f;">56.0%</div>
+                  <div class="detail-score-label">42.269 N, 93.169 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Strong rotation 0.031 s^-1</span>
+                <span class="signal-pill">0-1 km SRH 403</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>42.269 N, 93.169 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
@@ -85,31 +117,65 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Strong low-level rotation detected (AzShear &gt; 0.01)</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 1.6)</div>
+              <ul class="detail-list">
+                <li>Strong low-level rotation detected (AzShear &gt; 0.01)</li>
+                <li>Significant tornado parameter elevated (STP 1.6)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-2">
           <summary class="event-row">
-            <span class="rank-badge">2</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Upper Midwest</strong> <span class="chip" style="background:#7f1d1d;color:#fff;font-size:11px;padding:2px 8px;">CRITICAL</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198309</strong> <span class="mono">42.06, -93.18</span> <strong class="mono" style="color:#d32f2f">56.0%</strong> <span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">Very High</span> <span class="mono">CAPE: 864 | SRH: 414 | MaxLLAz: 0.0150</span></span>
+            <span class="event-row-leading"><span class="rank-badge">2</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Upper Midwest</span><span class="chip" style="background:#7f1d1d;color:#fff;font-size:11px;padding:2px 8px;">CRITICAL</span></span><span class="event-row-subline">56.0% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198309</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">Very High</span></span><span class="event-row-subline">42.06 N, 93.18 W | CAPE 864 J/kg | SRH 414 | AzShear 0.0150</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#d32f2f;">56.0%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#7f1d1d;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">CRITICAL</span>
-                <strong style="font-size:16px;">Upper Midwest</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Upper Midwest</h3>
+                  <p class="detail-copy">This storm has strong rotation detected, strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#7f1d1d;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">CRITICAL</span>
+                  <div class="detail-score" style="color:#d32f2f;">56.0%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has strong rotation detected, strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Seek shelter immediately if NWS issues a tornado warning for your area. Have your emergency plan ready.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Seek shelter immediately if NWS issues a tornado warning for your area. Have your emergency plan ready.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Strong rotation 0.015 s^-1</span>
+                <span class="signal-pill">0-1 km SRH 414</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Upper Midwest</strong><small>42.06 N, 93.18 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+12.6E / -13.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198309</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198309</h3>
+                  <p class="detail-copy">This storm has strong rotation detected, strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#d32f2f;color:#fff;font-size:12px;padding:4px 10px;">Very High</span>
+                  <div class="detail-score" style="color:#d32f2f;">56.0%</div>
+                  <div class="detail-score-label">42.063 N, 93.175 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Strong rotation 0.015 s^-1</span>
+                <span class="signal-pill">0-1 km SRH 414</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>42.063 N, 93.175 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
@@ -177,31 +243,65 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Strong low-level rotation detected (AzShear &gt; 0.01)</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 2.1)</div>
+              <ul class="detail-list">
+                <li>Strong low-level rotation detected (AzShear &gt; 0.01)</li>
+                <li>Significant tornado parameter elevated (STP 2.1)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-3">
           <summary class="event-row">
-            <span class="rank-badge">3</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Northeast US</strong> <span class="chip" style="background:#7f1d1d;color:#fff;font-size:11px;padding:2px 8px;">CRITICAL</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198378</strong> <span class="mono">47.76, -68.10</span> <strong class="mono" style="color:#d32f2f">56.0%</strong> <span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">Very High</span> <span class="mono">CAPE: 28 | SRH: 449 | MaxLLAz: 0.0160</span></span>
+            <span class="event-row-leading"><span class="rank-badge">3</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Northeast US</span><span class="chip" style="background:#7f1d1d;color:#fff;font-size:11px;padding:2px 8px;">CRITICAL</span></span><span class="event-row-subline">56.0% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198378</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">Very High</span></span><span class="event-row-subline">47.76 N, 68.10 W | CAPE 28 J/kg | SRH 449 | AzShear 0.0160</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#d32f2f;">56.0%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#7f1d1d;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">CRITICAL</span>
-                <strong style="font-size:16px;">Northeast US</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Northeast US</h3>
+                  <p class="detail-copy">This storm has strong rotation detected, strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#7f1d1d;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">CRITICAL</span>
+                  <div class="detail-score" style="color:#d32f2f;">56.0%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has strong rotation detected, strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Seek shelter immediately if NWS issues a tornado warning for your area. Have your emergency plan ready.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Seek shelter immediately if NWS issues a tornado warning for your area. Have your emergency plan ready.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Strong rotation 0.016 s^-1</span>
+                <span class="signal-pill">0-1 km SRH 449</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Northeast US</strong><small>47.76 N, 68.10 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+8.7E / -4.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198378</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198378</h3>
+                  <p class="detail-copy">This storm has strong rotation detected, strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#d32f2f;color:#fff;font-size:12px;padding:4px 10px;">Very High</span>
+                  <div class="detail-score" style="color:#d32f2f;">56.0%</div>
+                  <div class="detail-score-label">47.756 N, 68.101 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Strong rotation 0.016 s^-1</span>
+                <span class="signal-pill">0-1 km SRH 449</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>47.756 N, 68.101 W</strong></div>
               <div class="kv"><span>Location</span><strong>Northeast US</strong></div>
@@ -269,30 +369,64 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Strong low-level rotation detected (AzShear &gt; 0.01)</div>
+              <ul class="detail-list">
+                <li>Strong low-level rotation detected (AzShear &gt; 0.01)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-4">
           <summary class="event-row">
-            <span class="rank-badge">4</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Upper Midwest</strong> <span class="chip" style="background:#7f1d1d;color:#fff;font-size:11px;padding:2px 8px;">CRITICAL</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198198</strong> <span class="mono">42.57, -92.86</span> <strong class="mono" style="color:#d32f2f">53.2%</strong> <span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">Very High</span> <span class="mono">CAPE: 583 | SRH: 277 | MaxLLAz: 0.0120</span></span>
+            <span class="event-row-leading"><span class="rank-badge">4</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Upper Midwest</span><span class="chip" style="background:#7f1d1d;color:#fff;font-size:11px;padding:2px 8px;">CRITICAL</span></span><span class="event-row-subline">53.2% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198198</span><span class="chip" style="background:#d32f2f;color:#fff;font-size:11px;padding:2px 8px;">Very High</span></span><span class="event-row-subline">42.57 N, 92.86 W | CAPE 583 J/kg | SRH 277 | AzShear 0.0120</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#d32f2f;">53.2%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#7f1d1d;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">CRITICAL</span>
-                <strong style="font-size:16px;">Upper Midwest</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Upper Midwest</h3>
+                  <p class="detail-copy">This storm has strong rotation detected, strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#7f1d1d;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">CRITICAL</span>
+                  <div class="detail-score" style="color:#d32f2f;">53.2%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has strong rotation detected, strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Seek shelter immediately if NWS issues a tornado warning for your area. Have your emergency plan ready.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Seek shelter immediately if NWS issues a tornado warning for your area. Have your emergency plan ready.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Strong rotation 0.012 s^-1</span>
+                <span class="signal-pill">0-1 km SRH 277</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Upper Midwest</strong><small>42.57 N, 92.86 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+10.2E / -8.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198198</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198198</h3>
+                  <p class="detail-copy">This storm has strong rotation detected, strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#d32f2f;color:#fff;font-size:12px;padding:4px 10px;">Very High</span>
+                  <div class="detail-score" style="color:#d32f2f;">53.2%</div>
+                  <div class="detail-score-label">42.572 N, 92.863 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Strong rotation 0.012 s^-1</span>
+                <span class="signal-pill">0-1 km SRH 277</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>42.572 N, 92.863 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
@@ -360,31 +494,65 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Strong low-level rotation detected (AzShear &gt; 0.01)</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 1.4)</div>
+              <ul class="detail-list">
+                <li>Strong low-level rotation detected (AzShear &gt; 0.01)</li>
+                <li>Significant tornado parameter elevated (STP 1.4)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-5">
           <summary class="event-row">
-            <span class="rank-badge">5</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Central US</strong> <span class="chip" style="background:#dc2626;color:#fff;font-size:11px;padding:2px 8px;">HIGH</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198107</strong> <span class="mono">41.81, -93.21</span> <strong class="mono" style="color:#e65100">43.6%</strong> <span class="chip" style="background:#e65100;color:#fff;font-size:11px;padding:2px 8px;">High</span> <span class="mono">CAPE: 979 | SRH: 419 | MaxLLAz: 0.0080</span></span>
+            <span class="event-row-leading"><span class="rank-badge">5</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Central US</span><span class="chip" style="background:#dc2626;color:#fff;font-size:11px;padding:2px 8px;">HIGH</span></span><span class="event-row-subline">43.6% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198107</span><span class="chip" style="background:#e65100;color:#fff;font-size:11px;padding:2px 8px;">High</span></span><span class="event-row-subline">41.81 N, 93.21 W | CAPE 979 J/kg | SRH 419 | AzShear 0.0080</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#e65100;">43.6%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#dc2626;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">HIGH</span>
-                <strong style="font-size:16px;">Central US</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Central US</h3>
+                  <p class="detail-copy">This storm has moderate rotation detected, strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#dc2626;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">HIGH</span>
+                  <div class="detail-score" style="color:#e65100;">43.6%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has moderate rotation detected, strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Seek shelter immediately if NWS issues a tornado warning for your area. Have your emergency plan ready.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Seek shelter immediately if NWS issues a tornado warning for your area. Have your emergency plan ready.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Rotation 0.008 s^-1</span>
+                <span class="signal-pill">0-1 km SRH 419</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Central US</strong><small>41.81 N, 93.21 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+12.7E / -13.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198107</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198107</h3>
+                  <p class="detail-copy">This storm has moderate rotation detected, strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#e65100;color:#fff;font-size:12px;padding:4px 10px;">High</span>
+                  <div class="detail-score" style="color:#e65100;">43.6%</div>
+                  <div class="detail-score-label">41.811 N, 93.208 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Rotation 0.008 s^-1</span>
+                <span class="signal-pill">0-1 km SRH 419</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>41.811 N, 93.208 W</strong></div>
               <div class="kv"><span>Location</span><strong>Central US</strong></div>
@@ -452,31 +620,65 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Moderate low-level rotation (AzShear &gt; 0.005)</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 2.3)</div>
+              <ul class="detail-list">
+                <li>Moderate low-level rotation (AzShear &gt; 0.005)</li>
+                <li>Significant tornado parameter elevated (STP 2.3)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-6">
           <summary class="event-row">
-            <span class="rank-badge">6</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Upper Midwest</strong> <span class="chip" style="background:#dc2626;color:#fff;font-size:11px;padding:2px 8px;">HIGH</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198270</strong> <span class="mono">42.12, -91.42</span> <strong class="mono" style="color:#e65100">36.4%</strong> <span class="chip" style="background:#e65100;color:#fff;font-size:11px;padding:2px 8px;">High</span> <span class="mono">CAPE: 649 | SRH: 240 | MaxLLAz: 0.0080</span></span>
+            <span class="event-row-leading"><span class="rank-badge">6</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Upper Midwest</span><span class="chip" style="background:#dc2626;color:#fff;font-size:11px;padding:2px 8px;">HIGH</span></span><span class="event-row-subline">36.4% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198270</span><span class="chip" style="background:#e65100;color:#fff;font-size:11px;padding:2px 8px;">High</span></span><span class="event-row-subline">42.12 N, 91.42 W | CAPE 649 J/kg | SRH 240 | AzShear 0.0080</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#e65100;">36.4%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#dc2626;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">HIGH</span>
-                <strong style="font-size:16px;">Upper Midwest</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Upper Midwest</h3>
+                  <p class="detail-copy">This storm has moderate rotation detected, strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#dc2626;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">HIGH</span>
+                  <div class="detail-score" style="color:#e65100;">36.4%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has moderate rotation detected, strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Stay weather-aware. Monitor NWS warnings. Know where your nearest shelter is.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Stay weather-aware. Monitor NWS warnings. Know where your nearest shelter is.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Rotation 0.008 s^-1</span>
+                <span class="signal-pill">0-1 km SRH 240</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Upper Midwest</strong><small>42.12 N, 91.42 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+11.5E / -12.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198270</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198270</h3>
+                  <p class="detail-copy">This storm has moderate rotation detected, strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#e65100;color:#fff;font-size:12px;padding:4px 10px;">High</span>
+                  <div class="detail-score" style="color:#e65100;">36.4%</div>
+                  <div class="detail-score-label">42.123 N, 91.416 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Rotation 0.008 s^-1</span>
+                <span class="signal-pill">0-1 km SRH 240</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>42.123 N, 91.416 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
@@ -544,31 +746,65 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Moderate low-level rotation (AzShear &gt; 0.005)</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 1.4)</div>
+              <ul class="detail-list">
+                <li>Moderate low-level rotation (AzShear &gt; 0.005)</li>
+                <li>Significant tornado parameter elevated (STP 1.4)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-7">
           <summary class="event-row">
-            <span class="rank-badge">7</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>57 mi S of Lincoln, NE</strong> <span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198256</strong> <span class="mono">40.13, -96.24</span> <strong class="mono" style="color:#f9a825">22.1%</strong> <span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span> <span class="mono">CAPE: 1502 | SRH: 332 | MaxLLAz: 0.0030</span></span>
+            <span class="event-row-leading"><span class="rank-badge">7</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">57 mi S of Lincoln, NE</span><span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span><span class="event-row-subline">22.1% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198256</span><span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span></span><span class="event-row-subline">40.13 N, 96.24 W | CAPE 1502 J/kg | SRH 332 | AzShear 0.0030</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#f9a825;">22.1%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
-                <strong style="font-size:16px;">57 mi S of Lincoln, NE</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">57 mi S of Lincoln, NE</h3>
+                  <p class="detail-copy">This storm has unstable atmosphere, strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
+                  <div class="detail-score" style="color:#f9a825;">22.1%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has unstable atmosphere, strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Be aware of developing severe weather. Check weather.gov for updates.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Be aware of developing severe weather. Check weather.gov for updates.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 1502 J/kg</span>
+                <span class="signal-pill">0-1 km SRH 332</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>57 mi S of Lincoln, NE</strong><small>40.13 N, 96.24 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+8.7E / -4.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198256</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198256</h3>
+                  <p class="detail-copy">This storm has unstable atmosphere, strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#f9a825;color:#fff;font-size:12px;padding:4px 10px;">Moderate</span>
+                  <div class="detail-score" style="color:#f9a825;">22.1%</div>
+                  <div class="detail-score-label">40.127 N, 96.236 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 1502 J/kg</span>
+                <span class="signal-pill">0-1 km SRH 332</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>40.127 N, 96.236 W</strong></div>
               <div class="kv"><span>Location</span><strong>57 mi S of Lincoln, NE</strong></div>
@@ -636,31 +872,65 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• High instability + helicity environment (CAPE 1502, SRH 332)</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 3.8)</div>
+              <ul class="detail-list">
+                <li>High instability + helicity environment (CAPE 1502, SRH 332)</li>
+                <li>Significant tornado parameter elevated (STP 3.8)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-8">
           <summary class="event-row">
-            <span class="rank-badge">8</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>85 mi N of Kansas City, MO</strong> <span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198273</strong> <span class="mono">40.27, -94.95</span> <strong class="mono" style="color:#f9a825">22.1%</strong> <span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span> <span class="mono">CAPE: 1539 | SRH: 374 | MaxLLAz: 0.0020</span></span>
+            <span class="event-row-leading"><span class="rank-badge">8</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">85 mi N of Kansas City, MO</span><span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span><span class="event-row-subline">22.1% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198273</span><span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span></span><span class="event-row-subline">40.27 N, 94.95 W | CAPE 1539 J/kg | SRH 374 | AzShear 0.0020</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#f9a825;">22.1%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
-                <strong style="font-size:16px;">85 mi N of Kansas City, MO</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">85 mi N of Kansas City, MO</h3>
+                  <p class="detail-copy">This storm has unstable atmosphere, strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
+                  <div class="detail-score" style="color:#f9a825;">22.1%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has unstable atmosphere, strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Be aware of developing severe weather. Check weather.gov for updates.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Be aware of developing severe weather. Check weather.gov for updates.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 1539 J/kg</span>
+                <span class="signal-pill">0-1 km SRH 374</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>85 mi N of Kansas City, MO</strong><small>40.27 N, 94.95 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+8.7E / -4.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198273</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198273</h3>
+                  <p class="detail-copy">This storm has unstable atmosphere, strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#f9a825;color:#fff;font-size:12px;padding:4px 10px;">Moderate</span>
+                  <div class="detail-score" style="color:#f9a825;">22.1%</div>
+                  <div class="detail-score-label">40.271 N, 94.950 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 1539 J/kg</span>
+                <span class="signal-pill">0-1 km SRH 374</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>40.271 N, 94.950 W</strong></div>
               <div class="kv"><span>Location</span><strong>85 mi N of Kansas City, MO</strong></div>
@@ -728,31 +998,65 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• High instability + helicity environment (CAPE 1539, SRH 374)</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 2.8)</div>
+              <ul class="detail-list">
+                <li>High instability + helicity environment (CAPE 1539, SRH 374)</li>
+                <li>Significant tornado parameter elevated (STP 2.8)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-9">
           <summary class="event-row">
-            <span class="rank-badge">9</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>49 mi S of Lincoln, NE</strong> <span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198387</strong> <span class="mono">40.19, -96.37</span> <strong class="mono" style="color:#f9a825">22.1%</strong> <span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span> <span class="mono">CAPE: 1275 | SRH: 320 | MaxLLAz: 0.0020</span></span>
+            <span class="event-row-leading"><span class="rank-badge">9</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">49 mi S of Lincoln, NE</span><span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span><span class="event-row-subline">22.1% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198387</span><span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span></span><span class="event-row-subline">40.19 N, 96.37 W | CAPE 1275 J/kg | SRH 320 | AzShear 0.0020</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#f9a825;">22.1%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
-                <strong style="font-size:16px;">49 mi S of Lincoln, NE</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">49 mi S of Lincoln, NE</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
+                  <div class="detail-score" style="color:#f9a825;">22.1%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Be aware of developing severe weather. Check weather.gov for updates.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Be aware of developing severe weather. Check weather.gov for updates.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 1275 J/kg</span>
+                <span class="signal-pill">0-1 km SRH 320</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>49 mi S of Lincoln, NE</strong><small>40.19 N, 96.37 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+8.7E / -4.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198387</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198387</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#f9a825;color:#fff;font-size:12px;padding:4px 10px;">Moderate</span>
+                  <div class="detail-score" style="color:#f9a825;">22.1%</div>
+                  <div class="detail-score-label">40.187 N, 96.372 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 1275 J/kg</span>
+                <span class="signal-pill">0-1 km SRH 320</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>40.187 N, 96.372 W</strong></div>
               <div class="kv"><span>Location</span><strong>49 mi S of Lincoln, NE</strong></div>
@@ -820,30 +1124,62 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 3.1)</div>
+              <ul class="detail-list">
+                <li>Significant tornado parameter elevated (STP 3.1)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-10">
           <summary class="event-row">
-            <span class="rank-badge">10</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Upper Midwest</strong> <span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198380</strong> <span class="mono">42.59, -93.05</span> <strong class="mono" style="color:#f9a825">22.1%</strong> <span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span> <span class="mono">CAPE: 521 | SRH: 259 | MaxLLAz: 0.0040</span></span>
+            <span class="event-row-leading"><span class="rank-badge">10</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Upper Midwest</span><span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span><span class="event-row-subline">22.1% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198380</span><span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span></span><span class="event-row-subline">42.59 N, 93.05 W | CAPE 521 J/kg | SRH 259 | AzShear 0.0040</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#f9a825;">22.1%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
-                <strong style="font-size:16px;">Upper Midwest</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Upper Midwest</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
+                  <div class="detail-score" style="color:#f9a825;">22.1%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Be aware of developing severe weather. Check weather.gov for updates.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Be aware of developing severe weather. Check weather.gov for updates.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">0-1 km SRH 259</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Upper Midwest</strong><small>42.59 N, 93.05 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+10.3E / -8.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198380</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198380</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#f9a825;color:#fff;font-size:12px;padding:4px 10px;">Moderate</span>
+                  <div class="detail-score" style="color:#f9a825;">22.1%</div>
+                  <div class="detail-score-label">42.585 N, 93.054 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">0-1 km SRH 259</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>42.585 N, 93.054 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
@@ -911,30 +1247,62 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 1.2)</div>
+              <ul class="detail-list">
+                <li>Significant tornado parameter elevated (STP 1.2)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-11">
           <summary class="event-row">
-            <span class="rank-badge">11</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Upper Midwest</strong> <span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198268</strong> <span class="mono">42.34, -91.44</span> <strong class="mono" style="color:#f9a825">20.4%</strong> <span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span> <span class="mono">CAPE: 602 | SRH: 239 | MaxLLAz: 0.0040</span></span>
+            <span class="event-row-leading"><span class="rank-badge">11</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Upper Midwest</span><span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span><span class="event-row-subline">20.4% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198268</span><span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span></span><span class="event-row-subline">42.34 N, 91.44 W | CAPE 602 J/kg | SRH 239 | AzShear 0.0040</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#f9a825;">20.4%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
-                <strong style="font-size:16px;">Upper Midwest</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Upper Midwest</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
+                  <div class="detail-score" style="color:#f9a825;">20.4%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Be aware of developing severe weather. Check weather.gov for updates.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Be aware of developing severe weather. Check weather.gov for updates.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">0-1 km SRH 239</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Upper Midwest</strong><small>42.34 N, 91.44 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+11.5E / -12.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198268</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198268</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#f9a825;color:#fff;font-size:12px;padding:4px 10px;">Moderate</span>
+                  <div class="detail-score" style="color:#f9a825;">20.4%</div>
+                  <div class="detail-score-label">42.343 N, 91.441 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">0-1 km SRH 239</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>42.343 N, 91.441 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
@@ -1002,30 +1370,62 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 1.2)</div>
+              <ul class="detail-list">
+                <li>Significant tornado parameter elevated (STP 1.2)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-12">
           <summary class="event-row">
-            <span class="rank-badge">12</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Northeast US</strong> <span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198377</strong> <span class="mono">48.12, -69.82</span> <strong class="mono" style="color:#f9a825">19.9%</strong> <span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span> <span class="mono">CAPE: 26 | SRH: 273 | MaxLLAz: 0.0010</span></span>
+            <span class="event-row-leading"><span class="rank-badge">12</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Northeast US</span><span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span><span class="event-row-subline">19.9% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198377</span><span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span></span><span class="event-row-subline">48.12 N, 69.82 W | CAPE 26 J/kg | SRH 273 | AzShear 0.0010</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#f9a825;">19.9%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
-                <strong style="font-size:16px;">Northeast US</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Northeast US</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
+                  <div class="detail-score" style="color:#f9a825;">19.9%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Be aware of developing severe weather. Check weather.gov for updates.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Be aware of developing severe weather. Check weather.gov for updates.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">0-1 km SRH 273</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Northeast US</strong><small>48.12 N, 69.82 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+8.7E / -4.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198377</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198377</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#f9a825;color:#fff;font-size:12px;padding:4px 10px;">Moderate</span>
+                  <div class="detail-score" style="color:#f9a825;">19.9%</div>
+                  <div class="detail-score-label">48.124 N, 69.819 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">0-1 km SRH 273</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>48.124 N, 69.819 W</strong></div>
               <div class="kv"><span>Location</span><strong>Northeast US</strong></div>
@@ -1093,30 +1493,64 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <ul class="detail-list">
+                <li>Storm shows marginal severe weather signatures</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-13">
           <summary class="event-row">
-            <span class="rank-badge">13</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>66 mi S of Lincoln, NE</strong> <span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198365</strong> <span class="mono">39.91, -96.36</span> <strong class="mono" style="color:#f9a825">17.8%</strong> <span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span> <span class="mono">CAPE: 1967 | SRH: 246 | MaxLLAz: 0.0020</span></span>
+            <span class="event-row-leading"><span class="rank-badge">13</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">66 mi S of Lincoln, NE</span><span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span><span class="event-row-subline">17.8% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198365</span><span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span></span><span class="event-row-subline">39.91 N, 96.36 W | CAPE 1967 J/kg | SRH 246 | AzShear 0.0020</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#f9a825;">17.8%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
-                <strong style="font-size:16px;">66 mi S of Lincoln, NE</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">66 mi S of Lincoln, NE</h3>
+                  <p class="detail-copy">This storm has unstable atmosphere, strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
+                  <div class="detail-score" style="color:#f9a825;">17.8%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has unstable atmosphere, strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Be aware of developing severe weather. Check weather.gov for updates.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Be aware of developing severe weather. Check weather.gov for updates.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 1967 J/kg</span>
+                <span class="signal-pill">0-1 km SRH 246</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>66 mi S of Lincoln, NE</strong><small>39.91 N, 96.36 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+8.7E / -4.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198365</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198365</h3>
+                  <p class="detail-copy">This storm has unstable atmosphere, strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#f9a825;color:#fff;font-size:12px;padding:4px 10px;">Moderate</span>
+                  <div class="detail-score" style="color:#f9a825;">17.8%</div>
+                  <div class="detail-score-label">39.907 N, 96.362 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 1967 J/kg</span>
+                <span class="signal-pill">0-1 km SRH 246</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>39.907 N, 96.362 W</strong></div>
               <div class="kv"><span>Location</span><strong>66 mi S of Lincoln, NE</strong></div>
@@ -1184,31 +1618,63 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• High instability + helicity environment (CAPE 1967, SRH 246)</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 4.2)</div>
+              <ul class="detail-list">
+                <li>High instability + helicity environment (CAPE 1967, SRH 246)</li>
+                <li>Significant tornado parameter elevated (STP 4.2)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-14">
           <summary class="event-row">
-            <span class="rank-badge">14</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Upper Midwest</strong> <span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198354</strong> <span class="mono">42.89, -91.98</span> <strong class="mono" style="color:#f9a825">16.4%</strong> <span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span> <span class="mono">CAPE: 320 | SRH: 186 | MaxLLAz: 0.0040</span></span>
+            <span class="event-row-leading"><span class="rank-badge">14</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Upper Midwest</span><span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span><span class="event-row-subline">16.4% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198354</span><span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span></span><span class="event-row-subline">42.89 N, 91.98 W | CAPE 320 J/kg | SRH 186 | AzShear 0.0040</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#f9a825;">16.4%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
-                <strong style="font-size:16px;">Upper Midwest</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Upper Midwest</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
+                  <div class="detail-score" style="color:#f9a825;">16.4%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Be aware of developing severe weather. Check weather.gov for updates.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Be aware of developing severe weather. Check weather.gov for updates.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">0-1 km SRH 186</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Upper Midwest</strong><small>42.89 N, 91.98 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+11.1E / -11.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198354</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198354</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#f9a825;color:#fff;font-size:12px;padding:4px 10px;">Moderate</span>
+                  <div class="detail-score" style="color:#f9a825;">16.4%</div>
+                  <div class="detail-score-label">42.895 N, 91.983 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">0-1 km SRH 186</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>42.895 N, 91.983 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
@@ -1275,30 +1741,64 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <ul class="detail-list">
+                <li>Storm shows marginal severe weather signatures</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-15">
           <summary class="event-row">
-            <span class="rank-badge">15</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>61 mi W of Indianapolis, IN</strong> <span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198388</strong> <span class="mono">39.24, -86.88</span> <strong class="mono" style="color:#f9a825">16.0%</strong> <span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span> <span class="mono">CAPE: 1611 | SRH: 38 | MaxLLAz: 0.0060</span></span>
+            <span class="event-row-leading"><span class="rank-badge">15</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">61 mi W of Indianapolis, IN</span><span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span><span class="event-row-subline">16.0% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198388</span><span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span></span><span class="event-row-subline">39.24 N, 86.88 W | CAPE 1611 J/kg | SRH 38 | AzShear 0.0060</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#f9a825;">16.0%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
-                <strong style="font-size:16px;">61 mi W of Indianapolis, IN</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">61 mi W of Indianapolis, IN</h3>
+                  <p class="detail-copy">This storm has moderate rotation detected, unstable atmosphere.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
+                  <div class="detail-score" style="color:#f9a825;">16.0%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has moderate rotation detected, unstable atmosphere.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Be aware of developing severe weather. Check weather.gov for updates.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Be aware of developing severe weather. Check weather.gov for updates.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Rotation 0.006 s^-1</span>
+                <span class="signal-pill">MUCAPE 1611 J/kg</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>61 mi W of Indianapolis, IN</strong><small>39.24 N, 86.88 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+8.7E / -4.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198388</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198388</h3>
+                  <p class="detail-copy">This storm has moderate rotation detected, unstable atmosphere. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#f9a825;color:#fff;font-size:12px;padding:4px 10px;">Moderate</span>
+                  <div class="detail-score" style="color:#f9a825;">16.0%</div>
+                  <div class="detail-score-label">39.245 N, 86.878 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">Rotation 0.006 s^-1</span>
+                <span class="signal-pill">MUCAPE 1611 J/kg</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>39.245 N, 86.878 W</strong></div>
               <div class="kv"><span>Location</span><strong>61 mi W of Indianapolis, IN</strong></div>
@@ -1365,30 +1865,62 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Moderate low-level rotation (AzShear &gt; 0.005)</div>
+              <ul class="detail-list">
+                <li>Moderate low-level rotation (AzShear &gt; 0.005)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-16">
           <summary class="event-row">
-            <span class="rank-badge">16</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>39 mi N of Wichita, KS</strong> <span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198389</strong> <span class="mono">38.24, -97.44</span> <strong class="mono" style="color:#f9a825">15.4%</strong> <span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span> <span class="mono">CAPE: 2622 | SRH: 131 | MaxLLAz: 0.0050</span></span>
+            <span class="event-row-leading"><span class="rank-badge">16</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">39 mi N of Wichita, KS</span><span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span><span class="event-row-subline">15.4% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198389</span><span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span></span><span class="event-row-subline">38.24 N, 97.44 W | CAPE 2622 J/kg | SRH 131 | AzShear 0.0050</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#f9a825;">15.4%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
-                <strong style="font-size:16px;">39 mi N of Wichita, KS</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">39 mi N of Wichita, KS</h3>
+                  <p class="detail-copy">This storm has unstable atmosphere.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
+                  <div class="detail-score" style="color:#f9a825;">15.4%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has unstable atmosphere.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Be aware of developing severe weather. Check weather.gov for updates.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Be aware of developing severe weather. Check weather.gov for updates.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 2622 J/kg</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>39 mi N of Wichita, KS</strong><small>38.24 N, 97.44 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+8.7E / -4.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198389</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198389</h3>
+                  <p class="detail-copy">This storm has unstable atmosphere. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#f9a825;color:#fff;font-size:12px;padding:4px 10px;">Moderate</span>
+                  <div class="detail-score" style="color:#f9a825;">15.4%</div>
+                  <div class="detail-score-label">38.241 N, 97.435 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 2622 J/kg</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>38.241 N, 97.435 W</strong></div>
               <div class="kv"><span>Location</span><strong>39 mi N of Wichita, KS</strong></div>
@@ -1456,30 +1988,62 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 2.8)</div>
+              <ul class="detail-list">
+                <li>Significant tornado parameter elevated (STP 2.8)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-17">
           <summary class="event-row">
-            <span class="rank-badge">17</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Upper Midwest</strong> <span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198325</strong> <span class="mono">42.57, -91.29</span> <strong class="mono" style="color:#f9a825">15.2%</strong> <span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span> <span class="mono">CAPE: 474 | SRH: 208 | MaxLLAz: 0.0020</span></span>
+            <span class="event-row-leading"><span class="rank-badge">17</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Upper Midwest</span><span class="chip" style="background:#ea580c;color:#fff;font-size:11px;padding:2px 8px;">ELEVATED</span></span><span class="event-row-subline">15.2% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198325</span><span class="chip" style="background:#f9a825;color:#fff;font-size:11px;padding:2px 8px;">Moderate</span></span><span class="event-row-subline">42.57 N, 91.29 W | CAPE 474 J/kg | SRH 208 | AzShear 0.0020</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#f9a825;">15.2%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
-                <strong style="font-size:16px;">Upper Midwest</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Upper Midwest</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ea580c;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">ELEVATED</span>
+                  <div class="detail-score" style="color:#f9a825;">15.2%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Be aware of developing severe weather. Check weather.gov for updates.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Be aware of developing severe weather. Check weather.gov for updates.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">0-1 km SRH 208</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Upper Midwest</strong><small>42.57 N, 91.29 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+11.5E / -12.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198325</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198325</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#f9a825;color:#fff;font-size:12px;padding:4px 10px;">Moderate</span>
+                  <div class="detail-score" style="color:#f9a825;">15.2%</div>
+                  <div class="detail-score-label">42.566 N, 91.288 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">0-1 km SRH 208</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>42.566 N, 91.288 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
@@ -1547,30 +2111,62 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <ul class="detail-list">
+                <li>Storm shows marginal severe weather signatures</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-18">
           <summary class="event-row">
-            <span class="rank-badge">18</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Northeast US</strong> <span class="chip" style="background:#ca8a04;color:#fff;font-size:11px;padding:2px 8px;">MODERATE</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198362</strong> <span class="mono">42.70, -78.11</span> <strong class="mono" style="color:#1976d2">13.8%</strong> <span class="chip" style="background:#1976d2;color:#fff;font-size:11px;padding:2px 8px;">Low</span> <span class="mono">CAPE: 812 | SRH: 185 | MaxLLAz: 0.0020</span></span>
+            <span class="event-row-leading"><span class="rank-badge">18</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Northeast US</span><span class="chip" style="background:#ca8a04;color:#fff;font-size:11px;padding:2px 8px;">MODERATE</span></span><span class="event-row-subline">13.8% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198362</span><span class="chip" style="background:#1976d2;color:#fff;font-size:11px;padding:2px 8px;">Low</span></span><span class="event-row-subline">42.70 N, 78.11 W | CAPE 812 J/kg | SRH 185 | AzShear 0.0020</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#1976d2;">13.8%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ca8a04;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">MODERATE</span>
-                <strong style="font-size:16px;">Northeast US</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Northeast US</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ca8a04;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">MODERATE</span>
+                  <div class="detail-score" style="color:#1976d2;">13.8%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">This storm has strong low-level wind shear.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Low risk. No immediate action needed. Stay generally weather-aware.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Low risk. No immediate action needed. Stay generally weather-aware.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">0-1 km SRH 185</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Northeast US</strong><small>42.70 N, 78.11 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+8.7E / -4.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198362</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198362</h3>
+                  <p class="detail-copy">This storm has strong low-level wind shear. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#1976d2;color:#fff;font-size:12px;padding:4px 10px;">Low</span>
+                  <div class="detail-score" style="color:#1976d2;">13.8%</div>
+                  <div class="detail-score-label">42.701 N, 78.109 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">0-1 km SRH 185</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>42.701 N, 78.109 W</strong></div>
               <div class="kv"><span>Location</span><strong>Northeast US</strong></div>
@@ -1637,30 +2233,62 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 1.3)</div>
+              <ul class="detail-list">
+                <li>Significant tornado parameter elevated (STP 1.3)</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-19">
           <summary class="event-row">
-            <span class="rank-badge">19</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>Near Louisville, KY</strong> <span class="chip" style="background:#ca8a04;color:#fff;font-size:11px;padding:2px 8px;">MODERATE</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198332</strong> <span class="mono">38.09, -85.78</span> <strong class="mono" style="color:#1976d2">13.5%</strong> <span class="chip" style="background:#1976d2;color:#fff;font-size:11px;padding:2px 8px;">Low</span> <span class="mono">CAPE: 1469 | SRH: 39 | MaxLLAz: 0.0050</span></span>
+            <span class="event-row-leading"><span class="rank-badge">19</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">Near Louisville, KY</span><span class="chip" style="background:#ca8a04;color:#fff;font-size:11px;padding:2px 8px;">MODERATE</span></span><span class="event-row-subline">13.5% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198332</span><span class="chip" style="background:#1976d2;color:#fff;font-size:11px;padding:2px 8px;">Low</span></span><span class="event-row-subline">38.09 N, 85.78 W | CAPE 1469 J/kg | SRH 39 | AzShear 0.0050</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#1976d2;">13.5%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ca8a04;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">MODERATE</span>
-                <strong style="font-size:16px;">Near Louisville, KY</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">Near Louisville, KY</h3>
+                  <p class="detail-copy">No significant tornado signals detected in this storm.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ca8a04;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">MODERATE</span>
+                  <div class="detail-score" style="color:#1976d2;">13.5%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">No significant tornado signals detected in this storm.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Low risk. No immediate action needed. Stay generally weather-aware.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Low risk. No immediate action needed. Stay generally weather-aware.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 1469 J/kg</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>Near Louisville, KY</strong><small>38.09 N, 85.78 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+8.7E / -4.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198332</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198332</h3>
+                  <p class="detail-copy">No significant tornado signals detected in this storm. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#1976d2;color:#fff;font-size:12px;padding:4px 10px;">Low</span>
+                  <div class="detail-score" style="color:#1976d2;">13.5%</div>
+                  <div class="detail-score-label">38.086 N, 85.777 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 1469 J/kg</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>38.086 N, 85.777 W</strong></div>
               <div class="kv"><span>Location</span><strong>Near Louisville, KY</strong></div>
@@ -1726,30 +2354,62 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <ul class="detail-list">
+                <li>Storm shows marginal severe weather signatures</li>
+              </ul>
             </div>
           </div>
         </details>
         <details class="event-row-details" id="storm-20">
           <summary class="event-row">
-            <span class="rank-badge">20</span>
-            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;"> <strong>81 mi S of Greensboro, NC</strong> <span class="chip" style="background:#ca8a04;color:#fff;font-size:11px;padding:2px 8px;">MODERATE</span></span>
-            <span data-depth="technical" style="display:inline;"> <strong>198368</strong> <span class="mono">35.23, -78.97</span> <strong class="mono" style="color:#1976d2">13.5%</strong> <span class="chip" style="background:#1976d2;color:#fff;font-size:11px;padding:2px 8px;">Low</span> <span class="mono">CAPE: 1027 | SRH: 24 | MaxLLAz: 0.0050</span></span>
+            <span class="event-row-leading"><span class="rank-badge">20</span><span class="event-row-copy"><span class="event-row-mode" data-depth="simple"><span class="event-row-headline"><span class="event-row-title">81 mi S of Greensboro, NC</span><span class="chip" style="background:#ca8a04;color:#fff;font-size:11px;padding:2px 8px;">MODERATE</span></span><span class="event-row-subline">13.5% tornado risk in the next 24 hours | 2026-04-03 18:30:40 UTC</span></span><span class="event-row-mode" data-depth="technical"><span class="event-row-headline"><span class="event-row-title">Storm 198368</span><span class="chip" style="background:#1976d2;color:#fff;font-size:11px;padding:2px 8px;">Low</span></span><span class="event-row-subline">35.23 N, 78.97 W | CAPE 1027 J/kg | SRH 24 | AzShear 0.0050</span></span></span></span><span class="event-row-side"><span class="event-row-score" style="--event-accent:#1976d2;">13.5%</span><span class="event-row-caret" aria-hidden="true"></span></span>
           </summary>
-          <div class="event-detail" style="padding:12px 10px;">
-            <div data-depth="simple">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <span class="chip" style="background:#ca8a04;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">MODERATE</span>
-                <strong style="font-size:16px;">81 mi S of Greensboro, NC</strong>
+          <div class="event-detail">
+            <div data-depth="simple" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Threat brief</div>
+                  <h3 class="detail-title">81 mi S of Greensboro, NC</h3>
+                  <p class="detail-copy">No significant tornado signals detected in this storm.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#ca8a04;color:#fff;font-size:14px;padding:4px 14px;font-weight:700;">MODERATE</span>
+                  <div class="detail-score" style="color:#1976d2;">13.5%</div>
+                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>
+                </div>
               </div>
-              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">No significant tornado signals detected in this storm.</p>
-              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>
-                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">Low risk. No immediate action needed. Stay generally weather-aware.</p>
+              <div class="detail-alert">
+                <strong>What to do</strong>
+                <p>Low risk. No immediate action needed. Stay generally weather-aware.</p>
               </div>
-              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 1027 J/kg</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
+              <div class="detail-signal-grid" style="margin-top:16px;">
+                <div class="signal-card"><span>Location</span><strong>81 mi S of Greensboro, NC</strong><small>35.23 N, 78.97 W</small></div>
+                <div class="signal-card"><span>Storm motion</span><strong>+11.4E / -12.0S</strong><small>Motion components used in the analytic scoring stack</small></div>
+                <div class="signal-card"><span>ProbSevere ID</span><strong>198368</strong><small>Active convective object identifier</small></div>
+                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong><small>Always follow NWS watches and warnings first</small></div>
+              </div>
             </div>
-            <div data-depth="technical">
+            <div data-depth="technical" class="detail-mode">
+              <div class="detail-hero">
+                <div>
+                  <div class="detail-kicker">Technical breakdown</div>
+                  <h3 class="detail-title">Storm 198368</h3>
+                  <p class="detail-copy">No significant tornado signals detected in this storm. The current analytic blend uses ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>
+                </div>
+                <div class="detail-badge-stack">
+                  <span class="chip" style="background:#1976d2;color:#fff;font-size:12px;padding:4px 10px;">Low</span>
+                  <div class="detail-score" style="color:#1976d2;">13.5%</div>
+                  <div class="detail-score-label">35.227 N, 78.965 W</div>
+                </div>
+              </div>
+              <div class="detail-chip-row">
+                <span class="signal-pill">MUCAPE 1027 J/kg</span>
+                <span class="signal-pill">2/5 singularity conditions</span>
+              </div>
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
               <div class="kv"><span>Coordinates</span><strong>35.227 N, 78.965 W</strong></div>
               <div class="kv"><span>Location</span><strong>81 mi S of Greensboro, NC</strong></div>
@@ -1815,7 +2475,9 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <ul class="detail-list">
+                <li>Storm shows marginal severe weather signatures</li>
+              </ul>
             </div>
           </div>
         </details>

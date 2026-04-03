@@ -7,7 +7,7 @@
   <meta name="description" content="Static live overview for the current earthquake, hurricane, and tornado forecasts.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.com/live/">
-  <link rel="stylesheet" href="/assets/styles.css?v=7">
+  <link rel="stylesheet" href="/assets/styles.css?v=8">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <meta property="og:type" content="website">
@@ -17,6 +17,22 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Live Forecasts - HazardPulse">
   <meta name="twitter:description" content="Static live overview for the current earthquake, hurricane, and tornado forecasts.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "HazardPulse Live Forecasts",
+    "url": "https://hazardpulse.com/live/",
+    "description": "Static live overview for the current earthquake, hurricane, and tornado forecasts."
+  }
+  </script>
+  <script type="speculationrules">
+  {
+    "prefetch": [
+      { "source": "list", "urls": ["/", "/live/earthquake/", "/live/hurricane/", "/live/tornado/", "/evidence/", "/verification/"] }
+    ]
+  }
+  </script>
 </head>
 <body>
   <div class="live-bar"></div>
@@ -50,7 +66,7 @@
         <a href="/api/">API</a>
       </nav>
       <div class="theme-switch">
-        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to light mode">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
         <label for="theme-toggle">Dark</label>
       </div>
     </div>

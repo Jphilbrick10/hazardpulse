@@ -7,7 +7,7 @@
   <meta name="description" content="Static live hurricane page built from the current tropical cyclone feed and HazardPulse rapid-intensification model output.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.com/live/hurricane/">
-  <link rel="stylesheet" href="/assets/styles.css?v=7">
+  <link rel="stylesheet" href="/assets/styles.css?v=8">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <meta property="og:type" content="website">
@@ -17,6 +17,22 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Live Hurricane Forecasts - HazardPulse">
   <meta name="twitter:description" content="Static live hurricane page built from the current tropical cyclone feed and HazardPulse rapid-intensification model output.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "HazardPulse Live Hurricane Forecasts",
+    "url": "https://hazardpulse.com/live/hurricane/",
+    "description": "Static live hurricane page built from the current tropical cyclone feed and HazardPulse rapid-intensification model output."
+  }
+  </script>
+  <script type="speculationrules">
+  {
+    "prefetch": [
+      { "source": "list", "urls": ["/", "/live/", "/live/earthquake/", "/live/tornado/", "/evidence/", "/verification/"] }
+    ]
+  }
+  </script>
 </head>
 <body>
   <div class="live-bar"></div>
@@ -27,7 +43,6 @@
       <a href="/" class="brand" aria-label="HazardPulse home">
         <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
         HazardPulse
-        
       </a>
       <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
       <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
@@ -51,7 +66,7 @@
         <a href="/api/">API</a>
       </nav>
       <div class="theme-switch">
-        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to light mode">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
         <label for="theme-toggle">Dark</label>
       </div>
     </div>
@@ -64,9 +79,8 @@
         This page is rendered from the current tropical cyclone feed. When there are no active storms,
         it says so plainly instead of showing synthetic examples.
       </p>
-      <p class="muted">Updated Thu, 02 Apr 2026 17:41:20 UTC &middot; Model: hurricane_ri_v8_1 &middot; Independent hazard intelligence platform</p>
+      <p class="muted">Updated 2026-04-02T17:22:03Z &middot; Model: hurricane_ri_v8_1 &middot; Independent hazard intelligence platform</p>
     </section>
-
     <section class="section">
       <div class="grid">
         <div class="col-4">

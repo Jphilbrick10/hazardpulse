@@ -37,6 +37,10 @@ import numpy as np
 # Add src to path
 SRC = Path(__file__).resolve().parents[1] / "src"
 sys.path.insert(0, str(SRC))
+SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPT_DIR))
+
+from build_site_artifacts import build_site_artifacts
 
 from hazardpulse.earthquake.coherence_engine import (  # noqa: E402
     GRID_DLAT,
@@ -352,6 +356,97 @@ def _format_time(ts: str) -> str:
         return str(ts)
 
 
+def _compass_value(value: float, positive: str, negative: str) -> str:
+    """Format a signed coordinate value with a compass suffix."""
+    return f"{abs(value):.0f}{positive if value >= 0 else negative}"
+
+
+def _format_cell_coords(lat: float, lon: float) -> str:
+    """Format cell coordinates using N/S/E/W suffixes."""
+    return f"{_compass_value(lat, 'N', 'S')}, {_compass_value(lon, 'E', 'W')}"
+
+
+def _earthquake_summary_sentence(cell: dict) -> str:
+    """Explain why a cell is ranking highly in plain language."""
+    reasons: list[str] = []
+    conditions = int(cell.get("conditions_met", 0) or 0)
+    rate_acceleration = float(cell.get("rate_acceleration", 0) or 0)
+    b_value = float(cell.get("b_value", 0) or 0)
+    s_over_gamma = float(cell.get("S_over_Gamma", 0) or 0)
+
+    if conditions >= 4:
+        reasons.append(f"{conditions}/5 singularity conditions are active")
+    elif conditions >= 3:
+        reasons.append(f"{conditions}/5 precursor conditions are active")
+    if rate_acceleration >= 2:
+        reasons.append(f"event rate is {rate_acceleration:.1f}x the local background")
+    if 0 < b_value < 0.8:
+        reasons.append(f"the b-value is compressed at {b_value:.2f}")
+    if s_over_gamma > 1:
+        reasons.append(f"loading exceeds healing by {s_over_gamma:.1f}x")
+
+    if not reasons:
+        return (
+            "This cell remains on the watchlist because multiple coherence and "
+            "clustering signals are above background."
+        )
+    if len(reasons) == 1:
+        return f"This cell stands out because {reasons[0]}."
+    if len(reasons) == 2:
+        return f"This cell stands out because {reasons[0]} and {reasons[1]}."
+    return (
+        f"This cell stands out because {reasons[0]}, {reasons[1]}, and "
+        f"{reasons[2]}."
+    )
+
+
+def _earthquake_action_recommendation(cell: dict) -> str:
+    """Operational guidance for the current seismic posture."""
+    band = cell.get("risk_band", "minimal")
+    if band in {"critical", "very_high"}:
+        return (
+            "Treat this as a heightened watch signal: review continuity plans, "
+            "confirm response contacts, and monitor USGS or the relevant regional "
+            "seismological agency for escalation."
+        )
+    if band in {"elevated", "guarded"}:
+        return (
+            "Keep this zone on watch, especially if you have facilities, shipping, "
+            "or field operations nearby. Monitor official seismic catalogs for "
+            "rapid changes in rate or magnitude."
+        )
+    return (
+        "This is a monitoring signal rather than an emergency trigger. Keep "
+        "official seismic feeds in view and reassess if nearby activity clusters."
+    )
+
+
+def _earthquake_watch_items(cell: dict) -> list[str]:
+    """Short watch items for the simple detail view."""
+    items: list[str] = []
+    rate_acceleration = float(cell.get("rate_acceleration", 0) or 0)
+    b_value = float(cell.get("b_value", 0) or 0)
+    s_over_gamma = float(cell.get("S_over_Gamma", 0) or 0)
+    ell_trend = float(cell.get("ell_trend", 0) or 0)
+    max_mag = float(cell.get("max_mag", 0) or 0)
+    conditions = int(cell.get("conditions_met", 0) or 0)
+
+    if conditions:
+        items.append(f"{conditions}/5 criticality conditions")
+    if rate_acceleration >= 1.2:
+        items.append(f"Rate acceleration {rate_acceleration:.1f}x")
+    if 0 < b_value < 1:
+        items.append(f"b-value {b_value:.2f}")
+    if s_over_gamma > 0:
+        items.append(f"S/Gamma {s_over_gamma:.1f}")
+    if abs(ell_trend) >= 1:
+        items.append(f"Corr. length trend {ell_trend:+.1f} km/mo")
+    if max_mag >= 4:
+        items.append(f"Mmax {max_mag:.1f} in-window")
+
+    return items[:5]
+
+
 def _lat_lon_to_svg(lat: float, lon: float) -> tuple[float, float]:
     """Convert lat/lon to SVG coordinates for 960x480 equirectangular map."""
     x = ((lon + 180) / 360) * 960
@@ -382,7 +477,7 @@ def _render_grid_heatmap(cells: list[dict]) -> str:
 
         opacity = min(0.15 + prob * 1.2, 0.8)
         label = (
-            f"{lat:.0f}N, {lon:.0f}E - {_pct(prob)} "
+            f"{_format_cell_coords(lat, lon)} - {_pct(prob)} "
             f"({c['conditions_met']}/5 conditions)"
         )
         lines.append(
@@ -404,8 +499,9 @@ def _render_svg_markers(cells: list[dict]) -> str:
         rank = i + 1
         x, y = _lat_lon_to_svg(c["lat"], c["lon"])
         risk_label = RISK_LABELS.get(c["risk_band"], c["risk_band"])
+        cell_label = _format_cell_coords(c["lat"], c["lon"])
         label = (
-            f'Cell {c["lat"]:.0f}N {c["lon"]:.0f}E - '
+            f"Cell {cell_label} - "
             f'{_pct(c["probability"])} ({risk_label})'
         )
         base_r = 5.0 if rank == 1 else 3.5
@@ -432,7 +528,7 @@ def _render_svg_markers(cells: list[dict]) -> str:
         lines.append(
             f'        <text class="tooltip-text" x="{x + 12:.1f}" '
             f'y="{y - 8:.1f}">'
-            f'{c["lat"]:.0f}N, {c["lon"]:.0f}E</text>'
+            f"{_esc(cell_label)}</text>"
         )
         lines.append(
             f'        <text class="tooltip-sub" x="{x + 12:.1f}" '
@@ -459,99 +555,240 @@ def _render_cell_rows(cells: list[dict]) -> str:
         risk_color = RISK_COLORS.get(c["risk_band"], "#757575")
         risk_label = RISK_LABELS.get(c["risk_band"], c["risk_band"])
         rank_class = " rank-1" if rank == 1 else ""
+        probability = float(c.get("probability", 0) or 0)
+        cell_label = _format_cell_coords(c["lat"], c["lon"])
+        summary_sentence = _earthquake_summary_sentence(c)
+        action_text = _earthquake_action_recommendation(c)
+        watch_items = _earthquake_watch_items(c)
+        simple_subline = (
+            f"{_pct(probability)} 30-day seismic watch probability with "
+            f"{int(c.get('conditions_met', 0) or 0)}/5 criticality signals active"
+        )
+        technical_subline = (
+            f"{int(c.get('n_events', 0) or 0)} events in-window | "
+            f"Mmax {float(c.get('max_mag', 0) or 0):.1f} | "
+            f"Rate {float(c.get('rate_acceleration', 0) or 0):.2f}x | "
+            f"S/Gamma {float(c.get('S_over_Gamma', 0) or 0):.2f}"
+        )
+        sing = c.get("singularity_detail", {})
+        cond_labels = [
+            ("ell_elevated", "Correlation length elevated"),
+            ("b_depressed", "b-value depressed"),
+            ("iet_lorentzian", "IET Lorentzian"),
+            ("rate_accelerating", "Rate accelerating"),
+            ("loading_exceeds_healing", "Loading exceeds healing"),
+        ]
+        active_conditions = [
+            label for key, label in cond_labels if sing.get(key)
+        ]
+        if not active_conditions:
+            active_conditions = ["No singularity conditions are currently active"]
 
         lines.append(
             f'        <details class="event-row-details" id="cell-{rank}">'
         )
-        lines.append(f'          <summary class="event-row">')
+        lines.append('          <summary class="event-row">')
         lines.append(
-            f'            <span class="rank-badge{rank_class}">{rank}</span>'
-            f' <strong>{c["lat"]:.0f}N, {c["lon"]:.0f}E</strong>'
-            f' ({c["n_events"]} events, Mmax {c["max_mag"]:.1f})'
-            f' <strong style="color:{risk_color}">'
-            f'{_pct(c["probability"])}</strong>'
-            f' <span class="chip" style="background:{risk_color};'
+            f'            <span class="event-row-leading">'
+            f'<span class="rank-badge{rank_class}">{rank}</span>'
+            f'<span class="event-row-copy">'
+            f'<span class="event-row-mode" data-depth="simple">'
+            f'<span class="event-row-headline">'
+            f'<span class="event-row-title">{_esc(cell_label)}</span>'
+            f'<span class="chip" style="background:{risk_color};'
             f'color:#fff;font-size:11px;padding:2px 8px;">'
             f'{_esc(risk_label)}</span>'
-            f' Conditions: {c["conditions_met"]}/5'
+            f'</span>'
+            f'<span class="event-row-subline">{_esc(simple_subline)}</span>'
+            f'</span>'
+            f'<span class="event-row-mode" data-depth="technical">'
+            f'<span class="event-row-headline">'
+            f'<span class="event-row-title">{_esc(cell_label)}</span>'
+            f'<span class="chip" style="background:{risk_color};'
+            f'color:#fff;font-size:11px;padding:2px 8px;">'
+            f'{_esc(risk_label)}</span>'
+            f'</span>'
+            f'<span class="event-row-subline">{_esc(technical_subline)}</span>'
+            f'</span>'
+            f'</span>'
+            f'</span>'
+            f'<span class="event-row-side">'
+            f'<span class="event-row-score" style="--event-accent:{risk_color};">'
+            f'{_pct(probability)}</span>'
+            f'<span class="event-row-caret" aria-hidden="true"></span>'
+            f'</span>'
         )
-        lines.append(f'          </summary>')
+        lines.append('          </summary>')
+        lines.append('          <div class="event-detail">')
+        lines.append('            <div data-depth="simple" class="detail-mode">')
+        lines.append('              <div class="detail-hero">')
+        lines.append('                <div>')
+        lines.append('                  <div class="detail-kicker">Threat brief</div>')
         lines.append(
-            f'          <div class="event-detail" style="padding:12px 10px;">'
+            f'                  <h3 class="detail-title">Grid cell {_esc(cell_label)}</h3>'
         )
+        lines.append(
+            f'                  <p class="detail-copy">{_esc(summary_sentence)}</p>'
+        )
+        lines.append('                </div>')
+        lines.append('                <div class="detail-badge-stack">')
+        lines.append(
+            f'                  <span class="chip" style="background:{risk_color};'
+            f'color:#fff;font-size:12px;padding:4px 10px;">{_esc(risk_label)}</span>'
+        )
+        lines.append(
+            f'                  <div class="detail-score" style="color:{risk_color};">'
+            f'{_pct(probability)}</div>'
+        )
+        lines.append(
+            '                  <div class="detail-score-label">'
+            'Estimated M6.0+ probability in the next 30 days'
+            '</div>'
+        )
+        lines.append('                </div>')
+        lines.append('              </div>')
+        lines.append('              <div class="detail-alert">')
+        lines.append('                <strong>Operational posture</strong>')
+        lines.append(f'                <p>{_esc(action_text)}</p>')
+        lines.append('              </div>')
+        if watch_items:
+            lines.append('              <div class="detail-chip-row">')
+            for item in watch_items:
+                lines.append(
+                    f'                <span class="signal-pill">{_esc(item)}</span>'
+                )
+            lines.append('              </div>')
+        lines.append('              <div class="detail-signal-grid" style="margin-top:16px;">')
+        lines.append(
+            f'                <div class="signal-card"><span>Recent events</span>'
+            f'<strong>{int(c.get("n_events", 0) or 0)}</strong>'
+            f'<small>Cataloged M2.5+ events in this cell</small></div>'
+        )
+        lines.append(
+            f'                <div class="signal-card"><span>Largest event</span>'
+            f'<strong>M{float(c.get("max_mag", 0) or 0):.1f}</strong>'
+            f'<small>Strongest event in the current lookback window</small></div>'
+        )
+        lines.append(
+            f'                <div class="signal-card"><span>Rate acceleration</span>'
+            f'<strong>{float(c.get("rate_acceleration", 0) or 0):.2f}x</strong>'
+            f'<small>Current rate versus local background</small></div>'
+        )
+        lines.append(
+            f'                <div class="signal-card"><span>Conditions met</span>'
+            f'<strong>{int(c.get("conditions_met", 0) or 0)} / 5</strong>'
+            f'<small>Active coherence singularity conditions</small></div>'
+        )
+        lines.append('              </div>')
+        lines.append('            </div>')
 
-        # Key metrics
+        lines.append('            <div data-depth="technical" class="detail-mode">')
+        lines.append('              <div class="detail-hero">')
+        lines.append('                <div>')
+        lines.append('                  <div class="detail-kicker">Technical breakdown</div>')
         lines.append(
-            f'            <div class="kv"><span>b-value</span>'
+            f'                  <h3 class="detail-title">Cell {_esc(cell_label)}</h3>'
+        )
+        lines.append(
+            f'                  <p class="detail-copy">{_esc(summary_sentence)} '
+            f'The current window contains {int(c.get("n_events", 0) or 0)} '
+            f'recent catalog events with a maximum magnitude of '
+            f'{float(c.get("max_mag", 0) or 0):.1f}.</p>'
+        )
+        lines.append('                </div>')
+        lines.append('                <div class="detail-badge-stack">')
+        lines.append(
+            f'                  <span class="chip" style="background:{risk_color};'
+            f'color:#fff;font-size:12px;padding:4px 10px;">{_esc(risk_label)}</span>'
+        )
+        lines.append(
+            f'                  <div class="detail-score" style="color:{risk_color};">'
+            f'{_pct(probability)}</div>'
+        )
+        lines.append(
+            f'                  <div class="detail-score-label">'
+            f'{int(c.get("conditions_met", 0) or 0)} of 5 singularity conditions active'
+            f'</div>'
+        )
+        lines.append('                </div>')
+        lines.append('              </div>')
+        lines.append('              <div class="detail-panel-grid">')
+        lines.append('                <section class="detail-panel half">')
+        lines.append('                  <div class="detail-section-label">Signal diagnostics</div>')
+        lines.append(
+            f'                  <div class="kv"><span>b-value</span>'
             f'<strong>{_fmt(c["b_value"], ".3f")}</strong></div>'
         )
         lines.append(
-            f'            <div class="kv"><span>b-value trend</span>'
+            f'                  <div class="kv"><span>b-value trend</span>'
             f'<strong>{_fmt(c["b_trend"], ".4f")}</strong></div>'
         )
         lines.append(
-            f'            <div class="kv"><span>Correlation length</span>'
+            f'                  <div class="kv"><span>Correlation length</span>'
             f'<strong>{_fmt(c["ell_km"], ".1f")} km</strong></div>'
         )
         lines.append(
-            f'            <div class="kv"><span>Corr. length trend</span>'
+            f'                  <div class="kv"><span>Corr. length trend</span>'
             f'<strong>{_fmt(c["ell_trend"], ".2f")} km/month</strong></div>'
         )
         lines.append(
-            f'            <div class="kv"><span>Rate acceleration</span>'
+            f'                  <div class="kv"><span>Rate acceleration</span>'
             f'<strong>{_fmt(c["rate_acceleration"], ".2f")}x</strong></div>'
         )
         lines.append(
-            f'            <div class="kv"><span>IET delta-AIC</span>'
+            f'                  <div class="kv"><span>IET delta-AIC</span>'
             f'<strong>{_fmt(c["delta_aic_iet"], ".2f")}</strong></div>'
         )
         lines.append(
-            f'            <div class="kv"><span>S / Gamma</span>'
+            f'                  <div class="kv"><span>S / Gamma</span>'
             f'<strong>{_fmt(c["S_over_Gamma"], ".3f")}</strong></div>'
         )
         lines.append(
-            f'            <div class="kv"><span>Days to criticality</span>'
+            f'                  <div class="kv"><span>Days to criticality</span>'
             f'<strong>{_fmt(c["days_to_criticality"], ".0f")}</strong></div>'
         )
         lines.append(
-            f'            <div class="kv"><span>Depth trend</span>'
+            f'                  <div class="kv"><span>Depth trend</span>'
             f'<strong>{_fmt(c["depth_trend"], ".2f")} km</strong></div>'
         )
         lines.append(
-            f'            <div class="kv"><span>Spatial concentration</span>'
+            f'                  <div class="kv"><span>Spatial concentration</span>'
             f'<strong>{_fmt(c["spatial_concentration"], ".1f")} km</strong></div>'
         )
-
-        # Singularity conditions
-        sing = c.get("singularity_detail", {})
-        cond_labels = [
-            ("ell_elevated", "Corr. length elevated"),
-            ("b_depressed", "b-value depressed"),
-            ("iet_lorentzian", "IET Lorentzian"),
-            ("rate_accelerating", "Rate accelerating"),
-            ("loading_exceeds_healing", "Loading > healing"),
-        ]
+        lines.append('                </section>')
+        lines.append('                <section class="detail-panel half">')
+        lines.append('                  <div class="detail-section-label">Singularity conditions</div>')
         for key, label in cond_labels:
             val = sing.get(key)
             if val is not None:
-                if val:
-                    chip = (
-                        '<span class="chip" style="background:#d32f2f;'
-                        'color:#fff;font-size:11px;padding:2px 8px;">YES'
-                        '</span>'
-                    )
-                else:
-                    chip = (
-                        '<span class="chip" style="background:#757575;'
-                        'color:#fff;font-size:11px;padding:2px 8px;">no'
-                        '</span>'
-                    )
-                lines.append(
-                    f'            <div class="kv"><span>{_esc(label)}'
-                    f'</span>{chip}</div>'
+                chip = (
+                    '<span class="chip" style="background:#d32f2f;'
+                    'color:#fff;font-size:11px;padding:2px 8px;">YES</span>'
+                    if val
+                    else '<span class="chip" style="background:#757575;'
+                    'color:#fff;font-size:11px;padding:2px 8px;">NO</span>'
                 )
-
-        lines.append(f'          </div>')
+                lines.append(
+                    f'                  <div class="kv"><span>{_esc(label)}</span>{chip}</div>'
+                )
+        lines.append('                </section>')
+        lines.append('              </div>')
+        lines.append('              <section class="detail-panel" style="margin-top:12px;">')
+        lines.append('                <div class="detail-section-label">What is driving the rank</div>')
+        lines.append('                <ul class="detail-list">')
+        for item in active_conditions:
+            lines.append(f'                  <li>{_esc(item)}</li>')
+        lines.append(
+            f'                  <li>Window probability: {_pct(probability)} over the next 30 days.</li>'
+        )
+        lines.append(
+            f'                  <li>Catalog support: {int(c.get("n_events", 0) or 0)} recent events, '
+            f'max magnitude {float(c.get("max_mag", 0) or 0):.1f}.</li>'
+        )
+        lines.append('                </ul>')
+        lines.append('              </section>')
+        lines.append('            </div>')
+        lines.append('          </div>')
         lines.append(f'        </details>')
     return "\n".join(lines)
 
@@ -581,7 +818,7 @@ def _render_coherence_deep_dive(top: dict) -> str:
     # Coherence fields card
     lines.append('          <div class="card col-6 hazard-eq">')
     lines.append(
-        f'            <h3>{top["lat"]:.0f}N, {top["lon"]:.0f}E '
+        f'            <h3>{_esc(_format_cell_coords(top["lat"], top["lon"]))} '
         f'-- Coherence fields</h3>'
     )
     lines.append(
@@ -656,7 +893,7 @@ def _render_coherence_deep_dive(top: dict) -> str:
     lines.append('            <h3>Cell statistics</h3>')
     lines.append(
         f'            <div class="kv"><span>Location</span>'
-        f'<strong>{top["lat"]:.2f}N, {top["lon"]:.2f}E</strong></div>'
+        f'<strong>{_esc(_format_cell_coords(top["lat"], top["lon"]))}</strong></div>'
     )
     lines.append(
         f'            <div class="kv"><span>Events (30 days)</span>'
@@ -782,7 +1019,7 @@ def render_earthquake_page(
   <meta name="description" content="30-day M6.0+ earthquake probability for global seismic zones. Grid cells ranked by coherence field singularity conditions with full evidence.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/live/earthquake/">
-  <link rel="stylesheet" href="/assets/styles.css?v=7">
+  <link rel="stylesheet" href="/assets/styles.css?v=8">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -1521,6 +1758,8 @@ def run_pipeline(
             eq_page = DIST / "live" / "earthquake" / "index.html"
             eq_page.parent.mkdir(parents=True, exist_ok=True)
             eq_page.write_text(eq_html, encoding="utf-8")
+        if not skip_site and not skip_live_pulse:
+            build_site_artifacts()
         return {
             "forecast_id": forecast_id,
             "issued_at": format_utc_z(now),
@@ -1599,6 +1838,9 @@ def run_pipeline(
         eq_page.parent.mkdir(parents=True, exist_ok=True)
         eq_page.write_text(eq_html, encoding="utf-8")
         print(f"  Wrote {eq_page} ({len(scored)} cells baked in, zero JS)")
+
+    if not skip_site and not skip_live_pulse:
+        build_site_artifacts()
 
     print()
     print(

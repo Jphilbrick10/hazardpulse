@@ -33,6 +33,10 @@ import numpy as np
 # Add src to path
 SRC = Path(__file__).resolve().parents[1] / "src"
 sys.path.insert(0, str(SRC))
+SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPT_DIR))
+
+from build_site_artifacts import build_site_artifacts
 
 from hazardpulse.data.hrrr import (  # noqa: E402
     DX_KM,
@@ -600,6 +604,7 @@ def write_outputs(
     coherence_source: str = "none",
 ) -> None:
     """Write scored results to dist/data/."""
+    forecast_id = f"to_fcst_{now.strftime('%Y%m%d_%H%M')}"
 
     # Determine scoring tier label for display
     tier_labels = TIER_LABELS
@@ -628,6 +633,7 @@ def write_outputs(
             "Independent hazard intelligence platform. Always follow official NWS/USGS guidance."
         ),
         "updated_at": now.isoformat() + "Z",
+        "forecast_id": forecast_id,
         "model_version": MODEL_VERSION,
         "scoring_tier": scoring_tier,
         "scoring_tier_label": tier_labels.get(scoring_tier, scoring_tier),
@@ -671,6 +677,7 @@ def write_outputs(
                     hazard["risk_band"] = top["risk_band"]
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = MODEL_VERSION
+                    hazard["forecast_id"] = forecast_id
                     hazard["n_active_storms"] = len(scored_storms)
                     hazard["coherence_score"] = top.get("coherence_score", 0)
                     hazard["coherence_source"] = coherence_source
@@ -681,6 +688,7 @@ def write_outputs(
                     hazard["risk_band"] = "minimal"
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = MODEL_VERSION
+                    hazard["forecast_id"] = forecast_id
                     hazard["n_active_storms"] = 0
                     hazard["coherence_source"] = "none"
                 break
@@ -898,6 +906,32 @@ def _simple_why_sentence(s: dict) -> str:
     return "This storm has " + ", ".join(parts) + "."
 
 
+def _storm_watch_items(s: dict) -> list[str]:
+    """Return compact watch items for the storm detail card."""
+    items: list[str] = []
+    cape = float(s.get("mucape", 0) or 0)
+    srh = float(s.get("srh01", 0) or 0)
+    maxllaz = float(s.get("maxllaz", 0) or 0)
+    flash_rate = float(s.get("flash_rate", 0) or 0)
+    coh = s.get("coherence_diagnostics", {}) or {}
+    singularity_count = int(coh.get("singularity_conditions_met", 0) or 0)
+
+    if maxllaz > 0.01:
+        items.append(f"Strong rotation {maxllaz:.3f} s^-1")
+    elif maxllaz > 0.005:
+        items.append(f"Rotation {maxllaz:.3f} s^-1")
+    if cape >= 1000:
+        items.append(f"MUCAPE {cape:.0f} J/kg")
+    if abs(srh) >= 150:
+        items.append(f"0-1 km SRH {srh:.0f}")
+    if flash_rate >= 20:
+        items.append(f"Flash rate {flash_rate:.0f}/min")
+    if singularity_count >= 2:
+        items.append(f"{singularity_count}/5 singularity conditions")
+
+    return items[:5]
+
+
 def _esc(s: str) -> str:
     """Escape HTML special characters."""
     return (
@@ -1073,60 +1107,134 @@ def _render_storm_rows(storms: list[dict]) -> str:
         location_name = latlon_to_location_name(s["lat"], s["lon"])
         action = get_action_recommendation(s["risk_band"], prob)
         why_sentence = _simple_why_sentence(s)
+        watch_items = _storm_watch_items(s)
+        technical_subline = (
+            f"{_format_compass_coords(s['lat'], s['lon'], decimals=2)} | "
+            f"CAPE {float(s.get('mucape', 0) or 0):.0f} J/kg | "
+            f"SRH {float(s.get('srh01', 0) or 0):.0f} | "
+            f"AzShear {float(s.get('maxllaz', 0) or 0):.4f}"
+        )
+        simple_subline = (
+            f"{_pct(prob)} tornado risk in the next 24 hours | "
+            f"{_format_time(s.get('valid_time', ''))}"
+        )
 
         # --- Summary line: Simple shows location name + risk; Technical shows numbers ---
         lines.append(f'        <details class="event-row-details" id="storm-{rank}">')
         lines.append(f'          <summary class="event-row">')
         lines.append(
-            f'            <span class="rank-badge{rank_class}">{rank}</span>'
-        )
-        # Simple summary
-        lines.append(
-            f'            <span data-depth="simple" style="max-height:none;opacity:1;overflow:visible;display:inline;">'
-            f' <strong>{_esc(location_name)}</strong>'
-            f' <span class="chip" style="background:{simple_risk_color};color:#fff;font-size:11px;padding:2px 8px;">'
+            f'            <span class="event-row-leading">'
+            f'<span class="rank-badge{rank_class}">{rank}</span>'
+            f'<span class="event-row-copy">'
+            f'<span class="event-row-mode" data-depth="simple">'
+            f'<span class="event-row-headline">'
+            f'<span class="event-row-title">{_esc(location_name)}</span>'
+            f'<span class="chip" style="background:{simple_risk_color};color:#fff;font-size:11px;padding:2px 8px;">'
             f'{_esc(simple_risk_label)}</span>'
             f'</span>'
-        )
-        # Technical summary
-        lines.append(
-            f'            <span data-depth="technical" style="display:inline;">'
-            f' <strong>{_esc(str(s["storm_id"]))}</strong>'
-            f' <span class="mono">{s["lat"]:.2f}, {s["lon"]:.2f}</span>'
-            f' <strong class="mono" style="color:{risk_color}">{_pct(prob)}</strong>'
-            f' <span class="chip" style="background:{risk_color};color:#fff;font-size:11px;padding:2px 8px;">'
+            f'<span class="event-row-subline">{_esc(simple_subline)}</span>'
+            f'</span>'
+            f'<span class="event-row-mode" data-depth="technical">'
+            f'<span class="event-row-headline">'
+            f'<span class="event-row-title">Storm {_esc(str(s["storm_id"]))}</span>'
+            f'<span class="chip" style="background:{risk_color};color:#fff;font-size:11px;padding:2px 8px;">'
             f'{_esc(risk_label)}</span>'
-            f' <span class="mono">CAPE: {s.get("mucape", 0):.0f}'
-            f' | SRH: {s.get("srh01", 0):.0f}'
-            f' | MaxLLAz: {s.get("maxllaz", 0):.4f}</span>'
+            f'</span>'
+            f'<span class="event-row-subline">{_esc(technical_subline)}</span>'
+            f'</span>'
+            f'</span>'
+            f'</span>'
+            f'<span class="event-row-side">'
+            f'<span class="event-row-score" style="--event-accent:{risk_color};">'
+            f'{_pct(prob)}</span>'
+            f'<span class="event-row-caret" aria-hidden="true"></span>'
             f'</span>'
         )
         lines.append(f'          </summary>')
-        lines.append(f'          <div class="event-detail" style="padding:12px 10px;">')
+        lines.append(f'          <div class="event-detail">')
 
         # ===================================================================
         # SIMPLE MODE — just risk, location, one sentence, what to do
         # ===================================================================
-        lines.append(f'            <div data-depth="simple">')
-        lines.append(f'              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">')
+        lines.append(f'            <div data-depth="simple" class="detail-mode">')
+        lines.append(f'              <div class="detail-hero">')
+        lines.append(f'                <div>')
+        lines.append(f'                  <div class="detail-kicker">Threat brief</div>')
+        lines.append(f'                  <h3 class="detail-title">{_esc(location_name)}</h3>')
+        lines.append(f'                  <p class="detail-copy">{_esc(why_sentence)}</p>')
+        lines.append(f'                </div>')
+        lines.append(f'                <div class="detail-badge-stack">')
         lines.append(
-            f'                <span class="chip" style="background:{simple_risk_color};color:#fff;'
+            f'                  <span class="chip" style="background:{simple_risk_color};color:#fff;'
             f'font-size:14px;padding:4px 14px;font-weight:700;">{_esc(simple_risk_label)}</span>'
         )
-        lines.append(f'                <strong style="font-size:16px;">{_esc(location_name)}</strong>')
+        lines.append(
+            f'                  <div class="detail-score" style="color:{risk_color};">{_pct(prob)}</div>'
+        )
+        lines.append(
+            f'                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>'
+        )
+        lines.append(f'                </div>')
         lines.append(f'              </div>')
-        lines.append(f'              <p style="margin:0 0 10px;font-size:15px;line-height:1.5;">{_esc(why_sentence)}</p>')
-        lines.append(f'              <div style="background:var(--bg-alt,#f0f5ff);border-radius:8px;padding:10px 14px;margin-bottom:8px;">')
-        lines.append(f'                <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted,#6b7280);">What to do</strong>')
-        lines.append(f'                <p style="margin:4px 0 0;font-size:14px;line-height:1.5;">{_esc(action)}</p>')
+        lines.append(f'              <div class="detail-alert">')
+        lines.append(f'                <strong>What to do</strong>')
+        lines.append(f'                <p>{_esc(action)}</p>')
         lines.append(f'              </div>')
-        lines.append(f'              <p style="margin:0;font-size:12px;color:var(--muted,#6b7280);">Always follow official NWS guidance at <a href="https://www.weather.gov/" rel="noopener">weather.gov</a>.</p>')
+        if watch_items:
+            lines.append(f'              <div class="detail-chip-row">')
+            for item in watch_items:
+                lines.append(f'                <span class="signal-pill">{_esc(item)}</span>')
+            lines.append(f'              </div>')
+        lines.append(f'              <div class="detail-signal-grid" style="margin-top:16px;">')
+        lines.append(
+            f'                <div class="signal-card"><span>Location</span><strong>{_esc(location_name)}</strong>'
+            f'<small>{_esc(_format_compass_coords(s["lat"], s["lon"], decimals=2))}</small></div>'
+        )
+        lines.append(
+            f'                <div class="signal-card"><span>Storm motion</span><strong>{float(s.get("motion_east", 0) or 0):+.1f}E / {float(s.get("motion_south", 0) or 0):+.1f}S</strong>'
+            f'<small>Motion components used in the analytic scoring stack</small></div>'
+        )
+        lines.append(
+            f'                <div class="signal-card"><span>ProbSevere ID</span><strong>{_esc(str(s["storm_id"]))}</strong>'
+            f'<small>Active convective object identifier</small></div>'
+        )
+        lines.append(
+            f'                <div class="signal-card"><span>Official guidance</span><strong>weather.gov</strong>'
+            f'<small>Always follow NWS watches and warnings first</small></div>'
+        )
+        lines.append(f'              </div>')
         lines.append(f'            </div>')
 
         # ===================================================================
         # TECHNICAL MODE — full 7 sections + enhanced diagnostics
         # ===================================================================
-        lines.append(f'            <div data-depth="technical">')
+        lines.append(f'            <div data-depth="technical" class="detail-mode">')
+        lines.append(f'              <div class="detail-hero">')
+        lines.append(f'                <div>')
+        lines.append(f'                  <div class="detail-kicker">Technical breakdown</div>')
+        lines.append(f'                  <h3 class="detail-title">Storm {_esc(str(s["storm_id"]))}</h3>')
+        lines.append(
+            f'                  <p class="detail-copy">{_esc(why_sentence)} The current analytic blend uses '
+            f'ProbSevere storm attributes, coherence diagnostics, and a physics-first scoring tier.</p>'
+        )
+        lines.append(f'                </div>')
+        lines.append(f'                <div class="detail-badge-stack">')
+        lines.append(
+            f'                  <span class="chip" style="background:{risk_color};color:#fff;font-size:12px;padding:4px 10px;">{_esc(risk_label)}</span>'
+        )
+        lines.append(
+            f'                  <div class="detail-score" style="color:{risk_color};">{_pct(prob)}</div>'
+        )
+        lines.append(
+            f'                  <div class="detail-score-label">{_esc(_format_compass_coords(s["lat"], s["lon"], decimals=3))}</div>'
+        )
+        lines.append(f'                </div>')
+        lines.append(f'              </div>')
+        if watch_items:
+            lines.append(f'              <div class="detail-chip-row">')
+            for item in watch_items:
+                lines.append(f'                <span class="signal-pill">{_esc(item)}</span>')
+            lines.append(f'              </div>')
 
         # --- LOCATION & TIMING ---
         lines.append(f'              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>')
@@ -1331,8 +1439,10 @@ def _render_storm_rows(storms: list[dict]) -> str:
             reasons.append(f"Multiple coherence singularity conditions met ({_sc}/5)")
         if not reasons:
             reasons.append("Storm shows marginal severe weather signatures")
+        lines.append(f'              <ul class="detail-list">')
         for r in reasons:
-            lines.append(f'              <div style="margin:4px 0;font-size:13px;">\u2022 {_esc(r)}</div>')
+            lines.append(f'                <li>{_esc(r)}</li>')
+        lines.append(f'              </ul>')
 
         lines.append(f'            </div>')  # close data-depth="technical"
 
@@ -1474,8 +1584,7 @@ def render_tornado_page(
         </div>
       </section>"""
 
-    # Inline GeoJSON for MapLibre
-    inline_geojson = _render_geojson(scored_storms) if scored_storms else '{"type":"FeatureCollection","features":[]}'
+    forecast_id = f"to_fcst_{now.strftime('%Y%m%d_%H%M')}"
 
     # Storms section (with HTMX auto-refresh wrapper)
     if scored_storms:
@@ -1513,7 +1622,7 @@ def render_tornado_page(
       <section class="section" aria-labelledby="tornado-map-heading">
         <h2 id="tornado-map-heading">Storm locations</h2>
         <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Active ProbSevere storm objects. Click markers for details.</p>
-        <div id="tornado-map" style="width:100%;height:400px;border-radius:var(--radius);overflow:hidden;"></div>
+        <div id="tornado-map" data-geojson-src="/data/tornado-storms.geojson" style="width:100%;height:400px;border-radius:var(--radius);overflow:hidden;"></div>
         <noscript>
           <div class="card" style="text-align:center;padding:var(--s-2xl,48px);">
             <h3>Interactive map requires JavaScript</h3>
@@ -1531,8 +1640,8 @@ def render_tornado_page(
   <meta name="description" content="24-hour tornado formation probability for global severe convection zones. Top cells ranked by STP/SCP indices with full evidence.">
   <meta name="theme-color" content="#FAFBFE">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/live/tornado/">
-  <link rel="stylesheet" href="/assets/styles.css?v=7">
-  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles.css?v=8">
+  <link href="/assets/vendor/maplibre-gl.css" rel="stylesheet">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -1697,7 +1806,7 @@ def render_tornado_page(
           <div class="card col-4">
             <h3>Replay any forecast</h3>
             <p class="muted">Download the input data and re-run any past forecast yourself. Same data in, same result out - guaranteed.</p>
-            <a href="/data/replay/to_fcst_{now.strftime('%Y%m%d')}_0300.json" class="btn btn-secondary" style="margin-top:8px;">Download replay</a>
+            <a href="/data/replay/{forecast_id}.json" class="btn btn-secondary" style="margin-top:8px;">Download replay</a>
           </div>
         </div>
       </section>
@@ -1748,75 +1857,12 @@ def render_tornado_page(
     </div>
   </footer>
 
-  <!-- Inline storm GeoJSON for MapLibre -->
-  <script id="storm-geojson" type="application/json">
-{inline_geojson}
-  </script>
-
   <!-- HTMX for auto-refresh -->
-  <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js" defer></script>
+  <script src="/assets/vendor/htmx.min.js" defer></script>
 
   <!-- MapLibre GL JS -->
-  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script>
-    (function() {{
-      var mapEl = document.getElementById('tornado-map');
-      if (!mapEl || typeof maplibregl === 'undefined') return;
-
-      var map = new maplibregl.Map({{
-        container: 'tornado-map',
-        style: {{
-          version: 8,
-          sources: {{
-            'osm': {{
-              type: 'raster',
-              tiles: ['https://tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png'],
-              tileSize: 256,
-              attribution: '&copy; OpenStreetMap contributors'
-            }}
-          }},
-          layers: [{{ id: 'osm', type: 'raster', source: 'osm' }}]
-        }},
-        center: [-95, 38],
-        zoom: 4,
-        maxZoom: 12
-      }});
-
-      map.on('error', function(e) {{
-        document.getElementById('tornado-map').innerHTML = '<div class="card" style="text-align:center;padding:40px;"><h3>Map temporarily unavailable</h3><p class="muted">Storm data is still available in the list below.</p></div>';
-      }});
-
-      try {{
-        var geojson = JSON.parse(document.getElementById('storm-geojson').textContent);
-        (geojson.features || []).forEach(function(f) {{
-          var p = f.properties;
-          var prob = p.probability || 0;
-          var coords = f.geometry.coordinates;
-          var el = document.createElement('div');
-          el.style.width = (12 + prob * 30) + 'px';
-          el.style.height = (12 + prob * 30) + 'px';
-          el.style.borderRadius = '50%';
-          el.style.backgroundColor = prob > 0.3 ? '#EF4444' : prob > 0.15 ? '#F59E0B' : '#14B8A6';
-          el.style.border = '2px solid rgba(255,255,255,0.3)';
-          el.style.cursor = 'pointer';
-          el.setAttribute('role', 'button');
-          el.setAttribute('aria-label', 'Storm ' + p.storm_id + ', ' + (prob * 100).toFixed(0) + '% tornado probability');
-          el.setAttribute('tabindex', '0');
-
-          var popup = new maplibregl.Popup({{ offset: 15 }})
-            .setHTML('<strong>Storm ' + p.storm_id + '</strong><br>' +
-                     'Probability: <span class="mono">' + (prob * 100).toFixed(1) + '%</span><br>' +
-                     'CAPE: <span class="mono">' + (p.mucape || 0) + '</span> J/kg<br>' +
-                     'SRH: <span class="mono">' + (p.srh01 || 0) + '</span> m&sup2;/s&sup2;');
-
-          new maplibregl.Marker({{ element: el }})
-            .setLngLat(coords)
-            .setPopup(popup)
-            .addTo(map);
-        }});
-      }} catch(e) {{}}
-    }})();
-  </script>
+  <script src="/assets/vendor/maplibre-gl.js"></script>
+  <script src="/assets/tornado-monitor.js?v=1" defer></script>
 
 </body>
 </html>
@@ -2070,7 +2116,7 @@ def _legacy_render_homepage_cards(
   <meta name="description" content="Live probabilistic hazard forecasts for earthquakes, hurricanes, and tornadoes worldwide. Transparent uncertainty, verifiable evidence.">
   <meta name="theme-color" content="#FAFBFE">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/">
-  <link rel="stylesheet" href="/assets/styles.css?v=7">
+  <link rel="stylesheet" href="/assets/styles.css?v=8">
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
@@ -2775,7 +2821,7 @@ def render_live_overview_page(now: dt.datetime, scoring_tier: str) -> None:
   <meta name="description" content="Static live overview for the current earthquake, hurricane, and tornado forecasts.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/live/">
-  <link rel="stylesheet" href="/assets/styles.css?v=7">
+  <link rel="stylesheet" href="/assets/styles.css?v=8">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <meta property="og:type" content="website">
@@ -2785,6 +2831,22 @@ def render_live_overview_page(now: dt.datetime, scoring_tier: str) -> None:
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Live Forecasts - HazardPulse">
   <meta name="twitter:description" content="Static live overview for the current earthquake, hurricane, and tornado forecasts.">
+  <script type="application/ld+json">
+  {{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "HazardPulse Live Forecasts",
+    "url": "{PRIMARY_DOMAIN}/live/",
+    "description": "Static live overview for the current earthquake, hurricane, and tornado forecasts."
+  }}
+  </script>
+  <script type="speculationrules">
+  {{
+    "prefetch": [
+      {{ "source": "list", "urls": ["/", "/live/earthquake/", "/live/hurricane/", "/live/tornado/", "/evidence/", "/verification/"] }}
+    ]
+  }}
+  </script>
 </head>
 <body>
   <div class="live-bar"></div>
@@ -2818,7 +2880,7 @@ def render_live_overview_page(now: dt.datetime, scoring_tier: str) -> None:
         <a href="/api/">API</a>
       </nav>
       <div class="theme-switch">
-        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to light mode">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
         <label for="theme-toggle">Dark</label>
       </div>
     </div>
@@ -3098,7 +3160,7 @@ def render_homepage_cards(
   <meta name="description" content="Static-first hazard intelligence for earthquakes, hurricanes, and tornadoes with evidence-linked artifacts and honest uncertainty handling.">
   <meta name="theme-color" content="#FAFBFE">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/">
-  <link rel="stylesheet" href="/assets/styles.css?v=7">
+  <link rel="stylesheet" href="/assets/styles.css?v=8">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -3110,6 +3172,27 @@ def render_homepage_cards(
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="HazardPulse - Global hazard intelligence you can verify">
   <meta name="twitter:description" content="Static-first hazard intelligence for earthquakes, hurricanes, and tornadoes with evidence-linked artifacts and honest uncertainty handling.">
+  <script type="application/ld+json">
+  {{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "HazardPulse",
+    "url": "{PRIMARY_DOMAIN}/",
+    "description": "Static-first hazard intelligence for earthquakes, hurricanes, and tornadoes with evidence-linked artifacts and honest uncertainty handling.",
+    "publisher": {{
+      "@type": "Organization",
+      "name": "{SITE_PUBLISHER_NAME}",
+      "url": "{PRIMARY_DOMAIN}/"
+    }}
+  }}
+  </script>
+  <script type="speculationrules">
+  {{
+    "prefetch": [
+      {{ "source": "list", "urls": ["/live/", "/live/earthquake/", "/live/hurricane/", "/live/tornado/", "/evidence/", "/verification/"] }}
+    ]
+  }}
+  </script>
 </head>
 <body>
   <div class="live-bar"></div>
@@ -3160,8 +3243,10 @@ def render_homepage_cards(
     <section class="hero-observatory">
       <div class="container">
         <p class="eyebrow">GLOBAL HAZARD INTELLIGENCE</p>
-        <h1 class="threat-level elevated" data-depth="simple">Hazard Status</h1>
-        <h1 class="threat-level elevated" data-depth="technical">Static-first live dashboard</h1>
+        <h1 class="threat-level elevated">
+          <span data-depth="simple">Hazard Status</span>
+          <span data-depth="technical">Static-first live dashboard</span>
+        </h1>
         <p class="hero-subtitle" data-depth="simple">Real-time monitoring of earthquakes, hurricanes, and tornadoes worldwide.</p>
         <p class="hero-subtitle" data-depth="technical">{_esc(hero_text)}</p>
         <p class="muted">Updated {_esc(updated_at)}</p>
@@ -3616,6 +3701,7 @@ def main() -> None:
             render_homepage_cards([], now, scoring_tier="tier3_ps_only")
             render_live_overview_page(now, scoring_tier="tier3_ps_only")
             render_verification_ledger()
+            build_site_artifacts()
             print()
             print("Done. No storms to score.")
             return
@@ -3636,6 +3722,7 @@ def main() -> None:
         render_homepage_cards([], now, scoring_tier="tier3_ps_only")
         render_live_overview_page(now, scoring_tier="tier3_ps_only")
         render_verification_ledger()
+        build_site_artifacts()
         print()
         print("Done. No storms to score.")
         return
@@ -3786,6 +3873,7 @@ def main() -> None:
 
     # Update verification page ledger (static, no JS)
     render_verification_ledger()
+    build_site_artifacts()
 
     print()
     print(f"Done. Scored {len(scored)} storms.")

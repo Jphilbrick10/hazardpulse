@@ -7,7 +7,7 @@
   <meta name="description" content="Static-first hazard intelligence for earthquakes, hurricanes, and tornadoes with evidence-linked artifacts and honest uncertainty handling.">
   <meta name="theme-color" content="#FAFBFE">
   <link rel="canonical" href="https://hazardpulse.com/">
-  <link rel="stylesheet" href="/assets/styles.css?v=7">
+  <link rel="stylesheet" href="/assets/styles.css?v=8">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
@@ -19,6 +19,27 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="HazardPulse - Global hazard intelligence you can verify">
   <meta name="twitter:description" content="Static-first hazard intelligence for earthquakes, hurricanes, and tornadoes with evidence-linked artifacts and honest uncertainty handling.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "HazardPulse",
+    "url": "https://hazardpulse.com/",
+    "description": "Static-first hazard intelligence for earthquakes, hurricanes, and tornadoes with evidence-linked artifacts and honest uncertainty handling.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "HazardPulse",
+      "url": "https://hazardpulse.com/"
+    }
+  }
+  </script>
+  <script type="speculationrules">
+  {
+    "prefetch": [
+      { "source": "list", "urls": ["/live/", "/live/earthquake/", "/live/hurricane/", "/live/tornado/", "/evidence/", "/verification/"] }
+    ]
+  }
+  </script>
 </head>
 <body>
   <div class="live-bar"></div>
@@ -69,8 +90,10 @@
     <section class="hero-observatory">
       <div class="container">
         <p class="eyebrow">GLOBAL HAZARD INTELLIGENCE</p>
-        <h1 class="threat-level elevated" data-depth="simple">Hazard Status</h1>
-        <h1 class="threat-level elevated" data-depth="technical">Static-first live dashboard</h1>
+        <h1 class="threat-level elevated">
+          <span data-depth="simple">Hazard Status</span>
+          <span data-depth="technical">Static-first live dashboard</span>
+        </h1>
         <p class="hero-subtitle" data-depth="simple">Real-time monitoring of earthquakes, hurricanes, and tornadoes worldwide.</p>
         <p class="hero-subtitle" data-depth="technical">Highest current modeled probability: 57.6% for the earthquake pipeline.</p>
         <p class="muted">Updated Fri, 03 Apr 2026 18:42:15 UTC</p>

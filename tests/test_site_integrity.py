@@ -113,6 +113,18 @@ def test_key_public_pages_have_structural_basics() -> None:
         assert len(re.findall(r"<h1\b", text)) == 1, rel_path
 
 
+def test_key_surfaces_publish_structured_data_and_prefetch_rules() -> None:
+    for rel_path in [
+        "dist/index.html",
+        "dist/live/index.html",
+        "dist/live/hurricane/index.html",
+        "dist/evidence/index.html",
+    ]:
+        text = _read_text(rel_path)
+        assert 'type="application/ld+json"' in text, rel_path
+        assert 'type="speculationrules"' in text, rel_path
+
+
 def test_key_public_pages_have_no_encoding_garbage() -> None:
     bad_fragments = ["ï¿½", "�", "Â·", "â€”", "â†’"]
     for rel_path in [
@@ -151,6 +163,7 @@ def test_personalized_live_pages_are_not_publicly_cached() -> None:
     assert "Cache-Control: private, no-cache, no-store, must-revalidate" in headers
     assert "/data/*" in headers
     assert "X-Robots-Tag: noindex, nofollow" in headers
+    assert "X-Robots-Tag: index, follow" not in headers
 
 
 def test_live_earthquake_forecast_references_existing_replay() -> None:
@@ -166,6 +179,77 @@ def test_live_earthquake_forecast_references_existing_replay() -> None:
 
     index_page = _read_text("dist/index.html")
     assert forecast_id in index_page
+
+
+def test_live_forecast_ids_reference_existing_replay_artifacts() -> None:
+    pulse = json.loads(_read_text("dist/data/live-pulse.json"))
+    for hazard in pulse["hazards"]:
+        forecast_id = hazard.get("forecast_id")
+        if not forecast_id:
+            continue
+        replay_path = ROOT / "dist" / "data" / "replay" / f"{forecast_id}.json"
+        assert replay_path.exists(), replay_path
+
+
+def test_evidence_artifacts_use_real_records() -> None:
+    evidence_files = [
+        "dist/data/evidence/prediction-ledger.json",
+        "dist/data/evidence/provenance-envelopes.json",
+        "dist/data/evidence/gate-decisions.json",
+        "dist/evidence/index.html",
+    ]
+    forbidden = [
+        "example_hash",
+        "eq_input_hash",
+        "hu_input_hash",
+        "to_input_hash",
+        "trace_eq_20260313_0300",
+        "gate_eq_20260313_0300_001",
+        "sha256:eq_",
+        "sha256:hu_",
+        "sha256:to_",
+    ]
+    for rel_path in evidence_files:
+        text = _read_text(rel_path)
+        for token in forbidden:
+            assert token not in text, (rel_path, token)
+
+
+def test_public_html_has_no_inline_executable_scripts() -> None:
+    for html_path in (ROOT / "dist").rglob("*.html"):
+        text = html_path.read_text(encoding="utf-8")
+        for match in re.finditer(r"<script\b([^>]*)>", text, re.IGNORECASE):
+            attrs = match.group(1)
+            if "src=" in attrs:
+                continue
+            if 'type="application/ld+json"' in attrs:
+                continue
+            if 'type="speculationrules"' in attrs:
+                continue
+            if 'type="application/json"' in attrs:
+                continue
+            raise AssertionError(f"unexpected inline executable script in {html_path}")
+
+
+def test_public_html_theme_toggle_labels_are_consistent() -> None:
+    for html_path in (ROOT / "dist").rglob("*.html"):
+        text = html_path.read_text(encoding="utf-8")
+        assert 'aria-label="Switch to light mode"' not in text, html_path
+
+
+def test_sitemap_lastmod_matches_live_publish_date() -> None:
+    pulse = json.loads(_read_text("dist/data/live-pulse.json"))
+    publish_date = pulse["updated_at"][:10]
+    sitemap = _read_text("dist/sitemap.xml")
+    for route in [
+        "https://hazardpulse.com/",
+        "https://hazardpulse.com/live/",
+        "https://hazardpulse.com/live/earthquake/",
+        "https://hazardpulse.com/live/hurricane/",
+        "https://hazardpulse.com/live/tornado/",
+        "https://hazardpulse.com/evidence/",
+    ]:
+        assert f"<loc>{route}</loc><lastmod>{publish_date}</lastmod>" in sitemap
 
 
 def test_worker_api_smoke() -> None:

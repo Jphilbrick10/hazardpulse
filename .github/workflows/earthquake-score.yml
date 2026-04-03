@@ -42,14 +42,16 @@ jobs:
           eq_page = pathlib.Path('dist/live/earthquake/index.html')
           assert eq_page.exists(), 'Missing earthquake page!'
           content = eq_page.read_text()
-          assert 'RESEARCH ONLY' in content, 'Missing disclaimer!'
-          assert '<script' not in content.lower() or 'application/ld+json' in content or 'speculationrules' in content, 'Unexpected JavaScript detected!'
+          assert '<h1' in content, 'Missing primary heading!'
+          assert 'application/ld+json' in content, 'Missing structured data!'
+          assert '/data/replay/' in content, 'Missing replay artifact link!'
           print(f'Earthquake page: {len(content)} bytes')
 
           # Check live-pulse.json was updated
           pulse = json.loads(pathlib.Path('dist/data/live-pulse.json').read_text())
           eq_entry = next((h for h in pulse['hazards'] if h['key'] == 'eq'), None)
           assert eq_entry is not None, 'Missing earthquake entry in live-pulse.json!'
+          assert eq_entry.get('forecast_id'), 'Missing earthquake forecast_id!'
           print(f'EQ probability: {eq_entry.get(\"probability\", 0):.1%}')
           print(f'EQ risk band: {eq_entry.get(\"risk_band\", \"unknown\")}')
           print(f'EQ model: {eq_entry.get(\"model_version\", \"unknown\")}')
@@ -62,20 +64,23 @@ jobs:
               print(f'Ledger entries: {len(lines)}')
               print(f'Last hash: {last[\"hash\"][:16]}...')
 
+          evidence = pathlib.Path('dist/data/evidence/prediction-ledger.json')
+          assert evidence.exists(), 'Missing evidence ledger!'
+
           print('Output verification passed.')
           "
 
       - name: Check for changes
         id: changes
         run: |
-          git diff --quiet dist/live/earthquake/index.html dist/data/live-pulse.json dist/data/earthquake-ledger.jsonl 2>/dev/null && echo "changed=false" >> "$GITHUB_OUTPUT" || echo "changed=true" >> "$GITHUB_OUTPUT"
+          git diff --quiet dist/ 2>/dev/null && echo "changed=false" >> "$GITHUB_OUTPUT" || echo "changed=true" >> "$GITHUB_OUTPUT"
 
       - name: Commit and push updated data
         if: steps.changes.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f dist/live/earthquake/index.html dist/data/live-pulse.json dist/data/earthquake-ledger.jsonl
+          git add -f dist/
           git commit -m "data: earthquake scoring update $(date -u +%Y-%m-%dT%H:%MZ)
 
           Automated scoring via fetch_and_score_earthquake.py.

@@ -1,26 +1,109 @@
 {
+  "generated_at": "2026-04-03T20:02:46Z",
   "envelopes": [
     {
-      "provenance_id": "prov_eq_20260313_0300",
-      "forecast_id": "eq_fcst_20260313_0300",
-      "input_hash": "sha256:eq_input_hash",
-      "output_hash": "sha256:eq_output_hash",
-      "signed_at": "2026-03-13T03:00:01Z"
+      "provenance_id": "prov_to_fcst_20260403_1841",
+      "forecast_id": "to_fcst_20260403_1841",
+      "hazard": "tornado",
+      "model_version": "tornado_storm_v1_0",
+      "input_hash": "sha256:b3e665d5c7dbb62873bde610619a0dde52672fffba7afa78609c8ad352bf737f",
+      "output_hash": "sha256:9a1b5822bac068b122a2deda8fcbf2570b318b61bad7ada5bdced1581654cd5b",
+      "signed_at": "2026-04-03T18:41:05Z",
+      "sources": [
+        "ProbSevere storm objects",
+        "published live tornado snapshot"
+      ],
+      "transforms": [
+        "probsevere_ingest",
+        "coherence_scoring",
+        "storm_ranking",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/to_fcst_20260403_1841.json"
     },
     {
-      "provenance_id": "prov_hu_20260313_0300",
+      "provenance_id": "prov_eq_fcst_20260403_0300",
+      "forecast_id": "eq_fcst_20260403_0300",
+      "hazard": "earthquake",
+      "model_version": "eq_coherence_v1_0",
+      "input_hash": "sha256:386a4fb022903ee28abb4264ef0502168ff7d829b049470258c8c9f8bb057dd3",
+      "output_hash": "sha256:5071d69988ecec944fcae410a8ec95e80f0fd17d78939a3c4615f4e4fcc69597",
+      "signed_at": "2026-04-03T03:00:00Z",
+      "sources": [
+        "USGS FDSNWS"
+      ],
+      "transforms": [
+        "catalog_ingest",
+        "grid_binning",
+        "coherence_feature_extraction",
+        "singularity_scoring",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/eq_fcst_20260403_0300.json"
+    },
+    {
+      "provenance_id": "prov_eq_fcst_20260402_1900",
+      "forecast_id": "eq_fcst_20260402_1900",
+      "hazard": "earthquake",
+      "model_version": "eq_coherence_v1_0",
+      "input_hash": "sha256:ade457bcbeac4dbef55e087a2adf368eb3fdce84483f75ae671a9809cca90935",
+      "output_hash": "sha256:a0757f67cfdf856d577e0e97ca45b3bbc464220dcb411bd7db6096952dbf2c4b",
+      "signed_at": "2026-04-02T19:00:00Z",
+      "sources": [
+        "USGS FDSNWS"
+      ],
+      "transforms": [
+        "catalog_ingest",
+        "grid_binning",
+        "coherence_feature_extraction",
+        "singularity_scoring",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/eq_fcst_20260402_1900.json"
+    },
+    {
+      "provenance_id": "prov_hu_fcst_20260402_1722",
+      "forecast_id": "hu_fcst_20260402_1722",
+      "hazard": "hurricane",
+      "model_version": "hurricane_ri_v8_1",
+      "input_hash": "sha256:9e387320249c9c0005193a30ad62d4f0e0169f2767a8d0a3cfa03c8deb579107",
+      "output_hash": "sha256:ae4c6599dc5fb9572234d508d25220df0ea12de61368c6dfc1dac83a2606336f",
+      "signed_at": "2026-04-02T17:22:03Z",
+      "sources": [
+        "ATCF advisories",
+        "NOAA tropical cyclone feed",
+        "published live storm snapshot"
+      ],
+      "transforms": [
+        "advisory_ingest",
+        "feature_build",
+        "ri_scoring",
+        "calibration",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/hu_fcst_20260402_1722.json"
+    },
+    {
+      "provenance_id": "prov_hu_fcst_20260313_0300",
       "forecast_id": "hu_fcst_20260313_0300",
-      "input_hash": "sha256:hu_input_hash",
-      "output_hash": "sha256:hu_output_hash",
-      "signed_at": "2026-03-13T03:00:01Z"
-    },
-    {
-      "provenance_id": "prov_to_20260313_0300",
-      "forecast_id": "to_fcst_20260313_0300",
-      "input_hash": "sha256:to_input_hash",
-      "output_hash": "sha256:to_output_hash",
-      "signed_at": "2026-03-13T03:00:01Z"
+      "hazard": "hurricane",
+      "model_version": "hurricane_ri_v8_1",
+      "input_hash": "sha256:66add8747433008b45542fcfe039ce686bbcb9dabfb8bb462153aac54ca1ca56",
+      "output_hash": "sha256:0579bad30ce82fc40d73e9eb1ca1f14ce7802af68a72c2486f44f9fa294c591c",
+      "signed_at": "2026-03-13T03:00:00Z",
+      "sources": [
+        "ATCF advisories",
+        "NOAA tropical cyclone feed",
+        "published live storm snapshot"
+      ],
+      "transforms": [
+        "advisory_ingest",
+        "feature_build",
+        "ri_scoring",
+        "calibration",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/hu_fcst_20260313_0300.json"
     }
   ]
 }
-

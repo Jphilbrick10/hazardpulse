@@ -9,12 +9,14 @@
 const API_VERSION = "v1";
 const PRIMARY_DOMAIN = "https://hazardpulse.com";
 const INTERNAL_ASSET_HEADER = "x-hazardpulse-internal-asset";
+const THEME_COOKIE_NAME = "hp_theme";
+const SITE_SHELL_SRC = "/assets/site-shell.js?v=1";
 const ALERT_THRESHOLDS = { critical: 50, severe: 150, warning: 400, watch: 800 };
 const HTML_CACHE_CONTROL = "private, no-cache, no-store, must-revalidate";
 const HTML_CONTENT_SECURITY_POLICY =
   "default-src 'self'; " +
-  "script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; " +
-  "style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; " +
+  "script-src 'self'; " +
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
   "img-src 'self' data: https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://basemaps.cartocdn.com https://*.basemaps.cartocdn.com; " +
   "font-src 'self' data: https://fonts.gstatic.com; " +
   "connect-src 'self' https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://basemaps.cartocdn.com https://*.basemaps.cartocdn.com https://noaa-mrms-pds.s3.amazonaws.com; " +
@@ -68,6 +70,14 @@ function normalizeGeo(cf = {}) {
   };
   geo.isReliable = hasReliableGeo(geo);
   return geo;
+}
+
+function readThemePreference(request) {
+  const cookieHeader = request.headers.get("cookie") || "";
+  const match = cookieHeader.match(
+    new RegExp(`(?:^|;\\s*)${THEME_COOKIE_NAME}=(dark|light)(?:;|$)`, "i")
+  );
+  return match ? match[1].toLowerCase() : null;
 }
 
 function withSecurityHeaders(
@@ -220,6 +230,15 @@ function apiEnvelope(data, cacheTtl, extraMeta = {}) {
   };
 }
 
+function buildTraceId() {
+  try {
+    if (globalThis.crypto && typeof globalThis.crypto.randomUUID === "function") {
+      return `hp_${globalThis.crypto.randomUUID()}`;
+    }
+  } catch {}
+  return `hp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+}
+
 function errorEnvelope(code, message, status = 404) {
   return jsonResponse(
     {
@@ -227,7 +246,7 @@ function errorEnvelope(code, message, status = 404) {
         version: API_VERSION,
         generated_at: new Date().toISOString(),
       },
-      error: { code, message },
+      error: { code, message, trace_id: buildTraceId() },
     },
     status,
     "no-cache"
@@ -353,6 +372,61 @@ class BodyHandler {
           hasCoords ? geo.latitude : ""
         };--user-lon:${hasCoords ? geo.longitude : ""}`
       );
+    } catch {
+      // noop
+    }
+  }
+}
+
+class UserMarkerHandler {
+  constructor(geo) {
+    this.geo = geo;
+  }
+
+  element(el) {
+    try {
+      const { geo } = this;
+      const hasCoords =
+        geo.isReliable && geo.latitude !== null && geo.longitude !== null;
+      if (!hasCoords) return;
+      const mapW = 960;
+      const mapH = 480;
+      const ux = eqProjectX(geo.longitude, mapW).toFixed(1);
+      const uy = eqProjectY(geo.latitude, mapH).toFixed(1);
+      el.setAttribute("transform", `translate(${ux} ${uy})`);
+      el.setAttribute(
+        "aria-label",
+        `Your approximate location: ${geo.latitude.toFixed(2)}, ${geo.longitude.toFixed(2)}`
+      );
+    } catch {
+      // noop
+    }
+  }
+}
+
+class ThemeToggleHandler {
+  constructor(themePreference) {
+    this.themePreference = themePreference;
+  }
+
+  element(el) {
+    try {
+      if (this.themePreference === "dark") {
+        el.setAttribute("checked", "checked");
+        el.setAttribute("aria-label", "Switch to light mode");
+      } else {
+        el.setAttribute("aria-label", "Switch to dark mode");
+      }
+    } catch {
+      // noop
+    }
+  }
+}
+
+class HeadHandler {
+  element(el) {
+    try {
+      el.append(`<script src="${SITE_SHELL_SRC}" defer></script>`, { html: true });
     } catch {
       // noop
     }
@@ -826,6 +900,7 @@ export default {
     }
 
     const geo = normalizeGeo(request.cf || {});
+    const themePreference = readThemePreference(request);
 
     const [earthquakeZones, hurricaneZones, tornadoZones] = await Promise.all([
       loadLiveEarthquakeZones(env, request),
@@ -840,7 +915,10 @@ export default {
     }
 
     const transformed = new HTMLRewriter()
+      .on("head", new HeadHandler())
       .on("body", new BodyHandler(geo, threat))
+      .on(".theme-toggle", new ThemeToggleHandler(themePreference))
+      .on(".user-marker", new UserMarkerHandler(geo))
       .on(".emergency-banner", new EmergencyBannerHandler(threat, geo))
       .on(".your-area-section", new YourAreaHandler(threat, geo))
       .transform(response);
@@ -857,8 +935,12 @@ export default {
 if (typeof globalThis !== "undefined") {
   globalThis.__hazardpulse_worker_test = {
     BodyHandler,
+    HeadHandler,
+    ThemeToggleHandler,
+    UserMarkerHandler,
     YourAreaHandler,
     hasReliableGeo,
     normalizeGeo,
+    readThemePreference,
   };
 }

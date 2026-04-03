@@ -31,6 +31,7 @@ function mimeTypeFor(filePath) {
   if (ext === ".svg") return "image/svg+xml";
   if (ext === ".png") return "image/png";
   if (ext === ".css") return "text/css; charset=utf-8";
+  if (ext === ".js") return "application/javascript; charset=utf-8";
   return "application/octet-stream";
 }
 
@@ -119,6 +120,13 @@ const homeResponse = await worker.fetch(new Request("https://hazardpulse.com/"),
 assertHtmlSecurityHeaders(homeResponse);
 assert.match(await homeResponse.text(), /HazardPulse/);
 
+const siteShellResponse = await worker.fetch(
+  new Request("https://hazardpulse.com/assets/site-shell.js"),
+  env
+);
+assert.equal(siteShellResponse.status, 200);
+assert.match(siteShellResponse.headers.get("Content-Type") || "", /javascript/);
+
 assert.equal(
   workerTest.hasReliableGeo({
     latitude: 0,
@@ -144,6 +152,15 @@ assert.equal(
   true
 );
 
+assert.equal(
+  workerTest.readThemePreference(
+    new Request("https://hazardpulse.com/", {
+      headers: { cookie: "hp_theme=dark; foo=bar" },
+    })
+  ),
+  "dark"
+);
+
 const invalidGeo = workerTest.normalizeGeo({ latitude: "0", longitude: "0" });
 const invalidBodyAttrs = new Map();
 new workerTest.BodyHandler(invalidGeo, {
@@ -159,6 +176,34 @@ assert.equal(invalidBodyAttrs.get("data-geo-valid"), "false");
 assert.equal(invalidBodyAttrs.get("data-lat"), "");
 assert.equal(invalidBodyAttrs.get("data-lon"), "");
 assert.match(invalidBodyAttrs.get("style") || "", /--user-x:-9999px/);
+
+const validGeo = workerTest.normalizeGeo({
+  latitude: "40.7128",
+  longitude: "-74.0060",
+  city: "New York",
+  country: "US",
+  region: "New York",
+  timezone: "America/New_York",
+  continent: "NA",
+});
+
+const markerAttrs = new Map();
+new workerTest.UserMarkerHandler(validGeo).element({
+  setAttribute(name, value) {
+    markerAttrs.set(name, value);
+  },
+});
+assert.match(markerAttrs.get("transform") || "", /^translate\(\d+\.\d \d+\.\d\)$/);
+assert.match(markerAttrs.get("aria-label") || "", /Your approximate location/);
+
+const toggleAttrs = new Map();
+new workerTest.ThemeToggleHandler("dark").element({
+  setAttribute(name, value) {
+    toggleAttrs.set(name, value);
+  },
+});
+assert.equal(toggleAttrs.get("checked"), "checked");
+assert.equal(toggleAttrs.get("aria-label"), "Switch to light mode");
 
 let unavailableAreaHtml = "";
 new workerTest.YourAreaHandler(
@@ -199,6 +244,26 @@ await expectJsonRoute("/api/v1/registry/models", (data) => {
   assert.ok(Array.isArray(data.models));
 });
 
+const provenancePayload = JSON.parse(
+  readFileSync(path.join(root, "dist", "data", "evidence", "provenance-envelopes.json"), "utf8")
+);
+if (Array.isArray(provenancePayload.envelopes) && provenancePayload.envelopes.length > 0) {
+  const firstEnvelope = provenancePayload.envelopes[0];
+  await expectJsonRoute(`/api/v1/evidence/${firstEnvelope.provenance_id}`, (data) => {
+    assert.equal(data.provenance_id, firstEnvelope.provenance_id);
+  });
+}
+
+const gatePayload = JSON.parse(
+  readFileSync(path.join(root, "dist", "data", "evidence", "gate-decisions.json"), "utf8")
+);
+if (Array.isArray(gatePayload.decisions) && gatePayload.decisions.length > 0) {
+  const firstDecision = gatePayload.decisions[0];
+  await expectJsonRoute(`/api/v1/gates/${firstDecision.gate_decision_id}`, (data) => {
+    assert.equal(data.gate_decision_id, firstDecision.gate_decision_id);
+  });
+}
+
 const sseResponse = await worker.fetch(
   new Request("https://hazardpulse.com/stream/live/pulse"),
   env
@@ -223,5 +288,14 @@ const missingResponse = await worker.fetch(
 assertHtmlSecurityHeaders(missingResponse, 404, "no-store");
 assert.equal(missingResponse.headers.get("X-Robots-Tag"), "noindex, nofollow");
 assert.match(await missingResponse.text(), /404 - Page not found|Not found/);
+
+const unknownApiResponse = await worker.fetch(
+  new Request("https://hazardpulse.com/api/v1/unknown"),
+  env
+);
+assert.equal(unknownApiResponse.status, 404);
+const unknownApiJson = await unknownApiResponse.json();
+assert.equal(unknownApiJson.error.code, "not_found");
+assert.ok(unknownApiJson.error.trace_id);
 
 console.log("worker api smoke checks passed");

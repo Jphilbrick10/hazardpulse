@@ -22,6 +22,10 @@ import numpy as np
 # Add src to path
 SRC = Path(__file__).resolve().parents[1] / "src"
 sys.path.insert(0, str(SRC))
+SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPT_DIR))
+
+from build_site_artifacts import build_site_artifacts
 
 from hazardpulse.data.http import fetch_bytes, fetch_text  # noqa: E402
 from hazardpulse.hurricane.atcf import (  # noqa: E402
@@ -419,10 +423,12 @@ def write_outputs(
     now: dt.datetime,
 ) -> None:
     """Write scored results to dist/data/."""
+    forecast_id = f"hu_fcst_{now.strftime('%Y%m%d_%H%M')}"
 
     # Write live-storms.json
     output = {
         "updated_at": now.isoformat() + "Z",
+        "forecast_id": forecast_id,
         "model_version": "hurricane_ri_v8_1",
         "n_active_storms": len(scored_storms),
         "storms": scored_storms,
@@ -447,6 +453,7 @@ def write_outputs(
                     hazard["risk_band"] = _risk_band(top["ri_probability"])
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = "hurricane_ri_v8_1"
+                    hazard["forecast_id"] = forecast_id
                     hazard["n_active_storms"] = len(scored_storms)
                 else:
                     hazard["probability"] = 0.0
@@ -455,6 +462,7 @@ def write_outputs(
                     hazard["risk_band"] = "none"
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = "hurricane_ri_v8_1"
+                    hazard["forecast_id"] = forecast_id
                     hazard["n_active_storms"] = 0
                 break
         pulse["updated_at"] = now.isoformat() + "Z"
@@ -522,7 +530,7 @@ def render_hurricane_page(
             f"<div class=\"metric\">{float(scored_storms[0].get('ri_probability', 0) or 0) * 100:.1f}%</div>"
             f"<div class=\"metric-label\">Rapid intensification in 24h</div>"
             f"<div class=\"kv\"><span>Name</span><strong>{_esc(scored_storms[0].get('storm_name', scored_storms[0].get('storm_id', 'Storm')))}</strong></div>"
-            f"<div class=\"kv\"><span>Status</span><strong>{_esc(scored_storms[0].get('category', '--'))} · {scored_storms[0].get('vmax_kt', '--')} kt</strong></div>"
+            f"<div class=\"kv\"><span>Status</span><strong>{_esc(scored_storms[0].get('category', '--'))} &middot; {scored_storms[0].get('vmax_kt', '--')} kt</strong></div>"
             f"</div>"
         )
     else:
@@ -548,7 +556,7 @@ def render_hurricane_page(
   <meta name="description" content="Static live hurricane page built from the current tropical cyclone feed and HazardPulse rapid-intensification model output.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/live/hurricane/">
-  <link rel="stylesheet" href="/assets/styles.css?v=7">
+  <link rel="stylesheet" href="/assets/styles.css?v=8">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <meta property="og:type" content="website">
@@ -558,6 +566,22 @@ def render_hurricane_page(
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Live Hurricane Forecasts - HazardPulse">
   <meta name="twitter:description" content="Static live hurricane page built from the current tropical cyclone feed and HazardPulse rapid-intensification model output.">
+  <script type="application/ld+json">
+  {{
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "HazardPulse Live Hurricane Forecasts",
+    "url": "{PRIMARY_DOMAIN}/live/hurricane/",
+    "description": "Static live hurricane page built from the current tropical cyclone feed and HazardPulse rapid-intensification model output."
+  }}
+  </script>
+  <script type="speculationrules">
+  {{
+    "prefetch": [
+      {{ "source": "list", "urls": ["/", "/live/", "/live/earthquake/", "/live/tornado/", "/evidence/", "/verification/"] }}
+    ]
+  }}
+  </script>
 </head>
 <body>
   <div class="live-bar"></div>
@@ -591,7 +615,7 @@ def render_hurricane_page(
         <a href="/api/">API</a>
       </nav>
       <div class="theme-switch">
-        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to light mode">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
         <label for="theme-toggle">Dark</label>
       </div>
     </div>
@@ -667,6 +691,7 @@ def main() -> None:
         print("  Writing empty state...")
         write_outputs([], now)
         render_hurricane_page([], now)
+        build_site_artifacts()
         print()
         print("Done. No storms to score.")
         return
@@ -697,6 +722,7 @@ def main() -> None:
         print("  No scoreable cases found.")
         write_outputs([], now)
         render_hurricane_page([], now)
+        build_site_artifacts()
         print()
         print("Done. No storms to score.")
         return
@@ -723,6 +749,7 @@ def main() -> None:
     print("Step 5: Writing outputs...")
     write_outputs(scored, now)
     render_hurricane_page(scored, now)
+    build_site_artifacts()
 
     print()
     print(f"Done. Scored {len(scored)} storms.")
