@@ -1,12 +1,18 @@
 {
   "disclaimer": "Independent hazard intelligence platform. Always follow official NWS/USGS guidance.",
-  "updated_at": "2026-04-03T11:45:49.047237Z",
+  "updated_at": "2026-04-03T12:56:24.830606Z",
   "model_version": "tornado_storm_v1_0",
   "scoring_tier": "tier2_analytic",
   "scoring_tier_label": "Analytic coherence model (physics-only, no ML)",
   "coherence_source": "probsevere",
-  "n_active_storms": 34,
+  "n_active_storms": 41,
   "recent_predictions": [
+    {
+      "timestamp": "2026-04-03T11:45:49.047237Z",
+      "n_storms": 34,
+      "max_prob": 0.5604,
+      "hash": "45fbc9ec4c816c43..."
+    },
     {
       "timestamp": "2026-04-03T10:39:34.885070Z",
       "n_storms": 39,
@@ -60,30 +66,24 @@
       "n_storms": 69,
       "max_prob": 0.4857,
       "hash": "5d8fb2fe8c5ce408..."
-    },
-    {
-      "timestamp": "2026-04-02T16:53:47.736157Z",
-      "n_storms": 69,
-      "max_prob": 0.4857,
-      "hash": "129dcf8a4437946f..."
     }
   ],
   "storms": [
     {
-      "storm_id": "196984",
-      "lat": 42.4525,
-      "lon": -79.21,
+      "storm_id": "197138",
+      "lat": 46.7764,
+      "lon": -70.5082,
       "motion_east": 9.0,
       "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
+      "valid_time": "20260403_123038 UTC",
       "tornado_probability": 0.5604,
       "risk_band": "very_high",
       "ps_tor": 0.0,
       "ps": 0.0,
-      "mucape": 90.0,
-      "ebshear": 13.0,
-      "srh01": 510.0,
-      "maxllaz": 0.011,
+      "mucape": 16.0,
+      "ebshear": 10.0,
+      "srh01": 580.0,
+      "maxllaz": 0.023,
       "mesh": 0.0,
       "flash_rate": 0.0,
       "top_features": [],
@@ -92,13 +92,13 @@
       },
       "coherence_score": 0.5604,
       "coherence_diagnostics": {
-        "tau": 0.21158501505851746,
-        "grad_tau": 0.017800813540816307,
+        "tau": 0.09723770618438721,
+        "grad_tau": 0.012298914603888988,
         "torsion": 0.0,
-        "alignment": 0.045392073690891266,
-        "S_field": 0.07220964878797531,
+        "alignment": 0.031208496540784836,
+        "S_field": 0.0386258028447628,
         "Gamma_field": 0.25,
-        "S_over_Gamma": 0.28883859515190125,
+        "S_over_Gamma": 0.1545032113790512,
         "Da": 17.130695343017578,
         "E_coh": 0.0,
         "singularity_count": 2.0,
@@ -120,327 +120,127 @@
         "coordinates": [
           [
             [
-              -79.22,
-              42.48
+              -70.43,
+              46.83
             ],
             [
-              -79.19,
-              42.48
+              -70.41,
+              46.83
             ],
             [
-              -79.18,
-              42.47
+              -70.41,
+              46.81
             ],
             [
-              -79.19,
-              42.41
+              -70.39,
+              46.78
             ],
             [
-              -79.22,
-              42.41
+              -70.39,
+              46.73
             ],
             [
-              -79.23,
-              42.42
+              -70.43,
+              46.68
             ],
             [
-              -79.23,
-              42.47
+              -70.57,
+              46.69
             ],
             [
-              -79.22,
-              42.48
+              -70.6,
+              46.72
+            ],
+            [
+              -70.61,
+              46.72
+            ],
+            [
+              -70.61,
+              46.73
+            ],
+            [
+              -70.63,
+              46.75
+            ],
+            [
+              -70.63,
+              46.77
+            ],
+            [
+              -70.61,
+              46.81
+            ],
+            [
+              -70.59,
+              46.8
+            ],
+            [
+              -70.56,
+              46.8
+            ],
+            [
+              -70.54,
+              46.78
+            ],
+            [
+              -70.5,
+              46.78
+            ],
+            [
+              -70.48,
+              46.79
+            ],
+            [
+              -70.46,
+              46.81
+            ],
+            [
+              -70.46,
+              46.82
+            ],
+            [
+              -70.44,
+              46.82
+            ],
+            [
+              -70.43,
+              46.83
             ]
           ]
         ]
       }
     },
     {
-      "storm_id": "196986",
-      "lat": 48.53,
-      "lon": -78.4211,
+      "storm_id": "197165",
+      "lat": 47.027,
+      "lon": -71.09,
       "motion_east": 9.0,
       "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.487,
-      "risk_band": "high",
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.5604,
+      "risk_band": "very_high",
       "ps_tor": 0.0,
       "ps": 0.0,
-      "mucape": 18.0,
-      "ebshear": 9.0,
-      "srh01": 321.0,
-      "maxllaz": 0.009,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.487
-      },
-      "coherence_score": 0.487,
-      "coherence_diagnostics": {
-        "tau": 0.10029565542936325,
-        "grad_tau": 0.07655130326747894,
-        "torsion": 0.0,
-        "alignment": 0.11731487512588501,
-        "S_field": 0.07900597900152206,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.31602391600608826,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -78.44,
-              48.56
-            ],
-            [
-              -78.4,
-              48.55
-            ],
-            [
-              -78.38,
-              48.53
-            ],
-            [
-              -78.37,
-              48.5
-            ],
-            [
-              -78.42,
-              48.5
-            ],
-            [
-              -78.43,
-              48.52
-            ],
-            [
-              -78.45,
-              48.52
-            ],
-            [
-              -78.46,
-              48.53
-            ],
-            [
-              -78.44,
-              48.56
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196846",
-      "lat": 42.9443,
-      "lon": -78.8229,
-      "motion_east": 9.4,
-      "motion_south": -3.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.436,
-      "risk_band": "high",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 69.0,
-      "ebshear": 13.0,
-      "srh01": 444.0,
-      "maxllaz": 0.008,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.436
-      },
-      "coherence_score": 0.436,
-      "coherence_diagnostics": {
-        "tau": 0.2155013084411621,
-        "grad_tau": 0.01629832200706005,
-        "torsion": 0.0,
-        "alignment": 0.03618227317929268,
-        "S_field": 0.07520562410354614,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.30082249641418457,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 2,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -78.71,
-              43.06
-            ],
-            [
-              -78.69,
-              43.04
-            ],
-            [
-              -78.69,
-              43.02
-            ],
-            [
-              -78.71,
-              42.99
-            ],
-            [
-              -78.78,
-              42.95
-            ],
-            [
-              -78.78,
-              42.93
-            ],
-            [
-              -78.8,
-              42.9
-            ],
-            [
-              -78.8,
-              42.81
-            ],
-            [
-              -78.84,
-              42.77
-            ],
-            [
-              -78.88,
-              42.77
-            ],
-            [
-              -78.9,
-              42.78
-            ],
-            [
-              -78.93,
-              42.81
-            ],
-            [
-              -78.93,
-              42.85
-            ],
-            [
-              -78.95,
-              42.88
-            ],
-            [
-              -78.94,
-              42.9
-            ],
-            [
-              -78.94,
-              42.94
-            ],
-            [
-              -78.92,
-              42.94
-            ],
-            [
-              -78.89,
-              42.96
-            ],
-            [
-              -78.87,
-              42.96
-            ],
-            [
-              -78.86,
-              42.97
-            ],
-            [
-              -78.82,
-              42.98
-            ],
-            [
-              -78.81,
-              42.99
-            ],
-            [
-              -78.81,
-              43.02
-            ],
-            [
-              -78.8,
-              43.02
-            ],
-            [
-              -78.79,
-              43.04
-            ],
-            [
-              -78.77,
-              43.05
-            ],
-            [
-              -78.72,
-              43.05
-            ],
-            [
-              -78.71,
-              43.06
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196959",
-      "lat": 49.2152,
-      "lon": -81.1888,
-      "motion_east": 9.3,
-      "motion_south": -5.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.414,
-      "risk_band": "high",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 38.0,
+      "mucape": 53.0,
       "ebshear": 12.0,
-      "srh01": 182.0,
-      "maxllaz": 0.016,
-      "mesh": 0.11,
+      "srh01": 435.0,
+      "maxllaz": 0.015,
+      "mesh": 0.0,
       "flash_rate": 0.0,
       "top_features": [],
       "model_scores": {
-        "analytic_prob": 0.414
+        "analytic_prob": 0.5604
       },
-      "coherence_score": 0.414,
+      "coherence_score": 0.5604,
       "coherence_diagnostics": {
-        "tau": 0.0,
-        "grad_tau": 0.09231904149055481,
+        "tau": 0.09723770618438721,
+        "grad_tau": 0.012298914603888988,
         "torsion": 0.0,
-        "alignment": 0.08401032537221909,
-        "S_field": 0.08561036735773087,
+        "alignment": 0.031208496540784836,
+        "S_field": 0.0386258028447628,
         "Gamma_field": 0.25,
-        "S_over_Gamma": 0.34244146943092346,
+        "S_over_Gamma": 0.1545032113790512,
         "Da": 17.130695343017578,
         "E_coh": 0.0,
         "singularity_count": 2.0,
@@ -462,253 +262,79 @@
         "coordinates": [
           [
             [
-              -81.13,
-              49.31
+              -71.12,
+              47.06
             ],
             [
-              -81.06,
-              49.31
+              -71.09,
+              47.06
             ],
             [
-              -81.03,
-              49.29
+              -71.05,
+              47.04
             ],
             [
-              -81.03,
-              49.22
+              -71.01,
+              47.04
             ],
             [
-              -81.05,
-              49.2
+              -71.01,
+              46.98
             ],
             [
-              -81.05,
-              49.18
+              -71.09,
+              46.98
             ],
             [
-              -81.07,
-              49.16
+              -71.13,
+              47.0
             ],
             [
-              -81.11,
-              49.15
+              -71.14,
+              47.01
             ],
             [
-              -81.12,
-              49.14
+              -71.14,
+              47.04
             ],
             [
-              -81.19,
-              49.13
-            ],
-            [
-              -81.2,
-              49.12
-            ],
-            [
-              -81.27,
-              49.12
-            ],
-            [
-              -81.28,
-              49.13
-            ],
-            [
-              -81.41,
-              49.13
-            ],
-            [
-              -81.42,
-              49.14
-            ],
-            [
-              -81.42,
-              49.19
-            ],
-            [
-              -81.39,
-              49.2
-            ],
-            [
-              -81.31,
-              49.26
-            ],
-            [
-              -81.21,
-              49.26
-            ],
-            [
-              -81.2,
-              49.27
-            ],
-            [
-              -81.18,
-              49.27
-            ],
-            [
-              -81.16,
-              49.29
-            ],
-            [
-              -81.16,
-              49.3
-            ],
-            [
-              -81.14,
-              49.3
-            ],
-            [
-              -81.13,
-              49.31
+              -71.12,
+              47.06
             ]
           ]
         ]
       }
     },
     {
-      "storm_id": "196987",
-      "lat": 48.5,
-      "lon": -77.6873,
-      "motion_east": 10.0,
-      "motion_south": -8.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.3447,
+      "storm_id": "197162",
+      "lat": 48.7322,
+      "lon": -79.38,
+      "motion_east": 9.0,
+      "motion_south": -4.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.4521,
       "risk_band": "high",
       "ps_tor": 0.0,
       "ps": 0.0,
-      "mucape": 19.0,
-      "ebshear": 9.0,
-      "srh01": 383.0,
-      "maxllaz": 0.006,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.3447
-      },
-      "coherence_score": 0.3447,
-      "coherence_diagnostics": {
-        "tau": 0.09069428592920303,
-        "grad_tau": 0.07071419805288315,
-        "torsion": 0.0,
-        "alignment": 0.14938373863697052,
-        "S_field": 0.06867256760597229,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.27469027042388916,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -77.77,
-              48.55
-            ],
-            [
-              -77.71,
-              48.55
-            ],
-            [
-              -77.7,
-              48.54
-            ],
-            [
-              -77.66,
-              48.53
-            ],
-            [
-              -77.64,
-              48.51
-            ],
-            [
-              -77.55,
-              48.51
-            ],
-            [
-              -77.54,
-              48.5
-            ],
-            [
-              -77.54,
-              48.48
-            ],
-            [
-              -77.58,
-              48.43
-            ],
-            [
-              -77.66,
-              48.43
-            ],
-            [
-              -77.72,
-              48.46
-            ],
-            [
-              -77.81,
-              48.46
-            ],
-            [
-              -77.83,
-              48.48
-            ],
-            [
-              -77.83,
-              48.52
-            ],
-            [
-              -77.77,
-              48.55
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196921",
-      "lat": 48.7556,
-      "lon": -78.8448,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.2907,
-      "risk_band": "moderate",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 24.0,
+      "mucape": 44.0,
       "ebshear": 10.0,
-      "srh01": 292.0,
-      "maxllaz": 0.005,
+      "srh01": 213.0,
+      "maxllaz": 0.013,
       "mesh": 0.0,
       "flash_rate": 0.0,
       "top_features": [],
       "model_scores": {
-        "analytic_prob": 0.2907
+        "analytic_prob": 0.4521
       },
-      "coherence_score": 0.2907,
+      "coherence_score": 0.4521,
       "coherence_diagnostics": {
-        "tau": 0.10029565542936325,
-        "grad_tau": 0.07655130326747894,
+        "tau": 0.09449157118797302,
+        "grad_tau": 0.0647631287574768,
         "torsion": 0.0,
-        "alignment": 0.11731487512588501,
-        "S_field": 0.07900597900152206,
+        "alignment": 0.06897272914648056,
+        "S_field": 0.08964807540178299,
         "Gamma_field": 0.25,
-        "S_over_Gamma": 0.31602391600608826,
+        "S_over_Gamma": 0.35859230160713196,
         "Da": 17.130695343017578,
         "E_coh": 0.0,
         "singularity_count": 2.0,
@@ -730,229 +356,75 @@
         "coordinates": [
           [
             [
-              -78.9,
-              48.87
+              -79.39,
+              48.77
             ],
             [
-              -78.88,
-              48.86
-            ],
-            [
-              -78.84,
-              48.82
-            ],
-            [
-              -78.81,
+              -79.35,
               48.76
             ],
             [
-              -78.77,
-              48.75
-            ],
-            [
-              -78.73,
-              48.72
-            ],
-            [
-              -78.68,
-              48.7
-            ],
-            [
-              -78.65,
-              48.66
-            ],
-            [
-              -78.65,
-              48.63
-            ],
-            [
-              -78.66,
-              48.62
-            ],
-            [
-              -78.7,
-              48.62
-            ],
-            [
-              -78.73,
-              48.65
-            ],
-            [
-              -78.74,
-              48.65
-            ],
-            [
-              -78.78,
-              48.69
-            ],
-            [
-              -78.8,
+              -79.34,
               48.74
             ],
             [
-              -78.84,
-              48.78
+              -79.34,
+              48.72
             ],
             [
-              -78.96,
-              48.79
+              -79.37,
+              48.69
             ],
             [
-              -78.99,
+              -79.4,
+              48.69
+            ],
+            [
+              -79.42,
+              48.71
+            ],
+            [
+              -79.42,
+              48.74
+            ],
+            [
+              -79.39,
               48.77
-            ],
-            [
-              -79.04,
-              48.77
-            ],
-            [
-              -79.06,
-              48.79
-            ],
-            [
-              -79.06,
-              48.82
-            ],
-            [
-              -79.04,
-              48.84
-            ],
-            [
-              -79.0,
-              48.86
-            ],
-            [
-              -78.91,
-              48.86
-            ],
-            [
-              -78.9,
-              48.87
             ]
           ]
         ]
       }
     },
     {
-      "storm_id": "196880",
-      "lat": 43.2011,
-      "lon": -78.4222,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
+      "storm_id": "197131",
+      "lat": 41.2406,
+      "lon": -95.5689,
+      "motion_east": 9.1,
+      "motion_south": -16.0,
+      "valid_time": "20260403_123038 UTC",
       "tornado_probability": 0.2578,
       "risk_band": "moderate",
       "ps_tor": 0.0,
       "ps": 0.0,
-      "mucape": 52.0,
-      "ebshear": 15.0,
-      "srh01": 426.0,
+      "mucape": 1235.0,
+      "ebshear": 40.0,
+      "srh01": 324.0,
       "maxllaz": 0.004,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
+      "mesh": 0.14,
+      "flash_rate": 4.0,
       "top_features": [],
       "model_scores": {
         "analytic_prob": 0.2578
       },
       "coherence_score": 0.2578,
       "coherence_diagnostics": {
-        "tau": 0.2270471155643463,
-        "grad_tau": 0.007026356179267168,
+        "tau": 0.11756138503551483,
+        "grad_tau": 0.00741853890940547,
         "torsion": 0.0,
-        "alignment": 0.014966138638556004,
-        "S_field": 0.07988302409648895,
+        "alignment": 0.011378184892237186,
+        "S_field": 0.040566250681877136,
         "Gamma_field": 0.25,
-        "S_over_Gamma": 0.3195320963859558,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 2,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -78.42,
-              43.23
-            ],
-            [
-              -78.4,
-              43.23
-            ],
-            [
-              -78.39,
-              43.22
-            ],
-            [
-              -78.39,
-              43.17
-            ],
-            [
-              -78.4,
-              43.16
-            ],
-            [
-              -78.47,
-              43.16
-            ],
-            [
-              -78.47,
-              43.2
-            ],
-            [
-              -78.44,
-              43.21
-            ],
-            [
-              -78.42,
-              43.23
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196961",
-      "lat": 48.2224,
-      "lon": -77.6994,
-      "motion_east": 9.7,
-      "motion_south": -7.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.224,
-      "risk_band": "moderate",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 25.0,
-      "ebshear": 8.0,
-      "srh01": 462.0,
-      "maxllaz": 0.002,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.224
-      },
-      "coherence_score": 0.224,
-      "coherence_diagnostics": {
-        "tau": 0.09069428592920303,
-        "grad_tau": 0.07071419805288315,
-        "torsion": 0.0,
-        "alignment": 0.14938373863697052,
-        "S_field": 0.06867256760597229,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.27469027042388916,
+        "S_over_Gamma": 0.16226500272750854,
         "Da": 17.130695343017578,
         "E_coh": 0.0,
         "singularity_count": 2.0,
@@ -974,72 +446,1552 @@
         "coordinates": [
           [
             [
-              -77.75,
-              48.3
+              -95.64,
+              41.32
             ],
             [
-              -77.72,
-              48.3
+              -95.56,
+              41.28
             ],
             [
-              -77.72,
-              48.29
+              -95.51,
+              41.28
             ],
             [
-              -77.7,
-              48.27
+              -95.47,
+              41.26
             ],
             [
-              -77.7,
-              48.25
+              -95.45,
+              41.22
             ],
             [
-              -77.65,
-              48.21
+              -95.45,
+              41.19
+            ],
+            [
+              -95.46,
+              41.17
+            ],
+            [
+              -95.47,
+              41.16
+            ],
+            [
+              -95.52,
+              41.16
+            ],
+            [
+              -95.56,
+              41.2
+            ],
+            [
+              -95.58,
+              41.2
+            ],
+            [
+              -95.61,
+              41.22
+            ],
+            [
+              -95.64,
+              41.22
+            ],
+            [
+              -95.66,
+              41.23
+            ],
+            [
+              -95.7,
+              41.28
+            ],
+            [
+              -95.67,
+              41.31
+            ],
+            [
+              -95.65,
+              41.31
+            ],
+            [
+              -95.64,
+              41.32
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197158",
+      "lat": 49.409,
+      "lon": -77.16,
+      "motion_east": 9.0,
+      "motion_south": -4.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.2247,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 39.0,
+      "ebshear": 15.0,
+      "srh01": 318.0,
+      "maxllaz": 0.001,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.2247
+      },
+      "coherence_score": 0.2247,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.10288746654987335,
+        "torsion": 0.0,
+        "alignment": 0.16359108686447144,
+        "S_field": 0.1150643527507782,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.4602574110031128,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -77.2,
+              49.44
+            ],
+            [
+              -77.15,
+              49.44
+            ],
+            [
+              -77.11,
+              49.42
+            ],
+            [
+              -77.1,
+              49.41
+            ],
+            [
+              -77.1,
+              49.38
+            ],
+            [
+              -77.14,
+              49.36
+            ],
+            [
+              -77.18,
+              49.37
+            ],
+            [
+              -77.21,
+              49.4
+            ],
+            [
+              -77.21,
+              49.43
+            ],
+            [
+              -77.2,
+              49.44
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197159",
+      "lat": 49.3455,
+      "lon": -77.0091,
+      "motion_east": 9.0,
+      "motion_south": -4.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.2245,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 40.0,
+      "ebshear": 14.0,
+      "srh01": 328.0,
+      "maxllaz": 0.001,
+      "mesh": 0.05,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.2245
+      },
+      "coherence_score": 0.2245,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.09827060252428055,
+        "torsion": 0.0,
+        "alignment": 0.15944404900074005,
+        "S_field": 0.1055373027920723,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.4221492111682892,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -77.05,
+              49.4
+            ],
+            [
+              -76.97,
+              49.38
+            ],
+            [
+              -76.95,
+              49.36
+            ],
+            [
+              -76.95,
+              49.31
+            ],
+            [
+              -76.97,
+              49.31
+            ],
+            [
+              -76.98,
+              49.3
+            ],
+            [
+              -77.01,
+              49.3
+            ],
+            [
+              -77.03,
+              49.31
+            ],
+            [
+              -77.07,
+              49.35
+            ],
+            [
+              -77.07,
+              49.38
+            ],
+            [
+              -77.05,
+              49.4
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197161",
+      "lat": 49.06,
+      "lon": -76.26,
+      "motion_east": 9.0,
+      "motion_south": -4.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.2245,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 35.0,
+      "ebshear": 15.0,
+      "srh01": 321.0,
+      "maxllaz": 0.0,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.2245
+      },
+      "coherence_score": 0.2245,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.09827060252428055,
+        "torsion": 0.0,
+        "alignment": 0.15944404900074005,
+        "S_field": 0.1055373027920723,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.4221492111682892,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -76.27,
+              49.1
+            ],
+            [
+              -76.24,
+              49.1
+            ],
+            [
+              -76.22,
+              49.09
+            ],
+            [
+              -76.22,
+              49.03
+            ],
+            [
+              -76.24,
+              49.01
+            ],
+            [
+              -76.29,
+              49.01
+            ],
+            [
+              -76.3,
+              49.02
+            ],
+            [
+              -76.29,
+              49.08
+            ],
+            [
+              -76.27,
+              49.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197163",
+      "lat": 48.7112,
+      "lon": -77.5844,
+      "motion_east": 8.6,
+      "motion_south": -6.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.222,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 24.0,
+      "ebshear": 8.0,
+      "srh01": 316.0,
+      "maxllaz": 0.002,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.222
+      },
+      "coherence_score": 0.222,
+      "coherence_diagnostics": {
+        "tau": 0.10288746654987335,
+        "grad_tau": 0.07017195224761963,
+        "torsion": 0.0,
+        "alignment": 0.11087168753147125,
+        "S_field": 0.09693226218223572,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.38772904872894287,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -77.66,
+              48.79
+            ],
+            [
+              -77.58,
+              48.79
+            ],
+            [
+              -77.55,
+              48.77
+            ],
+            [
+              -77.55,
+              48.75
+            ],
+            [
+              -77.53,
+              48.73
+            ],
+            [
+              -77.51,
+              48.73
+            ],
+            [
+              -77.48,
+              48.76
+            ],
+            [
+              -77.43,
+              48.76
+            ],
+            [
+              -77.41,
+              48.74
+            ],
+            [
+              -77.41,
+              48.7
+            ],
+            [
+              -77.43,
+              48.67
+            ],
+            [
+              -77.47,
+              48.65
+            ],
+            [
+              -77.5,
+              48.65
+            ],
+            [
+              -77.54,
+              48.68
+            ],
+            [
+              -77.57,
+              48.68
             ],
             [
               -77.63,
-              48.21
+              48.64
             ],
             [
-              -77.62,
-              48.2
+              -77.67,
+              48.64
             ],
             [
-              -77.62,
-              48.16
-            ],
-            [
-              -77.63,
-              48.15
-            ],
-            [
-              -77.65,
-              48.14
-            ],
-            [
-              -77.69,
-              48.14
+              -77.68,
+              48.63
             ],
             [
               -77.75,
-              48.17
+              48.63
             ],
             [
               -77.76,
-              48.2
+              48.64
             ],
             [
-              -77.78,
-              48.22
+              -77.76,
+              48.68
             ],
             [
-              -77.77,
-              48.27
+              -77.72,
+              48.72
             ],
             [
-              -77.75,
-              48.3
+              -77.69,
+              48.78
+            ],
+            [
+              -77.67,
+              48.78
+            ],
+            [
+              -77.66,
+              48.79
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197141",
+      "lat": 45.2946,
+      "lon": -70.6292,
+      "motion_east": 7.4,
+      "motion_south": -5.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.2214,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 86.0,
+      "ebshear": 9.0,
+      "srh01": 576.0,
+      "maxllaz": 0.001,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.2214
+      },
+      "coherence_score": 0.2214,
+      "coherence_diagnostics": {
+        "tau": 0.09553827345371246,
+        "grad_tau": 0.010036892257630825,
+        "torsion": 0.0,
+        "alignment": 0.03076307475566864,
+        "S_field": 0.034101806581020355,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.13640722632408142,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -70.69,
+              45.34
+            ],
+            [
+              -70.65,
+              45.34
+            ],
+            [
+              -70.61,
+              45.32
+            ],
+            [
+              -70.57,
+              45.32
+            ],
+            [
+              -70.55,
+              45.3
+            ],
+            [
+              -70.55,
+              45.25
+            ],
+            [
+              -70.58,
+              45.25
+            ],
+            [
+              -70.6,
+              45.24
+            ],
+            [
+              -70.63,
+              45.26
+            ],
+            [
+              -70.66,
+              45.26
+            ],
+            [
+              -70.7,
+              45.28
+            ],
+            [
+              -70.7,
+              45.33
+            ],
+            [
+              -70.69,
+              45.34
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197155",
+      "lat": 45.524,
+      "lon": -70.6267,
+      "motion_east": 6.8,
+      "motion_south": -6.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.2214,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 52.0,
+      "ebshear": 8.0,
+      "srh01": 650.0,
+      "maxllaz": 0.0,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.2214
+      },
+      "coherence_score": 0.2214,
+      "coherence_diagnostics": {
+        "tau": 0.09553827345371246,
+        "grad_tau": 0.010036892257630825,
+        "torsion": 0.0,
+        "alignment": 0.03076307475566864,
+        "S_field": 0.034101806581020355,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.13640722632408142,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -70.61,
+              45.66
+            ],
+            [
+              -70.56,
+              45.62
+            ],
+            [
+              -70.56,
+              45.57
+            ],
+            [
+              -70.58,
+              45.54
+            ],
+            [
+              -70.58,
+              45.46
+            ],
+            [
+              -70.59,
+              45.44
+            ],
+            [
+              -70.62,
+              45.43
+            ],
+            [
+              -70.63,
+              45.44
+            ],
+            [
+              -70.67,
+              45.45
+            ],
+            [
+              -70.69,
+              45.47
+            ],
+            [
+              -70.68,
+              45.48
+            ],
+            [
+              -70.68,
+              45.51
+            ],
+            [
+              -70.67,
+              45.52
+            ],
+            [
+              -70.67,
+              45.61
+            ],
+            [
+              -70.61,
+              45.66
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197164",
+      "lat": 47.83,
+      "lon": -77.989,
+      "motion_east": 9.0,
+      "motion_south": -4.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.2214,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 74.0,
+      "ebshear": 9.0,
+      "srh01": 501.0,
+      "maxllaz": 0.001,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.2214
+      },
+      "coherence_score": 0.2214,
+      "coherence_diagnostics": {
+        "tau": 0.14030030369758606,
+        "grad_tau": 0.019427327439188957,
+        "torsion": 0.0,
+        "alignment": 0.04866545647382736,
+        "S_field": 0.07817308604717255,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.3126923441886902,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.03,
+              47.87
+            ],
+            [
+              -78.0,
+              47.87
+            ],
+            [
+              -77.96,
+              47.85
+            ],
+            [
+              -77.94,
+              47.83
+            ],
+            [
+              -77.93,
+              47.81
+            ],
+            [
+              -77.94,
+              47.77
+            ],
+            [
+              -77.98,
+              47.76
+            ],
+            [
+              -78.04,
+              47.81
+            ],
+            [
+              -78.04,
+              47.86
+            ],
+            [
+              -78.03,
+              47.87
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197170",
+      "lat": 41.078,
+      "lon": -95.687,
+      "motion_east": 9.0,
+      "motion_south": -16.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.2214,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 1386.0,
+      "ebshear": 41.0,
+      "srh01": 379.0,
+      "maxllaz": 0.003,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.2214
+      },
+      "coherence_score": 0.2214,
+      "coherence_diagnostics": {
+        "tau": 0.11756138503551483,
+        "grad_tau": 0.00741853890940547,
+        "torsion": 0.0,
+        "alignment": 0.011378184892237186,
+        "S_field": 0.040566250681877136,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.16226500272750854,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -95.71,
+              41.11
+            ],
+            [
+              -95.66,
+              41.11
+            ],
+            [
+              -95.65,
+              41.1
+            ],
+            [
+              -95.65,
+              41.06
+            ],
+            [
+              -95.66,
+              41.05
+            ],
+            [
+              -95.69,
+              41.05
+            ],
+            [
+              -95.7,
+              41.04
+            ],
+            [
+              -95.72,
+              41.06
+            ],
+            [
+              -95.72,
+              41.09
+            ],
+            [
+              -95.71,
+              41.11
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197130",
+      "lat": 41.3218,
+      "lon": -95.7964,
+      "motion_east": 9.3,
+      "motion_south": -16.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.2121,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 1131.0,
+      "ebshear": 41.0,
+      "srh01": 289.0,
+      "maxllaz": 0.003,
+      "mesh": 0.12,
+      "flash_rate": 1.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.2121
+      },
+      "coherence_score": 0.2121,
+      "coherence_diagnostics": {
+        "tau": 0.11756138503551483,
+        "grad_tau": 0.00741853890940547,
+        "torsion": 0.0,
+        "alignment": 0.011378184892237186,
+        "S_field": 0.040566250681877136,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.16226500272750854,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -95.81,
+              41.37
+            ],
+            [
+              -95.78,
+              41.36
+            ],
+            [
+              -95.78,
+              41.35
+            ],
+            [
+              -95.76,
+              41.34
+            ],
+            [
+              -95.75,
+              41.32
+            ],
+            [
+              -95.75,
+              41.29
+            ],
+            [
+              -95.79,
+              41.26
+            ],
+            [
+              -95.83,
+              41.26
+            ],
+            [
+              -95.85,
+              41.29
+            ],
+            [
+              -95.85,
+              41.33
+            ],
+            [
+              -95.81,
+              41.37
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197109",
+      "lat": 41.4683,
+      "lon": -95.6021,
+      "motion_east": 9.4,
+      "motion_south": -16.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.2006,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 952.0,
+      "ebshear": 38.0,
+      "srh01": 235.0,
+      "maxllaz": 0.004,
+      "mesh": 0.09,
+      "flash_rate": 3.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.2006
+      },
+      "coherence_score": 0.2006,
+      "coherence_diagnostics": {
+        "tau": 0.11756138503551483,
+        "grad_tau": 0.00741853890940547,
+        "torsion": 0.0,
+        "alignment": 0.011378184892237186,
+        "S_field": 0.040566250681877136,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.16226500272750854,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -95.69,
+              41.58
+            ],
+            [
+              -95.67,
+              41.58
+            ],
+            [
+              -95.66,
+              41.57
+            ],
+            [
+              -95.65,
+              41.58
+            ],
+            [
+              -95.62,
+              41.58
+            ],
+            [
+              -95.54,
+              41.5
+            ],
+            [
+              -95.51,
+              41.49
+            ],
+            [
+              -95.46,
+              41.42
+            ],
+            [
+              -95.46,
+              41.37
+            ],
+            [
+              -95.48,
+              41.37
+            ],
+            [
+              -95.5,
+              41.35
+            ],
+            [
+              -95.53,
+              41.35
+            ],
+            [
+              -95.54,
+              41.36
+            ],
+            [
+              -95.58,
+              41.36
+            ],
+            [
+              -95.62,
+              41.39
+            ],
+            [
+              -95.63,
+              41.39
+            ],
+            [
+              -95.64,
+              41.41
+            ],
+            [
+              -95.64,
+              41.43
+            ],
+            [
+              -95.63,
+              41.44
+            ],
+            [
+              -95.63,
+              41.48
+            ],
+            [
+              -95.69,
+              41.53
+            ],
+            [
+              -95.69,
+              41.56
+            ],
+            [
+              -95.7,
+              41.57
+            ],
+            [
+              -95.69,
+              41.58
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197160",
+      "lat": 49.3,
+      "lon": -78.0969,
+      "motion_east": 7.9,
+      "motion_south": -8.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1934,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 33.0,
+      "ebshear": 11.0,
+      "srh01": 264.0,
+      "maxllaz": 0.001,
+      "mesh": 0.1,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.1934
+      },
+      "coherence_score": 0.1934,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.10176883637905121,
+        "torsion": 0.0,
+        "alignment": 0.13204507529735565,
+        "S_field": 0.1156357005238533,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.4625428020954132,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.14,
+              49.35
+            ],
+            [
+              -78.05,
+              49.35
+            ],
+            [
+              -78.01,
+              49.31
+            ],
+            [
+              -78.01,
+              49.27
+            ],
+            [
+              -78.02,
+              49.26
+            ],
+            [
+              -78.08,
+              49.26
+            ],
+            [
+              -78.09,
+              49.27
+            ],
+            [
+              -78.12,
+              49.27
+            ],
+            [
+              -78.14,
+              49.28
+            ],
+            [
+              -78.14,
+              49.29
+            ],
+            [
+              -78.16,
+              49.31
+            ],
+            [
+              -78.16,
+              49.33
+            ],
+            [
+              -78.14,
+              49.35
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197031",
+      "lat": 49.259,
+      "lon": -78.258,
+      "motion_east": 7.9,
+      "motion_south": -8.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1865,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 22.0,
+      "ebshear": 9.0,
+      "srh01": 255.0,
+      "maxllaz": 0.001,
+      "mesh": 0.13,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.1865
+      },
+      "coherence_score": 0.1865,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.10176883637905121,
+        "torsion": 0.0,
+        "alignment": 0.13204507529735565,
+        "S_field": 0.1156357005238533,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.4625428020954132,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.27,
+              49.29
+            ],
+            [
+              -78.22,
+              49.29
+            ],
+            [
+              -78.21,
+              49.28
+            ],
+            [
+              -78.21,
+              49.25
+            ],
+            [
+              -78.23,
+              49.21
+            ],
+            [
+              -78.28,
+              49.21
+            ],
+            [
+              -78.3,
+              49.23
+            ],
+            [
+              -78.3,
+              49.27
+            ],
+            [
+              -78.29,
+              49.27
+            ],
+            [
+              -78.27,
+              49.29
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197123",
+      "lat": 37.873,
+      "lon": -83.499,
+      "motion_east": 9.0,
+      "motion_south": -4.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1851,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 193.0,
+      "ebshear": 24.0,
+      "srh01": 215.0,
+      "maxllaz": 0.004,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.1851
+      },
+      "coherence_score": 0.1851,
+      "coherence_diagnostics": {
+        "tau": 0.07601959258317947,
+        "grad_tau": 0.012269074097275734,
+        "torsion": 0.0,
+        "alignment": 0.013189255259931087,
+        "S_field": 0.025623179972171783,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.10249271988868713,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -83.49,
+              37.92
+            ],
+            [
+              -83.46,
+              37.92
+            ],
+            [
+              -83.45,
+              37.91
+            ],
+            [
+              -83.46,
+              37.86
+            ],
+            [
+              -83.49,
+              37.81
+            ],
+            [
+              -83.54,
+              37.8
+            ],
+            [
+              -83.55,
+              37.81
+            ],
+            [
+              -83.55,
+              37.87
+            ],
+            [
+              -83.51,
+              37.91
+            ],
+            [
+              -83.49,
+              37.92
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197157",
+      "lat": 38.1844,
+      "lon": -84.9356,
+      "motion_east": 9.0,
+      "motion_south": -4.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.167,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 547.0,
+      "ebshear": 25.0,
+      "srh01": 230.0,
+      "maxllaz": 0.002,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.167
+      },
+      "coherence_score": 0.167,
+      "coherence_diagnostics": {
+        "tau": 0.0982029139995575,
+        "grad_tau": 0.007308619562536478,
+        "torsion": 0.0,
+        "alignment": 0.008350098505616188,
+        "S_field": 0.03475486487150192,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.1390194594860077,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.95,
+              38.21
+            ],
+            [
+              -84.89,
+              38.21
+            ],
+            [
+              -84.89,
+              38.18
+            ],
+            [
+              -84.92,
+              38.15
+            ],
+            [
+              -84.95,
+              38.15
+            ],
+            [
+              -84.95,
+              38.17
+            ],
+            [
+              -84.96,
+              38.18
+            ],
+            [
+              -84.96,
+              38.2
+            ],
+            [
+              -84.95,
+              38.21
             ]
           ]
         ]
@@ -1047,218 +1999,34 @@
     },
     {
       "storm_id": "196808",
-      "lat": 39.1322,
-      "lon": -89.7244,
+      "lat": 39.2744,
+      "lon": -89.06,
       "motion_east": 9.0,
       "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.2214,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1649,
       "risk_band": "moderate",
       "ps_tor": 0.0,
       "ps": 0.0,
-      "mucape": 875.0,
-      "ebshear": 17.0,
-      "srh01": 310.0,
-      "maxllaz": 0.003,
-      "mesh": 0.1,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.2214
-      },
-      "coherence_score": 0.2214,
-      "coherence_diagnostics": {
-        "tau": 0.11623672395944595,
-        "grad_tau": 0.020421480759978294,
-        "torsion": 0.0,
-        "alignment": 0.03267436847090721,
-        "S_field": 0.037985291332006454,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.15194116532802582,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 2,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -89.74,
-              39.16
-            ],
-            [
-              -89.68,
-              39.16
-            ],
-            [
-              -89.67,
-              39.15
-            ],
-            [
-              -89.67,
-              39.09
-            ],
-            [
-              -89.75,
-              39.09
-            ],
-            [
-              -89.76,
-              39.1
-            ],
-            [
-              -89.76,
-              39.14
-            ],
-            [
-              -89.75,
-              39.14
-            ],
-            [
-              -89.74,
-              39.16
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196973",
-      "lat": 41.799,
-      "lon": -75.128,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.2214,
-      "risk_band": "moderate",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 18.0,
-      "ebshear": 9.0,
-      "srh01": 394.0,
-      "maxllaz": 0.001,
-      "mesh": 0.1,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.2214
-      },
-      "coherence_score": 0.2214,
-      "coherence_diagnostics": {
-        "tau": 0.12295190989971161,
-        "grad_tau": 0.0284451711922884,
-        "torsion": 0.0,
-        "alignment": 0.05603698641061783,
-        "S_field": 0.03522012010216713,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.14088048040866852,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -75.11,
-              41.84
-            ],
-            [
-              -75.09,
-              41.84
-            ],
-            [
-              -75.09,
-              41.82
-            ],
-            [
-              -75.12,
-              41.79
-            ],
-            [
-              -75.13,
-              41.76
-            ],
-            [
-              -75.14,
-              41.75
-            ],
-            [
-              -75.17,
-              41.76
-            ],
-            [
-              -75.17,
-              41.79
-            ],
-            [
-              -75.15,
-              41.8
-            ],
-            [
-              -75.11,
-              41.84
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196982",
-      "lat": 43.8289,
-      "lon": -77.4911,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.2214,
-      "risk_band": "moderate",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 58.0,
+      "mucape": 841.0,
       "ebshear": 14.0,
-      "srh01": 503.0,
-      "maxllaz": 0.001,
+      "srh01": 227.0,
+      "maxllaz": 0.003,
       "mesh": 0.0,
       "flash_rate": 0.0,
       "top_features": [],
       "model_scores": {
-        "analytic_prob": 0.2214
+        "analytic_prob": 0.1649
       },
-      "coherence_score": 0.2214,
+      "coherence_score": 0.1649,
       "coherence_diagnostics": {
-        "tau": 0.2191721647977829,
-        "grad_tau": 0.015798507258296013,
+        "tau": 0.09918307512998581,
+        "grad_tau": 0.005234818439930677,
         "torsion": 0.0,
-        "alignment": 0.039733245968818665,
-        "S_field": 0.07443206012248993,
+        "alignment": 0.005941519048064947,
+        "S_field": 0.032959483563899994,
         "Gamma_field": 0.25,
-        "S_over_Gamma": 0.2977282404899597,
+        "S_over_Gamma": 0.13183793425559998,
         "Da": 17.130695343017578,
         "E_coh": 0.0,
         "singularity_count": 2.0,
@@ -1274,1086 +2042,46 @@
       "scoring_tier": "tier2_analytic",
       "coherence_source": "probsevere",
       "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
+      "track_length": 4,
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              -77.51,
-              43.86
+              -89.07,
+              39.31
             ],
             [
-              -77.47,
-              43.86
+              -89.03,
+              39.31
             ],
             [
-              -77.45,
-              43.85
+              -89.02,
+              39.3
             ],
             [
-              -77.45,
-              43.8
+              -89.02,
+              39.25
             ],
             [
-              -77.46,
-              43.79
+              -89.05,
+              39.23
             ],
             [
-              -77.51,
-              43.79
+              -89.08,
+              39.23
             ],
             [
-              -77.53,
-              43.8
+              -89.1,
+              39.25
             ],
             [
-              -77.53,
-              43.85
+              -89.1,
+              39.28
             ],
             [
-              -77.51,
-              43.86
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196983",
-      "lat": 43.7945,
-      "lon": -78.96,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.2214,
-      "risk_band": "moderate",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 233.0,
-      "ebshear": 18.0,
-      "srh01": 530.0,
-      "maxllaz": 0.001,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.2214
-      },
-      "coherence_score": 0.2214,
-      "coherence_diagnostics": {
-        "tau": 0.2247610241174698,
-        "grad_tau": 0.010661685839295387,
-        "torsion": 0.0,
-        "alignment": 0.02825346775352955,
-        "S_field": 0.07620030641555786,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.30480122566223145,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -78.95,
-              43.84
-            ],
-            [
-              -78.91,
-              43.81
-            ],
-            [
-              -78.91,
-              43.77
-            ],
-            [
-              -78.92,
-              43.76
-            ],
-            [
-              -78.96,
-              43.76
-            ],
-            [
-              -78.97,
-              43.77
-            ],
-            [
-              -79.0,
-              43.77
-            ],
-            [
-              -79.01,
-              43.78
-            ],
-            [
-              -78.99,
-              43.81
-            ],
-            [
-              -78.99,
-              43.83
-            ],
-            [
-              -78.95,
-              43.84
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196988",
-      "lat": 39.0444,
-      "lon": -89.9822,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.2214,
-      "risk_band": "moderate",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 821.0,
-      "ebshear": 21.0,
-      "srh01": 330.0,
-      "maxllaz": 0.002,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.2214
-      },
-      "coherence_score": 0.2214,
-      "coherence_diagnostics": {
-        "tau": 0.11623672395944595,
-        "grad_tau": 0.020421480759978294,
-        "torsion": 0.0,
-        "alignment": 0.03267436847090721,
-        "S_field": 0.037985291332006454,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.15194116532802582,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -89.99,
-              39.08
-            ],
-            [
-              -89.95,
-              39.07
-            ],
-            [
-              -89.95,
-              39.04
-            ],
-            [
-              -89.96,
-              39.02
-            ],
-            [
-              -89.98,
-              39.01
-            ],
-            [
-              -90.0,
-              39.01
-            ],
-            [
-              -90.01,
-              39.02
-            ],
-            [
-              -90.01,
-              39.07
-            ],
-            [
-              -89.99,
-              39.08
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196960",
-      "lat": 49.194,
-      "lon": -79.2813,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.201,
-      "risk_band": "moderate",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 23.0,
-      "ebshear": 11.0,
-      "srh01": 273.0,
-      "maxllaz": 0.001,
-      "mesh": 0.04,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.201
-      },
-      "coherence_score": 0.201,
-      "coherence_diagnostics": {
-        "tau": 0.0,
-        "grad_tau": 0.1040365993976593,
-        "torsion": 0.0,
-        "alignment": 0.14200995862483978,
-        "S_field": 0.09461037814617157,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.3784415125846863,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -79.35,
-              49.24
-            ],
-            [
-              -79.22,
-              49.24
-            ],
-            [
-              -79.21,
-              49.23
-            ],
-            [
-              -79.19,
-              49.23
-            ],
-            [
-              -79.19,
-              49.18
-            ],
-            [
-              -79.21,
-              49.16
-            ],
-            [
-              -79.25,
-              49.15
-            ],
-            [
-              -79.26,
-              49.14
-            ],
-            [
-              -79.27,
-              49.15
-            ],
-            [
-              -79.32,
-              49.16
-            ],
-            [
-              -79.34,
-              49.17
-            ],
-            [
-              -79.34,
-              49.19
-            ],
-            [
-              -79.36,
-              49.2
-            ],
-            [
-              -79.36,
-              49.23
-            ],
-            [
-              -79.35,
-              49.24
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196911",
-      "lat": 48.5892,
-      "lon": -79.9017,
-      "motion_east": 9.1,
-      "motion_south": -7.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.1928,
-      "risk_band": "moderate",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 17.0,
-      "ebshear": 10.0,
-      "srh01": 265.0,
-      "maxllaz": 0.001,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.1928
-      },
-      "coherence_score": 0.1928,
-      "coherence_diagnostics": {
-        "tau": 0.10120176523923874,
-        "grad_tau": 0.07590263336896896,
-        "torsion": 0.0,
-        "alignment": 0.10057099163532257,
-        "S_field": 0.08240000903606415,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.3296000361442566,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -79.94,
-              48.64
-            ],
-            [
-              -79.91,
-              48.64
-            ],
-            [
-              -79.89,
-              48.62
-            ],
-            [
-              -79.85,
-              48.6
-            ],
-            [
-              -79.8,
-              48.6
-            ],
-            [
-              -79.8,
-              48.54
-            ],
-            [
-              -79.84,
-              48.51
-            ],
-            [
-              -79.9,
-              48.51
-            ],
-            [
-              -79.98,
-              48.55
-            ],
-            [
-              -79.99,
-              48.6
-            ],
-            [
-              -79.98,
-              48.62
-            ],
-            [
-              -79.94,
-              48.64
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196967",
-      "lat": 48.2137,
-      "lon": -82.2375,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.1843,
-      "risk_band": "moderate",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 13.0,
-      "ebshear": 7.0,
-      "srh01": 254.0,
-      "maxllaz": 0.002,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.1843
-      },
-      "coherence_score": 0.1843,
-      "coherence_diagnostics": {
-        "tau": 0.0789845734834671,
-        "grad_tau": 0.060397036373615265,
-        "torsion": 0.0,
-        "alignment": 0.0767042338848114,
-        "S_field": 0.06268623471260071,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.25074493885040283,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -82.24,
-              48.25
-            ],
-            [
-              -82.2,
-              48.23
-            ],
-            [
-              -82.2,
-              48.2
-            ],
-            [
-              -82.22,
-              48.18
-            ],
-            [
-              -82.26,
-              48.18
-            ],
-            [
-              -82.27,
-              48.19
-            ],
-            [
-              -82.27,
-              48.23
-            ],
-            [
-              -82.24,
-              48.25
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196979",
-      "lat": 48.281,
-      "lon": -81.205,
-      "motion_east": 9.4,
-      "motion_south": -6.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.1806,
-      "risk_band": "moderate",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 17.0,
-      "ebshear": 6.0,
-      "srh01": 249.0,
-      "maxllaz": 0.0,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.1806
-      },
-      "coherence_score": 0.1806,
-      "coherence_diagnostics": {
-        "tau": 0.09231904149055481,
-        "grad_tau": 0.06958185136318207,
-        "torsion": 0.0,
-        "alignment": 0.08471590280532837,
-        "S_field": 0.0747913047671318,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.2991652190685272,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -81.23,
-              48.32
-            ],
-            [
-              -81.19,
-              48.32
-            ],
-            [
-              -81.18,
-              48.28
-            ],
-            [
-              -81.17,
-              48.27
-            ],
-            [
-              -81.17,
-              48.25
-            ],
-            [
-              -81.18,
-              48.24
-            ],
-            [
-              -81.22,
-              48.24
-            ],
-            [
-              -81.24,
-              48.26
-            ],
-            [
-              -81.24,
-              48.31
-            ],
-            [
-              -81.23,
-              48.32
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196931",
-      "lat": 48.4994,
-      "lon": -81.266,
-      "motion_east": 9.4,
-      "motion_south": -6.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.1726,
-      "risk_band": "moderate",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 16.0,
-      "ebshear": 9.0,
-      "srh01": 238.0,
-      "maxllaz": 0.002,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.1726
-      },
-      "coherence_score": 0.1726,
-      "coherence_diagnostics": {
-        "tau": 0.09231904149055481,
-        "grad_tau": 0.06958185136318207,
-        "torsion": 0.0,
-        "alignment": 0.08471590280532837,
-        "S_field": 0.0747913047671318,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.2991652190685272,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -81.47,
-              48.65
-            ],
-            [
-              -81.4,
-              48.65
-            ],
-            [
-              -81.39,
-              48.64
-            ],
-            [
-              -81.35,
-              48.64
-            ],
-            [
-              -81.34,
-              48.63
-            ],
-            [
-              -81.24,
-              48.63
-            ],
-            [
-              -81.23,
-              48.62
-            ],
-            [
-              -81.2,
-              48.62
-            ],
-            [
-              -81.14,
-              48.56
-            ],
-            [
-              -81.14,
-              48.51
-            ],
-            [
-              -81.13,
-              48.49
-            ],
-            [
-              -81.07,
-              48.44
-            ],
-            [
-              -81.05,
-              48.4
-            ],
-            [
-              -81.05,
-              48.37
-            ],
-            [
-              -81.06,
-              48.35
-            ],
-            [
-              -81.08,
-              48.34
-            ],
-            [
-              -81.14,
-              48.34
-            ],
-            [
-              -81.15,
-              48.35
-            ],
-            [
-              -81.18,
-              48.35
-            ],
-            [
-              -81.2,
-              48.39
-            ],
-            [
-              -81.25,
-              48.39
-            ],
-            [
-              -81.26,
-              48.4
-            ],
-            [
-              -81.33,
-              48.4
-            ],
-            [
-              -81.34,
-              48.41
-            ],
-            [
-              -81.34,
-              48.46
-            ],
-            [
-              -81.33,
-              48.47
-            ],
-            [
-              -81.31,
-              48.47
-            ],
-            [
-              -81.29,
-              48.49
-            ],
-            [
-              -81.29,
-              48.5
-            ],
-            [
-              -81.31,
-              48.52
-            ],
-            [
-              -81.35,
-              48.53
-            ],
-            [
-              -81.47,
-              48.59
-            ],
-            [
-              -81.48,
-              48.6
-            ],
-            [
-              -81.48,
-              48.63
-            ],
-            [
-              -81.47,
-              48.65
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196989",
-      "lat": 38.3422,
-      "lon": -84.8278,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.1503,
-      "risk_band": "moderate",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 589.0,
-      "ebshear": 25.0,
-      "srh01": 205.0,
-      "maxllaz": 0.002,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.1503
-      },
-      "coherence_score": 0.1503,
-      "coherence_diagnostics": {
-        "tau": 0.1653909832239151,
-        "grad_tau": 0.0072926427237689495,
-        "torsion": 0.0,
-        "alignment": 0.007438495755195618,
-        "S_field": 0.057735055685043335,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.23094022274017334,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.86,
-              38.38
-            ],
-            [
-              -84.81,
-              38.38
-            ],
-            [
-              -84.79,
-              38.35
-            ],
-            [
-              -84.79,
-              38.32
-            ],
-            [
-              -84.8,
-              38.31
-            ],
-            [
-              -84.83,
-              38.31
-            ],
-            [
-              -84.85,
-              38.32
-            ],
-            [
-              -84.86,
-              38.33
-            ],
-            [
-              -84.86,
-              38.38
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196930",
-      "lat": 37.965,
-      "lon": -85.265,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.149,
-      "risk_band": "low",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 340.0,
-      "ebshear": 25.0,
-      "srh01": 203.0,
-      "maxllaz": 0.001,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.149
-      },
-      "coherence_score": 0.149,
-      "coherence_diagnostics": {
-        "tau": 0.1653909832239151,
-        "grad_tau": 0.0072926427237689495,
-        "torsion": 0.0,
-        "alignment": 0.007438495755195618,
-        "S_field": 0.057735055685043335,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.23094022274017334,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -85.26,
-              38.0
-            ],
-            [
-              -85.24,
-              38.0
-            ],
-            [
-              -85.22,
-              37.98
-            ],
-            [
-              -85.22,
-              37.94
-            ],
-            [
-              -85.28,
-              37.91
-            ],
-            [
-              -85.32,
-              37.92
-            ],
-            [
-              -85.32,
-              37.97
-            ],
-            [
-              -85.26,
-              38.0
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196918",
-      "lat": 37.9487,
-      "lon": -85.4737,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.1465,
-      "risk_band": "low",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 327.0,
-      "ebshear": 22.0,
-      "srh01": 199.0,
-      "maxllaz": 0.002,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.1465
-      },
-      "coherence_score": 0.1465,
-      "coherence_diagnostics": {
-        "tau": 0.1613660305738449,
-        "grad_tau": 0.01201685518026352,
-        "torsion": 0.0,
-        "alignment": 0.011956769973039627,
-        "S_field": 0.057054344564676285,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.22821737825870514,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -85.5,
-              37.98
-            ],
-            [
-              -85.44,
-              37.98
-            ],
-            [
-              -85.42,
-              37.96
-            ],
-            [
-              -85.42,
-              37.9
-            ],
-            [
-              -85.49,
-              37.9
-            ],
-            [
-              -85.51,
-              37.92
-            ],
-            [
-              -85.51,
-              37.97
-            ],
-            [
-              -85.5,
-              37.98
+              -89.07,
+              39.31
             ]
           ]
         ]
@@ -2361,646 +2089,34 @@
     },
     {
       "storm_id": "196919",
-      "lat": 37.714,
-      "lon": -85.564,
+      "lat": 38.02,
+      "lon": -85.0564,
       "motion_east": 9.0,
       "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.1428,
-      "risk_band": "low",
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1649,
+      "risk_band": "moderate",
       "ps_tor": 0.0,
       "ps": 0.0,
-      "mucape": 339.0,
-      "ebshear": 25.0,
-      "srh01": 193.0,
+      "mucape": 403.0,
+      "ebshear": 26.0,
+      "srh01": 227.0,
       "maxllaz": 0.002,
       "mesh": 0.0,
       "flash_rate": 0.0,
       "top_features": [],
       "model_scores": {
-        "analytic_prob": 0.1428
+        "analytic_prob": 0.1649
       },
-      "coherence_score": 0.1428,
+      "coherence_score": 0.1649,
       "coherence_diagnostics": {
-        "tau": 0.1659686267375946,
-        "grad_tau": 0.008575755171477795,
+        "tau": 0.0982029139995575,
+        "grad_tau": 0.007308619562536478,
         "torsion": 0.0,
-        "alignment": 0.007889694534242153,
-        "S_field": 0.05966634675860405,
+        "alignment": 0.008350098505616188,
+        "S_field": 0.03475486487150192,
         "Gamma_field": 0.25,
-        "S_over_Gamma": 0.2386653870344162,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -85.59,
-              37.77
-            ],
-            [
-              -85.57,
-              37.77
-            ],
-            [
-              -85.53,
-              37.72
-            ],
-            [
-              -85.52,
-              37.73
-            ],
-            [
-              -85.49,
-              37.73
-            ],
-            [
-              -85.49,
-              37.69
-            ],
-            [
-              -85.52,
-              37.68
-            ],
-            [
-              -85.56,
-              37.64
-            ],
-            [
-              -85.59,
-              37.64
-            ],
-            [
-              -85.59,
-              37.67
-            ],
-            [
-              -85.61,
-              37.69
-            ],
-            [
-              -85.61,
-              37.72
-            ],
-            [
-              -85.6,
-              37.73
-            ],
-            [
-              -85.6,
-              37.76
-            ],
-            [
-              -85.59,
-              37.77
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196970",
-      "lat": 37.7611,
-      "lon": -87.8444,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.1416,
-      "risk_band": "low",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 650.0,
-      "ebshear": 20.0,
-      "srh01": 191.0,
-      "maxllaz": 0.001,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.1416
-      },
-      "coherence_score": 0.1416,
-      "coherence_diagnostics": {
-        "tau": 0.15237021446228027,
-        "grad_tau": 0.015566430985927582,
-        "torsion": 0.0,
-        "alignment": 0.014865942299365997,
-        "S_field": 0.05349663272500038,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.21398653090000153,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -87.84,
-              37.79
-            ],
-            [
-              -87.8,
-              37.79
-            ],
-            [
-              -87.8,
-              37.75
-            ],
-            [
-              -87.83,
-              37.72
-            ],
-            [
-              -87.88,
-              37.72
-            ],
-            [
-              -87.88,
-              37.75
-            ],
-            [
-              -87.87,
-              37.77
-            ],
-            [
-              -87.86,
-              37.77
-            ],
-            [
-              -87.84,
-              37.79
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196871",
-      "lat": 44.3935,
-      "lon": -69.0518,
-      "motion_east": 9.8,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.1391,
-      "risk_band": "low",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 43.0,
-      "ebshear": 7.0,
-      "srh01": 187.0,
-      "maxllaz": 0.003,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.1391
-      },
-      "coherence_score": 0.1391,
-      "coherence_diagnostics": {
-        "tau": 0.02992451936006546,
-        "grad_tau": 0.008250325918197632,
-        "torsion": 0.0,
-        "alignment": 0.007714054547250271,
-        "S_field": 0.008594687096774578,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.03437874838709831,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 2,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -69.09,
-              44.47
-            ],
-            [
-              -69.05,
-              44.46
-            ],
-            [
-              -69.0,
-              44.41
-            ],
-            [
-              -68.92,
-              44.41
-            ],
-            [
-              -68.91,
-              44.4
-            ],
-            [
-              -68.91,
-              44.37
-            ],
-            [
-              -68.92,
-              44.35
-            ],
-            [
-              -68.95,
-              44.33
-            ],
-            [
-              -69.06,
-              44.33
-            ],
-            [
-              -69.07,
-              44.32
-            ],
-            [
-              -69.12,
-              44.32
-            ],
-            [
-              -69.16,
-              44.35
-            ],
-            [
-              -69.2,
-              44.36
-            ],
-            [
-              -69.2,
-              44.42
-            ],
-            [
-              -69.13,
-              44.46
-            ],
-            [
-              -69.1,
-              44.46
-            ],
-            [
-              -69.09,
-              44.47
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196945",
-      "lat": 37.4077,
-      "lon": -85.8346,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.1321,
-      "risk_band": "low",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 227.0,
-      "ebshear": 25.0,
-      "srh01": 175.0,
-      "maxllaz": 0.001,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.1321
-      },
-      "coherence_score": 0.1321,
-      "coherence_diagnostics": {
-        "tau": 0.1659686267375946,
-        "grad_tau": 0.008575755171477795,
-        "torsion": 0.0,
-        "alignment": 0.007889694534242153,
-        "S_field": 0.05966634675860405,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.2386653870344162,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -85.85,
-              37.45
-            ],
-            [
-              -85.77,
-              37.45
-            ],
-            [
-              -85.76,
-              37.44
-            ],
-            [
-              -85.76,
-              37.4
-            ],
-            [
-              -85.79,
-              37.38
-            ],
-            [
-              -85.81,
-              37.38
-            ],
-            [
-              -85.85,
-              37.36
-            ],
-            [
-              -85.86,
-              37.37
-            ],
-            [
-              -85.89,
-              37.37
-            ],
-            [
-              -85.9,
-              37.38
-            ],
-            [
-              -85.9,
-              37.43
-            ],
-            [
-              -85.86,
-              37.44
-            ],
-            [
-              -85.85,
-              37.45
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196978",
-      "lat": 38.6086,
-      "lon": -84.31,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.1248,
-      "risk_band": "low",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 477.0,
-      "ebshear": 24.0,
-      "srh01": 162.0,
-      "maxllaz": 0.003,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.1248
-      },
-      "coherence_score": 0.1248,
-      "coherence_diagnostics": {
-        "tau": 0.15484970808029175,
-        "grad_tau": 0.012955312617123127,
-        "torsion": 0.0,
-        "alignment": 0.010493802838027477,
-        "S_field": 0.05156664550304413,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.2062665820121765,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.35,
-              38.64
-            ],
-            [
-              -84.26,
-              38.64
-            ],
-            [
-              -84.24,
-              38.62
-            ],
-            [
-              -84.29,
-              38.57
-            ],
-            [
-              -84.33,
-              38.57
-            ],
-            [
-              -84.35,
-              38.58
-            ],
-            [
-              -84.35,
-              38.64
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196981",
-      "lat": 44.8518,
-      "lon": -99.3882,
-      "motion_east": 10.1,
-      "motion_south": -8.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.1041,
-      "risk_band": "low",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 11.0,
-      "ebshear": 7.0,
-      "srh01": 121.0,
-      "maxllaz": 0.001,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.1041
-      },
-      "coherence_score": 0.1041,
-      "coherence_diagnostics": {
-        "tau": 0.011486737057566643,
-        "grad_tau": 0.00048473101924173534,
-        "torsion": 0.0,
-        "alignment": 0.00023509454331360757,
-        "S_field": 0.00433660252019763,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.01734641008079052,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 2.0,
-        "singularity_conditions_met": 2,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": true,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -99.4,
-              44.92
-            ],
-            [
-              -99.36,
-              44.92
-            ],
-            [
-              -99.33,
-              44.87
-            ],
-            [
-              -99.33,
-              44.8
-            ],
-            [
-              -99.35,
-              44.78
-            ],
-            [
-              -99.39,
-              44.78
-            ],
-            [
-              -99.41,
-              44.79
-            ],
-            [
-              -99.44,
-              44.83
-            ],
-            [
-              -99.44,
-              44.86
-            ],
-            [
-              -99.42,
-              44.9
-            ],
-            [
-              -99.4,
-              44.92
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196705",
-      "lat": 29.1043,
-      "lon": -83.6452,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.0947,
-      "risk_band": "low",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 655.0,
-      "ebshear": 16.0,
-      "srh01": 51.0,
-      "maxllaz": 0.002,
-      "mesh": 0.33,
-      "flash_rate": 3.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.0947
-      },
-      "coherence_score": 0.0947,
-      "coherence_diagnostics": {
-        "tau": 0.06212586909532547,
-        "grad_tau": 0.0050356765277683735,
-        "torsion": 0.0,
-        "alignment": 0.0012840975541621447,
-        "S_field": 0.020685488358139992,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.08274195343255997,
+        "S_over_Gamma": 0.1390194594860077,
         "Da": 17.130695343017578,
         "E_coh": 0.0,
         "singularity_count": 2.0,
@@ -3022,123 +2138,193 @@
         "coordinates": [
           [
             [
-              -83.59,
-              29.21
+              -85.08,
+              38.05
             ],
             [
-              -83.55,
-              29.21
+              -85.04,
+              38.05
             ],
             [
-              -83.53,
-              29.17
+              -85.03,
+              38.04
             ],
             [
-              -83.54,
-              29.16
+              -85.01,
+              38.04
             ],
             [
-              -83.53,
-              29.15
+              -85.04,
+              38.01
             ],
             [
-              -83.56,
-              29.12
+              -85.04,
+              37.99
             ],
             [
-              -83.56,
-              29.1
+              -85.05,
+              37.98
             ],
             [
-              -83.58,
-              29.08
+              -85.08,
+              37.98
             ],
             [
-              -83.58,
-              29.07
+              -85.08,
+              38.01
             ],
             [
-              -83.6,
-              29.05
+              -85.09,
+              38.02
             ],
             [
-              -83.64,
-              29.04
-            ],
-            [
-              -83.72,
-              28.99
-            ],
-            [
-              -83.78,
-              28.99
-            ],
-            [
-              -83.8,
-              29.0
-            ],
-            [
-              -83.81,
-              29.02
-            ],
-            [
-              -83.81,
-              29.06
-            ],
-            [
-              -83.8,
-              29.08
-            ],
-            [
-              -83.71,
-              29.12
-            ],
-            [
-              -83.64,
-              29.18
-            ],
-            [
-              -83.63,
-              29.18
-            ],
-            [
-              -83.59,
-              29.21
+              -85.08,
+              38.05
             ]
           ]
         ]
       }
     },
     {
-      "storm_id": "196905",
-      "lat": 44.707,
-      "lon": -97.3585,
-      "motion_east": 10.1,
-      "motion_south": -6.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.0947,
+      "storm_id": "197059",
+      "lat": 41.9814,
+      "lon": -96.2507,
+      "motion_east": 9.2,
+      "motion_south": -15.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1601,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 662.0,
+      "ebshear": 37.0,
+      "srh01": 92.0,
+      "maxllaz": 0.006,
+      "mesh": 0.07,
+      "flash_rate": 2.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.1601
+      },
+      "coherence_score": 0.1601,
+      "coherence_diagnostics": {
+        "tau": 0.12477365136146545,
+        "grad_tau": 0.0030985777266323566,
+        "torsion": 0.0,
+        "alignment": 0.0016190068563446403,
+        "S_field": 0.04318482428789139,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.17273929715156555,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.31,
+              42.03
+            ],
+            [
+              -96.29,
+              42.03
+            ],
+            [
+              -96.24,
+              42.0
+            ],
+            [
+              -96.22,
+              42.0
+            ],
+            [
+              -96.21,
+              41.99
+            ],
+            [
+              -96.17,
+              41.98
+            ],
+            [
+              -96.17,
+              41.93
+            ],
+            [
+              -96.18,
+              41.92
+            ],
+            [
+              -96.21,
+              41.92
+            ],
+            [
+              -96.25,
+              41.95
+            ],
+            [
+              -96.31,
+              41.96
+            ],
+            [
+              -96.32,
+              41.98
+            ],
+            [
+              -96.32,
+              42.02
+            ],
+            [
+              -96.31,
+              42.03
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197113",
+      "lat": 41.797,
+      "lon": -96.02,
+      "motion_east": 9.2,
+      "motion_south": -15.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1452,
       "risk_band": "low",
       "ps_tor": 0.0,
       "ps": 0.0,
-      "mucape": 7.0,
-      "ebshear": 4.0,
-      "srh01": 2.0,
-      "maxllaz": 0.001,
-      "mesh": 0.0,
-      "flash_rate": 0.0,
+      "mucape": 647.0,
+      "ebshear": 39.0,
+      "srh01": 117.0,
+      "maxllaz": 0.005,
+      "mesh": 0.06,
+      "flash_rate": 1.0,
       "top_features": [],
       "model_scores": {
-        "analytic_prob": 0.0947
+        "analytic_prob": 0.1452
       },
-      "coherence_score": 0.0947,
+      "coherence_score": 0.1452,
       "coherence_diagnostics": {
-        "tau": 0.011119072325527668,
-        "grad_tau": 0.0007871445850469172,
+        "tau": 0.12477365136146545,
+        "grad_tau": 0.0030985777266323566,
         "torsion": 0.0,
-        "alignment": 7.871445632190444e-06,
-        "S_field": 0.00373648083768785,
+        "alignment": 0.0016190068563446403,
+        "S_field": 0.04318482428789139,
         "Gamma_field": 0.25,
-        "S_over_Gamma": 0.0149459233507514,
+        "S_over_Gamma": 0.17273929715156555,
         "Da": 17.130695343017578,
         "E_coh": 0.0,
         "singularity_count": 2.0,
@@ -3160,104 +2346,1050 @@
         "coordinates": [
           [
             [
-              -97.41,
-              44.79
+              -96.06,
+              41.84
             ],
             [
-              -97.37,
-              44.79
+              -96.0,
+              41.83
             ],
             [
-              -97.36,
-              44.78
+              -95.98,
+              41.81
             ],
             [
-              -97.31,
-              44.77
+              -95.98,
+              41.78
             ],
             [
-              -97.28,
-              44.74
+              -95.96,
+              41.75
             ],
             [
-              -97.28,
-              44.72
+              -95.97,
+              41.74
             ],
             [
-              -97.27,
-              44.71
+              -96.03,
+              41.75
             ],
             [
-              -97.27,
-              44.66
+              -96.08,
+              41.8
             ],
             [
-              -97.29,
-              44.64
+              -96.08,
+              41.83
             ],
             [
-              -97.29,
-              44.63
-            ],
-            [
-              -97.34,
-              44.63
-            ],
-            [
-              -97.35,
-              44.64
-            ],
-            [
-              -97.38,
-              44.64
-            ],
-            [
-              -97.4,
-              44.65
-            ],
-            [
-              -97.4,
-              44.67
-            ],
-            [
-              -97.42,
-              44.69
-            ],
-            [
-              -97.46,
-              44.71
-            ],
-            [
-              -97.44,
-              44.72
-            ],
-            [
-              -97.44,
-              44.77
-            ],
-            [
-              -97.41,
-              44.79
+              -96.06,
+              41.84
             ]
           ]
         ]
       }
     },
     {
-      "storm_id": "196920",
-      "lat": 30.328,
-      "lon": -81.668,
+      "storm_id": "197096",
+      "lat": 38.0873,
+      "lon": -87.4245,
       "motion_east": 9.0,
       "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1391,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 269.0,
+      "ebshear": 25.0,
+      "srh01": 187.0,
+      "maxllaz": 0.002,
+      "mesh": 0.16,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.1391
+      },
+      "coherence_score": 0.1391,
+      "coherence_diagnostics": {
+        "tau": 0.10338480770587921,
+        "grad_tau": 0.004992354661226273,
+        "torsion": 0.0,
+        "alignment": 0.004667851608246565,
+        "S_field": 0.036078907549381256,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.14431563019752502,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -87.42,
+              38.12
+            ],
+            [
+              -87.38,
+              38.12
+            ],
+            [
+              -87.37,
+              38.11
+            ],
+            [
+              -87.37,
+              38.07
+            ],
+            [
+              -87.4,
+              38.03
+            ],
+            [
+              -87.46,
+              38.03
+            ],
+            [
+              -87.48,
+              38.07
+            ],
+            [
+              -87.47,
+              38.08
+            ],
+            [
+              -87.47,
+              38.1
+            ],
+            [
+              -87.43,
+              38.11
+            ],
+            [
+              -87.42,
+              38.12
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197127",
+      "lat": 44.0433,
+      "lon": -102.3867,
+      "motion_east": 9.0,
+      "motion_south": -4.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.131,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 8.0,
+      "ebshear": 0.0,
+      "srh01": 173.0,
+      "maxllaz": 0.002,
+      "mesh": 0.05,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.131
+      },
+      "coherence_score": 0.131,
+      "coherence_diagnostics": {
+        "tau": 0.08307608962059021,
+        "grad_tau": 0.014401919208467007,
+        "torsion": 0.0,
+        "alignment": 0.011737563647329807,
+        "S_field": 0.02661445178091526,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.10645780712366104,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -102.44,
+              44.09
+            ],
+            [
+              -102.43,
+              44.08
+            ],
+            [
+              -102.42,
+              44.08
+            ],
+            [
+              -102.4,
+              44.06
+            ],
+            [
+              -102.35,
+              44.06
+            ],
+            [
+              -102.34,
+              44.05
+            ],
+            [
+              -102.31,
+              44.05
+            ],
+            [
+              -102.3,
+              44.04
+            ],
+            [
+              -102.28,
+              44.0
+            ],
+            [
+              -102.28,
+              43.99
+            ],
+            [
+              -102.3,
+              43.97
+            ],
+            [
+              -102.4,
+              43.97
+            ],
+            [
+              -102.45,
+              44.0
+            ],
+            [
+              -102.45,
+              44.04
+            ],
+            [
+              -102.44,
+              44.05
+            ],
+            [
+              -102.48,
+              44.08
+            ],
+            [
+              -102.45,
+              44.08
+            ],
+            [
+              -102.44,
+              44.09
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197076",
+      "lat": 44.3533,
+      "lon": -102.6933,
+      "motion_east": 9.0,
+      "motion_south": -4.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1287,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2.0,
+      "ebshear": 0.0,
+      "srh01": 169.0,
+      "maxllaz": 0.001,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.1287
+      },
+      "coherence_score": 0.1287,
+      "coherence_diagnostics": {
+        "tau": 0.06815332174301147,
+        "grad_tau": 0.014859957620501518,
+        "torsion": 0.0,
+        "alignment": 0.01255666371434927,
+        "S_field": 0.02083442732691765,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.0833377093076706,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -102.74,
+              44.4
+            ],
+            [
+              -102.68,
+              44.4
+            ],
+            [
+              -102.67,
+              44.39
+            ],
+            [
+              -102.63,
+              44.38
+            ],
+            [
+              -102.61,
+              44.35
+            ],
+            [
+              -102.61,
+              44.32
+            ],
+            [
+              -102.66,
+              44.28
+            ],
+            [
+              -102.71,
+              44.28
+            ],
+            [
+              -102.75,
+              44.32
+            ],
+            [
+              -102.76,
+              44.34
+            ],
+            [
+              -102.76,
+              44.38
+            ],
+            [
+              -102.74,
+              44.4
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197117",
+      "lat": 48.9342,
+      "lon": -80.6217,
+      "motion_east": 8.1,
+      "motion_south": -5.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1238,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 20.0,
+      "ebshear": 7.0,
+      "srh01": 160.0,
+      "maxllaz": 0.001,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.1238
+      },
+      "coherence_score": 0.1238,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.08214191347360611,
+        "torsion": 0.0,
+        "alignment": 0.06571353226900101,
+        "S_field": 0.09071964025497437,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.36287856101989746,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -80.66,
+              48.99
+            ],
+            [
+              -80.62,
+              48.99
+            ],
+            [
+              -80.6,
+              48.98
+            ],
+            [
+              -80.52,
+              48.9
+            ],
+            [
+              -80.52,
+              48.86
+            ],
+            [
+              -80.54,
+              48.85
+            ],
+            [
+              -80.61,
+              48.89
+            ],
+            [
+              -80.67,
+              48.9
+            ],
+            [
+              -80.69,
+              48.92
+            ],
+            [
+              -80.69,
+              48.96
+            ],
+            [
+              -80.68,
+              48.98
+            ],
+            [
+              -80.66,
+              48.99
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197154",
+      "lat": 48.7325,
+      "lon": -80.4213,
+      "motion_east": 7.4,
+      "motion_south": -5.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1205,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 20.0,
+      "ebshear": 6.0,
+      "srh01": 154.0,
+      "maxllaz": 0.001,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.1205
+      },
+      "coherence_score": 0.1205,
+      "coherence_diagnostics": {
+        "tau": 0.08214191347360611,
+        "grad_tau": 0.05751223489642143,
+        "torsion": 0.0,
+        "alignment": 0.04356551542878151,
+        "S_field": 0.0760229229927063,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.3040916919708252,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -80.44,
+              48.76
+            ],
+            [
+              -80.4,
+              48.76
+            ],
+            [
+              -80.4,
+              48.72
+            ],
+            [
+              -80.39,
+              48.71
+            ],
+            [
+              -80.4,
+              48.7
+            ],
+            [
+              -80.45,
+              48.7
+            ],
+            [
+              -80.45,
+              48.75
+            ],
+            [
+              -80.44,
+              48.76
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197136",
+      "lat": 43.88,
+      "lon": -102.116,
+      "motion_east": 9.0,
+      "motion_south": -4.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.12,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 10.0,
+      "ebshear": 1.0,
+      "srh01": 153.0,
+      "maxllaz": 0.001,
+      "mesh": 0.04,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.12
+      },
+      "coherence_score": 0.12,
+      "coherence_diagnostics": {
+        "tau": 0.08307608962059021,
+        "grad_tau": 0.014401919208467007,
+        "torsion": 0.0,
+        "alignment": 0.011737563647329807,
+        "S_field": 0.02661445178091526,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.10645780712366104,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -102.11,
+              43.96
+            ],
+            [
+              -102.07,
+              43.95
+            ],
+            [
+              -102.05,
+              43.92
+            ],
+            [
+              -102.06,
+              43.84
+            ],
+            [
+              -102.09,
+              43.8
+            ],
+            [
+              -102.13,
+              43.8
+            ],
+            [
+              -102.15,
+              43.81
+            ],
+            [
+              -102.2,
+              43.86
+            ],
+            [
+              -102.19,
+              43.9
+            ],
+            [
+              -102.11,
+              43.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197042",
+      "lat": 48.588,
+      "lon": -80.2167,
+      "motion_east": 7.3,
+      "motion_south": -5.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1179,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 15.0,
+      "ebshear": 7.0,
+      "srh01": 149.0,
+      "maxllaz": 0.001,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.1179
+      },
+      "coherence_score": 0.1179,
+      "coherence_diagnostics": {
+        "tau": 0.08214191347360611,
+        "grad_tau": 0.05751223489642143,
+        "torsion": 0.0,
+        "alignment": 0.04356551542878151,
+        "S_field": 0.0760229229927063,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.3040916919708252,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -80.22,
+              48.68
+            ],
+            [
+              -80.18,
+              48.68
+            ],
+            [
+              -80.14,
+              48.64
+            ],
+            [
+              -80.13,
+              48.62
+            ],
+            [
+              -80.13,
+              48.59
+            ],
+            [
+              -80.14,
+              48.58
+            ],
+            [
+              -80.14,
+              48.56
+            ],
+            [
+              -80.17,
+              48.5
+            ],
+            [
+              -80.21,
+              48.47
+            ],
+            [
+              -80.25,
+              48.47
+            ],
+            [
+              -80.32,
+              48.54
+            ],
+            [
+              -80.34,
+              48.58
+            ],
+            [
+              -80.34,
+              48.6
+            ],
+            [
+              -80.32,
+              48.63
+            ],
+            [
+              -80.22,
+              48.68
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "196705",
+      "lat": 29.1871,
+      "lon": -83.7452,
+      "motion_east": 6.9,
+      "motion_south": -13.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.1123,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 652.0,
+      "ebshear": 17.0,
+      "srh01": 138.0,
+      "maxllaz": 0.003,
+      "mesh": 0.24,
+      "flash_rate": 4.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.1123
+      },
+      "coherence_score": 0.1123,
+      "coherence_diagnostics": {
+        "tau": 0.031132999807596207,
+        "grad_tau": 0.0003390545607544482,
+        "torsion": 0.0,
+        "alignment": 0.00023394764866679907,
+        "S_field": 0.012258287519216537,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.04903315007686615,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 5,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -83.7,
+              29.28
+            ],
+            [
+              -83.69,
+              29.27
+            ],
+            [
+              -83.67,
+              29.27
+            ],
+            [
+              -83.65,
+              29.25
+            ],
+            [
+              -83.65,
+              29.22
+            ],
+            [
+              -83.68,
+              29.18
+            ],
+            [
+              -83.71,
+              29.1
+            ],
+            [
+              -83.73,
+              29.08
+            ],
+            [
+              -83.75,
+              29.08
+            ],
+            [
+              -83.76,
+              29.07
+            ],
+            [
+              -83.81,
+              29.08
+            ],
+            [
+              -83.85,
+              29.12
+            ],
+            [
+              -83.85,
+              29.15
+            ],
+            [
+              -83.83,
+              29.17
+            ],
+            [
+              -83.83,
+              29.18
+            ],
+            [
+              -83.8,
+              29.18
+            ],
+            [
+              -83.78,
+              29.2
+            ],
+            [
+              -83.77,
+              29.23
+            ],
+            [
+              -83.73,
+              29.27
+            ],
+            [
+              -83.71,
+              29.27
+            ],
+            [
+              -83.7,
+              29.28
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "196998",
+      "lat": 48.3033,
+      "lon": -81.0833,
+      "motion_east": 9.0,
+      "motion_south": -4.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.0986,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 24.0,
+      "ebshear": 5.0,
+      "srh01": 109.0,
+      "maxllaz": 0.001,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.0986
+      },
+      "coherence_score": 0.0986,
+      "coherence_diagnostics": {
+        "tau": 0.06691823899745941,
+        "grad_tau": 0.04836134985089302,
+        "torsion": 0.0,
+        "alignment": 0.026356935501098633,
+        "S_field": 0.05950212478637695,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.2380084991455078,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -81.17,
+              48.37
+            ],
+            [
+              -81.12,
+              48.37
+            ],
+            [
+              -81.08,
+              48.35
+            ],
+            [
+              -80.95,
+              48.35
+            ],
+            [
+              -80.94,
+              48.34
+            ],
+            [
+              -80.91,
+              48.34
+            ],
+            [
+              -80.89,
+              48.32
+            ],
+            [
+              -80.89,
+              48.27
+            ],
+            [
+              -80.92,
+              48.24
+            ],
+            [
+              -81.02,
+              48.24
+            ],
+            [
+              -81.04,
+              48.26
+            ],
+            [
+              -81.13,
+              48.26
+            ],
+            [
+              -81.14,
+              48.25
+            ],
+            [
+              -81.28,
+              48.25
+            ],
+            [
+              -81.29,
+              48.26
+            ],
+            [
+              -81.29,
+              48.3
+            ],
+            [
+              -81.27,
+              48.32
+            ],
+            [
+              -81.17,
+              48.37
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "196905",
+      "lat": 44.9786,
+      "lon": -96.985,
+      "motion_east": 8.5,
+      "motion_south": -13.0,
+      "valid_time": "20260403_123038 UTC",
       "tornado_probability": 0.0947,
       "risk_band": "low",
       "ps_tor": 0.0,
       "ps": 0.0,
-      "mucape": 948.0,
-      "ebshear": 14.0,
-      "srh01": 0.0,
-      "maxllaz": 0.0,
+      "mucape": 5.0,
+      "ebshear": 2.0,
+      "srh01": 46.0,
+      "maxllaz": 0.001,
       "mesh": 0.0,
       "flash_rate": 0.0,
       "top_features": [],
@@ -3266,73 +3398,165 @@
       },
       "coherence_score": 0.0947,
       "coherence_diagnostics": {
-        "tau": 0.05039643496274948,
-        "grad_tau": 0.006216300651431084,
+        "tau": 0.10496409237384796,
+        "grad_tau": 0.014285816811025143,
         "torsion": 0.0,
-        "alignment": 0.0,
-        "S_field": 0.015945594757795334,
+        "alignment": 0.003285737941041589,
+        "S_field": 0.03332265838980675,
         "Gamma_field": 0.25,
-        "S_over_Gamma": 0.06378237903118134,
+        "S_over_Gamma": 0.133290633559227,
         "Da": 17.130695343017578,
         "E_coh": 0.0,
-        "singularity_count": 1.0,
-        "singularity_conditions_met": 1,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
         "singularity_detail": {
           "s_over_gamma": false,
           "high_gradient": false,
           "high_torsion": false,
-          "positive_alignment": false,
+          "positive_alignment": true,
           "high_damkohler": true
         }
       },
       "scoring_tier": "tier2_analytic",
       "coherence_source": "probsevere",
       "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
+      "track_length": 3,
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              -81.7,
-              30.36
+              -97.19,
+              45.03
             ],
             [
-              -81.62,
-              30.36
+              -97.11,
+              45.03
             ],
             [
-              -81.62,
-              30.28
+              -97.1,
+              45.02
             ],
             [
-              -81.7,
-              30.28
+              -97.06,
+              45.02
             ],
             [
-              -81.7,
-              30.36
+              -97.05,
+              45.01
+            ],
+            [
+              -96.89,
+              45.01
+            ],
+            [
+              -96.88,
+              45.02
+            ],
+            [
+              -96.82,
+              45.02
+            ],
+            [
+              -96.81,
+              45.03
+            ],
+            [
+              -96.8,
+              45.02
+            ],
+            [
+              -96.75,
+              45.02
+            ],
+            [
+              -96.73,
+              45.0
+            ],
+            [
+              -96.72,
+              44.96
+            ],
+            [
+              -96.74,
+              44.93
+            ],
+            [
+              -96.76,
+              44.93
+            ],
+            [
+              -96.77,
+              44.92
+            ],
+            [
+              -96.92,
+              44.92
+            ],
+            [
+              -96.93,
+              44.91
+            ],
+            [
+              -97.0,
+              44.91
+            ],
+            [
+              -97.08,
+              44.95
+            ],
+            [
+              -97.1,
+              44.95
+            ],
+            [
+              -97.11,
+              44.94
+            ],
+            [
+              -97.19,
+              44.94
+            ],
+            [
+              -97.2,
+              44.95
+            ],
+            [
+              -97.22,
+              44.95
+            ],
+            [
+              -97.23,
+              44.97
+            ],
+            [
+              -97.23,
+              45.01
+            ],
+            [
+              -97.19,
+              45.03
             ]
           ]
         ]
       }
     },
     {
-      "storm_id": "196975",
-      "lat": 24.4191,
-      "lon": -83.93,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
+      "storm_id": "197103",
+      "lat": 44.94,
+      "lon": -99.745,
+      "motion_east": 7.4,
+      "motion_south": -13.0,
+      "valid_time": "20260403_123038 UTC",
       "tornado_probability": 0.0947,
       "risk_band": "low",
       "ps_tor": 0.0,
       "ps": 0.0,
-      "mucape": 2201.0,
-      "ebshear": 19.0,
-      "srh01": 0.0,
+      "mucape": 59.0,
+      "ebshear": 13.0,
+      "srh01": 88.0,
       "maxllaz": 0.001,
-      "mesh": 0.23,
+      "mesh": 0.04,
       "flash_rate": 0.0,
       "top_features": [],
       "model_scores": {
@@ -3340,22 +3564,22 @@
       },
       "coherence_score": 0.0947,
       "coherence_diagnostics": {
-        "tau": 0.0,
-        "grad_tau": 0.041434407234191895,
+        "tau": 0.10413018614053726,
+        "grad_tau": 0.009954575449228287,
         "torsion": 0.0,
-        "alignment": 0.0,
-        "S_field": 0.044090669602155685,
+        "alignment": 0.004380013328045607,
+        "S_field": 0.0356123223900795,
         "Gamma_field": 0.25,
-        "S_over_Gamma": 0.17636267840862274,
+        "S_over_Gamma": 0.142449289560318,
         "Da": 17.130695343017578,
         "E_coh": 0.0,
-        "singularity_count": 1.0,
-        "singularity_conditions_met": 1,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
         "singularity_detail": {
           "s_over_gamma": false,
           "high_gradient": false,
           "high_torsion": false,
-          "positive_alignment": false,
+          "positive_alignment": true,
           "high_damkohler": true
         }
       },
@@ -3368,92 +3592,96 @@
         "coordinates": [
           [
             [
-              -83.97,
-              24.48
+              -99.8,
+              44.99
             ],
             [
-              -83.95,
-              24.48
+              -99.76,
+              44.99
             ],
             [
-              -83.9,
-              24.43
+              -99.75,
+              44.98
             ],
             [
-              -83.89,
-              24.43
+              -99.67,
+              44.96
             ],
             [
-              -83.89,
-              24.4
+              -99.66,
+              44.94
             ],
             [
-              -83.9,
-              24.4
+              -99.66,
+              44.91
             ],
             [
-              -83.91,
-              24.38
+              -99.67,
+              44.89
             ],
             [
-              -83.93,
-              24.37
+              -99.69,
+              44.88
             ],
             [
-              -83.95,
-              24.37
+              -99.8,
+              44.88
             ],
             [
-              -83.97,
-              24.39
+              -99.84,
+              44.92
             ],
             [
-              -83.97,
-              24.48
+              -99.84,
+              44.95
+            ],
+            [
+              -99.8,
+              44.99
             ]
           ]
         ]
       }
     },
     {
-      "storm_id": "196976",
-      "lat": 24.2389,
-      "lon": -84.6133,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
+      "storm_id": "197104",
+      "lat": 44.9062,
+      "lon": -98.6246,
+      "motion_east": 7.0,
+      "motion_south": -10.0,
+      "valid_time": "20260403_123038 UTC",
       "tornado_probability": 0.0947,
       "risk_band": "low",
       "ps_tor": 0.0,
       "ps": 0.0,
-      "mucape": 2674.0,
-      "ebshear": 22.0,
-      "srh01": 0.0,
-      "maxllaz": 0.001,
-      "mesh": 0.32,
-      "flash_rate": 1.0,
+      "mucape": 34.0,
+      "ebshear": 10.0,
+      "srh01": 59.0,
+      "maxllaz": 0.002,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
       "top_features": [],
       "model_scores": {
         "analytic_prob": 0.0947
       },
       "coherence_score": 0.0947,
       "coherence_diagnostics": {
-        "tau": 0.0,
-        "grad_tau": 0.03899649530649185,
+        "tau": 0.10963597893714905,
+        "grad_tau": 0.010944252833724022,
         "torsion": 0.0,
-        "alignment": 0.0,
-        "S_field": 0.041511889547109604,
+        "alignment": 0.0024989377707242966,
+        "S_field": 0.03631258010864258,
         "Gamma_field": 0.25,
-        "S_over_Gamma": 0.16604755818843842,
+        "S_over_Gamma": 0.1452503204345703,
         "Da": 17.130695343017578,
         "E_coh": 0.0,
-        "singularity_count": 1.0,
-        "singularity_conditions_met": 1,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
         "singularity_detail": {
           "s_over_gamma": false,
           "high_gradient": false,
           "high_torsion": false,
-          "positive_alignment": false,
+          "positive_alignment": true,
           "high_damkohler": true
         }
       },
@@ -3466,59 +3694,663 @@
         "coordinates": [
           [
             [
-              -84.61,
-              24.28
+              -98.63,
+              44.95
             ],
             [
-              -84.59,
-              24.26
+              -98.56,
+              44.94
             ],
             [
-              -84.59,
-              24.2
+              -98.54,
+              44.92
             ],
             [
-              -84.61,
-              24.18
+              -98.54,
+              44.87
             ],
             [
-              -84.63,
-              24.19
+              -98.56,
+              44.86
             ],
             [
-              -84.63,
-              24.24
+              -98.64,
+              44.86
             ],
             [
-              -84.62,
-              24.25
+              -98.65,
+              44.87
             ],
             [
-              -84.63,
-              24.27
+              -98.68,
+              44.87
             ],
             [
-              -84.61,
-              24.28
+              -98.69,
+              44.88
+            ],
+            [
+              -98.69,
+              44.93
+            ],
+            [
+              -98.67,
+              44.94
+            ],
+            [
+              -98.64,
+              44.94
+            ],
+            [
+              -98.63,
+              44.95
             ]
           ]
         ]
       }
     },
     {
-      "storm_id": "196980",
-      "lat": 44.8688,
-      "lon": -98.8855,
-      "motion_east": 10.1,
-      "motion_south": -8.0,
-      "valid_time": "20260403_113040 UTC",
+      "storm_id": "197134",
+      "lat": 45.0812,
+      "lon": -97.9425,
+      "motion_east": 7.3,
+      "motion_south": -9.0,
+      "valid_time": "20260403_123038 UTC",
       "tornado_probability": 0.0947,
       "risk_band": "low",
       "ps_tor": 0.0,
       "ps": 0.0,
-      "mucape": 24.0,
-      "ebshear": 7.0,
-      "srh01": 73.0,
+      "mucape": 11.0,
+      "ebshear": 6.0,
+      "srh01": 31.0,
+      "maxllaz": 0.001,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.0947
+      },
+      "coherence_score": 0.0947,
+      "coherence_diagnostics": {
+        "tau": 0.10963597893714905,
+        "grad_tau": 0.010944252833724022,
+        "torsion": 0.0,
+        "alignment": 0.0024989377707242966,
+        "S_field": 0.03631258010864258,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.1452503204345703,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -97.96,
+              45.12
+            ],
+            [
+              -97.91,
+              45.11
+            ],
+            [
+              -97.88,
+              45.07
+            ],
+            [
+              -97.93,
+              45.03
+            ],
+            [
+              -97.94,
+              45.03
+            ],
+            [
+              -97.98,
+              45.07
+            ],
+            [
+              -97.98,
+              45.1
+            ],
+            [
+              -97.96,
+              45.12
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197135",
+      "lat": 45.0035,
+      "lon": -98.296,
+      "motion_east": 6.8,
+      "motion_south": -10.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.0947,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 17.0,
+      "ebshear": 11.0,
+      "srh01": 47.0,
+      "maxllaz": 0.002,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.0947
+      },
+      "coherence_score": 0.0947,
+      "coherence_diagnostics": {
+        "tau": 0.10963597893714905,
+        "grad_tau": 0.010944252833724022,
+        "torsion": 0.0,
+        "alignment": 0.0024989377707242966,
+        "S_field": 0.03631258010864258,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.1452503204345703,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -98.39,
+              45.07
+            ],
+            [
+              -98.31,
+              45.07
+            ],
+            [
+              -98.3,
+              45.06
+            ],
+            [
+              -98.26,
+              45.06
+            ],
+            [
+              -98.25,
+              45.05
+            ],
+            [
+              -98.22,
+              45.05
+            ],
+            [
+              -98.21,
+              45.06
+            ],
+            [
+              -98.2,
+              45.05
+            ],
+            [
+              -98.2,
+              45.01
+            ],
+            [
+              -98.22,
+              44.99
+            ],
+            [
+              -98.24,
+              44.95
+            ],
+            [
+              -98.27,
+              44.93
+            ],
+            [
+              -98.27,
+              44.92
+            ],
+            [
+              -98.29,
+              44.91
+            ],
+            [
+              -98.32,
+              44.91
+            ],
+            [
+              -98.37,
+              44.95
+            ],
+            [
+              -98.38,
+              44.95
+            ],
+            [
+              -98.41,
+              44.98
+            ],
+            [
+              -98.42,
+              45.03
+            ],
+            [
+              -98.39,
+              45.07
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197152",
+      "lat": 45.193,
+      "lon": -98.799,
+      "motion_east": 7.9,
+      "motion_south": -9.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.0947,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 17.0,
+      "ebshear": 10.0,
+      "srh01": 74.0,
+      "maxllaz": 0.002,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.0947
+      },
+      "coherence_score": 0.0947,
+      "coherence_diagnostics": {
+        "tau": 0.09837169200181961,
+        "grad_tau": 0.012969800271093845,
+        "torsion": 0.0,
+        "alignment": 0.004798825830221176,
+        "S_field": 0.0333431214094162,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.1333724856376648,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -98.86,
+              45.22
+            ],
+            [
+              -98.78,
+              45.22
+            ],
+            [
+              -98.77,
+              45.21
+            ],
+            [
+              -98.75,
+              45.21
+            ],
+            [
+              -98.74,
+              45.19
+            ],
+            [
+              -98.75,
+              45.17
+            ],
+            [
+              -98.77,
+              45.16
+            ],
+            [
+              -98.85,
+              45.16
+            ],
+            [
+              -98.86,
+              45.17
+            ],
+            [
+              -98.86,
+              45.22
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197166",
+      "lat": 45.2378,
+      "lon": -99.67,
+      "motion_east": 7.5,
+      "motion_south": -12.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.0947,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 15.0,
+      "ebshear": 12.0,
+      "srh01": 61.0,
+      "maxllaz": 0.002,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.0947
+      },
+      "coherence_score": 0.0947,
+      "coherence_diagnostics": {
+        "tau": 0.09490286558866501,
+        "grad_tau": 0.012737070210278034,
+        "torsion": 0.0,
+        "alignment": 0.0038848062977194786,
+        "S_field": 0.03252224251627922,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.13008897006511688,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -99.68,
+              45.27
+            ],
+            [
+              -99.65,
+              45.27
+            ],
+            [
+              -99.64,
+              45.26
+            ],
+            [
+              -99.64,
+              45.21
+            ],
+            [
+              -99.65,
+              45.2
+            ],
+            [
+              -99.69,
+              45.2
+            ],
+            [
+              -99.7,
+              45.21
+            ],
+            [
+              -99.7,
+              45.25
+            ],
+            [
+              -99.68,
+              45.27
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197167",
+      "lat": 44.9322,
+      "lon": -99.3478,
+      "motion_east": 7.4,
+      "motion_south": -13.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.0947,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 191.0,
+      "ebshear": 13.0,
+      "srh01": 91.0,
+      "maxllaz": 0.001,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.0947
+      },
+      "coherence_score": 0.0947,
+      "coherence_diagnostics": {
+        "tau": 0.10938353836536407,
+        "grad_tau": 0.009042332880198956,
+        "torsion": 0.0,
+        "alignment": 0.0036621447652578354,
+        "S_field": 0.03714583069086075,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.148583322763443,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -99.35,
+              44.97
+            ],
+            [
+              -99.32,
+              44.97
+            ],
+            [
+              -99.3,
+              44.96
+            ],
+            [
+              -99.3,
+              44.92
+            ],
+            [
+              -99.33,
+              44.89
+            ],
+            [
+              -99.38,
+              44.88
+            ],
+            [
+              -99.4,
+              44.9
+            ],
+            [
+              -99.4,
+              44.93
+            ],
+            [
+              -99.35,
+              44.97
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197168",
+      "lat": 44.745,
+      "lon": -99.554,
+      "motion_east": 7.4,
+      "motion_south": -13.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.0947,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 436.0,
+      "ebshear": 15.0,
+      "srh01": 71.0,
+      "maxllaz": 0.001,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [],
+      "model_scores": {
+        "analytic_prob": 0.0947
+      },
+      "coherence_score": 0.0947,
+      "coherence_diagnostics": {
+        "tau": 0.10938353836536407,
+        "grad_tau": 0.009042332880198956,
+        "torsion": 0.0,
+        "alignment": 0.0036621447652578354,
+        "S_field": 0.03714583069086075,
+        "Gamma_field": 0.25,
+        "S_over_Gamma": 0.148583322763443,
+        "Da": 17.130695343017578,
+        "E_coh": 0.0,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier2_analytic",
+      "coherence_source": "probsevere",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -99.57,
+              44.78
+            ],
+            [
+              -99.52,
+              44.78
+            ],
+            [
+              -99.49,
+              44.75
+            ],
+            [
+              -99.5,
+              44.72
+            ],
+            [
+              -99.52,
+              44.7
+            ],
+            [
+              -99.58,
+              44.7
+            ],
+            [
+              -99.6,
+              44.72
+            ],
+            [
+              -99.6,
+              44.75
+            ],
+            [
+              -99.59,
+              44.77
+            ],
+            [
+              -99.57,
+              44.78
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "storm_id": "197169",
+      "lat": 44.3455,
+      "lon": -99.4791,
+      "motion_east": 7.6,
+      "motion_south": -11.0,
+      "valid_time": "20260403_123038 UTC",
+      "tornado_probability": 0.0947,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 59.0,
+      "ebshear": 13.0,
+      "srh01": 99.0,
       "maxllaz": 0.003,
       "mesh": 0.0,
       "flash_rate": 0.0,
@@ -3528,13 +4360,13 @@
       },
       "coherence_score": 0.0947,
       "coherence_diagnostics": {
-        "tau": 0.011486737057566643,
-        "grad_tau": 0.00048473101924173534,
+        "tau": 0.11559787392616272,
+        "grad_tau": 0.006254721432924271,
         "torsion": 0.0,
-        "alignment": 0.00023509454331360757,
-        "S_field": 0.00433660252019763,
+        "alignment": 0.0030960869044065475,
+        "S_field": 0.03880966454744339,
         "Gamma_field": 0.25,
-        "S_over_Gamma": 0.01734641008079052,
+        "S_over_Gamma": 0.15523865818977356,
         "Da": 17.130695343017578,
         "E_coh": 0.0,
         "singularity_count": 2.0,
@@ -3556,298 +4388,92 @@
         "coordinates": [
           [
             [
-              -99.03,
-              44.99
+              -99.56,
+              44.47
             ],
             [
-              -98.94,
-              44.99
+              -99.5,
+              44.47
             ],
             [
-              -98.93,
-              44.98
+              -99.5,
+              44.46
             ],
             [
-              -98.87,
-              44.98
+              -99.48,
+              44.44
             ],
             [
-              -98.86,
-              44.99
+              -99.45,
+              44.43
             ],
             [
-              -98.77,
-              44.99
+              -99.4,
+              44.39
             ],
             [
-              -98.75,
-              44.98
+              -99.35,
+              44.37
             ],
             [
-              -98.69,
-              44.92
+              -99.35,
+              44.33
             ],
             [
-              -98.67,
-              44.91
+              -99.34,
+              44.32
             ],
             [
-              -98.63,
-              44.91
+              -99.38,
+              44.24
             ],
             [
-              -98.62,
-              44.9
+              -99.41,
+              44.24
             ],
             [
-              -98.61,
-              44.91
+              -99.42,
+              44.23
             ],
             [
-              -98.57,
-              44.86
+              -99.44,
+              44.23
             ],
             [
-              -98.55,
-              44.85
+              -99.45,
+              44.24
             ],
             [
-              -98.51,
-              44.85
+              -99.57,
+              44.23
             ],
             [
-              -98.5,
-              44.84
+              -99.58,
+              44.24
             ],
             [
-              -98.5,
-              44.79
+              -99.58,
+              44.27
             ],
             [
-              -98.51,
-              44.77
+              -99.59,
+              44.28
             ],
             [
-              -98.6,
-              44.76
+              -99.53,
+              44.4
             ],
             [
-              -98.63,
-              44.74
+              -99.54,
+              44.42
             ],
             [
-              -98.73,
-              44.74
+              -99.56,
+              44.43
             ],
             [
-              -98.78,
-              44.78
-            ],
-            [
-              -98.79,
-              44.82
-            ],
-            [
-              -98.8,
-              44.83
-            ],
-            [
-              -98.82,
-              44.83
-            ],
-            [
-              -98.83,
-              44.81
-            ],
-            [
-              -98.85,
-              44.8
-            ],
-            [
-              -98.9,
-              44.8
-            ],
-            [
-              -98.9,
-              44.81
-            ],
-            [
-              -98.92,
-              44.82
-            ],
-            [
-              -98.93,
-              44.84
-            ],
-            [
-              -98.97,
-              44.86
-            ],
-            [
-              -99.09,
-              44.87
-            ],
-            [
-              -99.11,
-              44.85
-            ],
-            [
-              -99.1,
-              44.83
-            ],
-            [
-              -99.12,
-              44.8
-            ],
-            [
-              -99.18,
-              44.8
-            ],
-            [
-              -99.19,
-              44.81
-            ],
-            [
-              -99.23,
-              44.81
-            ],
-            [
-              -99.25,
-              44.83
-            ],
-            [
-              -99.25,
-              44.87
-            ],
-            [
-              -99.23,
-              44.89
-            ],
-            [
-              -99.15,
-              44.89
-            ],
-            [
-              -99.14,
-              44.88
-            ],
-            [
-              -99.12,
-              44.9
-            ],
-            [
-              -99.12,
-              44.94
-            ],
-            [
-              -99.08,
-              44.98
-            ],
-            [
-              -99.04,
-              44.98
-            ],
-            [
-              -99.03,
-              44.99
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "storm_id": "196985",
-      "lat": 24.2391,
-      "lon": -83.7309,
-      "motion_east": 9.0,
-      "motion_south": -4.0,
-      "valid_time": "20260403_113040 UTC",
-      "tornado_probability": 0.0947,
-      "risk_band": "low",
-      "ps_tor": 0.0,
-      "ps": 0.0,
-      "mucape": 1979.0,
-      "ebshear": 17.0,
-      "srh01": 0.0,
-      "maxllaz": 0.0,
-      "mesh": 0.13,
-      "flash_rate": 0.0,
-      "top_features": [],
-      "model_scores": {
-        "analytic_prob": 0.0947
-      },
-      "coherence_score": 0.0947,
-      "coherence_diagnostics": {
-        "tau": 0.0,
-        "grad_tau": 0.041434407234191895,
-        "torsion": 0.0,
-        "alignment": 0.0,
-        "S_field": 0.044090669602155685,
-        "Gamma_field": 0.25,
-        "S_over_Gamma": 0.17636267840862274,
-        "Da": 17.130695343017578,
-        "E_coh": 0.0,
-        "singularity_count": 1.0,
-        "singularity_conditions_met": 1,
-        "singularity_detail": {
-          "s_over_gamma": false,
-          "high_gradient": false,
-          "high_torsion": false,
-          "positive_alignment": false,
-          "high_damkohler": true
-        }
-      },
-      "scoring_tier": "tier2_analytic",
-      "coherence_source": "probsevere",
-      "model_version": "tornado_storm_v1_0",
-      "track_length": 1,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -83.78,
-              24.3
-            ],
-            [
-              -83.7,
-              24.3
-            ],
-            [
-              -83.67,
-              24.27
-            ],
-            [
-              -83.67,
-              24.24
-            ],
-            [
-              -83.69,
-              24.23
-            ],
-            [
-              -83.67,
-              24.19
-            ],
-            [
-              -83.76,
-              24.19
-            ],
-            [
-              -83.77,
-              24.18
-            ],
-            [
-              -83.77,
-              24.21
-            ],
-            [
-              -83.78,
-              24.22
-            ],
-            [
-              -83.78,
-              24.3
+              -99.56,
+              44.47
             ]
           ]
         ]
