@@ -191,12 +191,20 @@ function errorEnvelope(code, message, status = 404) {
 }
 
 function assetRequest(pathname) {
-  return new Request(new URL(pathname, PRIMARY_DOMAIN).toString());
+  return new Request(new URL(pathname, PRIMARY_DOMAIN).toString(), {
+    headers: { "X-HazardPulse-Asset-Request": "1" },
+  });
 }
 
 async function fetchAsset(env, pathname) {
+  const request = assetRequest(pathname);
   try {
-    return await env.ASSETS.fetch(assetRequest(pathname));
+    const assetResponse = await env.ASSETS.fetch(request);
+    if (assetResponse.ok) return assetResponse;
+  } catch {}
+
+  try {
+    return await fetch(request);
   } catch {
     return new Response(null, { status: 404 });
   }

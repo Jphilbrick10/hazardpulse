@@ -47,6 +47,21 @@ const context = vm.createContext({
   Request,
   Response,
   HTMLRewriter: HTMLRewriterStub,
+  fetch: async (input) => {
+    const request = input instanceof Request ? input : new Request(input);
+    const url = new URL(request.url);
+    if (url.hostname !== "hazardpulse.com") {
+      throw new Error(`unexpected fetch host: ${url.hostname}`);
+    }
+    const filePath = resolveAssetPath(url.pathname);
+    if (!existsSync(filePath)) {
+      return new Response("not found", { status: 404 });
+    }
+    return new Response(readFileSync(filePath), {
+      status: 200,
+      headers: { "Content-Type": mimeTypeFor(filePath) },
+    });
+  },
   globalThis: {},
 });
 
@@ -60,6 +75,9 @@ const env = {
       const url = new URL(request.url);
       if (url.hostname !== "hazardpulse.com") {
         throw new Error(`unexpected asset host: ${url.hostname}`);
+      }
+      if (request.headers.get("X-HazardPulse-Asset-Request") === "1") {
+        return new Response("not found", { status: 404 });
       }
       const filePath = resolveAssetPath(url.pathname);
       if (!existsSync(filePath)) {
