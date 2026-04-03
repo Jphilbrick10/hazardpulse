@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -6,7 +6,7 @@
   <title>Model Registry - HazardPulse</title>
   <meta name="description" content="Active and retired model versions, promotion history, and performance metrics for all HazardPulse hazard models.">
   <meta name="theme-color" content="#f6f9ff">
-  <link rel="canonical" href="https://hazardpulse.io/registry/">
+  <link rel="canonical" href="https://hazardpulse.com/registry/">
   <link rel="stylesheet" href="/assets/styles.css?v=6">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Model Registry - HazardPulse">
   <meta property="og:description" content="Active and retired model versions with promotion history and performance metrics.">
-  <meta property="og:url" content="https://hazardpulse.io/registry/">
+  <meta property="og:url" content="https://hazardpulse.com/registry/">
   <meta property="og:site_name" content="HazardPulse">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Model Registry - HazardPulse">
@@ -27,8 +27,8 @@
     "@type": "DataCatalog",
     "name": "HazardPulse Model Registry",
     "description": "Versioned model registry with promotion/rejection history.",
-    "url": "https://hazardpulse.io/registry/",
-    "creator": { "@type": "Organization", "name": "Coherence Energy Labs" }
+    "url": "https://hazardpulse.com/registry/",
+    "creator": { "@type": "Organization", "name": "HazardPulse", "url": "https://hazardpulse.com/" }
   }
   </script>
 
@@ -176,8 +176,8 @@
           <tbody>
             <tr><td>2026-03-05</td><td><span class="chip good">promote</span></td><td>hp-tornado-meso-v1.4.2</td><td>+0.02 AUC, improved sharpness on 2025 spring holdout</td></tr>
             <tr><td>2026-03-05</td><td><span class="chip neutral">retire</span></td><td>hp-tornado-meso-v1.4.1</td><td>Superseded by hp-tornado-meso-v1.4.2</td></tr>
-            <tr><td>2026-03-13</td><td><span class="chip good">promote</span></td><td>hp-hurricane-ri-v8.1</td><td>Advisory-time eval: AUC 0.938 avg (0.910–0.957), BSS +0.29, +0.009 delta vs OFCL across 5 holdouts. 65 features, real NOAA SST, Platt calibration.</td></tr>
-            <tr><td>2026-03-13</td><td><span class="chip neutral">retire</span></td><td>hp-hurricane-ri-v3.2</td><td>Superseded by hp-hurricane-ri-v8.1 — v3.2 used IBTrACS best-track eval (AUC 0.84); v8.1 uses honest advisory-time protocol</td></tr>
+            <tr><td>2026-03-13</td><td><span class="chip good">promote</span></td><td>hp-hurricane-ri-v8.1</td><td>Advisory-time eval: AUC 0.938 avg (0.910-0.957), BSS +0.29, +0.009 delta vs OFCL across 5 holdouts. 65 features, real NOAA SST, Platt calibration.</td></tr>
+            <tr><td>2026-03-13</td><td><span class="chip neutral">retire</span></td><td>hp-hurricane-ri-v3.2</td><td>Superseded by hp-hurricane-ri-v8.1  -  v3.2 used IBTrACS best-track eval (AUC 0.84); v8.1 uses honest advisory-time protocol</td></tr>
             <tr><td>2026-03-01</td><td><span class="chip good">promote</span></td><td>hp-hurricane-ri-v3.2</td><td>+0.04 AUC, -0.015 Brier vs hp-hurricane-ri-v3.1 on holdout</td></tr>
             <tr><td>2026-03-01</td><td><span class="chip neutral">retire</span></td><td>hp-hurricane-ri-v3.1</td><td>Superseded by hp-hurricane-ri-v3.2</td></tr>
             <tr><td>2026-02-28</td><td><span class="chip good">promote</span></td><td>hp-etas-v3.2.1</td><td>+0.03 AUC, -0.011 Brier vs hp-etas-v3.1.0 on holdout</td></tr>
@@ -212,7 +212,7 @@
           <ul>
             <li>Statistically significant improvement on holdout set (AUC or Brier)</li>
             <li>No regression in calibration or false alarm rate</li>
-            <li>Passes all gate checks (G0–G12) on validation corpus</li>
+            <li>Passes all gate checks (G0-G12) on validation corpus</li>
             <li>Training data cutoff documented and frozen</li>
             <li>Feature set and architecture documented in registry</li>
           </ul>
@@ -265,8 +265,11 @@
         Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
         with stated uncertainty - they are not certainties.
       </p>
-      <p class="footer-build">Built with Coherence Lang · Zero client-side JS · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
+      <p class="footer-build">Static-first HTML &middot; Evidence-linked data &middot; Edge geolocation by Cloudflare</p>
     </div>
   </footer>
 </body>
 </html>
+
+
+

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -6,7 +6,7 @@
   <title>Evidence Ledger - HazardPulse</title>
   <meta name="description" content="Immutable prediction ledger, provenance envelopes, gate decisions, and replay artifacts. Every forecast is auditable end-to-end.">
   <meta name="theme-color" content="#f6f9ff">
-  <link rel="canonical" href="https://hazardpulse.io/evidence/">
+  <link rel="canonical" href="https://hazardpulse.com/evidence/">
   <link rel="stylesheet" href="/assets/styles.css?v=6">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Evidence Ledger - HazardPulse">
   <meta property="og:description" content="Immutable prediction ledger, provenance envelopes, and gate decisions. Every forecast is auditable.">
-  <meta property="og:url" content="https://hazardpulse.io/evidence/">
+  <meta property="og:url" content="https://hazardpulse.com/evidence/">
   <meta property="og:site_name" content="HazardPulse">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Evidence Ledger - HazardPulse">
@@ -27,8 +27,8 @@
     "@type": "DataCatalog",
     "name": "HazardPulse Evidence Ledger",
     "description": "Immutable prediction ledger, provenance envelopes, gate decision records, and deterministic replay artifacts for all HazardPulse forecasts.",
-    "url": "https://hazardpulse.io/evidence/",
-    "creator": { "@type": "Organization", "name": "Coherence Energy Labs" }
+    "url": "https://hazardpulse.com/evidence/",
+    "creator": { "@type": "Organization", "name": "HazardPulse", "url": "https://hazardpulse.com/" }
   }
   </script>
 
@@ -141,7 +141,7 @@
         <div class="kv"><span>Forecast ID</span><strong><code>eq_fcst_20260313_0300</code></strong></div>
         <div class="kv"><span>Hazard</span><strong>Earthquake</strong></div>
         <div class="kv"><span>Issued</span><strong>2026-03-13 03:00 UTC</strong></div>
-        <div class="kv"><span>Probability</span><strong>27.4% (21.2–33.0)</strong></div>
+        <div class="kv"><span>Probability</span><strong>27.4% (21.2-33.0)</strong></div>
         <div class="kv"><span>Model</span><strong>hp-etas-v3.2.1</strong></div>
         <div class="kv"><span>Gate</span><strong><span class="chip good">pass</span></strong></div>
         <div class="kv"><span>Provenance ID</span><strong><code>prov_eq_20260313_0300_a3f8</code></strong></div>
@@ -155,7 +155,7 @@
         <div class="kv"><span>Forecast ID</span><strong><code>hu_fcst_20260313_0300</code></strong></div>
         <div class="kv"><span>Hazard</span><strong>Hurricane RI</strong></div>
         <div class="kv"><span>Issued</span><strong>2026-03-13 03:00 UTC</strong></div>
-        <div class="kv"><span>Probability</span><strong>41.8% (35.0–48.1)</strong></div>
+        <div class="kv"><span>Probability</span><strong>41.8% (35.0-48.1)</strong></div>
         <div class="kv"><span>Model</span><strong>hp-hurricane-ri-v8.1</strong></div>
         <div class="kv"><span>Gate</span><strong><span class="chip good">pass</span></strong></div>
         <div class="kv"><span>Provenance ID</span><strong><code>prov_hu_20260313_0300_d4b1</code></strong></div>
@@ -169,7 +169,7 @@
         <div class="kv"><span>Forecast ID</span><strong><code>to_fcst_20260313_0300</code></strong></div>
         <div class="kv"><span>Hazard</span><strong>Tornado</strong></div>
         <div class="kv"><span>Issued</span><strong>2026-03-13 03:00 UTC</strong></div>
-        <div class="kv"><span>Probability</span><strong>18.6% (14.8–22.9)</strong></div>
+        <div class="kv"><span>Probability</span><strong>18.6% (14.8-22.9)</strong></div>
         <div class="kv"><span>Model</span><strong>hp-tornado-meso-v1.4.2</strong></div>
         <div class="kv"><span>Gate</span><strong><span class="chip warn">degrade</span></strong></div>
         <div class="kv"><span>Provenance ID</span><strong><code>prov_to_20260313_0300_f290</code></strong></div>
@@ -198,7 +198,7 @@
         <div class="kv"><span>Input hash (SHA-256)</span><strong><code>5c88a0e1..3f27b9d4</code></strong></div>
         <div class="kv"><span>Output hash (SHA-256)</span><strong><code>d920f4c3..81e0a567</code></strong></div>
         <div class="kv"><span>Sources</span><strong>USGS ANSS ComCat (2026-03-13T02:54Z)</strong></div>
-        <div class="kv"><span>Transforms</span><strong>catalog_filter → feature_extract → hp-etas-v3.2.1 → calibrate → gate_check</strong></div>
+        <div class="kv"><span>Transforms</span><strong>catalog_filter  ->  feature_extract  ->  hp-etas-v3.2.1  ->  calibrate  ->  gate_check</strong></div>
         <div class="kv"><span>Signed at</span><strong>2026-03-13 03:00:12 UTC</strong></div>
       </div>
 
@@ -208,7 +208,7 @@
         <div class="kv"><span>Input hash (SHA-256)</span><strong><code>8f12c3d4..a9b7e601</code></strong></div>
         <div class="kv"><span>Output hash (SHA-256)</span><strong><code>3e78f1a2..c405d912</code></strong></div>
         <div class="kv"><span>Sources</span><strong>GFS 06Z, NHC Advisory #14, SHIPS 02:30Z</strong></div>
-        <div class="kv"><span>Transforms</span><strong>gfs_extract → ships_merge → hp-hurricane-ri-v8.1 → calibrate → gate_check</strong></div>
+        <div class="kv"><span>Transforms</span><strong>gfs_extract  ->  ships_merge  ->  hp-hurricane-ri-v8.1  ->  calibrate  ->  gate_check</strong></div>
         <div class="kv"><span>Signed at</span><strong>2026-03-13 03:00:14 UTC</strong></div>
       </div>
 
@@ -218,7 +218,7 @@
         <div class="kv"><span>Input hash (SHA-256)</span><strong><code>c3a1b2d4..e8f09712</code></strong></div>
         <div class="kv"><span>Output hash (SHA-256)</span><strong><code>12d4f8a0..b3c7e190</code></strong></div>
         <div class="kv"><span>Sources</span><strong>SPC mesoanalysis (02:12Z, stale), RAP 03Z, MRMS 02:50Z</strong></div>
-        <div class="kv"><span>Transforms</span><strong>spc_extract → rap_merge → hp-tornado-meso-v1.4.2 → calibrate → gate_check(degrade)</strong></div>
+        <div class="kv"><span>Transforms</span><strong>spc_extract  ->  rap_merge  ->  hp-tornado-meso-v1.4.2  ->  calibrate  ->  gate_check(degrade)</strong></div>
         <div class="kv"><span>Signed at</span><strong>2026-03-13 03:00:18 UTC</strong></div>
       </div>
 
@@ -393,8 +393,11 @@
         Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
         with stated uncertainty - they are not certainties.
       </p>
-      <p class="footer-build">Built with Coherence Lang · Zero client-side JS · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
+      <p class="footer-build">Static-first HTML &middot; Evidence-linked data &middot; Edge geolocation by Cloudflare</p>
     </div>
   </footer>
 </body>
 </html>
+
+
+

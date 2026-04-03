@@ -64,6 +64,8 @@ DIST = Path(__file__).resolve().parents[1] / "dist"
 LEDGER_PATH = DIST / "data" / "earthquake-ledger.jsonl"
 
 MODEL_VERSION = "eq_coherence_v1_0"
+PRIMARY_DOMAIN = "https://hazardpulse.com"
+SITE_PUBLISHER_NAME = "HazardPulse"
 
 # ---------------------------------------------------------------------------
 # Risk band mapping
@@ -435,7 +437,7 @@ def _render_svg_markers(cells: list[dict]) -> str:
         lines.append(
             f'        <text class="tooltip-sub" x="{x + 12:.1f}" '
             f'y="{y + 1:.1f}">'
-            f'{_pct(c["probability"])} \u00b7 {c["conditions_met"]}/5</text>'
+            f'{_pct(c["probability"])} | {c["conditions_met"]}/5</text>'
         )
         lines.append(f'      </g>')
         lines.append(f'    </a>')
@@ -777,7 +779,7 @@ def render_earthquake_page(
   <title>Earthquake Monitor - HazardPulse</title>
   <meta name="description" content="30-day M6.0+ earthquake probability for global seismic zones. Grid cells ranked by coherence field singularity conditions with full evidence.">
   <meta name="theme-color" content="#f6f9ff">
-  <link rel="canonical" href="https://hazardpulse.io/live/earthquake/">
+  <link rel="canonical" href="{PRIMARY_DOMAIN}/live/earthquake/">
   <link rel="stylesheet" href="/assets/styles.css?v=4">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
@@ -786,7 +788,7 @@ def render_earthquake_page(
   <meta property="og:type" content="website">
   <meta property="og:title" content="Earthquake Monitor - HazardPulse">
   <meta property="og:description" content="30-day M6.0+ earthquake probability for global seismic zones. Grid cells ranked by coherence field singularity conditions with full evidence.">
-  <meta property="og:url" content="https://hazardpulse.io/live/earthquake/">
+  <meta property="og:url" content="{PRIMARY_DOMAIN}/live/earthquake/">
   <meta property="og:site_name" content="HazardPulse">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Earthquake Monitor - HazardPulse">
@@ -798,8 +800,8 @@ def render_earthquake_page(
     "@type": "Dataset",
     "name": "HazardPulse Global Earthquake Criticality Forecast",
     "description": "Probabilistic earthquake forecasts for global seismic zones using coherence field theory singularity conditions with full provenance chain.",
-    "license": "https://hazardpulse.io/legal/disclaimer/",
-    "creator": {{ "@type": "Organization", "name": "Coherence Energy Labs", "url": "https://coherenceenergylabs.com" }},
+    "license": "{PRIMARY_DOMAIN}/legal/disclaimer/",
+    "creator": {{ "@type": "Organization", "name": "{SITE_PUBLISHER_NAME}", "url": "{PRIMARY_DOMAIN}/" }},
     "temporalCoverage": "{now.strftime('%Y-%m-%d')}/{(now + dt.timedelta(days=30)).strftime('%Y-%m-%d')}",
     "spatialCoverage": {{ "@type": "Place", "name": "Global seismic zones" }},
     "variableMeasured": "Probability of M6.0+ earthquake in 30 days"
@@ -968,7 +970,7 @@ def render_earthquake_page(
         Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
         with stated uncertainty - they are not certainties.
       </p>
-      <p class="footer-build">Built with Coherence Lang &middot; Zero client-side JavaScript &middot; Zero npm dependencies &middot; Geolocation by Cloudflare Edge</p>
+      <p class="footer-build">Static-first HTML &middot; Evidence-linked data &middot; Edge geolocation by Cloudflare</p>
     </div>
   </footer>
 
@@ -997,6 +999,8 @@ def write_outputs(
                 if scored_cells:
                     top = scored_cells[0]
                     hazard["probability"] = top["probability"]
+                    hazard["conf_lo"] = None
+                    hazard["conf_hi"] = None
                     hazard["risk_band"] = top["risk_band"]
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = MODEL_VERSION
@@ -1006,6 +1010,8 @@ def write_outputs(
                     )
                 else:
                     hazard["probability"] = 0.0
+                    hazard["conf_lo"] = None
+                    hazard["conf_hi"] = None
                     hazard["risk_band"] = "minimal"
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = MODEL_VERSION

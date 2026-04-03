@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -6,7 +6,7 @@
   <title>API Contracts - HazardPulse</title>
   <meta name="description" content="HazardPulse API endpoints, schema contracts, versioning policy, and integration guide.">
   <meta name="theme-color" content="#f6f9ff">
-  <link rel="canonical" href="https://hazardpulse.io/api/">
+  <link rel="canonical" href="https://hazardpulse.com/api/">
   <link rel="stylesheet" href="/assets/styles.css?v=6">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="API Contracts - HazardPulse">
   <meta property="og:description" content="API endpoints, schema contracts, and integration guide.">
-  <meta property="og:url" content="https://hazardpulse.io/api/">
+  <meta property="og:url" content="https://hazardpulse.com/api/">
   <meta property="og:site_name" content="HazardPulse">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="API Contracts - HazardPulse">
@@ -27,8 +27,8 @@
     "@type": "WebAPI",
     "name": "HazardPulse API",
     "description": "Programmatic access to live hazard forecasts, evidence ledgers, verification scores, and replay artifacts.",
-    "url": "https://hazardpulse.io/api/",
-    "provider": { "@type": "Organization", "name": "Coherence Energy Labs" }
+    "url": "https://hazardpulse.com/api/",
+    "provider": { "@type": "Organization", "name": "HazardPulse", "url": "https://hazardpulse.com/" }
   }
   </script>
 
@@ -80,8 +80,8 @@
       <div class="eyebrow">API</div>
       <h1>Integrate with verified forecasts.</h1>
       <p class="subtitle">
-        Programmatic access to live forecasts, evidence chains, verification scores,
-        and replay artifacts. Strict schema versioning. Deterministic response envelopes.
+        Public beta access to the live JSON artifacts currently deployed in <code>/data</code>,
+        plus replay, evidence, and verification endpoints exposed through the worker.
       </p>
     </section>
 
@@ -134,8 +134,8 @@
           </tbody>
         </table>
         <p class="muted" style="margin-top:12px;font-size:13px;">
-          Server-Sent Events (SSE) with automatic reconnection. Each event is a complete
-          JSON payload matching the corresponding REST endpoint schema.
+          These SSE routes currently emit a snapshot payload when the connection opens.
+          Clients that want polling-style freshness should reconnect on their own cadence.
         </p>
       </div>
     </section>
@@ -153,7 +153,7 @@
           <div class="kv"><span>hazard_type</span><strong>earthquake | hurricane | tornado</strong></div>
           <div class="kv"><span>issued_at</span><strong>Timestamp (ISO 8601)</strong></div>
           <div class="kv"><span>valid_from / valid_to</span><strong>Timestamp</strong></div>
-          <div class="kv"><span>probability</span><strong>Float (0.0–1.0)</strong></div>
+          <div class="kv"><span>probability</span><strong>Float (0.0-1.0)</strong></div>
           <div class="kv"><span>confidence_lo / confidence_hi</span><strong>Float</strong></div>
           <div class="kv"><span>delta_from_prev</span><strong>Float</strong></div>
           <div class="kv"><span>model_version</span><strong>String</strong></div>
@@ -227,9 +227,9 @@
         <div class="card col-6">
           <h3>Rate limits</h3>
           <ul>
-            <li>Public tier: 60 requests / minute.</li>
-            <li>No API key required for public read endpoints.</li>
-            <li>Streaming endpoints: 1 concurrent connection per IP.</li>
+            <li>No API key is required for public read endpoints.</li>
+            <li>No hard public rate limit is enforced today; abusive traffic may be throttled.</li>
+            <li>Streaming endpoints are best-effort beta snapshot feeds.</li>
           </ul>
         </div>
       </div>
@@ -270,8 +270,11 @@
         Storm Prediction Center (SPC), JMA (Japan), and IMD (India). Probabilistic outputs represent model estimates
         with stated uncertainty - they are not certainties.
       </p>
-      <p class="footer-build">Built with Coherence Lang · Zero client-side JS · Zero npm dependencies · Geolocation by Cloudflare Edge</p>
+      <p class="footer-build">Static-first HTML &middot; Evidence-linked data &middot; Edge geolocation by Cloudflare</p>
     </div>
   </footer>
 </body>
 </html>
+
+
+

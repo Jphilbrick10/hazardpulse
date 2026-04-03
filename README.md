@@ -136,7 +136,7 @@ The scripts download data directly from USGS, IBTrACS, and SPC (free, no API key
 
 ## Live Predictions (Coming Soon)
 
-We're building a public prediction platform at **hazardpulse.io** with:
+The public prediction platform at **hazardpulse.com** includes:
 
 - **Real-time earthquake risk map** — USGS data feed, predictions every 6 hours, 3° global grid
 - **Hurricane RI tracker** — NHC advisory data, RI probability for every active tropical cyclone
@@ -207,4 +207,4 @@ Apache License 2.0. See [LICENSE](LICENSE) for details.
 
 ---
 
-**Coherence Energy Labs** | [coherenceenergylabs.com](https://coherenceenergylabs.com) | [OneUnity.earth](https://oneunity.earth)
+**HazardPulse** | [hazardpulse.com](https://hazardpulse.com) | [OneUnity.earth](https://oneunity.earth)

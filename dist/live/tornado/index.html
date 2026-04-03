@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -6,7 +6,7 @@
   <title>Tornado Monitor - HazardPulse</title>
   <meta name="description" content="24-hour tornado formation probability for global severe convection zones. Top cells ranked by STP/SCP indices with full evidence.">
   <meta name="theme-color" content="#FAFBFE">
-  <link rel="canonical" href="https://hazardpulse.io/live/tornado/">
+  <link rel="canonical" href="https://hazardpulse.com/live/tornado/">
   <link rel="stylesheet" href="/assets/styles.css?v=7">
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
@@ -16,7 +16,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Tornado Monitor - HazardPulse">
   <meta property="og:description" content="24-hour tornado formation probability for global severe convection zones. Top cells ranked by STP/SCP indices with full evidence.">
-  <meta property="og:url" content="https://hazardpulse.io/live/tornado/">
+  <meta property="og:url" content="https://hazardpulse.com/live/tornado/">
   <meta property="og:site_name" content="HazardPulse">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Tornado Monitor - HazardPulse">
@@ -28,8 +28,8 @@
     "@type": "Dataset",
     "name": "HazardPulse Global Tornado Formation Forecast",
     "description": "Probabilistic tornado formation forecasts for active severe convection zones worldwide using composite STP/SCP indices with full provenance chain.",
-    "license": "https://hazardpulse.io/legal/disclaimer/",
-    "creator": { "@type": "Organization", "name": "Coherence Energy Labs", "url": "https://coherenceenergylabs.com" },
+    "license": "https://hazardpulse.com/legal/disclaimer/",
+    "creator": { "@type": "Organization", "name": "HazardPulse", "url": "https://hazardpulse.com/" },
     "temporalCoverage": "2026-04-02/2026-04-03",
     "spatialCoverage": { "@type": "Place", "name": "Global severe convection zones" },
     "variableMeasured": "Probability of tornado formation in 24 h"
@@ -113,6 +113,20 @@
       <section class="your-area-section section" aria-labelledby="your-area-heading">
         <!-- Worker injects personalized severe weather threat content here based on IP geolocation -->
       </section>
+
+      <!-- SIMPLE: What should I do? -->
+      <div data-depth="simple">
+        <section class="section">
+          <div class="card" style="padding:24px;">
+            <h2 style="margin-bottom:12px;">What should I do?</h2>
+            <p style="font-size:16px;line-height:1.6;">
+              There are currently <strong>73 storm cells</strong> being tracked.
+              Monitor <a href="https://weather.gov">weather.gov</a> for official warnings in your area.
+              If a tornado warning is issued, seek shelter immediately in an interior room on the lowest floor.
+            </p>
+          </div>
+        </section>
+      </div>
 
       <!-- WORLD MAP -->
       <section class="section" aria-labelledby="worldmap-heading">
@@ -324,7 +338,7 @@
     <path class="land" d="M518.7,205.7L519.7,207.4L519.9,209.2L519.8,211.0L521.2,213.4L519.8,213.4L519.0,213.5L517.8,213.3L517.2,214.5L518.8,216.1L519.9,216.5L520.3,217.6L521.2,219.5L520.7,220.2L519.4,222.9L518.8,223.4L518.6,225.5L518.8,226.6L518.6,227.4L519.9,228.8L520.1,229.7L521.1,231.1L522.3,232.0L522.4,233.2L522.7,234.0L522.5,235.4L520.4,234.8L518.2,234.1L514.9,234.0L514.5,233.8L513.0,234.2L511.3,233.8L510.1,234.0L505.7,233.9L506.1,231.8L505.1,230.0L503.9,229.6L503.3,228.4L502.6,228.0L502.7,227.3L503.4,225.4L504.6,222.8L505.4,222.8L507.0,221.2L508.0,221.2L509.5,222.3L511.3,221.4L511.6,220.3L512.2,219.2L512.6,217.9L514.0,216.8L514.5,214.9L515.1,214.3L515.5,212.9L516.2,211.2L518.4,209.1L518.6,208.3L518.9,207.8L517.8,206.7L517.9,205.9L518.7,205.7Z" data-country="CM" data-name="Cameroon"><title>Cameroon</title></path>
     <path class="land" d="M482.4,210.7L482.1,212.1L482.9,212.9L483.8,213.8L483.9,215.1L484.4,215.7L484.3,221.8L485.0,223.6L482.8,224.2L482.2,223.3L481.5,221.6L481.3,220.2L481.9,217.8L481.2,216.9L481.0,214.8L481.0,212.8L479.9,211.4L480.1,210.6L482.4,210.7Z" data-country="TG" data-name="Togo"><title>Togo</title></path>
     <path class="land" d="M480.1,210.6L479.9,211.4L481.0,212.8L481.0,214.8L481.2,216.9L481.9,217.8L481.3,220.2L481.5,221.6L482.2,223.3L482.8,224.2L478.6,225.8L477.2,226.7L474.8,227.4L472.4,226.7L472.5,225.6L471.3,223.3L472.0,220.3L473.2,218.1L472.5,214.3L472.1,212.3L472.2,210.8L476.8,210.6L478.0,210.8L478.8,210.4L480.1,210.6Z" data-country="GH" data-name="Ghana"><title>Ghana</title></path>
-    <path class="land" d="M458.6,212.8L458.9,212.5L459.7,212.9L461.7,213.0L462.2,212.2L462.7,212.2L463.5,211.9L463.9,213.1L464.5,212.7L465.6,212.3L466.8,212.9L467.3,213.8L468.5,214.4L469.4,213.7L470.6,213.6L472.5,214.3L473.2,218.1L472.0,220.3L471.3,223.3L472.5,225.6L472.4,226.7L471.2,226.7L469.3,226.2L467.6,226.2L464.4,226.7L462.6,227.5L459.9,228.4L459.4,228.4L459.6,226.2L459.9,225.8L459.8,224.8L458.7,223.7L457.8,223.5L457.1,222.8L457.6,221.6L457.4,220.3L457.5,219.5L457.9,219.5L458.1,218.3L457.9,217.8L458.1,217.5L459.1,217.1L458.5,215.0L457.8,213.9L458.1,213.0L458.6,212.8Z" data-country="CI" data-name="Côte d'Ivoire"><title>Côte d'Ivoire</title></path>
+    <path class="land" d="M458.6,212.8L458.9,212.5L459.7,212.9L461.7,213.0L462.2,212.2L462.7,212.2L463.5,211.9L463.9,213.1L464.5,212.7L465.6,212.3L466.8,212.9L467.3,213.8L468.5,214.4L469.4,213.7L470.6,213.6L472.5,214.3L473.2,218.1L472.0,220.3L471.3,223.3L472.5,225.6L472.4,226.7L471.2,226.7L469.3,226.2L467.6,226.2L464.4,226.7L462.6,227.5L459.9,228.4L459.4,228.4L459.6,226.2L459.9,225.8L459.8,224.8L458.7,223.7L457.8,223.5L457.1,222.8L457.6,221.6L457.4,220.3L457.5,219.5L457.9,219.5L458.1,218.3L457.9,217.8L458.1,217.5L459.1,217.1L458.5,215.0L457.8,213.9L458.1,213.0L458.6,212.8Z" data-country="CI" data-name="CÃ´te d'Ivoire"><title>CÃ´te d'Ivoire</title></path>
     <path class="land" d="M443.5,206.4L444.8,206.5L446.7,207.1L447.3,207.1L447.5,206.8L448.9,207.0L449.3,206.8L449.5,207.8L449.9,207.8L450.6,207.4L451.0,207.5L451.8,208.2L452.9,208.4L453.6,207.8L454.5,207.5L455.1,207.1L455.7,207.2L456.3,207.8L456.6,208.5L457.7,209.6L457.1,210.3L457.0,211.2L457.6,210.9L457.9,211.2L457.8,212.0L458.6,212.8L458.1,213.0L457.8,213.9L458.5,215.0L459.1,217.1L458.1,217.5L457.9,217.8L458.1,218.3L457.9,219.5L457.5,219.5L456.7,219.4L456.2,220.5L455.4,220.5L454.9,219.9L455.1,218.9L454.0,217.2L453.3,217.5L452.7,217.6L452.0,217.7L452.0,216.8L451.6,216.1L451.7,215.3L451.1,214.2L450.4,213.2L448.2,213.2L447.6,213.7L446.9,213.8L446.4,214.3L446.1,215.1L444.7,216.3L443.5,214.7L442.5,213.6L441.8,213.3L441.1,212.8L440.8,211.6L440.4,211.0L439.7,210.6L440.8,209.3L441.6,209.3L442.3,208.9L442.9,208.9L443.4,208.5L443.1,207.6L443.4,207.3L443.5,206.4Z" data-country="GN" data-name="Guinea"><title>Guinea</title></path>
     <path class="land" d="M435.5,207.0L436.9,206.5L437.8,206.6L438.5,206.3L443.5,206.4L443.4,207.3L443.1,207.6L443.4,208.5L442.9,208.9L442.3,208.9L441.6,209.3L440.8,209.3L439.7,210.6L438.2,209.4L437.1,209.3L436.5,208.5L436.5,208.1L435.7,207.5L435.5,207.0Z" data-country="GW" data-name="Guinea-Bissau"><title>Guinea-Bissau</title></path>
     <path class="land" d="M457.5,219.5L457.4,220.3L457.6,221.6L457.1,222.8L457.8,223.5L458.7,223.7L459.8,224.8L459.9,225.8L459.6,226.2L459.4,228.4L458.7,228.4L456.0,227.1L453.6,225.1L451.3,223.6L449.5,221.9L450.1,221.1L450.3,220.3L451.5,218.8L452.7,217.6L453.3,217.5L454.0,217.2L455.1,218.9L454.9,219.9L455.4,220.5L456.2,220.5L456.7,219.4L457.5,219.5Z" data-country="LR" data-name="Liberia"><title>Liberia</title></path>
@@ -752,16 +766,16 @@
       <section class="section">
         <div class="grid">
           <div class="card col-3">
-            <div class="kv"><span><span class="status-dot good"></span> Last update</span><strong>Thu, 02 Apr 2026 17:41:20 UTC</strong> <span class="muted" style="font-size:11px;">(every 2 hr)</span></div>
+            <div class="kv"><span><span class="status-dot good"></span> Last update</span><strong>2026-04-02T17:41:20.888667+00:00Z</strong> <span class="muted" style="font-size:11px;">(every 2 hr)</span></div>
           </div>
           <div class="card col-3">
-            <div class="kv"><span><span class="status-dot good"></span> Scoring model</span><strong>Analytic coherence model (physics-only, no ML)</strong></div>
+            <div class="kv"><span><span class="status-dot good"></span> Scoring model</span><strong>ProbSevere-only fallback (no ML, no HRRR)</strong></div>
           </div>
           <div class="card col-3">
             <div class="kv"><span><span class="status-dot good"></span> Active storms</span><strong>73 storms</strong></div>
           </div>
           <div class="card col-3">
-            <div class="kv"><span><span class="status-dot good"></span> Coherence source</span><strong>ProbSevere atmospheric fallback</strong></div>
+            <div class="kv"><span><span class="status-dot warn"></span> Coherence source</span><strong>Unavailable</strong></div>
           </div>
         </div>
       </section>
@@ -797,11 +811,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>43.393°N, 85.066°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>43.393 N, 85.066 W</strong></div>
               <div class="kv"><span>Location</span><strong>51 mi E of Grand Rapids, MI</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>22 mph ENE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -809,18 +823,18 @@
               <div class="kv"><span>MUCAPE</span><strong>243 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>555 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>555 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>16 kt (Low)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.3 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0140 s⁻¹ (Strong rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0140 s^-1 (Strong rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -832,18 +846,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.2898 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0149</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0415</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.38 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.2898 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0149</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0415</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.38 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.29) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.29) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -853,7 +867,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>555 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>555 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>243 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200, MAXLLAZ>0.01) produced tornadoes ~50% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -863,7 +877,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Strong low-level rotation detected (AzShear &gt; 0.01)</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Strong low-level rotation detected (AzShear &gt; 0.01)</div>
             </div>
           </div>
         </details>
@@ -888,11 +902,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>43.950°N, 82.569°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>43.950 N, 82.569 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>22 mph ENE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -900,18 +914,18 @@
               <div class="kv"><span>MUCAPE</span><strong>210 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>364 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>364 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>22 kt (Moderate)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.3 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0100 s⁻¹ (Moderate rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0100 s^-1 (Moderate rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -923,18 +937,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.2169 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0319</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0539</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.29 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.2169 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0319</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0539</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.29 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.22) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.3) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.22) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.3) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -944,7 +958,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>364 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>364 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>210 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~50% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -954,7 +968,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Moderate low-level rotation (AzShear &gt; 0.005)</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Moderate low-level rotation (AzShear &gt; 0.005)</div>
             </div>
           </div>
         </details>
@@ -979,11 +993,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>43.133°N, 85.529°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>43.133 N, 85.529 W</strong></div>
               <div class="kv"><span>Location</span><strong>Near Grand Rapids, MI</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>39 mph NE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -991,18 +1005,18 @@
               <div class="kv"><span>MUCAPE</span><strong>189 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>502 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>502 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>13 kt (Low)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.2 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0080 s⁻¹ (Moderate rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0080 s^-1 (Moderate rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -1014,18 +1028,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.3016 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0139</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0349</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.38 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.3016 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0139</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0349</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.38 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.30) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.30) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1035,7 +1049,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>502 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>502 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>189 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~48% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1045,7 +1059,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Moderate low-level rotation (AzShear &gt; 0.005)</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Moderate low-level rotation (AzShear &gt; 0.005)</div>
             </div>
           </div>
         </details>
@@ -1070,11 +1084,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>30.394°N, 96.456°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>30.394 N, 96.456 W</strong></div>
               <div class="kv"><span>Location</span><strong>87 mi W of Houston, TX</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>17 mph ENE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>2 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1082,18 +1096,18 @@
               <div class="kv"><span>MUCAPE</span><strong>1840 J/kg (Moderate)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>80 m²/s² (Low)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>80 m^2/s^2 (Low)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>36 kt (High)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>1.2 (Tornado possible)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0140 s⁻¹ (Strong rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0140 s^-1 (Strong rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.40 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>5 /min (Quiet)</strong></div>
@@ -1105,18 +1119,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.3152 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0675</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0319</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.40 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.3152 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0675</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0319</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.40 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.32) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.32) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1126,7 +1140,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>80 m²/s² is ~50th for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>80 m^2/s^2 is ~50th for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>1840 J/kg is ~75th for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (CAPE>1500, MAXLLAZ>0.01) produced tornadoes ~35% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1136,8 +1150,8 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Strong low-level rotation detected (AzShear &gt; 0.01)</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 1.2)</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Strong low-level rotation detected (AzShear &gt; 0.01)</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Significant tornado parameter elevated (STP 1.2)</div>
             </div>
           </div>
         </details>
@@ -1162,11 +1176,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>43.910°N, 82.366°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>43.910 N, 82.366 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>23 mph ENE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1174,18 +1188,18 @@
               <div class="kv"><span>MUCAPE</span><strong>227 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>370 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>370 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>20 kt (Low)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.3 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0050 s⁻¹ (Weak rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0050 s^-1 (Weak rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -1197,18 +1211,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.2169 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0319</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0539</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.29 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.2169 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0319</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0539</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.29 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.22) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.3) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.22) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.3) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1218,7 +1232,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>370 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>370 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>227 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~33% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1228,7 +1242,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Storm shows marginal severe weather signatures</div>
             </div>
           </div>
         </details>
@@ -1253,11 +1267,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>32.391°N, 93.842°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>32.391 N, 93.842 W</strong></div>
               <div class="kv"><span>Location</span><strong>Near Shreveport, LA</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>22 mph ENE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1265,18 +1279,18 @@
               <div class="kv"><span>MUCAPE</span><strong>1131 J/kg (Moderate)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>183 m²/s² (Moderate)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>183 m^2/s^2 (Moderate)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>34 kt (Moderate)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>1.6 (Tornado possible)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0070 s⁻¹ (Moderate rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0070 s^-1 (Moderate rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -1288,18 +1302,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.4714 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0439</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0321</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.66 (Near balance)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.4714 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0439</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0321</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.66 (Near balance)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.47) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.7) is approaching balance — storm may intensify if conditions persist.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.47) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.7) is approaching balance - storm may intensify if conditions persist.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1309,7 +1323,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>183 m²/s² is ~75th for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>183 m^2/s^2 is ~75th for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>1131 J/kg is ~75th for CONUS spring</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Data Provenance</div>
@@ -1318,8 +1332,8 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Moderate low-level rotation (AzShear &gt; 0.005)</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 1.6)</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Moderate low-level rotation (AzShear &gt; 0.005)</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Significant tornado parameter elevated (STP 1.6)</div>
             </div>
           </div>
         </details>
@@ -1344,11 +1358,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>44.503°N, 84.433°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>44.503 N, 84.433 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>22 mph ENE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>2 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1356,18 +1370,18 @@
               <div class="kv"><span>MUCAPE</span><strong>54 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>469 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>469 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>15 kt (Low)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.1 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0040 s⁻¹ (Weak rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0040 s^-1 (Weak rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -1379,18 +1393,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.2436 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0308</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0721</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.33 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.2436 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0308</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0721</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.33 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.24) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.3) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.24) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.3) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1400,7 +1414,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>469 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>469 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>54 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~28% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1410,7 +1424,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Storm shows marginal severe weather signatures</div>
             </div>
           </div>
         </details>
@@ -1435,11 +1449,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>41.618°N, 91.478°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>41.618 N, 91.478 W</strong></div>
               <div class="kv"><span>Location</span><strong>Central US</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>40 mph NE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>2 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1447,18 +1461,18 @@
               <div class="kv"><span>MUCAPE</span><strong>202 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>473 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>473 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>21 kt (Moderate)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.3 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0040 s⁻¹ (Weak rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0040 s^-1 (Weak rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -1470,18 +1484,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.4035 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0234</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0590</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.55 (Near balance)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.4035 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0234</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0590</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.55 (Near balance)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.40) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.5) is approaching balance — storm may intensify if conditions persist.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.40) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.5) is approaching balance - storm may intensify if conditions persist.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1491,7 +1505,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>473 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>473 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>202 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~28% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1501,7 +1515,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Storm shows marginal severe weather signatures</div>
             </div>
           </div>
         </details>
@@ -1526,11 +1540,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>41.399°N, 93.942°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>41.399 N, 93.942 W</strong></div>
               <div class="kv"><span>Location</span><strong>Central US</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>22 mph ENE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1538,18 +1552,18 @@
               <div class="kv"><span>MUCAPE</span><strong>642 J/kg (Low)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>315 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>315 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>17 kt (Low)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.7 (Marginal)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0040 s⁻¹ (Weak rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0040 s^-1 (Weak rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -1561,18 +1575,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.3879 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0299</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0471</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.53 (Near balance)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.3879 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0299</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0471</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.53 (Near balance)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.39) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.5) is approaching balance — storm may intensify if conditions persist.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.39) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.5) is approaching balance - storm may intensify if conditions persist.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1582,7 +1596,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>315 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>315 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>642 J/kg is ~50th for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~28% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1592,7 +1606,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Storm shows marginal severe weather signatures</div>
             </div>
           </div>
         </details>
@@ -1617,11 +1631,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>40.749°N, 94.978°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>40.749 N, 94.978 W</strong></div>
               <div class="kv"><span>Location</span><strong>75 mi E of Omaha, NE</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>33 mph NE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>3 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1629,18 +1643,18 @@
               <div class="kv"><span>MUCAPE</span><strong>969 J/kg (Low)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>198 m²/s² (Moderate)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>198 m^2/s^2 (Moderate)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>29 kt (Moderate)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>1.2 (Tornado possible)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0060 s⁻¹ (Moderate rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0060 s^-1 (Moderate rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.34 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>27 /min (Active)</strong></div>
@@ -1652,18 +1666,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.3082 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0481</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0452</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.40 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.3082 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0481</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0452</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.40 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.31) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.31) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1673,7 +1687,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>198 m²/s² is ~75th for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>198 m^2/s^2 is ~75th for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>969 J/kg is ~50th for CONUS spring</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Data Provenance</div>
@@ -1682,9 +1696,9 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Moderate low-level rotation (AzShear &gt; 0.005)</div>
-              <div style="margin:4px 0;font-size:13px;">• Significant tornado parameter elevated (STP 1.2)</div>
-              <div style="margin:4px 0;font-size:13px;">• Active lightning (27/min) indicates strong updraft</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Moderate low-level rotation (AzShear &gt; 0.005)</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Significant tornado parameter elevated (STP 1.2)</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Active lightning (27/min) indicates strong updraft</div>
             </div>
           </div>
         </details>
@@ -1709,11 +1723,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>42.360°N, 93.563°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>42.360 N, 93.563 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>21 mph NE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>2 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1721,18 +1735,18 @@
               <div class="kv"><span>MUCAPE</span><strong>36 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>372 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>372 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>12 kt (Low)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.0 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0030 s⁻¹ (No significant rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0030 s^-1 (No significant rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -1744,18 +1758,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.3307 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0541</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.1047</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.42 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.3307 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0541</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.1047</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.42 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.33) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.33) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Wind shear is aligned with the coherence gradient, a signature the theory associates with tornadic transition.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1765,7 +1779,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>372 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>372 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>36 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~24% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1775,7 +1789,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Wind shear aligned with coherence gradient (alignment term active)</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Wind shear aligned with coherence gradient (alignment term active)</div>
             </div>
           </div>
         </details>
@@ -1800,11 +1814,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>42.558°N, 93.302°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>42.558 N, 93.302 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>21 mph NE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1812,18 +1826,18 @@
               <div class="kv"><span>MUCAPE</span><strong>54 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>402 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>402 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>11 kt (Low)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.0 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0010 s⁻¹ (No significant rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0010 s^-1 (No significant rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -1835,18 +1849,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.3307 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0541</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.1047</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.42 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.3307 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0541</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.1047</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.42 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.33) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.33) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Wind shear is aligned with the coherence gradient, a signature the theory associates with tornadic transition.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1856,7 +1870,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>402 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>402 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>54 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~24% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1866,7 +1880,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Wind shear aligned with coherence gradient (alignment term active)</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Wind shear aligned with coherence gradient (alignment term active)</div>
             </div>
           </div>
         </details>
@@ -1891,11 +1905,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>42.637°N, 87.997°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>42.637 N, 87.997 W</strong></div>
               <div class="kv"><span>Location</span><strong>58 mi N of Chicago, IL</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>22 mph ENE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>3 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1903,18 +1917,18 @@
               <div class="kv"><span>MUCAPE</span><strong>285 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>519 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>519 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>14 kt (Low)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.3 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0010 s⁻¹ (No significant rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0010 s^-1 (No significant rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -1926,18 +1940,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.3362 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0194</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0501</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.41 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.3362 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0194</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0501</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.41 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.34) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.34) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1947,7 +1961,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>519 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>519 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>285 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~24% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1957,7 +1971,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Storm shows marginal severe weather signatures</div>
             </div>
           </div>
         </details>
@@ -1982,11 +1996,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>41.397°N, 94.564°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>41.397 N, 94.564 W</strong></div>
               <div class="kv"><span>Location</span><strong>Central US</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>33 mph NE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>3 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -1994,18 +2008,18 @@
               <div class="kv"><span>MUCAPE</span><strong>462 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>317 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>317 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>20 kt (Low)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.6 (Marginal)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0030 s⁻¹ (No significant rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0030 s^-1 (No significant rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.08 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>1 /min (Quiet)</strong></div>
@@ -2017,18 +2031,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.3521 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0424</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0589</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.47 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.3521 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0424</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0589</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.47 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.35) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.5) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.35) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.5) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2038,7 +2052,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>317 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>317 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>462 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~24% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2048,7 +2062,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Storm shows marginal severe weather signatures</div>
             </div>
           </div>
         </details>
@@ -2073,11 +2087,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>41.723°N, 91.187°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>41.723 N, 91.187 W</strong></div>
               <div class="kv"><span>Location</span><strong>Central US</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>40 mph NE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>2 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2085,18 +2099,18 @@
               <div class="kv"><span>MUCAPE</span><strong>148 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>469 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>469 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>24 kt (Moderate)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.2 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0020 s⁻¹ (No significant rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0020 s^-1 (No significant rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -2108,18 +2122,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.4035 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0234</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0590</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.55 (Near balance)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.4035 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0234</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0590</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.55 (Near balance)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.40) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.5) is approaching balance — storm may intensify if conditions persist.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.40) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.5) is approaching balance - storm may intensify if conditions persist.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2129,7 +2143,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>469 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>469 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>148 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~24% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2139,7 +2153,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Storm shows marginal severe weather signatures</div>
             </div>
           </div>
         </details>
@@ -2164,11 +2178,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>40.865°N, 90.204°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>40.865 N, 90.204 W</strong></div>
               <div class="kv"><span>Location</span><strong>Central US</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>35 mph NE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>2 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2176,18 +2190,18 @@
               <div class="kv"><span>MUCAPE</span><strong>401 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>383 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>383 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>31 kt (Moderate)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.8 (Marginal)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0010 s⁻¹ (No significant rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0010 s^-1 (No significant rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -2199,18 +2213,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.3854 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0272</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0521</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.50 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.3854 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0272</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0521</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.50 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.39) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.5) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.39) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.5) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2220,7 +2234,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>383 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>383 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>401 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~24% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2230,7 +2244,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Storm shows marginal severe weather signatures</div>
             </div>
           </div>
         </details>
@@ -2255,11 +2269,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>40.792°N, 90.839°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>40.792 N, 90.839 W</strong></div>
               <div class="kv"><span>Location</span><strong>Central US</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>35 mph NNE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2267,18 +2281,18 @@
               <div class="kv"><span>MUCAPE</span><strong>248 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>328 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>328 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>23 kt (Moderate)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.4 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0030 s⁻¹ (No significant rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0030 s^-1 (No significant rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -2290,18 +2304,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.3911 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0312</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0511</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.51 (Near balance)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.3911 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0312</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0511</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.51 (Near balance)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.39) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.5) is approaching balance — storm may intensify if conditions persist.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.39) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.5) is approaching balance - storm may intensify if conditions persist.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2311,7 +2325,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>328 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>328 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>248 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~24% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2321,7 +2335,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Storm shows marginal severe weather signatures</div>
             </div>
           </div>
         </details>
@@ -2346,11 +2360,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>41.889°N, 90.680°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>41.889 N, 90.680 W</strong></div>
               <div class="kv"><span>Location</span><strong>Central US</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>42 mph NE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2358,18 +2372,18 @@
               <div class="kv"><span>MUCAPE</span><strong>111 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>339 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>339 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>27 kt (Moderate)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.2 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0030 s⁻¹ (No significant rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0030 s^-1 (No significant rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -2381,18 +2395,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.4001 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0198</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0333</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.53 (Near balance)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.4001 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0198</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0333</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.53 (Near balance)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.40) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.5) is approaching balance — storm may intensify if conditions persist.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.40) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.5) is approaching balance - storm may intensify if conditions persist.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2402,7 +2416,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>339 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>339 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>111 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~24% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2412,7 +2426,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Storm shows marginal severe weather signatures</div>
             </div>
           </div>
         </details>
@@ -2437,11 +2451,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>43.977°N, 84.009°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>43.977 N, 84.009 W</strong></div>
               <div class="kv"><span>Location</span><strong>Upper Midwest</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>22 mph ENE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2449,18 +2463,18 @@
               <div class="kv"><span>MUCAPE</span><strong>225 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>433 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>433 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>22 kt (Moderate)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.3 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0010 s⁻¹ (No significant rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0010 s^-1 (No significant rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>1 /min (Quiet)</strong></div>
@@ -2472,18 +2486,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.2658 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0220</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0506</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.36 (Damping dominant)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.2658 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0220</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0506</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.36 (Damping dominant)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.27) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) — dissipation dominates, limiting storm development.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.27) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Low source/damping ratio (0.4) - dissipation dominates, limiting storm development.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2493,7 +2507,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>433 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>433 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>225 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~24% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2503,7 +2517,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Storm shows marginal severe weather signatures</div>
             </div>
           </div>
         </details>
@@ -2528,11 +2542,11 @@
             </div>
             <div data-depth="technical">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;margin-top:4px;">Location &amp; Timing</div>
-              <div class="kv"><span>Coordinates</span><strong>41.134°N, 90.450°W</strong></div>
+              <div class="kv"><span>Coordinates</span><strong>41.134 N, 90.450 W</strong></div>
               <div class="kv"><span>Location</span><strong>Central US</strong></div>
               <div class="kv"><span>Valid time</span><strong>2026-04-02 17:30:41 UTC</strong></div>
               <div class="kv"><span>Storm motion</span><strong>23 mph ENE</strong></div>
-              <div class="kv"><span>Storm size</span><strong>0 km²</strong></div>
+              <div class="kv"><span>Storm size</span><strong>0 km^2</strong></div>
               <div class="kv"><span>Track length</span><strong>1 time steps</strong></div>
               <div class="kv"><span>Scoring tier</span><strong>tier2_analytic</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2540,18 +2554,18 @@
               <div class="kv"><span>MUCAPE</span><strong>233 J/kg (Marginal)</strong></div>
               <div class="kv"><span>MLCAPE</span><strong>0 J/kg</strong></div>
               <div class="kv"><span>MLCIN</span><strong>0 J/kg</strong></div>
-              <div class="kv"><span>0-1km SRH</span><strong>319 m²/s² (Extreme)</strong></div>
+              <div class="kv"><span>0-1km SRH</span><strong>319 m^2/s^2 (Extreme)</strong></div>
               <div class="kv"><span>Effective bulk shear</span><strong>25 kt (Moderate)</strong></div>
               <div class="kv"><span>Precipitable water</span><strong>0.0 in</strong></div>
-              <div class="kv"><span>Wet bulb 0°C height</span><strong>0 kft</strong></div>
+              <div class="kv"><span>Wet bulb 0C height</span><strong>0 kft</strong></div>
               <div class="kv"><span>STP estimate</span><strong>0.4 (Low)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Radar Signatures</div>
-              <div class="kv"><span>Max low-level AzShear</span><strong>0.0020 s⁻¹ (No significant rotation)</strong></div>
-              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
-              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s⁻¹</strong></div>
+              <div class="kv"><span>Max low-level AzShear</span><strong>0.0020 s^-1 (No significant rotation)</strong></div>
+              <div class="kv"><span>P98 low-level AzShear</span><strong>0.0000 s^-1</strong></div>
+              <div class="kv"><span>P98 mid-level AzShear</span><strong>0.0000 s^-1</strong></div>
               <div class="kv"><span>MESH (max hail)</span><strong>0.00 in</strong></div>
-              <div class="kv"><span>VIL density</span><strong>0.00 g/m³</strong></div>
+              <div class="kv"><span>VIL density</span><strong>0.00 g/m^3</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Lightning Activity</div>
               <div class="kv"><span>Flash rate</span><strong>0 /min (Quiet)</strong></div>
@@ -2563,18 +2577,18 @@
               <div class="kv"><span>ProbSevere tornado</span><strong>0%</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Field Theory Analysis</div>
-              <div class="kv"><span>Coherence amplitude (τ)</span><strong>0.4066 (Moderate)</strong></div>
-              <div class="kv"><span>Coherence gradient (|∇τ|)</span><strong>0.0157</strong></div>
-              <div class="kv"><span>Torsion (SRH × curl τ)</span><strong>0.0000</strong></div>
-              <div class="kv"><span>Alignment (shear · ∇τ)</span><strong>0.0251</strong></div>
-              <div class="kv"><span>S / Γ ratio</span><strong>0.54 (Near balance)</strong></div>
-              <div class="kv"><span>Damköhler number</span><strong>17.13</strong></div>
+              <div class="kv"><span>Coherence amplitude (tau)</span><strong>0.4066 (Moderate)</strong></div>
+              <div class="kv"><span>Coherence gradient (|grad tau|)</span><strong>0.0157</strong></div>
+              <div class="kv"><span>Torsion (SRH x curl tau)</span><strong>0.0000</strong></div>
+              <div class="kv"><span>Alignment (shear dot grad tau)</span><strong>0.0251</strong></div>
+              <div class="kv"><span>S / Gamma ratio</span><strong>0.54 (Near balance)</strong></div>
+              <div class="kv"><span>Damkohler number</span><strong>17.13</strong></div>
               <div class="kv"><span>Singularity conditions</span><strong>2 / 5 (Marginal)</strong></div>
               <div class="kv"><span>Coherence source</span><strong>probsevere</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Coherence Interpretation</div>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (τ=0.41) — some atmospheric organization present.</p>
-              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.5) is approaching balance — storm may intensify if conditions persist.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Moderate coherence (tau=0.41) - some atmospheric organization present.</p>
+              <p style="margin:4px 0;font-size:13px;line-height:1.5;">Source/damping ratio (0.5) is approaching balance - storm may intensify if conditions persist.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Partial shear-coherence alignment detected.</p>
               <p style="margin:4px 0;font-size:13px;line-height:1.5;">Marginal: 2/5 singularity conditions.</p>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2584,7 +2598,7 @@
               <div class="kv"><span>Model version</span><strong>tornado_storm_v1_0</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Comparison to Climatology</div>
-              <div class="kv"><span>SRH percentile (approx.)</span><strong>319 m²/s² is ~99th+ for CONUS spring</strong></div>
+              <div class="kv"><span>SRH percentile (approx.)</span><strong>319 m^2/s^2 is ~99th+ for CONUS spring</strong></div>
               <div class="kv"><span>CAPE percentile (approx.)</span><strong>233 J/kg is ~below median for CONUS spring</strong></div>
               <div class="kv"><span>Historical analogs</span><strong>Storms with similar profiles (SRH>200) produced tornadoes ~24% of the time in training data</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
@@ -2594,7 +2608,7 @@
               <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>
               <hr style="border:0;border-top:1px solid var(--border,#e5e7eb);margin:10px 0;">
               <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted,#6b7280);margin-bottom:6px;">Why This Probability</div>
-              <div style="margin:4px 0;font-size:13px;">• Storm shows marginal severe weather signatures</div>
+              <div style="margin:4px 0;font-size:13px;">â€¢ Storm shows marginal severe weather signatures</div>
             </div>
           </div>
         </details>
@@ -2692,9 +2706,9 @@
           <a href="https://nhc.noaa.gov" rel="noopener">NHC Hurricanes</a>
           <a href="/ops/status/">System Status</a>
         </div>
-        <div class="col-3 footer-col">
-          <h4>Company</h4>
-          <a href="https://coherenceenergylabs.com">Coherence Energy Labs</a>
+                <div class="col-3 footer-col">
+          <h4>About</h4>
+          <a href="https://github.com/Jphilbrick10/hazardpulse">Open Source</a>
           <a href="mailto:josh@coherenceenergylabs.com">Contact</a>
           <a href="/legal/disclaimer/">Terms &amp; Disclaimer</a>
           <a href="/COMMERCIAL_LICENSE.md">Commercial License</a>
@@ -2703,7 +2717,7 @@
       <hr style="border:0;border-top:1px solid var(--line);margin:24px 0 16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
         <p class="muted" style="font-size:11px;margin:0;">
-          &copy; 2026 Coherence Energy Labs. AGPL-3.0 &middot; <a href="/COMMERCIAL_LICENSE.md">Commercial licensing</a> available.
+          &copy; 2026 HazardPulse. AGPL-3.0 &middot; <a href="/COMMERCIAL_LICENSE.md">Commercial licensing</a> available.
         </p>
         <p class="muted" style="font-size:11px;margin:0;">
           Always follow official <a href="https://weather.gov">NWS</a> and <a href="https://earthquake.usgs.gov">USGS</a> guidance.
@@ -2784,3 +2798,8 @@
 
 </body>
 </html>
+
+
+
+
+

@@ -1,0 +1,154 @@
+import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+import vm from "node:vm";
+import { fileURLToPath } from "node:url";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const workerSource = readFileSync(path.join(root, "src", "worker.js"), "utf8");
+const transformedSource = workerSource.replace(
+  "export default",
+  "globalThis.__worker_default ="
+);
+
+class HTMLRewriterStub {
+  on() {
+    return this;
+  }
+
+  transform(response) {
+    return response;
+  }
+}
+
+function mimeTypeFor(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  if (ext === ".html") return "text/html; charset=utf-8";
+  if (ext === ".json") return "application/json; charset=utf-8";
+  if (ext === ".xml") return "application/xml; charset=utf-8";
+  if (ext === ".txt") return "text/plain; charset=utf-8";
+  if (ext === ".md") return "text/markdown; charset=utf-8";
+  if (ext === ".svg") return "image/svg+xml";
+  if (ext === ".png") return "image/png";
+  if (ext === ".css") return "text/css; charset=utf-8";
+  return "application/octet-stream";
+}
+
+function resolveAssetPath(urlPath) {
+  let normalized = urlPath;
+  if (!normalized || normalized === "/") normalized = "/index.html";
+  if (normalized.endsWith("/")) normalized += "index.html";
+  return path.join(root, "dist", ...normalized.split("/").filter(Boolean));
+}
+
+const context = vm.createContext({
+  console,
+  URL,
+  Request,
+  Response,
+  HTMLRewriter: HTMLRewriterStub,
+  globalThis: {},
+});
+
+vm.runInContext(transformedSource, context, { filename: "worker.js" });
+const worker = context.globalThis.__worker_default;
+assert(worker && typeof worker.fetch === "function");
+
+const env = {
+  ASSETS: {
+    async fetch(request) {
+      const url = new URL(request.url);
+      const filePath = resolveAssetPath(url.pathname);
+      if (!existsSync(filePath)) {
+        return new Response("not found", { status: 404 });
+      }
+      return new Response(readFileSync(filePath), {
+        status: 200,
+        headers: { "Content-Type": mimeTypeFor(filePath) },
+      });
+    },
+  },
+};
+
+async function expectJsonRoute(pathname, predicate) {
+  const response = await worker.fetch(new Request(`https://hazardpulse.com${pathname}`), env);
+  assert.equal(response.status, 200, `${pathname} should return 200`);
+  assert.equal(response.headers.get("X-Content-Type-Options"), "nosniff");
+  assert.equal(response.headers.get("X-Frame-Options"), "DENY");
+  assert.equal(response.headers.get("X-Robots-Tag"), "noindex, nofollow");
+  const json = await response.json();
+  assert.equal(json.meta.version, "v1");
+  predicate(json.data);
+}
+
+function assertHtmlSecurityHeaders(
+  response,
+  expectedStatus = 200,
+  expectedCacheControl = "private, no-cache, no-store, must-revalidate"
+) {
+  assert.equal(response.status, expectedStatus);
+  assert.match(response.headers.get("Content-Security-Policy") || "", /frame-ancestors 'none'/);
+  assert.equal(response.headers.get("X-Content-Type-Options"), "nosniff");
+  assert.equal(response.headers.get("X-Frame-Options"), "DENY");
+  assert.equal(response.headers.get("Referrer-Policy"), "strict-origin-when-cross-origin");
+  assert.equal(response.headers.get("Cache-Control"), expectedCacheControl);
+}
+
+const homeResponse = await worker.fetch(new Request("https://hazardpulse.com/"), env);
+assertHtmlSecurityHeaders(homeResponse);
+assert.match(await homeResponse.text(), /HazardPulse/);
+
+await expectJsonRoute("/api/v1/live/pulse", (data) => {
+  assert.ok(Array.isArray(data.hazards));
+});
+
+await expectJsonRoute("/api/v1/live/hurricane", (data) => {
+  assert.ok("n_active_storms" in data);
+});
+
+await expectJsonRoute("/api/v1/live/tornado", (data) => {
+  assert.ok(Array.isArray(data.storms));
+});
+
+await expectJsonRoute("/api/v1/live/earthquake", (data) => {
+  assert.ok(data.summary);
+});
+
+await expectJsonRoute("/api/v1/forecast/eq_fcst_20260402_0000", (data) => {
+  assert.equal(data.forecast_id, "eq_fcst_20260402_0000");
+});
+
+await expectJsonRoute("/api/v1/verification/summary", (data) => {
+  assert.ok(Array.isArray(data.hazards));
+});
+
+await expectJsonRoute("/api/v1/registry/models", (data) => {
+  assert.ok(Array.isArray(data.models));
+});
+
+const sseResponse = await worker.fetch(
+  new Request("https://hazardpulse.com/stream/live/pulse"),
+  env
+);
+assert.equal(sseResponse.status, 200);
+assert.match(sseResponse.headers.get("Content-Type") || "", /text\/event-stream/);
+assert.equal(sseResponse.headers.get("X-Robots-Tag"), "noindex, nofollow");
+assert.match(await sseResponse.text(), /event: live_pulse/);
+
+const redirectResponse = await worker.fetch(
+  new Request("https://hazardpulse.com/commercial-license/"),
+  env
+);
+assert.equal(redirectResponse.status, 302);
+assert.match(redirectResponse.headers.get("Location") || "", /COMMERCIAL_LICENSE\.md$/);
+assert.equal(redirectResponse.headers.get("X-Robots-Tag"), "noindex, nofollow");
+
+const missingResponse = await worker.fetch(
+  new Request("https://hazardpulse.com/does-not-exist"),
+  env
+);
+assertHtmlSecurityHeaders(missingResponse, 404, "no-store");
+assert.equal(missingResponse.headers.get("X-Robots-Tag"), "noindex, nofollow");
+assert.match(await missingResponse.text(), /404 - Page not found|Not found/);
+
+console.log("worker api smoke checks passed");
