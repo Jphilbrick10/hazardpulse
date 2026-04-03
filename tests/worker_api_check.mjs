@@ -44,6 +44,7 @@ function resolveAssetPath(urlPath) {
 const context = vm.createContext({
   console,
   URL,
+  Headers,
   Request,
   Response,
   HTMLRewriter: HTMLRewriterStub,

@@ -8,6 +8,7 @@
 
 const API_VERSION = "v1";
 const PRIMARY_DOMAIN = "https://hazardpulse.com";
+const INTERNAL_ASSET_HEADER = "x-hazardpulse-internal-asset";
 const ALERT_THRESHOLDS = { critical: 50, severe: 150, warning: 400, watch: 800 };
 const HTML_CACHE_CONTROL = "private, no-cache, no-store, must-revalidate";
 const HTML_CONTENT_SECURITY_POLICY =
@@ -233,26 +234,34 @@ function errorEnvelope(code, message, status = 404) {
   );
 }
 
-function assetRequest(pathname) {
-  return new Request(new URL(pathname, PRIMARY_DOMAIN).toString());
+function assetRequest(pathname, baseRequest) {
+  const baseUrl = baseRequest ? new URL(baseRequest.url) : new URL(PRIMARY_DOMAIN);
+  const headers = new Headers(baseRequest ? baseRequest.headers : undefined);
+  headers.set(INTERNAL_ASSET_HEADER, "1");
+  headers.delete("if-none-match");
+  headers.delete("if-modified-since");
+  return new Request(new URL(pathname, baseUrl).toString(), {
+    method: "GET",
+    headers,
+  });
 }
 
-async function fetchAsset(env, pathname) {
-  const request = assetRequest(pathname);
+async function fetchAsset(env, pathname, baseRequest) {
+  const request = assetRequest(pathname, baseRequest);
   try {
     const assetResponse = await env.ASSETS.fetch(request);
     if (assetResponse.ok) return assetResponse;
   } catch {}
 
   try {
-    return await fetch(new Request(new URL(pathname, PRIMARY_DOMAIN).toString()));
+    return await fetch(request);
   } catch {
     return new Response(null, { status: 404 });
   }
 }
 
-async function fetchAssetJson(env, pathname) {
-  const response = await fetchAsset(env, pathname);
+async function fetchAssetJson(env, pathname, baseRequest) {
+  const response = await fetchAsset(env, pathname, baseRequest);
   if (!response.ok) return null;
   try {
     const text = await response.text();
@@ -262,8 +271,8 @@ async function fetchAssetJson(env, pathname) {
   }
 }
 
-async function fetchAssetText(env, pathname) {
-  const response = await fetchAsset(env, pathname);
+async function fetchAssetText(env, pathname, baseRequest) {
+  const response = await fetchAsset(env, pathname, baseRequest);
   if (!response.ok) return null;
   return response.text();
 }
@@ -514,15 +523,15 @@ class YourAreaHandler {
   }
 }
 
-async function loadLiveEarthquakeZones(env) {
-  const pulse = await fetchAssetJson(env, "/data/live-pulse.json");
+async function loadLiveEarthquakeZones(env, request) {
+  const pulse = await fetchAssetJson(env, "/data/live-pulse.json", request);
   if (!pulse || !Array.isArray(pulse.hazards)) return [];
 
   const eq = pulse.hazards.find((hazard) => hazard.key === "eq");
   const forecastId = eq && eq.forecast_id;
   if (!forecastId) return [];
 
-  const replay = await fetchAssetJson(env, `/data/replay/${forecastId}.json`);
+  const replay = await fetchAssetJson(env, `/data/replay/${forecastId}.json`, request);
   if (!replay || !Array.isArray(replay.active_cells)) return [];
 
   return replay.active_cells.slice(0, 12).map((cell, index) => ({
@@ -540,8 +549,8 @@ async function loadLiveEarthquakeZones(env) {
   }));
 }
 
-async function loadLiveHurricaneZones(env) {
-  const data = await fetchAssetJson(env, "/data/live-storms.json");
+async function loadLiveHurricaneZones(env, request) {
+  const data = await fetchAssetJson(env, "/data/live-storms.json", request);
   if (!data || !Array.isArray(data.storms)) return [];
 
   return data.storms.map((storm, index) => ({
@@ -557,8 +566,8 @@ async function loadLiveHurricaneZones(env) {
   }));
 }
 
-async function loadLiveTornadoZones(env) {
-  const data = await fetchAssetJson(env, "/data/live-tornadoes.json");
+async function loadLiveTornadoZones(env, request) {
+  const data = await fetchAssetJson(env, "/data/live-tornadoes.json", request);
   if (!data || !Array.isArray(data.storms)) return [];
 
   return data.storms.slice(0, 20).map((storm) => ({
@@ -574,10 +583,10 @@ async function loadLiveTornadoZones(env) {
   }));
 }
 
-async function buildOpsSnapshot(env) {
-  const pulse = await fetchAssetJson(env, "/data/live-pulse.json");
-  const storms = await fetchAssetJson(env, "/data/live-storms.json");
-  const tornadoes = await fetchAssetJson(env, "/data/live-tornadoes.json");
+async function buildOpsSnapshot(env, request) {
+  const pulse = await fetchAssetJson(env, "/data/live-pulse.json", request);
+  const storms = await fetchAssetJson(env, "/data/live-storms.json", request);
+  const tornadoes = await fetchAssetJson(env, "/data/live-tornadoes.json", request);
 
   return {
     status: "ok",
@@ -595,7 +604,7 @@ async function handleApiRequest(request, env) {
   const path = url.pathname;
 
   if (path === "/api/v1/live/pulse") {
-    const pulse = await fetchAssetJson(env, "/data/live-pulse.json");
+    const pulse = await fetchAssetJson(env, "/data/live-pulse.json", request);
     if (!pulse) return errorEnvelope("not_found", "Live pulse data is unavailable.");
     return jsonResponse(apiEnvelope(pulse, 300), 200, "public, max-age=300");
   }
@@ -604,24 +613,24 @@ async function handleApiRequest(request, env) {
   if (liveMatch) {
     const hazard = liveMatch[1];
     if (hazard === "hurricane") {
-      const storms = await fetchAssetJson(env, "/data/live-storms.json");
+      const storms = await fetchAssetJson(env, "/data/live-storms.json", request);
       if (!storms) return errorEnvelope("not_found", "Live hurricane data is unavailable.");
       return jsonResponse(apiEnvelope(storms, 300, { hazard }), 200, "public, max-age=300");
     }
     if (hazard === "tornado") {
-      const tornadoes = await fetchAssetJson(env, "/data/live-tornadoes.json");
+      const tornadoes = await fetchAssetJson(env, "/data/live-tornadoes.json", request);
       if (!tornadoes) return errorEnvelope("not_found", "Live tornado data is unavailable.");
       return jsonResponse(apiEnvelope(tornadoes, 300, { hazard }), 200, "public, max-age=300");
     }
 
-    const pulse = await fetchAssetJson(env, "/data/live-pulse.json");
+    const pulse = await fetchAssetJson(env, "/data/live-pulse.json", request);
     if (!pulse || !Array.isArray(pulse.hazards)) {
       return errorEnvelope("not_found", "Live earthquake data is unavailable.");
     }
     const eq = pulse.hazards.find((item) => item.key === "eq") || null;
     const forecastId = eq && eq.forecast_id;
     const replay = forecastId
-      ? await fetchAssetJson(env, `/data/replay/${forecastId}.json`)
+      ? await fetchAssetJson(env, `/data/replay/${forecastId}.json`, request)
       : null;
     return jsonResponse(
       apiEnvelope({ summary: eq, replay }, 300, { hazard }),
@@ -633,7 +642,7 @@ async function handleApiRequest(request, env) {
   const forecastMatch = path.match(/^\/api\/v1\/forecast\/([A-Za-z0-9_.-]+)$/);
   if (forecastMatch) {
     const forecastId = forecastMatch[1];
-    const artifact = await fetchAssetJson(env, `/data/replay/${forecastId}.json`);
+    const artifact = await fetchAssetJson(env, `/data/replay/${forecastId}.json`, request);
     if (!artifact) {
       return errorEnvelope("not_found", `Forecast ${forecastId} was not found.`);
     }
@@ -647,7 +656,7 @@ async function handleApiRequest(request, env) {
   const replayMatch = path.match(/^\/api\/v1\/replay\/([A-Za-z0-9_.-]+)$/);
   if (replayMatch) {
     const forecastId = replayMatch[1];
-    const artifact = await fetchAssetJson(env, `/data/replay/${forecastId}.json`);
+    const artifact = await fetchAssetJson(env, `/data/replay/${forecastId}.json`, request);
     if (!artifact) {
       return errorEnvelope("not_found", `Replay artifact ${forecastId} was not found.`);
     }
@@ -661,7 +670,11 @@ async function handleApiRequest(request, env) {
   const evidenceMatch = path.match(/^\/api\/v1\/evidence\/([A-Za-z0-9_.-]+)$/);
   if (evidenceMatch) {
     const provenanceId = evidenceMatch[1];
-    const envelopes = await fetchAssetJson(env, "/data/evidence/provenance-envelopes.json");
+    const envelopes = await fetchAssetJson(
+      env,
+      "/data/evidence/provenance-envelopes.json",
+      request
+    );
     const match =
       envelopes &&
       Array.isArray(envelopes.envelopes) &&
@@ -679,7 +692,7 @@ async function handleApiRequest(request, env) {
   const gatesMatch = path.match(/^\/api\/v1\/gates\/([A-Za-z0-9_.-]+)$/);
   if (gatesMatch) {
     const gateDecisionId = gatesMatch[1];
-    const gates = await fetchAssetJson(env, "/data/evidence/gate-decisions.json");
+    const gates = await fetchAssetJson(env, "/data/evidence/gate-decisions.json", request);
     const match =
       gates &&
       Array.isArray(gates.decisions) &&
@@ -695,19 +708,19 @@ async function handleApiRequest(request, env) {
   }
 
   if (path === "/api/v1/verification/summary") {
-    const summary = await fetchAssetJson(env, "/data/verification-summary.json");
+    const summary = await fetchAssetJson(env, "/data/verification-summary.json", request);
     if (!summary) return errorEnvelope("not_found", "Verification summary is unavailable.");
     return jsonResponse(apiEnvelope(summary, 3600), 200, "public, max-age=3600");
   }
 
   if (path === "/api/v1/registry/models") {
-    const registry = await fetchAssetJson(env, "/data/model-registry.json");
+    const registry = await fetchAssetJson(env, "/data/model-registry.json", request);
     if (!registry) return errorEnvelope("not_found", "Model registry is unavailable.");
     return jsonResponse(apiEnvelope(registry, 3600), 200, "public, max-age=3600");
   }
 
   if (path === "/api/v1/ops/status") {
-    const snapshot = await buildOpsSnapshot(env);
+    const snapshot = await buildOpsSnapshot(env, request);
     return jsonResponse(apiEnvelope(snapshot, 300), 200, "public, max-age=300");
   }
 
@@ -718,13 +731,13 @@ async function handleStreamRequest(request, env) {
   const path = new URL(request.url).pathname;
 
   if (path === "/stream/live/pulse") {
-    const pulse = await fetchAssetJson(env, "/data/live-pulse.json");
+    const pulse = await fetchAssetJson(env, "/data/live-pulse.json", request);
     if (!pulse) return errorEnvelope("not_found", "Live pulse data is unavailable.");
     return sseResponse("live_pulse", apiEnvelope(pulse, 300));
   }
 
   if (path === "/stream/ops/status") {
-    const snapshot = await buildOpsSnapshot(env);
+    const snapshot = await buildOpsSnapshot(env, request);
     return sseResponse("ops_status", apiEnvelope(snapshot, 300));
   }
 
@@ -735,6 +748,18 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const pathname = url.pathname;
+
+    if (
+      request.headers.get(INTERNAL_ASSET_HEADER) === "1" &&
+      (pathname.startsWith("/data/") ||
+        pathname.startsWith("/assets/") ||
+        pathname.endsWith(".json") ||
+        pathname.endsWith(".xml") ||
+        pathname.endsWith(".txt") ||
+        pathname.endsWith(".md"))
+    ) {
+      return env.ASSETS.fetch(request);
+    }
 
     if (pathname === "/commercial-license" || pathname === "/commercial-license/") {
       return withSecurityHeaders(
@@ -803,9 +828,9 @@ export default {
     const geo = normalizeGeo(request.cf || {});
 
     const [earthquakeZones, hurricaneZones, tornadoZones] = await Promise.all([
-      loadLiveEarthquakeZones(env),
-      loadLiveHurricaneZones(env),
-      loadLiveTornadoZones(env),
+      loadLiveEarthquakeZones(env, request),
+      loadLiveHurricaneZones(env, request),
+      loadLiveTornadoZones(env, request),
     ]);
     const allZones = [...earthquakeZones, ...hurricaneZones, ...tornadoZones];
 
