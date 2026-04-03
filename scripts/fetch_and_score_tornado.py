@@ -2961,7 +2961,20 @@ def render_homepage_cards(
         else "No current hazard summary is available."
     )
 
-    def hazard_card(key: str, title: str, unit: str, link: str, extra_html: str) -> str:
+    # Simple-mode risk descriptions (no jargon)
+    simple_risk_text = {
+        "critical": "Significant risk detected",
+        "very_high": "Elevated risk detected",
+        "high": "Elevated risk",
+        "elevated": "Moderate risk",
+        "guarded": "Low risk",
+        "moderate": "Low risk",
+        "low": "Minimal risk",
+        "minimal": "No significant risk",
+        "none": "No significant risk",
+    }
+
+    def hazard_card(key: str, title: str, unit: str, link: str, extra_html: str, simple_desc: str) -> str:
         hazard = hazard_map.get(key, {})
         confidence = _confidence_text(
             hazard.get("probability"),
@@ -2971,8 +2984,23 @@ def render_homepage_cards(
         delta = float(hazard.get("delta", 0) or 0)
         band = hazard.get("risk_band", "--")
         band_class = risk_classes.get(band, "warn")
-        return (
-            f'<a href="{link}" class="card card-link col-4 hazard-{key}">'
+        risk_text = simple_risk_text.get(band, "Monitoring")
+
+        # SIMPLE version: risk level + plain description, no numbers
+        simple_card = (
+            f'<a href="{link}" class="card card-link col-4 hazard-{key}" data-depth="simple">'
+            f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">'
+            f'<h2 style="margin:0;">{title}</h2>'
+            f'<span class="chip {band_class}" style="margin-left:auto;">{_esc(risk_text)}</span>'
+            '</div>'
+            f'<p style="margin:8px 0;font-size:15px;line-height:1.5;">{simple_desc}</p>'
+            '<span class="card-cta">View details &rarr;</span>'
+            '</a>'
+        )
+
+        # TECHNICAL version: full metrics
+        tech_card = (
+            f'<a href="{link}" class="card card-link col-4 hazard-{key}" data-depth="technical">'
             f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">'
             f'<h2 style="margin:0;">{title}</h2>'
             f'<span class="chip {band_class}" style="margin-left:auto;">{_esc(str(band))}</span>'
@@ -2985,6 +3013,8 @@ def render_homepage_cards(
             '<span class="card-cta">View detail &rarr;</span>'
             "</a>"
         )
+
+        return simple_card + "\n" + tech_card
 
     eq_extra = (
         f'<div class="kv"><span>Forecast ID</span><strong>{_esc(hazard_map.get("eq", {}).get("forecast_id", "--"))}</strong></div>'
@@ -3013,11 +3043,36 @@ def render_homepage_cards(
             f'<div class="kv"><span>Top object</span><strong>Storm {_esc(str(top_to.get("storm_id", "--")))} at {top_to.get("lat", "--")}, {top_to.get("lon", "--")}</strong></div>'
         )
 
+    # Build plain-language descriptions for Simple mode
+    n_eq_cells = len(eq_replay.get("active_cells", []))
+    eq_prob = float(hazard_map.get("eq", {}).get("probability", 0) or 0)
+    eq_simple = (
+        f"{n_eq_cells} seismic zones are being monitored globally. "
+        + ("Some zones show elevated activity." if eq_prob > 0.3 else "No unusual activity detected.")
+    )
+
+    hu_storms = hurricanes.get("storms", [])
+    hu_simple = (
+        f"{hu_storms[0].get('storm_name', 'A storm')} is being tracked in the {hu_storms[0].get('basin', 'Atlantic')}."
+        if hu_storms else "No active tropical storms anywhere in the world."
+    )
+
+    n_tor = int(tornadoes.get("n_active_storms", 0) or 0)
+    top_tor_prob = float(scored_storms[0].get("tornado_probability", 0)) if scored_storms else 0
+    if top_tor_prob > 0.30:
+        to_simple = f"{n_tor} storms tracked. Some show strong rotation. Stay weather-aware and monitor NWS warnings."
+    elif top_tor_prob > 0.15:
+        to_simple = f"{n_tor} storms tracked. Moderate severe weather activity. Stay generally aware."
+    elif n_tor > 0:
+        to_simple = f"{n_tor} storms tracked. No significant tornado signals at this time."
+    else:
+        to_simple = "No active severe weather detected."
+
     cards_html = "\n".join(
         [
-            hazard_card("eq", "Earthquake", "P(M6+ in 30 days)", "/live/earthquake/", eq_extra),
-            hazard_card("hu", "Hurricane", "Rapid intensification in 24h", "/live/hurricane/", hu_extra),
-            hazard_card("to", "Tornado", "Formation in 24h", "/live/tornado/", to_extra),
+            hazard_card("eq", "Earthquake", "P(M6+ in 30 days)", "/live/earthquake/", eq_extra, eq_simple),
+            hazard_card("hu", "Hurricane", "Rapid intensification in 24h", "/live/hurricane/", hu_extra, hu_simple),
+            hazard_card("to", "Tornado", "Formation in 24h", "/live/tornado/", to_extra, to_simple),
         ]
     )
 
@@ -3100,12 +3155,22 @@ def render_homepage_cards(
     </div>
   </header>
   <main id="main">
+    <div class="depth-content">
+      <div class="depth-toggle" role="radiogroup" aria-label="Content depth" style="text-align:center;padding:12px 0;">
+        <input type="radio" id="depth-simple" name="depth" value="simple" checked>
+        <label for="depth-simple">Simple</label>
+        <input type="radio" id="depth-technical" name="depth" value="technical">
+        <label for="depth-technical">Technical</label>
+      </div>
+
     <section class="hero-observatory">
       <div class="container">
         <p class="eyebrow">GLOBAL HAZARD INTELLIGENCE</p>
-        <h1 class="threat-level elevated">Static-first live dashboard</h1>
-        <p class="hero-subtitle">{_esc(hero_text)}</p>
-        <p class="muted">Updated {_esc(updated_at)} &middot; Independent hazard intelligence platform</p>
+        <h1 class="threat-level elevated" data-depth="simple">Hazard Status</h1>
+        <h1 class="threat-level elevated" data-depth="technical">Static-first live dashboard</h1>
+        <p class="hero-subtitle" data-depth="simple">Real-time monitoring of earthquakes, hurricanes, and tornadoes worldwide.</p>
+        <p class="hero-subtitle" data-depth="technical">{_esc(hero_text)}</p>
+        <p class="muted">Updated {_esc(updated_at)}</p>
       </div>
     </section>
 
@@ -3125,7 +3190,7 @@ def render_homepage_cards(
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" data-depth="technical">
       <div class="container">
         <div class="grid">
           <div class="card col-8">
@@ -3145,7 +3210,20 @@ def render_homepage_cards(
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" data-depth="simple">
+      <div class="container">
+        <div class="card" style="padding:24px;">
+          <h2 style="margin-top:0;margin-bottom:12px;">What should I do?</h2>
+          <p style="font-size:16px;line-height:1.7;">
+            <strong>Tornadoes:</strong> Monitor <a href="https://weather.gov">weather.gov</a> for warnings. If a tornado warning is issued for your area, seek shelter immediately in an interior room on the lowest floor.<br>
+            <strong>Earthquakes:</strong> Follow <a href="https://earthquake.usgs.gov">USGS</a> guidance. Drop, cover, and hold on during shaking.<br>
+            <strong>Hurricanes:</strong> Follow <a href="https://nhc.noaa.gov">NHC</a> advisories. Evacuate if ordered by local authorities.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-depth="technical">
       <div class="container">
         <h2>Verified accuracy snapshot</h2>
         <div class="grid">
@@ -3154,6 +3232,7 @@ def render_homepage_cards(
         <p class="muted" style="margin-top:16px;">See <a href="/verification/">verification</a> and <a href="/evidence/">evidence</a> for the underlying artifacts.</p>
       </div>
     </section>
+    </div><!-- end depth-content -->
   </main>
   <footer class="footer" role="contentinfo">
     <div class="container">
