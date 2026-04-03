@@ -2976,45 +2976,39 @@ def render_homepage_cards(
 
     def hazard_card(key: str, title: str, unit: str, link: str, extra_html: str, simple_desc: str) -> str:
         hazard = hazard_map.get(key, {})
-        confidence = _confidence_text(
-            hazard.get("probability"),
-            hazard.get("conf_lo"),
-            hazard.get("conf_hi"),
-        )
         delta = float(hazard.get("delta", 0) or 0)
         band = hazard.get("risk_band", "--")
         band_class = risk_classes.get(band, "warn")
         risk_text = simple_risk_text.get(band, "Monitoring")
+        prob = hazard.get("probability", 0)
 
-        # SIMPLE version: risk level + plain description, no numbers
-        simple_card = (
-            f'<a href="{link}" class="card card-link col-4 hazard-{key}" data-depth="simple">'
+        # Confidence: only show if values exist
+        conf_lo = hazard.get("conf_lo")
+        conf_hi = hazard.get("conf_hi")
+        if conf_lo is not None and conf_hi is not None:
+            confidence_html = f'<div class="kv"><span>Confidence</span><strong>{_pct(conf_lo)} - {_pct(conf_hi)}</strong></div>'
+        else:
+            confidence_html = ''
+
+        return (
+            f'<a href="{link}" class="card card-link col-4 hazard-{key}">'
             f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">'
             f'<h2 style="margin:0;">{title}</h2>'
             f'<span class="chip {band_class}" style="margin-left:auto;">{_esc(risk_text)}</span>'
-            '</div>'
-            f'<p style="margin:8px 0;font-size:15px;line-height:1.5;">{simple_desc}</p>'
-            '<span class="card-cta">View details &rarr;</span>'
-            '</a>'
-        )
-
-        # TECHNICAL version: full metrics
-        tech_card = (
-            f'<a href="{link}" class="card card-link col-4 hazard-{key}" data-depth="technical">'
-            f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">'
-            f'<h2 style="margin:0;">{title}</h2>'
-            f'<span class="chip {band_class}" style="margin-left:auto;">{_esc(str(band))}</span>'
-            "</div>"
-            f'<div class="metric">{_pct(hazard.get("probability", 0))}</div>'
+            f'</div>'
+            # Simple: just the description
+            f'<p data-depth="simple" style="margin:8px 0;font-size:15px;line-height:1.5;">{simple_desc}</p>'
+            # Technical: full metrics
+            f'<div data-depth="technical">'
+            f'<div class="metric">{_pct(prob)}</div>'
             f'<div class="metric-label">{unit}</div>'
-            f'<div class="kv"><span>Confidence</span><strong>{_esc(confidence)}</strong></div>'
+            f'{confidence_html}'
             f'<div class="kv"><span>Trend</span><strong>{_esc(_trend_text(delta))}</strong></div>'
-            f"{extra_html}"
-            '<span class="card-cta">View detail &rarr;</span>'
-            "</a>"
+            f'{extra_html}'
+            f'</div>'
+            f'<span class="card-cta">View details &rarr;</span>'
+            f'</a>'
         )
-
-        return simple_card + "\n" + tech_card
 
     eq_extra = (
         f'<div class="kv"><span>Forecast ID</span><strong>{_esc(hazard_map.get("eq", {}).get("forecast_id", "--"))}</strong></div>'
@@ -3195,7 +3189,7 @@ def render_homepage_cards(
         <div class="grid">
           <div class="card col-8">
             <h2 style="margin-top:0;">What changed</h2>
-            <div class="kv"><span>Earthquake</span><strong>{_pct(hazard_map.get("eq", {}).get("probability", 0))} in the current 30-day artifact. Confidence: {_esc(_confidence_text(hazard_map.get("eq", {}).get("probability"), hazard_map.get("eq", {}).get("conf_lo"), hazard_map.get("eq", {}).get("conf_hi")))}</strong></div>
+            <div class="kv"><span>Earthquake</span><strong>{_pct(hazard_map.get("eq", {}).get("probability", 0))} in the current 30-day artifact.{(" Confidence: " + _pct(hazard_map.get("eq", {}).get("conf_lo")) + " - " + _pct(hazard_map.get("eq", {}).get("conf_hi"))) if hazard_map.get("eq", {}).get("conf_lo") is not None and hazard_map.get("eq", {}).get("conf_hi") is not None else ""}</strong></div>
             <div class="kv"><span>Hurricane</span><strong>{hurricanes.get("n_active_storms", 0)} active storms in the current feed.</strong></div>
             <div class="kv"><span>Tornado</span><strong>{tornadoes.get("n_active_storms", 0)} active storm objects scored with {_esc(TIER_LABELS.get(scoring_tier, scoring_tier))}.</strong></div>
           </div>
