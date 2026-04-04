@@ -152,6 +152,18 @@ assert.equal(
   }),
   true
 );
+assert.equal(
+  workerTest.hasReliableGeo({
+    latitude: 35.4676,
+    longitude: -97.5164,
+    city: null,
+    country: null,
+    region: null,
+    timezone: null,
+    continent: null,
+  }),
+  true
+);
 
 assert.equal(
   workerTest.readThemePreference(

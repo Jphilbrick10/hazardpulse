@@ -831,6 +831,13 @@ li { margin-bottom: 6px; }
   margin: 0;
 }
 
+.depth-content > section[data-depth="simple"],
+.depth-content > section[data-depth="technical"],
+.depth-content > div[data-depth="simple"],
+.depth-content > div[data-depth="technical"] {
+  display: none;
+}
+
 /* Inline data-depth spans (e.g. inside <summary> elements) */
 .depth-content span[data-depth="simple"],
 .depth-content span[data-depth="technical"] {
@@ -845,6 +852,13 @@ li { margin-bottom: 6px; }
   margin-bottom: var(--s-md);
 }
 
+.depth-content:has(#depth-simple:checked) > section[data-depth="simple"],
+.depth-content:not(:has(input[type="radio"]:checked)) > section[data-depth="simple"],
+.depth-content:has(#depth-simple:checked) > div[data-depth="simple"],
+.depth-content:not(:has(input[type="radio"]:checked)) > div[data-depth="simple"] {
+  display: block;
+}
+
 .depth-content:has(#depth-simple:checked) span[data-depth="simple"],
 .depth-content:not(:has(input[type="radio"]:checked)) span[data-depth="simple"] {
   display: inline !important;
@@ -855,6 +869,11 @@ li { margin-bottom: 6px; }
   max-height: 8000px;
   opacity: 1;
   margin-bottom: var(--s-md);
+}
+
+.depth-content:has(#depth-technical:checked) > section[data-depth="technical"],
+.depth-content:has(#depth-technical:checked) > div[data-depth="technical"] {
+  display: block;
 }
 
 .depth-content:has(#depth-technical:checked) span[data-depth="technical"] {

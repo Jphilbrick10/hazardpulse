@@ -259,6 +259,28 @@ def test_public_pages_ship_theme_bootstrap_assets() -> None:
         assert '<link rel="stylesheet" href="/assets/styles.css?v=9">' in text, rel_path
 
 
+def test_map_surfaces_include_user_marker_svg_node() -> None:
+    for rel_path in [
+        "dist/assets/world-map-base.svg",
+        "dist/index.html",
+        "dist/live/earthquake/index.html",
+        "dist/live/tornado/index.html",
+    ]:
+        text = _read_text(rel_path)
+        assert 'class="user-marker"' in text, rel_path
+        assert 'class="user-pin"' in text, rel_path
+        assert 'class="user-ring"' in text, rel_path
+
+
+def test_depth_toggle_hides_root_sections_without_leaving_ghost_layout() -> None:
+    stylesheet = _read_text("dist/assets/styles.css")
+    assert '.depth-content > section[data-depth="simple"]' in stylesheet
+    assert '.depth-content > section[data-depth="technical"]' in stylesheet
+    assert '.depth-content > div[data-depth="simple"]' in stylesheet
+    assert '.depth-content > div[data-depth="technical"]' in stylesheet
+    assert "display: none;" in stylesheet
+
+
 def test_stylesheet_dark_mode_uses_theme_attribute() -> None:
     stylesheet = _read_text("dist/assets/styles.css")
     assert 'body[data-theme="dark"]' in stylesheet

@@ -47,9 +47,7 @@ function hasReliableGeo(geo) {
   if (Math.abs(geo.latitude) < 0.25 && Math.abs(geo.longitude) < 0.25) {
     return false;
   }
-  return Boolean(
-    geo.city || geo.country || geo.region || geo.timezone || geo.continent
-  );
+  return true;
 }
 
 function normalizeGeo(cf = {}) {
@@ -515,7 +513,11 @@ class YourAreaHandler {
         return;
       }
 
-      const city = escapeHtml(geo.city) || escapeHtml(geo.region) || "your area";
+      const coordLabel =
+        geo.latitude !== null && geo.longitude !== null
+          ? `${geo.latitude.toFixed(2)}, ${geo.longitude.toFixed(2)}`
+          : "your area";
+      const city = escapeHtml(geo.city) || escapeHtml(geo.region) || coordLabel;
       const country = escapeHtml(geo.country) || "";
       const locationStr = country ? `${city}, ${country}` : city;
 
