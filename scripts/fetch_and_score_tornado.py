@@ -3145,9 +3145,15 @@ def render_homepage_cards(
             parts.append(f"AUC {item['auc']:.3f}")
         if isinstance(item.get("brier"), (float, int)):
             parts.append(f"Brier {item['brier']:.3f}")
-        detail = " | ".join(parts) if parts else "Metric unavailable"
+        if not parts:
+            if item.get("homepage_line"):
+                parts.append(str(item["homepage_line"]))
+            elif item.get("verification_status_label"):
+                parts.append(str(item["verification_status_label"]))
+        detail = " | ".join(parts) if parts else "Verification pending"
+        caption = item.get("metric_source_label") or item.get("verification_status_label") or "Verification source unavailable"
         verification_cards.append(
-            f'<div class="card col-4"><h3>{_esc(name)}</h3><div class="metric">{_esc(detail)}</div></div>'
+            f'<div class="card col-4"><h3>{_esc(name)}</h3><div class="metric">{_esc(detail)}</div><div class="metric-label">{_esc(caption)}</div></div>'
         )
     verification_html = "\n".join(verification_cards) or (
         '<div class="card"><p class="muted" style="margin:0;">Verification metrics are unavailable in this build.</p></div>'

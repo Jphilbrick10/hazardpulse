@@ -202,6 +202,42 @@ def test_live_forecast_ids_reference_existing_replay_artifacts() -> None:
         assert replay_path.exists(), replay_path
 
 
+def test_verification_summary_tracks_storage_and_scoring_status() -> None:
+    payload = json.loads(_read_text("dist/data/verification-summary.json"))
+    assert payload["generated_at"]
+    assert payload["score_as_of"]
+    assert "system" in payload
+    hazards = {item["key"]: item for item in payload["hazards"]}
+    for key in ["eq", "hu", "to"]:
+        item = hazards[key]
+        assert item["verification_status"]
+        assert item["verification_status_label"]
+        assert item["forecast_storage"]["n_replay_artifacts"] >= 0
+        assert "n_matured_forecasts" in item["forecast_storage"]
+        assert "n_scored_forecasts" in item["forecast_storage"]
+        assert "recommended_action" in item
+
+
+def test_verification_rollups_are_written_to_results_storage() -> None:
+    for rel_path in [
+        "results/verification/system/summary.json",
+        "results/verification/earthquake/live_rollup.json",
+        "results/verification/hurricane/live_rollup.json",
+        "results/verification/tornado/live_rollup.json",
+    ]:
+        path = ROOT / rel_path
+        assert path.exists(), rel_path
+        assert path.read_text(encoding="utf-8").strip(), rel_path
+
+
+def test_verification_page_uses_explicit_scoring_status_language() -> None:
+    text = _read_text("dist/verification/index.html")
+    assert "Every metric is computed from resolved outcomes - not cherry-picked examples." not in text
+    assert "If a live model is not" in text
+    assert "scored yet, this page says so directly." in text
+    assert "scoring backlogs" in text
+
+
 def test_evidence_artifacts_use_real_records() -> None:
     evidence_files = [
         "dist/data/evidence/prediction-ledger.json",

@@ -1,10 +1,10 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Verification - HazardPulse</title>
-  <meta name="description" content="Rolling verification metrics for HazardPulse forecasts: Brier scores, calibration, reliability, and hazard-specific breakdowns.">
+  <meta name="description" content="Forecast storage, scoring readiness, and benchmark status for live HazardPulse models. This page distinguishes exact live scoring, pending maturity, and scorer backlogs.">
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="https://hazardpulse.com/verification/">
   <script src="/assets/site-shell.js?v=2"></script>
@@ -14,38 +14,35 @@
   <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Verification - HazardPulse">
-  <meta property="og:description" content="Rolling verification metrics for all HazardPulse forecasts.">
+  <meta property="og:description" content="Forecast storage, scoring readiness, and benchmark status for live HazardPulse models.">
   <meta property="og:url" content="https://hazardpulse.com/verification/">
   <meta property="og:site_name" content="HazardPulse">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Verification - HazardPulse">
-  <meta name="twitter:description" content="Rolling verification metrics for all HazardPulse forecasts.">
-
+  <meta name="twitter:description" content="Forecast storage, scoring readiness, and benchmark status for live HazardPulse models.">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    "name": "HazardPulse Verification Scores",
-    "description": "Rolling verification metrics for probabilistic hazard forecasts: Brier scores, calibration, reliability, AUC, and hit/miss tallies.",
+    "name": "HazardPulse Verification Status",
+    "description": "Storage, scoring readiness, benchmark provenance, and live verification status for HazardPulse forecast models.",
     "url": "https://hazardpulse.com/verification/",
     "creator": { "@type": "Organization", "name": "HazardPulse", "url": "https://hazardpulse.com/" }
   }
   </script>
-
   <script type="speculationrules">
-  { "prefetch": [{ "source": "list", "urls": ["/evidence/", "/methods/"] }] }
+  { "prefetch": [{ "source": "list", "urls": ["/", "/live/", "/evidence/", "/api/"] }] }
   </script>
 </head>
 <body>
   <div class="live-bar"></div>
   <div class="emergency-banner" role="alert" aria-live="assertive"></div>
   <a class="skip-link" href="#main">Skip to content</a>
-
   <header class="topbar" role="banner">
     <div class="container topbar-inner">
       <a href="/" class="brand" aria-label="HazardPulse home">
         <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
-        HazardPulse 
+        HazardPulse
       </a>
       <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
       <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
@@ -74,317 +71,68 @@
       </div>
     </div>
   </header>
-
   <main id="main" class="container">
     <section class="hero">
       <div class="eyebrow">Verification</div>
-      <h1>Are our forecasts accurate?</h1>
+      <h1>Verification now reflects what we can actually prove.</h1>
       <p class="subtitle">
-        We publish rolling verification scores so you can judge our track record.
-        Every metric is computed from resolved outcomes - not cherry-picked examples.
+        HazardPulse freezes every live forecast into replay artifacts, tracks raw append-only ledgers, and now
+        separates exact model benchmarks, pending maturity windows, and scoring backlogs. If a live model is not
+        scored yet, this page says so directly.
       </p>
+      <p class="muted">Built 2026-04-04T20:59:03Z &middot; Score as of 2026-04-04T20:26:34Z</p>
     </section>
-
-    <div class="depth-content">
-      <div class="depth-toggle" role="radiogroup" aria-label="Content depth">
-        <input type="radio" name="depth" id="depth-simple" value="simple" checked>
-        <label for="depth-simple">Simple</label>
-        <input type="radio" name="depth" id="depth-technical" value="technical">
-        <label for="depth-technical">Technical</label>
-      </div>
-
-    <div data-depth="simple">
-      <section class="section">
-        <h2>How accurate are we?</h2>
-        <div class="grid">
-          <div class="card col-4 hazard-eq">
-            <h3>Earthquake</h3>
-            <p style="font-size:15px;line-height:1.5;margin:0 0 8px;">Our earthquake model correctly distinguishes higher-risk from lower-risk periods about <strong>80% of the time</strong>. Global AUC 0.907 (includes spatial discrimination) | Same-location temporal AUC 0.799. When we say there is a 20% chance, events happen about 17-23% of the time.</p>
-            <p class="muted" style="font-size:13px;margin:0;">Model: hp-etas-v3.2.1 | 363 forecasts evaluated</p>
-          </div>
-          <div class="card col-4 hazard-hu">
-            <h3>Hurricane</h3>
-            <p style="font-size:15px;line-height:1.5;margin:0 0 8px;">Our hurricane rapid intensification model is our strongest, correctly ranking risk about <strong>94% of the time</strong> (AUC 0.938). Calibration is within 3.4% across all probability bins.</p>
-            <p class="muted" style="font-size:13px;margin:0;">Model: hp-hurricane-ri-v8.1 | 303 forecasts evaluated</p>
-          </div>
-          <div class="card col-4 hazard-to">
-            <h3>Tornado</h3>
-            <p style="font-size:15px;line-height:1.5;margin:0 0 8px;">Day-ahead tornado formation is hard to predict (AUC 0.644). Our newer storm-object model scores individual storms with <strong>89% discrimination</strong> (AUC 0.894) and is accumulating live verification data.</p>
-            <p class="muted" style="font-size:13px;margin:0;">Models: hp-tornado-meso-v1.4.2, hp-tornado-coherence-v1</p>
-          </div>
-        </div>
-      </section>
-      <section class="section">
-        <h2>False alarms</h2>
-        <div class="card">
-          <p style="font-size:15px;line-height:1.6;margin:0 0 8px;">We track every time we predicted a high risk that did not materialize:</p>
-          <ul style="font-size:15px;line-height:1.8;margin:0;">
-            <li><strong>Earthquake:</strong> 46.7% false alarm rate (improving)</li>
-            <li><strong>Hurricane:</strong> 31.6% false alarm rate (improving)</li>
-            <li><strong>Tornado:</strong> 43.9% false alarm rate (worsening - we are working on this)</li>
-          </ul>
-        </div>
-      </section>
-    </div>
-
-    <!-- Global summary (Technical) -->
-    <section class="section" aria-labelledby="summary-heading" data-depth="technical">
-      <h2 id="summary-heading">System-wide summary (rolling 90 days)</h2>
+    <section class="section">
       <div class="grid">
-        <div class="card col-3">
-          <div class="metric mono">0.143</div>
-          <div class="metric-label">Mean Brier score</div>
-          <p class="muted" style="font-size:12px;margin-top:4px;">Lower is better. 0 = perfect, 0.25 = no skill.</p>
-        </div>
-        <div class="card col-3">
-          <div class="metric mono">0.794</div>
-          <div class="metric-label">Mean AUC</div>
-          <p class="muted" style="font-size:12px;margin-top:4px;">Area under ROC curve. 1.0 = perfect discrimination.</p>
-        </div>
-        <div class="card col-3">
-          <div class="metric mono">+0.17</div>
-          <div class="metric-label">Mean Brier skill score</div>
-          <p class="muted" style="font-size:12px;margin-top:4px;">Improvement over climatological baseline.</p>
-        </div>
-        <div class="card col-3">
-          <div class="metric mono">2.8%</div>
-          <div class="metric-label">Mean calibration error</div>
-          <p class="muted" style="font-size:12px;margin-top:4px;">Average abs difference between predicted and observed rates.</p>
-        </div>
+        <div class="card col-3"><div class="metric mono">24</div><div class="metric-label">Frozen forecasts</div><p class="muted" style="font-size:12px;margin-top:8px;">Replay artifacts preserved across all live hazards.</p></div><div class="card col-3"><div class="metric mono">2</div><div class="metric-label">Scoring backlog</div><p class="muted" style="font-size:12px;margin-top:8px;">Matured windows waiting for an evaluator or scoring run.</p></div><div class="card col-3"><div class="metric mono">0</div><div class="metric-label">Hash mismatches</div><p class="muted" style="font-size:12px;margin-top:8px;">Prev-hash continuity failures in raw append-only ledgers.</p></div><div class="card col-3"><div class="metric mono">1</div><div class="metric-label">Exact benchmarks</div><p class="muted" style="font-size:12px;margin-top:8px;">Live model versions with an attached exact benchmark.</p></div>
       </div>
     </section>
-
-    <!-- Per-hazard breakdowns (Technical) -->
-    <section class="section" aria-labelledby="eq-heading" data-depth="technical">
-      <h2 id="eq-heading">Earthquake verification</h2>
+    <section class="section">
+      <h2>Control alerts</h2>
+      <div class="card">
+        <ul><li>2 matured forecast windows are waiting for scoring.</li><li>Earthquake: no exact benchmark is attached to the current live model version.</li><li>Tornado: no exact benchmark is attached to the current live model version.</li></ul>
+      </div>
+    </section>
+    <section class="section">
+      <h2>Hazard by hazard</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">These cards tell you whether each live model has exact scores, only related research benchmarks, or just frozen forecasts waiting for scoring.</p>
       <div class="grid">
-        <div class="card col-6">
-          <h3>Scores</h3>
-          <div class="kv"><span>Brier score</span><strong class="mono">0.142</strong></div>
-          <div class="kv"><span>Brier skill score</span><strong class="mono">+0.18</strong></div>
-          <div class="kv"><span>Global AUC</span><strong class="mono">0.907</strong></div>
-          <div class="kv"><span>Temporal AUC (same-location)</span><strong class="mono">0.799</strong></div>
-          <div class="kv"><span>Log score</span><strong class="mono">-0.384</strong></div>
-          <div class="kv"><span>Sharpness</span><strong class="mono">0.072</strong></div>
-          <div class="kv"><span>Forecasts resolved</span><strong class="mono">363</strong></div>
-        </div>
-        <div class="card col-6">
-          <h3>Calibration (reliability)</h3>
-          <table>
-            <thead><tr><th>Predicted</th><th>Observed</th><th>N</th><th>Error</th></tr></thead>
-            <tbody>
-              <tr><td>0-10%</td><td>7.2%</td><td>142</td><td>+2.2%</td></tr>
-              <tr><td>10-20%</td><td>16.8%</td><td>89</td><td>+1.8%</td></tr>
-              <tr><td>20-30%</td><td>23.1%</td><td>64</td><td>-1.9%</td></tr>
-              <tr><td>30-40%</td><td>36.4%</td><td>38</td><td>+1.4%</td></tr>
-              <tr><td>40-50%</td><td>42.9%</td><td>21</td><td>-2.1%</td></tr>
-              <tr><td>50+%</td><td>55.6%</td><td>9</td><td>+0.6%</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="grid" style="margin-top:16px;">
-        <div class="card col-6">
-          <h3>Hit / miss tally</h3>
-          <table>
-            <thead><tr><th>Outcome</th><th>Count</th><th>Rate</th></tr></thead>
-            <tbody>
-              <tr><td>True positive (event predicted &ge;50%, occurred)</td><td>5</td><td>55.6%</td></tr>
-              <tr><td>True negative (predicted &lt;20%, did not occur)</td><td>131</td><td>92.3%</td></tr>
-              <tr><td>False alarm (predicted &ge;40%, did not occur)</td><td>14</td><td>46.7%</td></tr>
-              <tr><td>Miss (predicted &lt;20%, occurred)</td><td>11</td><td>7.7%</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card col-6">
-          <h3>Sharpness distribution</h3>
-          <p class="muted">How spread out are our forecasts? Sharper forecasts commit to higher or lower probabilities rather than staying near the base rate.</p>
-          <table>
-            <thead><tr><th>Range</th><th>% of forecasts</th></tr></thead>
-            <tbody>
-              <tr><td>0-10%</td><td>39.1%</td></tr>
-              <tr><td>10-25%</td><td>35.0%</td></tr>
-              <tr><td>25-40%</td><td>16.5%</td></tr>
-              <tr><td>40-60%</td><td>7.0%</td></tr>
-              <tr><td>60+%</td><td>2.4%</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div class="card col-4 hazard-eq"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><h2 style="margin:0;">Earthquake</h2><span class="chip warn" style="margin-left:auto;">Waiting</span></div><p style="margin:0 0 12px;line-height:1.6;">Prospective earthquake logging is live; the 30-day windows have not matured yet.</p><div class="kv"><span>Live model</span><strong>eq_coherence_v1_0</strong></div><div class="kv"><span>Latest forecast</span><strong>eq_fcst_20260404_1900</strong></div><div class="kv"><span>Storage</span><strong>8 replays &middot; horizon 30 days</strong></div><div class="kv"><span>Maturity</span><strong>0 matured &middot; 0 scored</strong></div><div class="kv"><span>Related benchmark</span><strong>same-location AUC 0.797 | global AUC 0.907</strong></div><div class="kv"><span>Raw ledger</span><strong>19 rows &middot; 0 mismatches</strong></div><p class="muted" style="margin:12px 0 0;">Keep freezing every earthquake forecast. Once the first 30-day windows mature, run the prospective scorer and use those scores to tune thresholds and calibration.</p></div><div class="card col-4 hazard-hu"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><h2 style="margin:0;">Hurricane</h2><span class="chip bad" style="margin-left:auto;">Backlog</span></div><p style="margin:0 0 12px;line-height:1.6;">Matured hurricane forecasts exist, but no live advisory-to-outcome scorer is wired yet.</p><div class="kv"><span>Live model</span><strong>hurricane_ri_v8_1</strong></div><div class="kv"><span>Latest forecast</span><strong>hu_fcst_20260402_1722</strong></div><div class="kv"><span>Storage</span><strong>2 replays &middot; horizon 24 hours</strong></div><div class="kv"><span>Maturity</span><strong>1 matured &middot; 0 scored</strong></div><div class="kv"><span>Primary metric</span><strong>AUC 0.938 &middot; Brier 0.034</strong></div><div class="kv"><span>Exact benchmark</span><strong>AUC 0.938 &middot; Brier 0.034</strong></div><div class="kv"><span>Raw ledger</span><strong>Not implemented for this hazard yet</strong></div><p class="muted" style="margin:12px 0 0;">Implement an advisory-to-outcome scorer that joins frozen hurricane forecasts to realized 24-hour intensity change before using the model for calibration or promotion decisions.</p></div><div class="card col-4 hazard-to"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><h2 style="margin:0;">Tornado</h2><span class="chip bad" style="margin-left:auto;">Backlog</span></div><p style="margin:0 0 12px;line-height:1.6;">Matured tornado storm-object forecasts exist, but no live outcome scorer is wired yet.</p><div class="kv"><span>Live model</span><strong>tornado_storm_v1_0</strong></div><div class="kv"><span>Latest forecast</span><strong>to_fcst_20260404_2026</strong></div><div class="kv"><span>Storage</span><strong>14 replays &middot; horizon 24 hours</strong></div><div class="kv"><span>Maturity</span><strong>1 matured &middot; 0 scored</strong></div><div class="kv"><span>Related benchmark</span><strong>AUC 0.894</strong></div><div class="kv"><span>Raw ledger</span><strong>80 rows &middot; 0 mismatches</strong></div><p class="muted" style="margin:12px 0 0;">Bind each frozen tornado storm-object forecast to a matched outcome definition and write a 24-hour scorer before using the live model for calibration or threshold changes.</p></div>
       </div>
     </section>
-
-    <section class="section" aria-labelledby="hu-heading" data-depth="technical">
-      <h2 id="hu-heading">Hurricane RI verification</h2>
-      <div class="grid">
-        <div class="card col-6">
-          <h3>Scores</h3>
-          <div class="kv"><span>Brier score</span><strong class="mono">0.168</strong></div>
-          <div class="kv"><span>Brier skill score</span><strong class="mono">+0.22</strong></div>
-          <div class="kv"><span>AUC</span><strong class="mono">0.938</strong></div>
-          <div class="kv"><span>Log score</span><strong class="mono">-0.421</strong></div>
-          <div class="kv"><span>Sharpness</span><strong class="mono">0.089</strong></div>
-          <div class="kv"><span>Forecasts resolved</span><strong class="mono">303</strong></div>
-        </div>
-        <div class="card col-6">
-          <h3>Calibration (reliability)</h3>
-          <table>
-            <thead><tr><th>Predicted</th><th>Observed</th><th>N</th><th>Error</th></tr></thead>
-            <tbody>
-              <tr><td>0-10%</td><td>5.1%</td><td>98</td><td>+0.1%</td></tr>
-              <tr><td>10-20%</td><td>18.4%</td><td>72</td><td>+3.4%</td></tr>
-              <tr><td>20-30%</td><td>27.3%</td><td>55</td><td>+2.3%</td></tr>
-              <tr><td>30-40%</td><td>33.8%</td><td>40</td><td>-1.2%</td></tr>
-              <tr><td>40-50%</td><td>46.2%</td><td>26</td><td>+1.2%</td></tr>
-              <tr><td>50+%</td><td>58.3%</td><td>12</td><td>+3.3%</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="grid" style="margin-top:16px;">
-        <div class="card col-6">
-          <h3>Hit / miss tally</h3>
-          <table>
-            <thead><tr><th>Outcome</th><th>Count</th><th>Rate</th></tr></thead>
-            <tbody>
-              <tr><td>True positive</td><td>7</td><td>58.3%</td></tr>
-              <tr><td>True negative</td><td>90</td><td>91.8%</td></tr>
-              <tr><td>False alarm</td><td>12</td><td>31.6%</td></tr>
-              <tr><td>Miss</td><td>5</td><td>8.2%</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card col-6">
-          <h3>Sharpness distribution</h3>
-          <table>
-            <thead><tr><th>Range</th><th>% of forecasts</th></tr></thead>
-            <tbody>
-              <tr><td>0-10%</td><td>32.3%</td></tr>
-              <tr><td>10-25%</td><td>28.7%</td></tr>
-              <tr><td>25-40%</td><td>19.1%</td></tr>
-              <tr><td>40-60%</td><td>13.2%</td></tr>
-              <tr><td>60+%</td><td>6.7%</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="to-heading" data-depth="technical">
-      <h2 id="to-heading">Tornado verification</h2>
-      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
-        Two models are evaluated: the day-ahead formation model (hp-tornado-meso-v1.4.2, AUC 0.644)
-        and the storm-object coherence model (hp-tornado-coherence-v1, AUC 0.894 on 2024 strict temporal holdout).
-      </p>
-      <div class="grid">
-        <div class="card col-6">
-          <h3>Scores (day-ahead formation: hp-tornado-meso-v1.4.2)</h3>
-          <div class="kv"><span>Brier score</span><strong class="mono">0.231</strong></div>
-          <div class="kv"><span>Brier skill score</span><strong class="mono">+0.12</strong></div>
-          <div class="kv"><span>AUC</span><strong class="mono">0.644</strong></div>
-          <div class="kv"><span>Log score</span><strong class="mono">-0.342</strong></div>
-          <div class="kv"><span>Sharpness</span><strong class="mono">0.054</strong></div>
-          <div class="kv"><span>Forecasts resolved</span><strong class="mono">453</strong></div>
-        </div>
-        <div class="card col-6">
-          <h3>Calibration (reliability)</h3>
-          <table>
-            <thead><tr><th>Predicted</th><th>Observed</th><th>N</th><th>Error</th></tr></thead>
-            <tbody>
-              <tr><td>0-10%</td><td>8.4%</td><td>210</td><td>+3.4%</td></tr>
-              <tr><td>10-20%</td><td>14.1%</td><td>128</td><td>-0.9%</td></tr>
-              <tr><td>20-30%</td><td>22.8%</td><td>74</td><td>-2.2%</td></tr>
-              <tr><td>30-40%</td><td>31.2%</td><td>32</td><td>-3.8%</td></tr>
-              <tr><td>40+%</td><td>44.4%</td><td>9</td><td>+4.4%</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="grid" style="margin-top:16px;">
-        <div class="card col-6">
-          <h3>Hit / miss tally</h3>
-          <table>
-            <thead><tr><th>Outcome</th><th>Count</th><th>Rate</th></tr></thead>
-            <tbody>
-              <tr><td>True positive</td><td>4</td><td>44.4%</td></tr>
-              <tr><td>True negative</td><td>196</td><td>93.3%</td></tr>
-              <tr><td>False alarm</td><td>18</td><td>43.9%</td></tr>
-              <tr><td>Miss</td><td>14</td><td>6.7%</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card col-6">
-          <h3>Sharpness distribution</h3>
-          <table>
-            <thead><tr><th>Range</th><th>% of forecasts</th></tr></thead>
-            <tbody>
-              <tr><td>0-10%</td><td>46.4%</td></tr>
-              <tr><td>10-25%</td><td>33.6%</td></tr>
-              <tr><td>25-40%</td><td>13.2%</td></tr>
-              <tr><td>40-60%</td><td>4.9%</td></tr>
-              <tr><td>60+%</td><td>1.9%</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="grid" style="margin-top:16px;">
-        <div class="card col-12">
-          <h3>Storm-object coherence model (hp-tornado-coherence-v1)</h3>
-          <p class="muted" style="margin-bottom:8px;">Scores ProbSevere storm objects using Coherence Field Theory diagnostics. Accumulating verification data.</p>
-          <div class="kv"><span>AUC</span><strong><span class="mono">0.894</span> (2024 strict temporal holdout)</strong></div>
-          <div class="kv"><span>Features</span><strong class="mono">41</strong></div>
-          <div class="kv"><span>Status</span><strong>Accumulating</strong></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="false-alarm-heading" data-depth="technical">
-      <h2 id="false-alarm-heading">False alarm debt</h2>
-      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
-        We track every false alarm - not to hide them, but to learn from them.
-        High false alarm rates erode trust. We report ours publicly.
-      </p>
+    <section class="section">
+      <h2>Benchmark provenance</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Exact benchmarks are safe to cite for the current live model version. Related benchmarks are useful for research context, but not as proof of live performance.</p>
       <div class="card">
         <table>
-          <thead><tr><th>Hazard</th><th>False alarms (90d)</th><th>False alarm rate</th><th>Trend</th></tr></thead>
+          <thead><tr><th>Hazard</th><th>Type</th><th>Model</th><th>Metrics</th><th>Source updated</th></tr></thead>
           <tbody>
-            <tr><td>Earthquake</td><td>14</td><td>46.7%</td><td style="color:var(--good)">Improving (-3.2% from prior quarter)</td></tr>
-            <tr><td>Hurricane RI</td><td>12</td><td>31.6%</td><td style="color:var(--good)">Improving (-1.8%)</td></tr>
-            <tr><td>Tornado</td><td>18</td><td>43.9%</td><td style="color:var(--bad)">Worsening (+2.1%)</td></tr>
+            <tr><td>Earthquake</td><td>Related Research Benchmark</td><td>earthquake_honest_regional_suite</td><td>same-location AUC 0.797 | global AUC 0.907</td><td>--</td></tr><tr><td>Hurricane</td><td>Exact Model Benchmark</td><td>hurricane_ri_v8_1</td><td>AUC 0.938 | Brier 0.034</td><td>2026-03-13T03:00:00Z</td></tr><tr><td>Tornado</td><td>Related Research Benchmark</td><td>hazardpulse_tornado_definitive_v1</td><td>AUC 0.894</td><td>2026-03-31T04:07:24Z</td></tr>
           </tbody>
         </table>
-        <p class="muted" style="margin-top:12px;font-size:13px;">
-          False alarm rate = false alarms / (false alarms + true positives) at the 40%+ decision threshold.
-          We aim to reduce this over time through better calibration and model promotion discipline.
-        </p>
       </div>
     </section>
-
-    <section class="section" aria-labelledby="method-heading" data-depth="technical">
-      <h2 id="method-heading">How we verify</h2>
+    <section class="section">
+      <h2>Storage and audit surfaces</h2>
       <div class="grid">
         <div class="card col-6">
-          <h3>Resolution process</h3>
-          <p class="muted">
-            Every forecast has a defined valid window. After that window closes, we check
-            whether the predicted event occurred using authoritative sources (USGS catalog,
-            NHC best track, SPC storm reports). The outcome is recorded immutably in the
-            verification ledger.
-          </p>
+          <div class="kv"><span>Verification summary</span><strong><a href="/data/verification-summary.json">/data/verification-summary.json</a></strong></div>
+          <div class="kv"><span>Replay index</span><strong><a href="/data/evidence/replay-index.json">/data/evidence/replay-index.json</a></strong></div>
+          <div class="kv"><span>Prediction ledger</span><strong><a href="/data/evidence/prediction-ledger.json">/data/evidence/prediction-ledger.json</a></strong></div>
+          <div class="kv"><span>Earthquake raw chain</span><strong><a href="/data/earthquake-ledger.jsonl">/data/earthquake-ledger.jsonl</a></strong></div>
+          <div class="kv"><span>Tornado raw chain</span><strong><a href="/data/tornado-ledger.jsonl">/data/tornado-ledger.jsonl</a></strong></div>
         </div>
         <div class="card col-6">
-          <h3>Scoring</h3>
-          <p class="muted">
-            We use Brier score (mean squared probability error), log score (information-theoretic),
-            and calibration tables (reliability). AUC measures discrimination ability. Sharpness
-            measures how decisive our forecasts are. All metrics are computed over rolling windows
-            and broken down by hazard type.
+          <p style="margin:0 0 12px;line-height:1.6;">
+            This surface is intentionally stricter than marketing copy. A billion-dollar company needs a page that tells operators
+            what is frozen, what is scored, what is only a research benchmark, and what still needs engineering work before it
+            can influence model adjustment or promotion.
           </p>
+          <p class="muted" style="margin:0;">Use the evidence ledger for artifact-level traceability and this page for scoring readiness and benchmark discipline.</p>
         </div>
       </div>
     </section>
-    </div>
   </main>
-
   <footer class="footer" role="contentinfo">
     <div class="container footer-inner">
       <div class="footer-col">
@@ -402,21 +150,16 @@
         <a href="/feed.xml">RSS feed</a>
       </div>
       <div class="footer-col">
-        <h4>Legal</h4>
+        <h4>About</h4>
+        <a href="mailto:josh@coherenceenergylabs.com">Contact</a>
         <a href="/legal/disclaimer/">Disclaimer</a>
-        <a href="https://earthquake.usgs.gov/" rel="noopener">USGS</a>
-        <a href="https://www.nhc.noaa.gov/" rel="noopener">NHC</a>
-        <a href="https://www.spc.noaa.gov/" rel="noopener">SPC</a>
+        <a href="/COMMERCIAL_LICENSE.md">Commercial License</a>
       </div>
       <p class="footer-disclaimer">
         Independent hazard intelligence platform. Always follow official guidance from the USGS, NHC, NWS, SPC, JMA, and IMD.
-        Probabilistic outputs represent model estimates with stated uncertainty.
       </p>
-      <p class="footer-build">Static-first HTML &middot; Evidence-linked data &middot; Edge geolocation by Cloudflare</p>
+      <p class="footer-build">Static-first HTML &middot; Evidence-linked data &middot; Verification state generated from live artifacts</p>
     </div>
   </footer>
 </body>
 </html>
-
-
-

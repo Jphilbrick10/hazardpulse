@@ -18,13 +18,21 @@ LIVE_STORMS_PATH = DIST / "data" / "live-storms.json"
 EQ_LEDGER_PATH = DIST / "data" / "earthquake-ledger.jsonl"
 TO_LEDGER_PATH = DIST / "data" / "tornado-ledger.jsonl"
 REPLAY_DIR = DIST / "data" / "replay"
+VERIFICATION_SUMMARY_PATH = DIST / "data" / "verification-summary.json"
+VERIFICATION_DATA_DIR = DIST / "data" / "verification"
 REPLAY_INDEX_PATH = DIST / "data" / "evidence" / "replay-index.json"
 PREDICTION_LEDGER_PATH = DIST / "data" / "evidence" / "prediction-ledger.json"
 PROVENANCE_PATH = DIST / "data" / "evidence" / "provenance-envelopes.json"
 GATE_DECISIONS_PATH = DIST / "data" / "evidence" / "gate-decisions.json"
 EVIDENCE_PAGE_PATH = DIST / "evidence" / "index.html"
+VERIFICATION_PAGE_PATH = DIST / "verification" / "index.html"
 SITEMAP_PATH = DIST / "sitemap.xml"
 FEED_PATH = DIST / "feed.xml"
+RESULTS_VERIFICATION_DIR = ROOT / "results" / "verification"
+EQ_PROSPECTIVE_DIR = ROOT / "results" / "earthquake_prospective"
+EQ_HONEST_RESULTS_PATH = ROOT / "results" / "earthquake_honest" / "v4_regional_honest_results.json"
+EQ_SAME_LOCATION_PATH = ROOT / "results" / "earthquake_honest" / "same_location_auc.json"
+TO_RETRO_RESULTS_PATH = ROOT / "results" / "definitive" / "definitive_results.json"
 
 ROUTES = [
     ("/", "daily", "1.0"),
@@ -48,6 +56,18 @@ HAZARD_LABELS = {
     "hurricane": "Hurricane",
     "to": "Tornado",
     "tornado": "Tornado",
+}
+
+HURRICANE_RETRO_FALLBACK = {
+    "availability": "exact_model_benchmark",
+    "label": "Retrospective benchmark available for the current live model version.",
+    "model_version": "hurricane_ri_v8_1",
+    "source_updated_at": "2026-03-13T03:00:00Z",
+    "auc": 0.938,
+    "brier": 0.034,
+    "brier_skill_score": 0.290,
+    "reliability_slope": 0.976,
+    "n_cases": 9714,
 }
 
 
@@ -148,6 +168,13 @@ def _esc(value: object) -> str:
 def _pct(value: object) -> str:
     try:
         return f"{float(value) * 100:.1f}%"
+    except (TypeError, ValueError):
+        return "--"
+
+
+def _fmt_float(value: object, digits: int = 3) -> str:
+    try:
+        return f"{float(value):.{digits}f}"
     except (TypeError, ValueError):
         return "--"
 
@@ -460,6 +487,740 @@ def _count_link_mismatches(path: Path) -> tuple[int, int]:
             mismatches += 1
         previous_hash = str(row.get("hash", previous_hash))
     return len(rows), mismatches
+
+
+def _artifact_hazard_key(artifact: dict) -> str | None:
+    return {
+        "earthquake": "eq",
+        "hurricane": "hu",
+        "tornado": "to",
+        "eq": "eq",
+        "hu": "hu",
+        "to": "to",
+    }.get(str(artifact.get("hazard", "")).strip())
+
+
+def _artifact_mature_at(artifact: dict) -> dt.datetime | None:
+    issued_at = _parse_utc(artifact.get("issued_at"))
+    if issued_at is None:
+        return None
+    if artifact.get("forecast_horizon_days") is not None:
+        return issued_at + dt.timedelta(days=int(artifact.get("forecast_horizon_days", 0) or 0))
+    if artifact.get("forecast_horizon_hours") is not None:
+        return issued_at + dt.timedelta(hours=int(artifact.get("forecast_horizon_hours", 0) or 0))
+    return None
+
+
+def _format_horizon(artifact: dict) -> str:
+    if artifact.get("forecast_horizon_days") is not None:
+        return f"{int(artifact.get('forecast_horizon_days', 0) or 0)} days"
+    if artifact.get("forecast_horizon_hours") is not None:
+        return f"{int(artifact.get('forecast_horizon_hours', 0) or 0)} hours"
+    return "Unknown"
+
+
+def _load_replay_artifacts_by_hazard() -> dict[str, list[dict]]:
+    grouped: dict[str, list[dict]] = {"eq": [], "hu": [], "to": []}
+    if not REPLAY_DIR.exists():
+        return grouped
+    for path in sorted(REPLAY_DIR.glob("*.json")):
+        artifact = _read_json(path, {})
+        if not artifact:
+            continue
+        hazard_key = _artifact_hazard_key(artifact)
+        if hazard_key is None:
+            continue
+        artifact["_path"] = _asset_ref(path)
+        mature_at = _artifact_mature_at(artifact)
+        artifact["_mature_at"] = _format_utc_z(mature_at) if mature_at is not None else None
+        grouped[hazard_key].append(artifact)
+    for key in grouped:
+        grouped[key].sort(key=lambda item: item.get("issued_at", ""))
+    return grouped
+
+
+def _legacy_verification_item(legacy_summary: dict, hazard_key: str, model_version: str | None) -> dict | None:
+    for item in legacy_summary.get("hazards", []):
+        item_key = str(item.get("key") or item.get("hazard") or "")
+        normalized = {
+            "earthquake": "eq",
+            "hurricane": "hu",
+            "tornado": "to",
+            "eq": "eq",
+            "hu": "hu",
+            "to": "to",
+        }.get(item_key)
+        if normalized != hazard_key:
+            continue
+        if model_version and item.get("model_version") and item.get("model_version") != model_version:
+            continue
+        exact = item.get("exact_model_benchmark")
+        if isinstance(exact, dict):
+            merged = dict(exact)
+            merged.setdefault("model_version", item.get("model_version"))
+            merged.setdefault("auc", item.get("auc"))
+            merged.setdefault("brier", item.get("brier"))
+            merged.setdefault("brier_skill_score", item.get("brier_skill_score"))
+            return merged
+        return item
+    return None
+
+
+def _earthquake_related_benchmark() -> dict | None:
+    honest = _read_json(EQ_HONEST_RESULTS_PATH, {})
+    same_location = _read_json(EQ_SAME_LOCATION_PATH, {})
+    global_metrics = honest.get("global_combined", {}).get("global_baseline", {})
+    same_location_auc = (
+        same_location.get("same_location_weighted_auc")
+        or same_location.get("same_location_macro_auc")
+    )
+    if not global_metrics and not same_location_auc:
+        return None
+    return {
+        "availability": "related_research_benchmark",
+        "label": "Related research benchmark exists, but it is not yet bound to the current live model version.",
+        "model_version": "earthquake_honest_regional_suite",
+        "source_updated_at": honest.get("timestamp"),
+        "global_auc": global_metrics.get("auc"),
+        "global_brier": global_metrics.get("brier"),
+        "same_location_auc": same_location_auc,
+        "source_files": [
+            "results/earthquake_honest/v4_regional_honest_results.json",
+            "results/earthquake_honest/same_location_auc.json",
+        ],
+    }
+
+
+def _tornado_related_benchmark() -> dict | None:
+    payload = _read_json(TO_RETRO_RESULTS_PATH, {})
+    full = payload.get("full", {})
+    if not full:
+        return None
+    return {
+        "availability": "related_research_benchmark",
+        "label": "A historical 2024 holdout benchmark exists for a related tornado GBT family, but not yet as an exact score for the live storm-object model.",
+        "model_version": payload.get("model"),
+        "source_updated_at": payload.get("timestamp"),
+        "auc": full.get("auc"),
+        "brier": full.get("brier"),
+        "brier_skill_score": full.get("bss"),
+        "source_files": [
+            "results/definitive/definitive_results.json",
+        ],
+    }
+
+
+def _status_chip_class(status: str) -> str:
+    if status in {"prospective_scored"}:
+        return "good"
+    if status in {"matured_unscored", "matured_unscored_no_evaluator"}:
+        return "bad"
+    return "warn"
+
+
+def _build_verification_summary(pulse: dict) -> dict:
+    score_as_of = _parse_utc(pulse.get("updated_at")) or dt.datetime.now(dt.timezone.utc)
+    legacy_summary = _read_json(VERIFICATION_SUMMARY_PATH, {"hazards": []})
+    replay_groups = _load_replay_artifacts_by_hazard()
+    eq_rows, eq_mismatches = _count_link_mismatches(EQ_LEDGER_PATH)
+    to_rows, to_mismatches = _count_link_mismatches(TO_LEDGER_PATH)
+    live_map = {hazard.get("key"): hazard for hazard in pulse.get("hazards", [])}
+    eq_related = _earthquake_related_benchmark()
+    to_related = _tornado_related_benchmark()
+    eq_prospective_summary = _read_json(EQ_PROSPECTIVE_DIR / "prospective_summary.json", {})
+
+    def next_mature_at(artifacts: list[dict]) -> str | None:
+        future = []
+        for artifact in artifacts:
+            mature_at = _artifact_mature_at(artifact)
+            if mature_at is not None and mature_at > score_as_of:
+                future.append(mature_at)
+        return _format_utc_z(min(future)) if future else None
+
+    hazards: list[dict] = []
+
+    eq_hazard = live_map.get("eq", {})
+    eq_artifacts = replay_groups["eq"]
+    eq_matured = [
+        artifact
+        for artifact in eq_artifacts
+        if _artifact_mature_at(artifact) is not None and _artifact_mature_at(artifact) <= score_as_of
+    ]
+    eq_scored = int(eq_prospective_summary.get("n_matured_forecasts", 0) or 0)
+    eq_backlog = max(0, len(eq_matured) - eq_scored)
+    if eq_scored > 0:
+        eq_status = "prospective_scored"
+        eq_status_label = "Prospective live scoring is active for matured earthquake windows."
+    elif eq_backlog > 0:
+        eq_status = "matured_unscored"
+        eq_status_label = "Matured earthquake windows exist, but they have not been scored yet."
+    elif eq_artifacts:
+        eq_status = "logging_waiting_maturity"
+        eq_status_label = "Prospective earthquake logging is live; the 30-day windows have not matured yet."
+    else:
+        eq_status = "no_live_artifacts"
+        eq_status_label = "No live earthquake replay artifacts are present."
+
+    eq_latest = eq_artifacts[-1] if eq_artifacts else {}
+    hazards.append(
+        {
+            "key": "eq",
+            "hazard": "earthquake",
+            "model_version": eq_hazard.get("model_version"),
+            "verification_status": eq_status,
+            "status_badge": {
+                "prospective_scored": "Scored",
+                "matured_unscored": "Backlog",
+                "logging_waiting_maturity": "Waiting",
+                "no_live_artifacts": "Missing",
+            }.get(eq_status, "Status"),
+            "verification_status_label": eq_status_label,
+            "metric_source": "prospective_live" if eq_scored > 0 else "no_exact_model_benchmark",
+            "metric_source_label": (
+                "Computed from matured live forecasts."
+                if eq_scored > 0
+                else "The current live earthquake model does not yet have an exact benchmark in this repo."
+            ),
+            "auc": eq_prospective_summary.get("mean_auc") if eq_scored > 0 else None,
+            "brier": eq_prospective_summary.get("mean_brier") if eq_scored > 0 else None,
+            "homepage_line": (
+                f"{eq_scored} matured windows scored"
+                if eq_scored > 0
+                else f"{len(eq_artifacts)} frozen forecasts · {eq_backlog} matured backlog"
+            ),
+            "forecast_storage": {
+                "n_replay_artifacts": len(eq_artifacts),
+                "n_matured_forecasts": len(eq_matured),
+                "n_scored_forecasts": eq_scored,
+                "n_backlog": eq_backlog,
+                "first_issued_at": eq_artifacts[0].get("issued_at") if eq_artifacts else None,
+                "last_issued_at": eq_latest.get("issued_at"),
+                "last_forecast_id": eq_latest.get("forecast_id"),
+                "latest_replay_artifact": eq_latest.get("_path"),
+                "forecast_horizon": _format_horizon(eq_latest) if eq_latest else "30 days",
+                "next_mature_at": next_mature_at(eq_artifacts),
+            },
+            "ledger": {
+                "supported": True,
+                "path": "/data/earthquake-ledger.jsonl",
+                "n_rows": eq_rows,
+                "prev_hash_mismatches": eq_mismatches,
+            },
+            "prospective": {
+                "summary_path": "results/earthquake_prospective/prospective_summary.json",
+                "status": eq_prospective_summary.get("status", "not_run"),
+                "scored_as_of": eq_prospective_summary.get("scored_as_of"),
+                "message": eq_prospective_summary.get("message"),
+                "top_5_hit_rate": eq_prospective_summary.get("top_5_hit_rate"),
+            },
+            "exact_model_benchmark": None,
+            "related_benchmark": eq_related,
+            "recommended_action": (
+                "Keep freezing every earthquake forecast. Once the first 30-day windows mature, run the prospective scorer and use those scores to tune thresholds and calibration."
+            ),
+        }
+    )
+
+    hu_hazard = live_map.get("hu", {})
+    hu_artifacts = replay_groups["hu"]
+    hu_matured = [
+        artifact
+        for artifact in hu_artifacts
+        if _artifact_mature_at(artifact) is not None and _artifact_mature_at(artifact) <= score_as_of
+    ]
+    hu_backlog = len(hu_matured)
+    hu_exact = _legacy_verification_item(
+        legacy_summary,
+        "hu",
+        str(hu_hazard.get("model_version") or ""),
+    )
+    if str(hu_hazard.get("model_version") or "") == HURRICANE_RETRO_FALLBACK["model_version"]:
+        merged_exact = dict(HURRICANE_RETRO_FALLBACK)
+        if isinstance(hu_exact, dict):
+            merged_exact.update({key: value for key, value in hu_exact.items() if value is not None})
+        hu_exact = merged_exact
+    if hu_backlog > 0:
+        hu_status = "matured_unscored_no_evaluator"
+        hu_status_label = "Matured hurricane forecasts exist, but no live advisory-to-outcome scorer is wired yet."
+    elif hu_artifacts:
+        hu_status = "logging_live_no_evaluator"
+        hu_status_label = "Hurricane forecasts are being frozen, but live outcome scoring is not wired yet."
+    else:
+        hu_status = "no_live_artifacts"
+        hu_status_label = "No live hurricane replay artifacts are present."
+
+    hu_latest = hu_artifacts[-1] if hu_artifacts else {}
+    hazards.append(
+        {
+            "key": "hu",
+            "hazard": "hurricane",
+            "model_version": hu_hazard.get("model_version"),
+            "verification_status": hu_status,
+            "status_badge": {
+                "matured_unscored_no_evaluator": "Backlog",
+                "logging_live_no_evaluator": "Logging",
+                "no_live_artifacts": "Missing",
+            }.get(hu_status, "Status"),
+            "verification_status_label": hu_status_label,
+            "metric_source": "retrospective_holdout_exact_model" if hu_exact else "unverified_live_model",
+            "metric_source_label": (
+                "Exact-model retrospective benchmark is available."
+                if hu_exact
+                else "No exact-model benchmark is available in this repo."
+            ),
+            "auc": hu_exact.get("auc") if hu_exact else None,
+            "brier": hu_exact.get("brier") if hu_exact else None,
+            "brier_skill_score": hu_exact.get("brier_skill_score") if hu_exact else None,
+            "homepage_line": (
+                f"AUC {_fmt_float(hu_exact.get('auc'))} retrospective holdout"
+                if hu_exact and hu_exact.get("auc") is not None
+                else f"{len(hu_artifacts)} frozen forecasts · scorer pending"
+            ),
+            "forecast_storage": {
+                "n_replay_artifacts": len(hu_artifacts),
+                "n_matured_forecasts": len(hu_matured),
+                "n_scored_forecasts": 0,
+                "n_backlog": hu_backlog,
+                "first_issued_at": hu_artifacts[0].get("issued_at") if hu_artifacts else None,
+                "last_issued_at": hu_latest.get("issued_at"),
+                "last_forecast_id": hu_latest.get("forecast_id"),
+                "latest_replay_artifact": hu_latest.get("_path"),
+                "forecast_horizon": _format_horizon(hu_latest) if hu_latest else "24 hours",
+                "next_mature_at": next_mature_at(hu_artifacts),
+            },
+            "ledger": {
+                "supported": False,
+                "path": None,
+                "n_rows": 0,
+                "prev_hash_mismatches": 0,
+            },
+            "prospective": {
+                "summary_path": None,
+                "status": "evaluator_missing",
+                "scored_as_of": None,
+                "message": "Live hurricane forecasts are stored, but the repo does not yet score them against realized 24-hour intensity change.",
+            },
+            "exact_model_benchmark": (
+                {
+                    "availability": "exact_model_benchmark",
+                    "label": "Retrospective benchmark available for the current live model version.",
+                    "model_version": hu_exact.get("model_version"),
+                    "source_updated_at": hu_exact.get("source_updated_at"),
+                    "auc": hu_exact.get("auc"),
+                    "brier": hu_exact.get("brier"),
+                    "brier_skill_score": hu_exact.get("brier_skill_score"),
+                    "reliability_slope": hu_exact.get("reliability_slope"),
+                    "n_cases": hu_exact.get("n_cases"),
+                }
+                if hu_exact
+                else None
+            ),
+            "related_benchmark": None,
+            "recommended_action": (
+                "Implement an advisory-to-outcome scorer that joins frozen hurricane forecasts to realized 24-hour intensity change before using the model for calibration or promotion decisions."
+            ),
+        }
+    )
+
+    to_hazard = live_map.get("to", {})
+    to_artifacts = replay_groups["to"]
+    to_matured = [
+        artifact
+        for artifact in to_artifacts
+        if _artifact_mature_at(artifact) is not None and _artifact_mature_at(artifact) <= score_as_of
+    ]
+    to_backlog = len(to_matured)
+    if to_backlog > 0:
+        to_status = "matured_unscored_no_evaluator"
+        to_status_label = "Matured tornado storm-object forecasts exist, but no live outcome scorer is wired yet."
+    elif to_artifacts:
+        to_status = "logging_live_no_evaluator"
+        to_status_label = "Tornado storm-object forecasts are being frozen, but live outcome scoring is not wired yet."
+    else:
+        to_status = "no_live_artifacts"
+        to_status_label = "No live tornado replay artifacts are present."
+
+    to_latest = to_artifacts[-1] if to_artifacts else {}
+    hazards.append(
+        {
+            "key": "to",
+            "hazard": "tornado",
+            "model_version": to_hazard.get("model_version"),
+            "verification_status": to_status,
+            "status_badge": {
+                "matured_unscored_no_evaluator": "Backlog",
+                "logging_live_no_evaluator": "Logging",
+                "no_live_artifacts": "Missing",
+            }.get(to_status, "Status"),
+            "verification_status_label": to_status_label,
+            "metric_source": "no_exact_model_benchmark",
+            "metric_source_label": "No exact benchmark is currently bound to the live tornado storm-object model version in this repo.",
+            "auc": None,
+            "brier": None,
+            "homepage_line": f"{len(to_artifacts)} frozen forecasts · {to_backlog} matured backlog",
+            "forecast_storage": {
+                "n_replay_artifacts": len(to_artifacts),
+                "n_matured_forecasts": len(to_matured),
+                "n_scored_forecasts": 0,
+                "n_backlog": to_backlog,
+                "first_issued_at": to_artifacts[0].get("issued_at") if to_artifacts else None,
+                "last_issued_at": to_latest.get("issued_at"),
+                "last_forecast_id": to_latest.get("forecast_id"),
+                "latest_replay_artifact": to_latest.get("_path"),
+                "forecast_horizon": _format_horizon(to_latest) if to_latest else "24 hours",
+                "next_mature_at": next_mature_at(to_artifacts),
+            },
+            "ledger": {
+                "supported": True,
+                "path": "/data/tornado-ledger.jsonl",
+                "n_rows": to_rows,
+                "prev_hash_mismatches": to_mismatches,
+            },
+            "prospective": {
+                "summary_path": None,
+                "status": "evaluator_missing",
+                "scored_as_of": None,
+                "message": "Live tornado storm-object forecasts are stored, but the repo does not yet score them against matched outcomes.",
+            },
+            "exact_model_benchmark": None,
+            "related_benchmark": to_related,
+            "recommended_action": (
+                "Bind each frozen tornado storm-object forecast to a matched outcome definition and write a 24-hour scorer before using the live model for calibration or threshold changes."
+            ),
+        }
+    )
+
+    total_replays = sum(item["forecast_storage"]["n_replay_artifacts"] for item in hazards)
+    total_matured = sum(item["forecast_storage"]["n_matured_forecasts"] for item in hazards)
+    total_scored = sum(item["forecast_storage"]["n_scored_forecasts"] for item in hazards)
+    total_backlog = sum(item["forecast_storage"]["n_backlog"] for item in hazards)
+    total_chain_mismatches = eq_mismatches + to_mismatches
+    alerts: list[str] = []
+    if total_backlog:
+        alerts.append(f"{total_backlog} matured forecast windows are waiting for scoring.")
+    if total_chain_mismatches:
+        alerts.append(f"{total_chain_mismatches} hash-chain mismatches were detected in raw ledgers.")
+    for item in hazards:
+        if item.get("exact_model_benchmark") is None and item.get("auc") is None:
+            alerts.append(
+                f"{_hazard_label(item['key'])}: no exact benchmark is attached to the current live model version."
+            )
+
+    summary = {
+        "generated_at": _format_utc_z(dt.datetime.now(dt.timezone.utc)),
+        "score_as_of": _format_utc_z(score_as_of),
+        "system": {
+            "frozen_forecasts": total_replays,
+            "matured_forecasts": total_matured,
+            "scored_forecasts": total_scored,
+            "matured_unscored_backlog": total_backlog,
+            "raw_chain_rows": eq_rows + to_rows,
+            "hash_chain_mismatches": total_chain_mismatches,
+            "exact_model_benchmarks": sum(1 for item in hazards if item.get("exact_model_benchmark")),
+            "alerts": alerts,
+        },
+        "hazards": hazards,
+    }
+
+    _write_json(VERIFICATION_SUMMARY_PATH, summary)
+    _write_json(VERIFICATION_DATA_DIR / "ops-summary.json", summary)
+    _write_json(RESULTS_VERIFICATION_DIR / "system" / "summary.json", summary)
+    for item in hazards:
+        _write_json(VERIFICATION_DATA_DIR / f"{item['key']}.json", item)
+        _write_json(RESULTS_VERIFICATION_DIR / _hazard_label(item["key"]).lower() / "live_rollup.json", item)
+    return summary
+
+
+def _render_verification_page(summary: dict) -> None:
+    system = summary.get("system", {})
+    hazards = list(summary.get("hazards", []))
+
+    system_cards = [
+        (
+            str(system.get("frozen_forecasts", 0)),
+            "Frozen forecasts",
+            "Replay artifacts preserved across all live hazards.",
+        ),
+        (
+            str(system.get("matured_unscored_backlog", 0)),
+            "Scoring backlog",
+            "Matured windows waiting for an evaluator or scoring run.",
+        ),
+        (
+            str(system.get("hash_chain_mismatches", 0)),
+            "Hash mismatches",
+            "Prev-hash continuity failures in raw append-only ledgers.",
+        ),
+        (
+            str(system.get("exact_model_benchmarks", 0)),
+            "Exact benchmarks",
+            "Live model versions with an attached exact benchmark.",
+        ),
+    ]
+
+    system_cards_html = "".join(
+        '<div class="card col-3">'
+        f'<div class="metric mono">{_esc(value)}</div>'
+        f'<div class="metric-label">{_esc(label)}</div>'
+        f'<p class="muted" style="font-size:12px;margin-top:8px;">{_esc(note)}</p>'
+        "</div>"
+        for value, label, note in system_cards
+    )
+
+    alert_items = system.get("alerts", [])
+    alert_html = (
+        "<ul>"
+        + "".join(f"<li>{_esc(item)}</li>" for item in alert_items)
+        + "</ul>"
+        if alert_items
+        else '<p class="muted" style="margin:0;">No current verification-control alerts.</p>'
+    )
+
+    hazard_cards: list[str] = []
+    benchmark_rows: list[str] = []
+    for item in hazards:
+        storage = item.get("forecast_storage", {})
+        ledger = item.get("ledger", {})
+        exact_benchmark = item.get("exact_model_benchmark")
+        related_benchmark = item.get("related_benchmark")
+        metric_html = ""
+        if item.get("auc") is not None or item.get("brier") is not None:
+            metric_html = (
+                f'<div class="kv"><span>Primary metric</span><strong>AUC {_fmt_float(item.get("auc"))} &middot; '
+                f'Brier {_fmt_float(item.get("brier"))}</strong></div>'
+            )
+        if exact_benchmark:
+            benchmark_html = (
+                f'<div class="kv"><span>Exact benchmark</span><strong>AUC {_fmt_float(exact_benchmark.get("auc"))} &middot; '
+                f'Brier {_fmt_float(exact_benchmark.get("brier"))}</strong></div>'
+            )
+        elif related_benchmark:
+            related_bits = []
+            if related_benchmark.get("same_location_auc") is not None:
+                related_bits.append(f"same-location AUC {_fmt_float(related_benchmark.get('same_location_auc'))}")
+            if related_benchmark.get("global_auc") is not None:
+                related_bits.append(f"global AUC {_fmt_float(related_benchmark.get('global_auc'))}")
+            if related_benchmark.get("auc") is not None:
+                related_bits.append(f"AUC {_fmt_float(related_benchmark.get('auc'))}")
+            benchmark_html = (
+                f'<div class="kv"><span>Related benchmark</span><strong>{_esc(" | ".join(related_bits) or "Available")}</strong></div>'
+            )
+        else:
+            benchmark_html = (
+                '<div class="kv"><span>Benchmark</span><strong>No benchmark artifact attached to this live model yet</strong></div>'
+            )
+        ledger_html = (
+            f'<div class="kv"><span>Raw ledger</span><strong>{int(ledger.get("n_rows", 0) or 0)} rows &middot; '
+            f'{int(ledger.get("prev_hash_mismatches", 0) or 0)} mismatches</strong></div>'
+            if ledger.get("supported")
+            else '<div class="kv"><span>Raw ledger</span><strong>Not implemented for this hazard yet</strong></div>'
+        )
+        hazard_cards.append(
+            f'<div class="card col-4 hazard-{_esc(item["key"])}">'
+            f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><h2 style="margin:0;">{_esc(_hazard_label(item["key"]))}</h2>'
+            f'<span class="chip {_status_chip_class(str(item.get("verification_status", "")))}" style="margin-left:auto;">{_esc(item.get("status_badge", "Status"))}</span></div>'
+            f'<p style="margin:0 0 12px;line-height:1.6;">{_esc(item.get("verification_status_label"))}</p>'
+            f'<div class="kv"><span>Live model</span><strong>{_esc(item.get("model_version") or "--")}</strong></div>'
+            f'<div class="kv"><span>Latest forecast</span><strong>{_esc(storage.get("last_forecast_id") or "--")}</strong></div>'
+            f'<div class="kv"><span>Storage</span><strong>{int(storage.get("n_replay_artifacts", 0) or 0)} replays &middot; horizon {_esc(storage.get("forecast_horizon") or "--")}</strong></div>'
+            f'<div class="kv"><span>Maturity</span><strong>{int(storage.get("n_matured_forecasts", 0) or 0)} matured &middot; {int(storage.get("n_scored_forecasts", 0) or 0)} scored</strong></div>'
+            f'{metric_html}'
+            f'{benchmark_html}'
+            f'{ledger_html}'
+            f'<p class="muted" style="margin:12px 0 0;">{_esc(item.get("recommended_action"))}</p>'
+            "</div>"
+        )
+
+        source = exact_benchmark or related_benchmark or {}
+        metric_bits = []
+        if exact_benchmark and exact_benchmark.get("auc") is not None:
+            metric_bits.append(f"AUC {_fmt_float(exact_benchmark.get('auc'))}")
+        if exact_benchmark and exact_benchmark.get("brier") is not None:
+            metric_bits.append(f"Brier {_fmt_float(exact_benchmark.get('brier'))}")
+        if related_benchmark and related_benchmark.get("same_location_auc") is not None:
+            metric_bits.append(f"same-location AUC {_fmt_float(related_benchmark.get('same_location_auc'))}")
+        if related_benchmark and related_benchmark.get("global_auc") is not None:
+            metric_bits.append(f"global AUC {_fmt_float(related_benchmark.get('global_auc'))}")
+        if related_benchmark and related_benchmark.get("auc") is not None:
+            metric_bits.append(f"AUC {_fmt_float(related_benchmark.get('auc'))}")
+        benchmark_rows.append(
+            "<tr>"
+            f"<td>{_esc(_hazard_label(item['key']))}</td>"
+            f"<td>{_esc(source.get('availability', 'unavailable').replace('_', ' ').title())}</td>"
+            f"<td>{_esc(source.get('model_version') or item.get('model_version') or '--')}</td>"
+            f"<td>{_esc(' | '.join(metric_bits) or 'None attached')}</td>"
+            f"<td>{_esc(source.get('source_updated_at') or '--')}</td>"
+            "</tr>"
+        )
+
+    page = f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verification - HazardPulse</title>
+  <meta name="description" content="Forecast storage, scoring readiness, and benchmark status for live HazardPulse models. This page distinguishes exact live scoring, pending maturity, and scorer backlogs.">
+  <meta name="theme-color" content="#f6f9ff">
+  <link rel="canonical" href="{PRIMARY_DOMAIN}/verification/">
+  <script src="/assets/site-shell.js?v=2"></script>
+  <link rel="stylesheet" href="/assets/styles.css?v=9">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Verification - HazardPulse">
+  <meta property="og:description" content="Forecast storage, scoring readiness, and benchmark status for live HazardPulse models.">
+  <meta property="og:url" content="{PRIMARY_DOMAIN}/verification/">
+  <meta property="og:site_name" content="HazardPulse">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Verification - HazardPulse">
+  <meta name="twitter:description" content="Forecast storage, scoring readiness, and benchmark status for live HazardPulse models.">
+  <script type="application/ld+json">
+  {{
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "HazardPulse Verification Status",
+    "description": "Storage, scoring readiness, benchmark provenance, and live verification status for HazardPulse forecast models.",
+    "url": "{PRIMARY_DOMAIN}/verification/",
+    "creator": {{ "@type": "Organization", "name": "HazardPulse", "url": "{PRIMARY_DOMAIN}/" }}
+  }}
+  </script>
+  <script type="speculationrules">
+  {{ "prefetch": [{{ "source": "list", "urls": ["/", "/live/", "/evidence/", "/api/"] }}] }}
+  </script>
+</head>
+<body>
+  <div class="live-bar"></div>
+  <div class="emergency-banner" role="alert" aria-live="assertive"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="topbar" role="banner">
+    <div class="container topbar-inner">
+      <a href="/" class="brand" aria-label="HazardPulse home">
+        <img src="/assets/hp-logo.png" alt="" class="brand-logo" width="30" height="30">
+        HazardPulse
+      </a>
+      <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
+      <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+      </label>
+      <nav class="nav" aria-label="Primary navigation">
+        <div class="nav-dropdown">
+          <a href="/live/">Live</a>
+          <div class="nav-dropdown-menu">
+            <a href="/live/earthquake/"><span class="hazard-dot eq"></span> Earthquake</a>
+            <a href="/live/hurricane/"><span class="hazard-dot hu"></span> Hurricane</a>
+            <a href="/live/tornado/"><span class="hazard-dot to"></span> Tornado</a>
+          </div>
+        </div>
+        <a href="/verification/" aria-current="page">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+        <a href="/registry/">Registry</a>
+        <a href="/api/">API</a>
+      </nav>
+      <div class="theme-switch">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
+        <label for="theme-toggle">Dark</label>
+      </div>
+    </div>
+  </header>
+  <main id="main" class="container">
+    <section class="hero">
+      <div class="eyebrow">Verification</div>
+      <h1>Verification now reflects what we can actually prove.</h1>
+      <p class="subtitle">
+        HazardPulse freezes every live forecast into replay artifacts, tracks raw append-only ledgers, and now
+        separates exact model benchmarks, pending maturity windows, and scoring backlogs. If a live model is not
+        scored yet, this page says so directly.
+      </p>
+      <p class="muted">Built {_esc(summary.get("generated_at"))} &middot; Score as of {_esc(summary.get("score_as_of"))}</p>
+    </section>
+    <section class="section">
+      <div class="grid">
+        {system_cards_html}
+      </div>
+    </section>
+    <section class="section">
+      <h2>Control alerts</h2>
+      <div class="card">
+        {alert_html}
+      </div>
+    </section>
+    <section class="section">
+      <h2>Hazard by hazard</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">These cards tell you whether each live model has exact scores, only related research benchmarks, or just frozen forecasts waiting for scoring.</p>
+      <div class="grid">
+        {''.join(hazard_cards)}
+      </div>
+    </section>
+    <section class="section">
+      <h2>Benchmark provenance</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Exact benchmarks are safe to cite for the current live model version. Related benchmarks are useful for research context, but not as proof of live performance.</p>
+      <div class="card">
+        <table>
+          <thead><tr><th>Hazard</th><th>Type</th><th>Model</th><th>Metrics</th><th>Source updated</th></tr></thead>
+          <tbody>
+            {''.join(benchmark_rows)}
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="section">
+      <h2>Storage and audit surfaces</h2>
+      <div class="grid">
+        <div class="card col-6">
+          <div class="kv"><span>Verification summary</span><strong><a href="/data/verification-summary.json">/data/verification-summary.json</a></strong></div>
+          <div class="kv"><span>Replay index</span><strong><a href="/data/evidence/replay-index.json">/data/evidence/replay-index.json</a></strong></div>
+          <div class="kv"><span>Prediction ledger</span><strong><a href="/data/evidence/prediction-ledger.json">/data/evidence/prediction-ledger.json</a></strong></div>
+          <div class="kv"><span>Earthquake raw chain</span><strong><a href="/data/earthquake-ledger.jsonl">/data/earthquake-ledger.jsonl</a></strong></div>
+          <div class="kv"><span>Tornado raw chain</span><strong><a href="/data/tornado-ledger.jsonl">/data/tornado-ledger.jsonl</a></strong></div>
+        </div>
+        <div class="card col-6">
+          <p style="margin:0 0 12px;line-height:1.6;">
+            This surface is intentionally stricter than marketing copy. A billion-dollar company needs a page that tells operators
+            what is frozen, what is scored, what is only a research benchmark, and what still needs engineering work before it
+            can influence model adjustment or promotion.
+          </p>
+          <p class="muted" style="margin:0;">Use the evidence ledger for artifact-level traceability and this page for scoring readiness and benchmark discipline.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="/live/">Live forecasts</a>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+      </div>
+      <div class="footer-col">
+        <h4>Data</h4>
+        <a href="/registry/">Model registry</a>
+        <a href="/api/">API contracts</a>
+        <a href="/ops/status/">System status</a>
+        <a href="/feed.xml">RSS feed</a>
+      </div>
+      <div class="footer-col">
+        <h4>About</h4>
+        <a href="mailto:{CONTACT_EMAIL}">Contact</a>
+        <a href="/legal/disclaimer/">Disclaimer</a>
+        <a href="/COMMERCIAL_LICENSE.md">Commercial License</a>
+      </div>
+      <p class="footer-disclaimer">
+        Independent hazard intelligence platform. Always follow official guidance from the USGS, NHC, NWS, SPC, JMA, and IMD.
+      </p>
+      <p class="footer-build">Static-first HTML &middot; Evidence-linked data &middot; Verification state generated from live artifacts</p>
+    </div>
+  </footer>
+</body>
+</html>
+"""
+    VERIFICATION_PAGE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    VERIFICATION_PAGE_PATH.write_text(page, encoding="utf-8")
 
 
 def _render_evidence_page(
@@ -960,6 +1721,7 @@ def build_site_artifacts() -> dict:
     entries = _collect_prediction_entries(pulse, replay_index)
     envelopes = _build_provenance_envelopes(entries)
     gate_decisions = _build_gate_decisions(entries, pulse)
+    verification_summary = _build_verification_summary(pulse)
 
     _write_json(
         PREDICTION_LEDGER_PATH,
@@ -986,11 +1748,13 @@ def build_site_artifacts() -> dict:
     )
     _render_live_hurricane_page()
     _render_evidence_page(pulse, entries, envelopes, gate_decisions, replay_index)
+    _render_verification_page(verification_summary)
     _write_sitemap_and_feed(pulse)
     _normalize_html_accessibility_labels()
 
     return {
         "pulse": pulse,
+        "verification_summary": verification_summary,
         "entries": entries,
         "envelopes": envelopes,
         "gate_decisions": gate_decisions,
