@@ -150,6 +150,17 @@ def test_key_public_pages_have_no_encoding_garbage() -> None:
             assert fragment not in text, (rel_path, fragment)
 
 
+def test_stylesheet_uses_encoding_safe_generated_labels() -> None:
+    text = _read_text("dist/assets/styles.css")
+    for fragment in [
+        'content: " \\25BE";',
+        'content: "\\26A0\\00A0ALERT";',
+        'content: "\\26A0\\00A0NEARBY HAZARD";',
+        'content: "\\26A0\\00A0ADVISORY";',
+    ]:
+        assert fragment in text, fragment
+
+
 def test_worker_is_in_deploy_path() -> None:
     worker_path = ROOT / "src" / "worker.js"
     assert worker_path.exists(), "src/worker.js must exist for production deploys"

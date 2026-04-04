@@ -894,7 +894,7 @@ li { margin-bottom: 6px; }
 }
 
 .nav-dropdown > a::after {
-  content: " â–¾";
+  content: " \25BE";
   font-size: 10px;
   opacity: .5;
 }
@@ -1729,7 +1729,7 @@ body[data-alert="critical"] .topbar {
 }
 
 body[data-alert="critical"] .brand::after {
-  content: "âš  ALERT";
+  content: "\26A0\00A0ALERT";
   margin-left: var(--s-sm);
   font-size: var(--text-xs);
   font-weight: 800;
@@ -1777,7 +1777,7 @@ body[data-alert="severe"] .topbar {
 }
 
 body[data-alert="severe"] .brand::after {
-  content: "âš  NEARBY HAZARD";
+  content: "\26A0\00A0NEARBY HAZARD";
   margin-left: var(--s-sm);
   font-size: var(--text-xs);
   font-weight: 700;
@@ -1788,7 +1788,7 @@ body[data-alert="severe"] .brand::after {
 }
 
 body[data-alert="warning"] .brand::after {
-  content: "âš  ADVISORY";
+  content: "\26A0\00A0ADVISORY";
   margin-left: var(--s-sm);
   font-size: var(--text-xs);
   font-weight: 700;
