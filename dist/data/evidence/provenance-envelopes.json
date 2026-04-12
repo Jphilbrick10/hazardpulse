@@ -1,6 +1,26 @@
 {
-  "generated_at": "2026-04-12T16:34:18Z",
+  "generated_at": "2026-04-12T18:41:34Z",
   "envelopes": [
+    {
+      "provenance_id": "prov_to_fcst_20260412_1841",
+      "forecast_id": "to_fcst_20260412_1841",
+      "hazard": "tornado",
+      "model_version": "tornado_storm_v1_0",
+      "input_hash": "sha256:90d2b174ea648043880e93d4ada52a30cc2dad7c78eab21863a0d2d30763fef9",
+      "output_hash": "sha256:c56c9d1824816ee8be265f1cbe294b8eb7849579e5fb64b545dcd4b16fb0df46",
+      "signed_at": "2026-04-12T18:41:26Z",
+      "sources": [
+        "ProbSevere storm objects",
+        "published live tornado snapshot"
+      ],
+      "transforms": [
+        "probsevere_ingest",
+        "coherence_scoring",
+        "storm_ranking",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/to_fcst_20260412_1841.json"
+    },
     {
       "provenance_id": "prov_to_fcst_20260412_1634",
       "forecast_id": "to_fcst_20260412_1634",
