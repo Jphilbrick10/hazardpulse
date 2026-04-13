@@ -24,11 +24,36 @@ from __future__ import annotations
 import datetime as dt
 import hashlib
 import json
+import math as _math
 import sys
 from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
+
+
+def _json_safe(obj):
+    """JSON default handler: convert numpy types to Python."""
+    if isinstance(obj, (np.floating, np.integer)):
+        v = float(obj)
+        return None if (_math.isnan(v) or _math.isinf(v)) else v
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+
+
+def _sanitize_for_json(obj):
+    """Recursively replace NaN/Inf floats with None for valid JSON output."""
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sanitize_for_json(v) for v in obj]
+    if isinstance(obj, float):
+        return None if (_math.isnan(obj) or _math.isinf(obj)) else obj
+    if isinstance(obj, (np.floating, np.integer)):
+        v = float(obj)
+        return None if (_math.isnan(v) or _math.isinf(v)) else v
+    return obj
 
 # Add src to path
 SRC = Path(__file__).resolve().parents[1] / "src"
@@ -645,7 +670,8 @@ def write_outputs(
     storms_path = DIST / "data" / "live-tornadoes.json"
     storms_path.parent.mkdir(parents=True, exist_ok=True)
     storms_path.write_text(
-        json.dumps(output, indent=2) + "\n", encoding="utf-8"
+        json.dumps(_sanitize_for_json(output), indent=2, default=_json_safe) + "\n",
+        encoding="utf-8",
     )
     print(f"  Wrote {storms_path} ({len(scored_storms)} storms)")
 

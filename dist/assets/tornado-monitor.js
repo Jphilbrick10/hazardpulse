@@ -1,4 +1,11 @@
 (function () {
+  "use strict";
+
+  function _esc(s) {
+    if (!s) return "";
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
   function renderFallback(mapEl) {
     mapEl.innerHTML =
       '<div class="card" style="text-align:center;padding:40px;">' +
@@ -59,7 +66,7 @@
           marker.setAttribute(
             "aria-label",
             "Storm " +
-              props.storm_id +
+              _esc(props.storm_id) +
               ", " +
               (probability * 100).toFixed(0) +
               "% tornado probability"
@@ -68,16 +75,16 @@
 
           var popup = new maplibregl.Popup({ offset: 15 }).setHTML(
             "<strong>Storm " +
-              props.storm_id +
+              _esc(props.storm_id) +
               "</strong><br>" +
               'Probability: <span class="mono">' +
               (probability * 100).toFixed(1) +
               "%</span><br>" +
               'CAPE: <span class="mono">' +
-              (props.mucape || 0) +
+              _esc(String(props.mucape || 0)) +
               "</span> J/kg<br>" +
               'SRH: <span class="mono">' +
-              (props.srh01 || 0) +
+              _esc(String(props.srh01 || 0)) +
               "</span> m&sup2;/s&sup2;"
           );
 

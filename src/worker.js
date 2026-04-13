@@ -12,10 +12,19 @@ const INTERNAL_ASSET_HEADER = "x-hazardpulse-internal-asset";
 const THEME_COOKIE_NAME = "hp_theme";
 const ALERT_THRESHOLDS = { critical: 50, severe: 150, warning: 400, watch: 800 };
 const HTML_CACHE_CONTROL = "private, no-cache, no-store, must-revalidate";
+const ALLOWED_ORIGINS = new Set([
+  "https://hazardpulse.com",
+  "https://www.hazardpulse.com",
+  "https://hazardpulse-preview.workers.dev",
+]);
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 120;
+const _rateLimitMap = new Map();
+
 const HTML_CONTENT_SECURITY_POLICY =
   "default-src 'self'; " +
   "script-src 'self'; " +
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+  "style-src 'self' https://fonts.googleapis.com; " +
   "img-src 'self' data: https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://basemaps.cartocdn.com https://*.basemaps.cartocdn.com; " +
   "font-src 'self' data: https://fonts.gstatic.com; " +
   "connect-src 'self' https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://basemaps.cartocdn.com https://*.basemaps.cartocdn.com https://noaa-mrms-pds.s3.amazonaws.com; " +
@@ -180,14 +189,34 @@ function eqProjectY(lat, mapHeight) {
   return ((90 - lat) / 180) * mapHeight;
 }
 
-function jsonResponse(body, status = 200, cacheControl = "public, max-age=300") {
+function _corsOrigin(request) {
+  const origin = request && request.headers && request.headers.get("Origin");
+  if (origin && ALLOWED_ORIGINS.has(origin)) return origin;
+  return "https://hazardpulse.com";
+}
+
+function _checkRateLimit(request) {
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  const now = Date.now();
+  let entry = _rateLimitMap.get(ip);
+  if (!entry || now - entry.start > RATE_LIMIT_WINDOW_MS) {
+    entry = { start: now, count: 0 };
+    _rateLimitMap.set(ip, entry);
+  }
+  entry.count++;
+  if (_rateLimitMap.size > 10000) _rateLimitMap.clear();
+  return entry.count <= RATE_LIMIT_MAX_REQUESTS;
+}
+
+function jsonResponse(body, status = 200, cacheControl = "public, max-age=300", request = null) {
   return withSecurityHeaders(
     new Response(JSON.stringify(body, null, 2), {
       status,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "Cache-Control": cacheControl,
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": _corsOrigin(request),
+        "Vary": "Origin",
       },
     }),
     {
@@ -197,7 +226,7 @@ function jsonResponse(body, status = 200, cacheControl = "public, max-age=300") 
   );
 }
 
-function sseResponse(eventName, payload) {
+function sseResponse(eventName, payload, request = null) {
   const body = `event: ${eventName}\ndata: ${JSON.stringify(payload)}\n\n`;
   return withSecurityHeaders(
     new Response(body, {
@@ -205,7 +234,8 @@ function sseResponse(eventName, payload) {
         "Content-Type": "text/event-stream; charset=utf-8",
         "Cache-Control": "no-cache",
         Connection: "keep-alive",
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": _corsOrigin(request),
+        "Vary": "Origin",
       },
     }),
     {
@@ -665,6 +695,13 @@ async function buildOpsSnapshot(env, request) {
 }
 
 async function handleApiRequest(request, env) {
+  if (!_checkRateLimit(request)) {
+    return jsonResponse(
+      { error: "rate_limit_exceeded", message: "Too many requests. Try again shortly." },
+      429, "no-store", request,
+    );
+  }
+
   const url = new URL(request.url);
   const path = url.pathname;
 

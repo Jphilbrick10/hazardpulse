@@ -725,6 +725,8 @@ def render_hurricane_page(
       <div class="footer-col">
         <h4>Legal</h4>
         <a href="/legal/disclaimer/">Disclaimer</a>
+        <a href="/legal/privacy/">Privacy</a>
+        <a href="/legal/terms/">Terms</a>
         <a href="/COMMERCIAL_LICENSE.md">Commercial License</a>
       </div>
       <p class="footer-disclaimer">

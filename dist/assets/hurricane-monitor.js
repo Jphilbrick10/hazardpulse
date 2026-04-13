@@ -107,16 +107,16 @@
           el.setAttribute("tabindex", "0");
           el.setAttribute(
             "aria-label",
-            (props.storm_name || props.storm_id) + " " + cat
+            _esc(props.storm_name || props.storm_id) + " " + _esc(cat)
           );
 
           var popupHtml =
             '<div style="font-family:var(--font-mono,monospace);font-size:13px;line-height:1.5;">' +
             "<strong>" + _esc(props.storm_name || props.storm_id) + "</strong>" +
             ' <span style="opacity:0.6;">(' + _esc(basin) + ")</span><br>" +
-            '<span style="color:' + colorForCategory(cat) + ';">' + _esc(cat) + "</span><br>" +
-            "Wind: <strong>" + (vmax != null ? vmax + " kt" : "--") + "</strong><br>" +
-            "Pressure: " + (props.mslp_hpa != null ? props.mslp_hpa + " hPa" : "--") + "<br>" +
+            '<span style="color:' + _esc(colorForCategory(cat)) + ';">' + _esc(cat) + "</span><br>" +
+            "Wind: <strong>" + _esc(vmax != null ? vmax + " kt" : "--") + "</strong><br>" +
+            "Pressure: " + _esc(props.mslp_hpa != null ? props.mslp_hpa + " hPa" : "--") + "<br>" +
             "RI 24h: <strong>" + (riProb * 100).toFixed(1) + "%</strong>" +
             "</div>";
 
