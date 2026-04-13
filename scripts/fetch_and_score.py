@@ -67,7 +67,8 @@ REALTIME_ADECK_FILE_RE = re.compile(
     r'href="(a[a-z]{2}\d{2}\d{4}\.dat\.gz)"', re.IGNORECASE
 )
 
-# Basin prefixes for all global basins
+# All global basins — NHC ATCF hosts a-decks for all basins including
+# JTWC-tracked Western Pacific, Indian Ocean, and Southern Hemisphere storms.
 ALL_BASINS = ("AL", "EP", "CP", "WP", "IO", "SH")
 
 # Category thresholds (Saffir-Simpson)
@@ -94,8 +95,12 @@ def classify_storm(vmax_kt: float | None) -> str:
 def list_realtime_storms(
     basin_prefixes: tuple[str, ...] = ALL_BASINS,
 ) -> list[str]:
-    """List active storm IDs from NHC real-time a-deck index."""
+    """List active storm IDs from NHC ATCF real-time index (hosts all basins).
 
+    The NHC ATCF server at ftp.nhc.noaa.gov hosts a-deck files for all global
+    basins including JTWC-tracked Western Pacific (WP), Indian Ocean (IO),
+    and Southern Hemisphere (SH) storms.
+    """
     try:
         html = fetch_text(
             REALTIME_ADECK_INDEX,
@@ -103,7 +108,7 @@ def list_realtime_storms(
             use_cache=False,
         )
     except Exception as e:
-        print(f"  Warning: Could not fetch NHC real-time index: {e}")
+        print(f"  Warning: Could not fetch ATCF real-time index: {e}")
         return []
 
     wanted = {p.upper() for p in basin_prefixes}
@@ -116,7 +121,7 @@ def list_realtime_storms(
 
 
 def fetch_realtime_adeck(storm_id: str) -> list[ATCFRecord]:
-    """Fetch real-time a-deck data for an active storm."""
+    """Fetch real-time a-deck data for an active storm (all basins via NHC ATCF)."""
 
     filename = f"a{storm_id.lower()}.dat.gz"
     url = f"{REALTIME_ADECK_INDEX}{filename}"
@@ -418,6 +423,30 @@ def train_and_score(
     return scored
 
 
+def _render_hurricane_geojson(storms: list[dict[str, object]]) -> str:
+    """Render scored hurricanes as GeoJSON FeatureCollection for MapLibre."""
+    features = []
+    for s in storms:
+        lon = s.get("lon")
+        lat = s.get("lat")
+        if lon is None or lat is None:
+            continue
+        features.append({
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [lon, lat]},
+            "properties": {
+                "storm_id": s.get("storm_id", ""),
+                "storm_name": s.get("storm_name", ""),
+                "ri_probability": s.get("ri_probability", 0),
+                "category": s.get("category", ""),
+                "vmax_kt": s.get("vmax_kt"),
+                "mslp_hpa": s.get("mslp_hpa"),
+                "basin": s.get("basin", ""),
+            },
+        })
+    return json.dumps({"type": "FeatureCollection", "features": features})
+
+
 def write_outputs(
     scored_storms: list[dict[str, object]],
     now: dt.datetime,
@@ -437,6 +466,13 @@ def write_outputs(
     storms_path.parent.mkdir(parents=True, exist_ok=True)
     storms_path.write_text(json.dumps(output, indent=2) + "\n", encoding="utf-8")
     print(f"  Wrote {storms_path} ({len(scored_storms)} storms)")
+
+    # Write GeoJSON for MapLibre hurricane map
+    geojson_path = DIST / "data" / "hurricane-storms.geojson"
+    geojson_path.write_text(
+        _render_hurricane_geojson(scored_storms) + "\n", encoding="utf-8",
+    )
+    print(f"  Wrote {geojson_path} ({len(scored_storms)} features)")
 
     # Write replay artifact (required by site integrity tests)
     replay_path = DIST / "data" / "replay" / f"{forecast_id}.json"
@@ -571,7 +607,8 @@ def render_hurricane_page(
   <meta name="theme-color" content="#f6f9ff">
   <link rel="canonical" href="{PRIMARY_DOMAIN}/live/hurricane/">
   <script src="/assets/site-shell.js?v=2"></script>
-  <link rel="stylesheet" href="/assets/styles.css?v=9">
+  <link rel="stylesheet" href="/assets/styles.css?v=10">
+  <link rel="stylesheet" href="/assets/vendor/maplibre-gl.css">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <meta property="og:type" content="website">
@@ -647,6 +684,16 @@ def render_hurricane_page(
     </section>
 
     <section class="section">
+      <div class="card" style="margin-bottom:var(--space-lg);">
+        <h2 style="margin-top:0;">Global tropical cyclone map</h2>
+        <div id="hurricane-map"
+             data-geojson-src="/data/hurricane-storms.geojson"
+             style="width:100%;height:420px;border-radius:var(--radius);overflow:hidden;"
+             role="img"
+             aria-label="Interactive map showing active tropical cyclones across all ocean basins">
+        </div>
+        <p class="muted" style="margin-top:8px;">Coverage: Atlantic, East Pacific, West Pacific, Indian Ocean, Southern Hemisphere. Data: NHC ATCF + JTWC. Markers sized by wind speed, colored by Saffir-Simpson category.</p>
+      </div>
       <div class="grid">
         <div class="col-4">
           {summary_html}
@@ -654,7 +701,7 @@ def render_hurricane_page(
         <div class="card col-8">
           <h2 style="margin-top:0;">Active tropical systems</h2>
           {storms_html}
-          <p class="muted" style="margin-top:12px;">Source feed: <a href="/data/live-storms.json">/data/live-storms.json</a>. Always follow official advisories from the National Hurricane Center and local authorities.</p>
+          <p class="muted" style="margin-top:12px;">Source feed: <a href="/data/live-storms.json">/data/live-storms.json</a> &middot; GeoJSON: <a href="/data/hurricane-storms.geojson">/data/hurricane-storms.geojson</a>. Always follow official advisories from the NHC, JTWC, and local authorities.</p>
         </div>
       </div>
     </section>
@@ -686,6 +733,8 @@ def render_hurricane_page(
       <p class="footer-build">Static-first HTML &middot; Live data under <code>/data</code> &middot; Edge geolocation by Cloudflare</p>
     </div>
   </footer>
+  <script src="/assets/vendor/maplibre-gl.js"></script>
+  <script src="/assets/hurricane-monitor.js?v=1" defer></script>
 </body>
 </html>
 """
