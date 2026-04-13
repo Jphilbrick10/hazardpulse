@@ -438,6 +438,20 @@ def write_outputs(
     storms_path.write_text(json.dumps(output, indent=2) + "\n", encoding="utf-8")
     print(f"  Wrote {storms_path} ({len(scored_storms)} storms)")
 
+    # Write replay artifact (required by site integrity tests)
+    replay_path = DIST / "data" / "replay" / f"{forecast_id}.json"
+    replay_path.parent.mkdir(parents=True, exist_ok=True)
+    replay_payload = {
+        "forecast_id": forecast_id,
+        "issued_at": now.isoformat() + "Z",
+        "model_version": "hurricane_ri_v8_1",
+        "hazard": "hurricane",
+        "n_active_storms": len(scored_storms),
+        "storms": scored_storms,
+    }
+    replay_path.write_text(json.dumps(replay_payload, indent=2) + "\n", encoding="utf-8")
+    print(f"  Wrote {replay_path}")
+
     # Update live-pulse.json hurricane entry
     pulse_path = DIST / "data" / "live-pulse.json"
     if pulse_path.exists():
