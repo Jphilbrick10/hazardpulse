@@ -1,7 +1,18 @@
 {
   "mode": "append_only",
-  "generated_at": "2026-04-13T15:01:58Z",
+  "generated_at": "2026-04-13T15:03:52Z",
   "entries": [
+    {
+      "forecast_id": "hu_fcst_20260413_1503",
+      "hazard": "hurricane",
+      "issued_at": "2026-04-13T15:03:50Z",
+      "hash": "sha256:264ca53047e71a11977d25e17a5d14ce91182f8c065ee244136c0ebe5be77b80",
+      "prev_hash": null,
+      "model_version": "hurricane_ri_v8_1",
+      "probability": 0.0,
+      "replay_artifact": "/data/replay/hu_fcst_20260413_1503.json",
+      "current": true
+    },
     {
       "forecast_id": "hu_fcst_20260413_1501",
       "hazard": "hurricane",
@@ -11,7 +22,84 @@
       "model_version": "hurricane_ri_v8_1",
       "probability": 0.0,
       "replay_artifact": "/data/replay/hu_fcst_20260413_1501.json",
+      "current": false
+    },
+    {
+      "forecast_id": "eq_fcst_20260413_1400",
+      "hazard": "earthquake",
+      "issued_at": "2026-04-13T14:00:00Z",
+      "hash": "sha256:3a1d73f48a803303e6c2a4d17a16f0cb1acd015d40b88ac6ca0898576fc5a025",
+      "prev_hash": "sha256:a7bcedf3b20b6c816eb351d249955ab10376eff6fac4d5b133ba8e5644ebacb7",
+      "model_version": "eq_coherence_v1_0",
+      "probability": 0.576,
+      "replay_artifact": "/data/replay/eq_fcst_20260413_1400.json",
+      "current": false
+    },
+    {
+      "forecast_id": "to_fcst_20260413_1318",
+      "hazard": "tornado",
+      "issued_at": "2026-04-13T13:18:39Z",
+      "hash": "sha256:dd69224b3b981dd92fd0c2474b2de0fb8bedef71a9e4fbd91636c757217ebf93",
+      "prev_hash": "sha256:df7eb80a8a309d9fb802a594bfadecf21abf6b3c765aaf2553d08bcc6d9c5ffc",
+      "model_version": "tornado_storm_v1_0",
+      "probability": 0.1824,
+      "replay_artifact": "/data/replay/to_fcst_20260413_1318.json",
       "current": true
+    },
+    {
+      "forecast_id": "to_fcst_20260413_1115",
+      "hazard": "tornado",
+      "issued_at": "2026-04-13T11:15:00Z",
+      "hash": "sha256:df7eb80a8a309d9fb802a594bfadecf21abf6b3c765aaf2553d08bcc6d9c5ffc",
+      "prev_hash": "sha256:ddeb5bd5429a31ed5a03c46e854b04ce88d35fe51069b5043fddffca3f10876b",
+      "model_version": "tornado_storm_v1_0",
+      "probability": 0.2042,
+      "replay_artifact": "/data/replay/to_fcst_20260413_1115.json",
+      "current": false
+    },
+    {
+      "forecast_id": "to_fcst_20260413_0951",
+      "hazard": "tornado",
+      "issued_at": "2026-04-13T09:51:52Z",
+      "hash": "sha256:ddeb5bd5429a31ed5a03c46e854b04ce88d35fe51069b5043fddffca3f10876b",
+      "prev_hash": "sha256:8da45f230b57102111686eddd257902040841d782565dd84e6f80d80232bccd6",
+      "model_version": "tornado_storm_v1_0",
+      "probability": 0.5,
+      "replay_artifact": "/data/replay/to_fcst_20260413_0951.json",
+      "current": false
+    },
+    {
+      "forecast_id": "eq_fcst_20260413_0800",
+      "hazard": "earthquake",
+      "issued_at": "2026-04-13T08:00:00Z",
+      "hash": "sha256:a7bcedf3b20b6c816eb351d249955ab10376eff6fac4d5b133ba8e5644ebacb7",
+      "prev_hash": "sha256:065952b225614834f6b1142142d571d05c9e4cf79d077429d752c5720020c72b",
+      "model_version": "eq_coherence_v1_0",
+      "probability": 0.576,
+      "replay_artifact": "/data/replay/eq_fcst_20260413_0800.json",
+      "current": false
+    },
+    {
+      "forecast_id": "to_fcst_20260413_0611",
+      "hazard": "tornado",
+      "issued_at": "2026-04-13T06:11:35Z",
+      "hash": "sha256:8da45f230b57102111686eddd257902040841d782565dd84e6f80d80232bccd6",
+      "prev_hash": "sha256:65afe07c3f293f08bec5dfee914f2a8d7e4660c49794a7931b03ca693d766179",
+      "model_version": "tornado_storm_v1_0",
+      "probability": 0.475,
+      "replay_artifact": "/data/replay/to_fcst_20260413_0611.json",
+      "current": false
+    },
+    {
+      "forecast_id": "eq_fcst_20260413_0300",
+      "hazard": "earthquake",
+      "issued_at": "2026-04-13T03:00:00Z",
+      "hash": "sha256:065952b225614834f6b1142142d571d05c9e4cf79d077429d752c5720020c72b",
+      "prev_hash": "sha256:1605be91b6ba63ea5f826d4d61153b9a776a2b07d6e6c2b019fb0ba486d99226",
+      "model_version": "eq_coherence_v1_0",
+      "probability": 0.576,
+      "replay_artifact": "/data/replay/eq_fcst_20260413_0300.json",
+      "current": false
     },
     {
       "forecast_id": "hu_fcst_20260413_0244",
@@ -44,7 +132,7 @@
       "model_version": "tornado_storm_v1_0",
       "probability": 0.5,
       "replay_artifact": "/data/replay/to_fcst_20260413_0214.json",
-      "current": true
+      "current": false
     },
     {
       "forecast_id": "hu_fcst_20260413_0144",

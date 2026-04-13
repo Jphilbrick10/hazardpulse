@@ -1,6 +1,28 @@
 {
-  "generated_at": "2026-04-13T15:01:58Z",
+  "generated_at": "2026-04-13T15:03:52Z",
   "envelopes": [
+    {
+      "provenance_id": "prov_hu_fcst_20260413_1503",
+      "forecast_id": "hu_fcst_20260413_1503",
+      "hazard": "hurricane",
+      "model_version": "hurricane_ri_v8_1",
+      "input_hash": "sha256:8db4c4fee4bb0b54c194750d4f999ff1b4b0c056e9446cda45bcca62fb1609b1",
+      "output_hash": "sha256:264ca53047e71a11977d25e17a5d14ce91182f8c065ee244136c0ebe5be77b80",
+      "signed_at": "2026-04-13T15:03:50Z",
+      "sources": [
+        "ATCF advisories",
+        "NOAA tropical cyclone feed",
+        "published live storm snapshot"
+      ],
+      "transforms": [
+        "advisory_ingest",
+        "feature_build",
+        "ri_scoring",
+        "calibration",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/hu_fcst_20260413_1503.json"
+    },
     {
       "provenance_id": "prov_hu_fcst_20260413_1501",
       "forecast_id": "hu_fcst_20260413_1501",
@@ -22,6 +44,150 @@
         "publish_artifact"
       ],
       "replay_artifact": "/data/replay/hu_fcst_20260413_1501.json"
+    },
+    {
+      "provenance_id": "prov_eq_fcst_20260413_1400",
+      "forecast_id": "eq_fcst_20260413_1400",
+      "hazard": "earthquake",
+      "model_version": "eq_coherence_v1_0",
+      "input_hash": "sha256:cf9ccd65a2bda642e87323137b12b474f76e43177c05cf360b71eb5e94f53670",
+      "output_hash": "sha256:7009f1332d8ebfe66df71dda7004ca24b097a483689ef5e94145f75d16e09031",
+      "signed_at": "2026-04-13T14:00:00Z",
+      "sources": [
+        "USGS FDSNWS"
+      ],
+      "transforms": [
+        "catalog_ingest",
+        "grid_binning",
+        "coherence_feature_extraction",
+        "singularity_scoring",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/eq_fcst_20260413_1400.json"
+    },
+    {
+      "provenance_id": "prov_to_fcst_20260413_1318",
+      "forecast_id": "to_fcst_20260413_1318",
+      "hazard": "tornado",
+      "model_version": "tornado_storm_v1_0",
+      "input_hash": "sha256:42e8e904f42412f22c8fbd9ca7f376c86c2f4b35970a63146d4dec57fd2c3de0",
+      "output_hash": "sha256:2484ef3f882a408767d4c6e54ec0ee182b10125ad7f4a9acc3f15c7caee06ca7",
+      "signed_at": "2026-04-13T13:18:39Z",
+      "sources": [
+        "ProbSevere storm objects",
+        "published live tornado snapshot",
+        "HRRR analysis"
+      ],
+      "transforms": [
+        "probsevere_ingest",
+        "coherence_scoring",
+        "storm_ranking",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/to_fcst_20260413_1318.json"
+    },
+    {
+      "provenance_id": "prov_to_fcst_20260413_1115",
+      "forecast_id": "to_fcst_20260413_1115",
+      "hazard": "tornado",
+      "model_version": "tornado_storm_v1_0",
+      "input_hash": "sha256:7606c004624050d08dc8fa119a7c67d1702dec5fedc76f92f04ed452909f577a",
+      "output_hash": "sha256:9acdf74caa08e00f559a0308e6f3a6e59173f5fd82fbfd4d92b11124578842d0",
+      "signed_at": "2026-04-13T11:15:00Z",
+      "sources": [
+        "ProbSevere storm objects",
+        "published live tornado snapshot",
+        "HRRR analysis"
+      ],
+      "transforms": [
+        "probsevere_ingest",
+        "coherence_scoring",
+        "storm_ranking",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/to_fcst_20260413_1115.json"
+    },
+    {
+      "provenance_id": "prov_to_fcst_20260413_0951",
+      "forecast_id": "to_fcst_20260413_0951",
+      "hazard": "tornado",
+      "model_version": "tornado_storm_v1_0",
+      "input_hash": "sha256:c7034695c2c6240d5203c5800c4fb2a3a75156836f4bc55819f1990f655c4c81",
+      "output_hash": "sha256:a345ebf270944b42c58f77d26e0e2b1a86f83cc38cab6168d83dbd8bd345542a",
+      "signed_at": "2026-04-13T09:51:52Z",
+      "sources": [
+        "ProbSevere storm objects",
+        "published live tornado snapshot",
+        "HRRR analysis"
+      ],
+      "transforms": [
+        "probsevere_ingest",
+        "coherence_scoring",
+        "storm_ranking",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/to_fcst_20260413_0951.json"
+    },
+    {
+      "provenance_id": "prov_eq_fcst_20260413_0800",
+      "forecast_id": "eq_fcst_20260413_0800",
+      "hazard": "earthquake",
+      "model_version": "eq_coherence_v1_0",
+      "input_hash": "sha256:11d77c760456e0f0cde08a1d02c1e6b8f5db470b6eaec886429f1f40c66c033c",
+      "output_hash": "sha256:7de772b78855d2abc8e010d6af9f9d911841e64c52dbabe815a8ae1aa962735d",
+      "signed_at": "2026-04-13T08:00:00Z",
+      "sources": [
+        "USGS FDSNWS"
+      ],
+      "transforms": [
+        "catalog_ingest",
+        "grid_binning",
+        "coherence_feature_extraction",
+        "singularity_scoring",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/eq_fcst_20260413_0800.json"
+    },
+    {
+      "provenance_id": "prov_to_fcst_20260413_0611",
+      "forecast_id": "to_fcst_20260413_0611",
+      "hazard": "tornado",
+      "model_version": "tornado_storm_v1_0",
+      "input_hash": "sha256:7c18fd810e855392b73c5022601bec92ca76f9e44b02384d67264836738ad990",
+      "output_hash": "sha256:7de24e3d92e1197d8ac31793cb37b1518c339b173cc9d2cd16d3d71023787618",
+      "signed_at": "2026-04-13T06:11:35Z",
+      "sources": [
+        "ProbSevere storm objects",
+        "published live tornado snapshot",
+        "HRRR analysis"
+      ],
+      "transforms": [
+        "probsevere_ingest",
+        "coherence_scoring",
+        "storm_ranking",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/to_fcst_20260413_0611.json"
+    },
+    {
+      "provenance_id": "prov_eq_fcst_20260413_0300",
+      "forecast_id": "eq_fcst_20260413_0300",
+      "hazard": "earthquake",
+      "model_version": "eq_coherence_v1_0",
+      "input_hash": "sha256:180407401b292c2142e2b499878ba1afdeda5fb6702d7836a502874f461a48d7",
+      "output_hash": "sha256:e271f95ae092c5f23b70a49f8ca97fa88ffd39ef004d26a0f053f6c73311c1cd",
+      "signed_at": "2026-04-13T03:00:00Z",
+      "sources": [
+        "USGS FDSNWS"
+      ],
+      "transforms": [
+        "catalog_ingest",
+        "grid_binning",
+        "coherence_feature_extraction",
+        "singularity_scoring",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/eq_fcst_20260413_0300.json"
     },
     {
       "provenance_id": "prov_hu_fcst_20260413_0244",
