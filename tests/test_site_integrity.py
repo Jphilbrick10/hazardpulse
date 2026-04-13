@@ -309,7 +309,7 @@ def test_public_pages_ship_theme_bootstrap_assets() -> None:
 def test_map_surfaces_include_user_marker_svg_node() -> None:
     for rel_path in [
         "dist/assets/world-map-base.svg",
-        "dist/index.html",
+        "dist/assets/world-map-inline.svg",
         "dist/live/earthquake/index.html",
         "dist/live/tornado/index.html",
     ]:
