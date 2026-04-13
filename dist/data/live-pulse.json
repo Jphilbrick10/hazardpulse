@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-13T14:00:00Z",
+  "updated_at": "2026-04-13T15:01:55.504428Z",
   "hazards": [
     {
       "key": "eq",
@@ -10,7 +10,7 @@
       "delta": 0.019,
       "risk_band": "critical",
       "gate_status": "pass",
-      "forecast_id": "eq_fcst_20260413_1400",
+      "forecast_id": "eq_fcst_20260412_1900",
       "model_version": "eq_coherence_v1_0"
     },
     {
@@ -22,26 +22,26 @@
       "delta": 0.024,
       "risk_band": "none",
       "gate_status": "pass",
-      "forecast_id": "hu_fcst_20260413_1255",
+      "forecast_id": "hu_fcst_20260413_1501",
       "model_version": "hurricane_ri_v8_1",
       "model_auc": 0.938,
       "n_features": 65,
       "calibration": "platt",
-      "n_active_storms": 0
+      "n_active_storms": 1
     },
     {
       "key": "to",
       "hazard": "tornado",
-      "probability": 0.1824,
+      "probability": 0.5,
       "conf_lo": null,
       "conf_hi": null,
       "delta": -0.021,
-      "risk_band": "moderate",
+      "risk_band": "very_high",
       "gate_status": "pass",
-      "forecast_id": "to_fcst_20260413_1318",
+      "forecast_id": "to_fcst_20260413_0214",
       "model_version": "tornado_storm_v1_0",
-      "n_active_storms": 33,
-      "coherence_score": 0.1824,
+      "n_active_storms": 71,
+      "coherence_score": 0.5,
       "coherence_source": "hrrr"
     }
   ]

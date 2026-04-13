@@ -67,9 +67,16 @@ REALTIME_ADECK_FILE_RE = re.compile(
     r'href="(a[a-z]{2}\d{2}\d{4}\.dat\.gz)"', re.IGNORECASE
 )
 
-# All global basins — NHC ATCF hosts a-decks for all basins including
-# JTWC-tracked Western Pacific, Indian Ocean, and Southern Hemisphere storms.
+# All global basins — NHC ATCF hosts a-decks for NHC basins; JTWC storms
+# are discovered from the JTWC RSS feed and parsed from warning text.
 ALL_BASINS = ("AL", "EP", "CP", "WP", "IO", "SH")
+
+# JTWC public RSS feed listing active tropical cyclone warnings
+JTWC_RSS_URL = "https://www.metoc.navy.mil/jtwc/rss/jtwc.rss"
+# JTWC warning text products (public, no auth required)
+JTWC_WARNING_URL = "https://www.metoc.navy.mil/jtwc/products/{product_id}web.txt"
+# Regex to extract storm product IDs from JTWC RSS
+JTWC_PRODUCT_RE = re.compile(r"products/(\w+)web\.txt", re.IGNORECASE)
 
 # Category thresholds (Saffir-Simpson)
 CATEGORY_THRESHOLDS = [
@@ -90,6 +97,130 @@ def classify_storm(vmax_kt: float | None) -> str:
         if vmax_kt >= threshold:
             return label
     return "Tropical Disturbance"
+
+
+def _discover_jtwc_storms() -> list[dict]:
+    """Discover active JTWC storms from RSS feed and parse warning text.
+
+    Returns list of dicts with keys matching scored storm format:
+    storm_id, storm_name, basin, lat, lon, vmax_kt, mslp_hpa, category,
+    issue_time, ri_probability (set to 0 — no model run for JTWC storms).
+    """
+    try:
+        rss = fetch_text(JTWC_RSS_URL, namespace="jtwc_rss", use_cache=False)
+    except Exception as e:
+        print(f"  Warning: Could not fetch JTWC RSS: {e}")
+        return []
+
+    product_ids = JTWC_PRODUCT_RE.findall(rss)
+    if not product_ids:
+        return []
+
+    storms: list[dict] = []
+    for pid in product_ids:
+        url = JTWC_WARNING_URL.format(product_id=pid)
+        try:
+            text = fetch_text(url, namespace="jtwc_warning", use_cache=False)
+        except Exception:
+            continue
+
+        storm = _parse_jtwc_warning(text, pid)
+        if storm:
+            storms.append(storm)
+
+    return storms
+
+
+def _parse_jtwc_warning(text: str, product_id: str) -> dict | None:
+    """Parse a JTWC warning text product into a storm dict."""
+    lines = text.strip().split("\n")
+
+    # Extract storm name from SUBJ line
+    storm_name = ""
+    storm_number = ""
+    for line in lines:
+        m = re.search(
+            r"(?:SUPER TYPHOON|TYPHOON|TROPICAL STORM|TROPICAL DEPRESSION|TROPICAL CYCLONE)"
+            r"\s+(\d{2}[A-Z])\s+\((\w+)\)",
+            line, re.IGNORECASE,
+        )
+        if m:
+            storm_number = m.group(1)
+            storm_name = m.group(2).title()
+            break
+
+    if not storm_number:
+        return None
+
+    # Map basin from storm number suffix (W=WP, A/B=IO, S/P=SH)
+    suffix = storm_number[-1].upper()
+    basin_map = {"W": "WP", "A": "IO", "B": "IO", "S": "SH", "P": "SH", "E": "EP", "C": "CP", "L": "AL"}
+    basin = basin_map.get(suffix, "WP")
+
+    # Build full storm ID: WP042026
+    year = dt.datetime.now(dt.timezone.utc).year
+    storm_id = f"{basin}{storm_number[:2]}{year}"
+
+    # Extract position: "NEAR 13.1N 147.4E"
+    lat, lon = None, None
+    for line in lines:
+        m = re.search(r"NEAR\s+([\d.]+)([NS])\s+([\d.]+)([EW])", line)
+        if m:
+            lat = float(m.group(1))
+            if m.group(2) == "S":
+                lat = -lat
+            lon = float(m.group(3))
+            if m.group(4) == "W":
+                lon = -lon
+            break
+
+    # Extract max sustained winds: "MAX SUSTAINED WINDS - 150 KT"
+    vmax_kt = None
+    for line in lines:
+        m = re.search(r"MAX SUSTAINED WINDS\s*-\s*(\d+)\s*KT", line)
+        if m:
+            vmax_kt = float(m.group(1))
+            break
+
+    # Extract time: "131200Z"
+    issue_time = None
+    for line in lines:
+        m = re.search(r"(\d{6})Z\s*---\s*NEAR", line)
+        if m:
+            ddhhmm = m.group(1)
+            now = dt.datetime.now(dt.timezone.utc)
+            try:
+                day = int(ddhhmm[:2])
+                hour = int(ddhhmm[2:4])
+                minute = int(ddhhmm[4:6])
+                issue_time = dt.datetime(now.year, now.month, day, hour, minute)
+            except ValueError:
+                pass
+            break
+
+    if lat is None or lon is None:
+        return None
+
+    category = classify_storm(vmax_kt)
+
+    return {
+        "storm_id": storm_id,
+        "storm_name": storm_name,
+        "basin": basin,
+        "lat": lat,
+        "lon": lon,
+        "vmax_kt": vmax_kt,
+        "mslp_hpa": None,
+        "category": category,
+        "issue_time": issue_time.isoformat() + "Z" if issue_time else None,
+        "ri_probability": 0.0,
+        "ri_probability_raw": 0.0,
+        "model_scores": {},
+        "n_features": 0,
+        "model_version": "jtwc_warning_ingest",
+        "calibration": "none",
+        "source": "jtwc_warning_text",
+    }
 
 
 def list_realtime_storms(
@@ -749,10 +880,67 @@ def main() -> None:
     print(f"HazardPulse v8.1 scoring pipeline — {now.isoformat()}Z")
     print()
 
-    # Step 1: Check for active storms
-    print("Step 1: Checking NHC for active tropical cyclones...")
+    # Step 1: Check NHC ATCF for active storms
+    print("Step 1: Checking NHC ATCF for active tropical cyclones...")
     active_ids = list_realtime_storms()
-    if not active_ids:
+    if active_ids:
+        print(f"  Found {len(active_ids)} storms in ATCF: {', '.join(active_ids)}")
+    else:
+        print("  No storms in NHC ATCF index.")
+
+    # Step 1b: Check JTWC for additional storms (WP, IO, SH)
+    print()
+    print("Step 1b: Checking JTWC RSS for Western Pacific / Indian Ocean / SH storms...")
+    jtwc_storms = _discover_jtwc_storms()
+    jtwc_ids = {s["storm_id"] for s in jtwc_storms}
+    if jtwc_storms:
+        for s in jtwc_storms:
+            print(f"  JTWC: {s['storm_name']} ({s['storm_id']}) — {s['category']}, {s['vmax_kt']} kt at {s['lat']}N {s['lon']}E")
+    else:
+        print("  No active JTWC storms.")
+
+    # Step 2: Fetch a-deck data for NHC-tracked storms
+    scored: list[dict[str, object]] = []
+
+    if active_ids:
+        print()
+        print("Step 2: Fetching ATCF a-deck data...")
+        live_cases: list[dict[str, object]] = []
+        for sid in active_ids:
+            if sid in jtwc_ids:
+                continue  # Already have JTWC data
+            print(f"  Fetching {sid}...")
+            records = fetch_realtime_adeck(sid)
+            if not records:
+                print(f"    No records for {sid}, skipping")
+                continue
+            case = build_live_case(sid, records)
+            if case is not None:
+                name = case.get("storm_name", sid)
+                vmax = case.get("analysis_vmax_kt", "?")
+                cat = classify_storm(vmax if isinstance(vmax, (int, float)) else None)
+                print(f"    {name}: {cat} ({vmax} kt) at {case.get('analysis_lat')}N, {case.get('analysis_lon')}W")
+                live_cases.append(case)
+            else:
+                print(f"    Could not build case for {sid}")
+
+        # Step 3: Score NHC-tracked storms with v8.1 model
+        if live_cases:
+            print()
+            print("Step 3: Loading historical training data...")
+            historical = load_historical_cases()
+            if historical:
+                print()
+                print("Step 4: Training v8.1 model and scoring active storms...")
+                scored = train_and_score(historical, live_cases)
+            else:
+                print("  WARNING: No historical data — NHC storms will appear without RI scores.")
+
+    # Step 4b: Merge JTWC warning-sourced storms (no RI model, displayed with observed data)
+    scored.extend(jtwc_storms)
+
+    if not scored:
+        print()
         print("  No active tropical cyclones in any basin.")
         print("  Writing empty state...")
         write_outputs([], now)
@@ -762,52 +950,10 @@ def main() -> None:
         print("Done. No storms to score.")
         return
 
-    print(f"  Found {len(active_ids)} active storms: {', '.join(active_ids)}")
-
-    # Step 2: Fetch a-deck data and build live cases
-    print()
-    print("Step 2: Fetching ATCF a-deck data...")
-    live_cases: list[dict[str, object]] = []
-    for sid in active_ids:
-        print(f"  Fetching {sid}...")
-        records = fetch_realtime_adeck(sid)
-        if not records:
-            print(f"    No records for {sid}, skipping")
-            continue
-        case = build_live_case(sid, records)
-        if case is not None:
-            name = case.get("storm_name", sid)
-            vmax = case.get("analysis_vmax_kt", "?")
-            cat = classify_storm(vmax if isinstance(vmax, (int, float)) else None)
-            print(f"    {name}: {cat} ({vmax} kt) at {case.get('analysis_lat')}N, {case.get('analysis_lon')}W")
-            live_cases.append(case)
-        else:
-            print(f"    Could not build case for {sid}")
-
-    if not live_cases:
-        print("  No scoreable cases found.")
-        write_outputs([], now)
-        render_hurricane_page([], now)
-        build_site_artifacts()
-        print()
-        print("Done. No storms to score.")
-        return
-
-    # Step 3: Load historical data and train model
-    print()
-    print("Step 3: Loading historical training data...")
-    historical = load_historical_cases()
-    if not historical:
-        print("  ERROR: Cannot score without historical data. Exiting.")
-        return
-
-    # Step 4: Train and score
-    print()
-    print("Step 4: Training v8.1 model and scoring active storms...")
-    scored = train_and_score(historical, live_cases)
-
     for s in scored:
-        print(f"  {s['storm_name']}: P(RI) = {s['ri_probability']:.1%} "
+        ri = s.get("ri_probability", 0) or 0
+        src = s.get("source", "atcf_model")
+        print(f"  {s.get('storm_name', s['storm_id'])}: P(RI) = {ri:.1%} "
               f"({s['category']}, {s['vmax_kt']} kt)")
 
     # Step 5: Write outputs
