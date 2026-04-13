@@ -1,0 +1,69 @@
+name: Verification Scoring
+
+on:
+  schedule:
+    # Run daily at 06:00 UTC to score matured forecasts
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: hazardpulse-scoring
+  cancel-in-progress: false
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install numpy scipy
+          pip install -e .
+
+      - name: Score earthquake forecasts
+        run: python scripts/score_earthquake_prospective.py
+
+      - name: Score tornado forecasts
+        run: python scripts/score_tornado_prospective.py
+
+      - name: Score hurricane forecasts
+        run: python scripts/score_hurricane_prospective.py
+
+      - name: Show results
+        run: |
+          echo "=== Earthquake ==="
+          cat results/earthquake_prospective/prospective_summary.json | python -m json.tool 2>/dev/null || true
+          echo ""
+          echo "=== Tornado ==="
+          cat results/tornado_prospective/prospective_summary.json | python -m json.tool 2>/dev/null || true
+          echo ""
+          echo "=== Hurricane ==="
+          cat results/hurricane_prospective/prospective_summary.json | python -m json.tool 2>/dev/null || true
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet results/ 2>/dev/null && echo "changed=false" >> "$GITHUB_OUTPUT" || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push verification results
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add results/earthquake_prospective/ results/tornado_prospective/ results/hurricane_prospective/
+          git commit -m "data: verification scoring update $(date -u +%Y-%m-%dT%H:%MZ)
+
+          Automated prospective scoring of matured forecast replay artifacts.
+          Sources: USGS FDSN (earthquake), SPC reports (tornado), NHC ATCF (hurricane)"
+          git push

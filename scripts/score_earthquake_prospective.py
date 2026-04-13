@@ -137,6 +137,9 @@ def matured_artifacts(artifacts: list[dict], score_as_of: dt.datetime) -> list[d
         horizon_days = int(artifact.get("forecast_horizon_days", 30))
         mature_time = issued_at + dt.timedelta(days=horizon_days)
         if mature_time <= score_as_of:
+            # Skip legacy minimal replay artifacts that lack scoreable data
+            if "steps" in artifact and "forecast_domain" not in artifact:
+                continue
             matured.append(artifact)
     return matured
 
@@ -206,12 +209,15 @@ def score_single_forecast(
     artifact: dict,
     observed_events: list[dict],
     output_dir: Path,
-) -> dict:
+) -> dict | None:
     issued_at = parse_utc_datetime(artifact["issued_at"])
     horizon_days = int(artifact.get("forecast_horizon_days", 30))
     window_end = issued_at + dt.timedelta(days=horizon_days)
 
-    domain = artifact["forecast_domain"]
+    domain = artifact.get("forecast_domain")
+    if domain is None:
+        # Legacy minimal replay artifact — cannot score
+        return None
     n_lat = int(domain["n_lat"])
     n_lon = int(domain["n_lon"])
     default_probability = float(domain.get("default_probability", 0.0))
@@ -363,6 +369,8 @@ def main(argv: list[str] | None = None) -> int:
                     if issued_at <= parse_utc_datetime(event["time"]) < window_end
                 ]
                 result = score_single_forecast(artifact, observed_events, output_dir)
+                if result is None:
+                    continue
                 per_forecast_results.append(result)
                 handle.write(json.dumps(result) + "\n")
 
