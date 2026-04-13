@@ -283,8 +283,9 @@ def _parse_storms(data: dict) -> list[dict] | None:
         coords = geom.get("coordinates", [[]])
         if coords and coords[0]:
             ring = coords[0]
-            lat = sum(p[1] for p in ring) / len(ring)
-            lon = sum(p[0] for p in ring) / len(ring)
+            if len(ring) > 0:
+                lat = sum(p[1] for p in ring) / len(ring)
+                lon = sum(p[0] for p in ring) / len(ring)
 
         def _float(key: str, default: float = 0.0) -> float:
             v = props.get(key)

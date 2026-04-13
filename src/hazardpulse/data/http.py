@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import ssl
+import time
 import urllib.request
 from pathlib import Path
 
@@ -33,8 +34,18 @@ def fetch_bytes(
         return cache_path.read_bytes()
 
     req = urllib.request.Request(url, headers={"User-Agent": user_agent})
-    with urllib.request.urlopen(req, timeout=timeout, context=ssl.create_default_context()) as resp:
-        data = resp.read()
+    last_exc: Exception | None = None
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout, context=ssl.create_default_context()) as resp:
+                data = resp.read()
+            break
+        except (urllib.error.URLError, OSError) as exc:
+            last_exc = exc
+            if attempt < 2:
+                time.sleep(2 ** attempt)
+    else:
+        raise last_exc  # type: ignore[misc]
 
     if use_cache:
         cache_path.parent.mkdir(parents=True, exist_ok=True)

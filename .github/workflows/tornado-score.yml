@@ -13,6 +13,10 @@ on:
         required: false
         type: string
 
+concurrency:
+  group: hazardpulse-scoring
+  cancel-in-progress: false
+
 jobs:
   score:
     runs-on: ubuntu-latest

@@ -379,7 +379,7 @@ def compute_coherence_fields(
     torsion = (shear_06 * curl_tau / 25.0).astype(np.float32)
 
     # Alignment: shear-coherence coupling (Form 16)
-    grad_mag_safe = grad_tau + 1e-6
+    grad_mag_safe = np.maximum(grad_tau, 1e-6)
     e_x = grad_x / grad_mag_safe
     e_y = grad_y / grad_mag_safe
     shear_x = atm_grid["ushear_01"].astype(np.float32)
@@ -416,12 +416,12 @@ def compute_coherence_fields(
     p_shear = shear_frac / p_sum
     q = np.float32(1.0 / 3.0)
     D_KL = (
-        p_cape * np.log(p_cape / q + 1e-12)
-        + p_srh * np.log(p_srh / q + 1e-12)
-        + p_shear * np.log(p_shear / q + 1e-12)
+        p_cape * np.log(np.maximum(p_cape / q, 1e-12))
+        + p_srh * np.log(np.maximum(p_srh / q, 1e-12))
+        + p_shear * np.log(np.maximum(p_shear / q, 1e-12))
     ).astype(np.float32)
     T_sfc = atm_grid["t2m"].astype(np.float32)
-    E_coh = (T_sfc * D_KL / 300.0).astype(np.float32)
+    E_coh = (T_sfc * np.maximum(D_KL, 0.0) / 300.0).astype(np.float32)
 
     # 5-condition singularity test using absolute thresholds
     # Thresholds based on observed tornadic environments; require calibration
@@ -496,7 +496,7 @@ def compute_gaussian_fields(
     curl_tau = compute_curl_2d(tau)
     torsion = (shear_06 * curl_tau / 25.0).astype(np.float32)
 
-    grad_mag_safe = grad_tau + 1e-6
+    grad_mag_safe = np.maximum(grad_tau, 1e-6)
     e_x = grad_x / grad_mag_safe
     e_y = grad_y / grad_mag_safe
     shear_x = atm_grid["ushear_01"].astype(np.float32)
@@ -529,12 +529,12 @@ def compute_gaussian_fields(
     p_shear = shear_frac / p_sum
     q = np.float32(1.0 / 3.0)
     D_KL = (
-        p_cape * np.log(p_cape / q + 1e-12)
-        + p_srh * np.log(p_srh / q + 1e-12)
-        + p_shear * np.log(p_shear / q + 1e-12)
+        p_cape * np.log(np.maximum(p_cape / q, 1e-12))
+        + p_srh * np.log(np.maximum(p_srh / q, 1e-12))
+        + p_shear * np.log(np.maximum(p_shear / q, 1e-12))
     ).astype(np.float32)
     T_sfc = atm_grid["t2m"].astype(np.float32)
-    E_coh = (T_sfc * D_KL / 300.0).astype(np.float32)
+    E_coh = (T_sfc * np.maximum(D_KL, 0.0) / 300.0).astype(np.float32)
 
     # Same absolute thresholds as Helmholtz for consistent comparison
     cond1 = (S_over_Gamma > 1.0).astype(np.float32)

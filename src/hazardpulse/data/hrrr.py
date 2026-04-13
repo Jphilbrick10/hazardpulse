@@ -180,10 +180,12 @@ def fetch_hrrr_grid(
             # HRRR CONUS native is ~1059 x 1799; subsample to 34 x 63
             subsampled = _subsample_to_grid(full, var_name)
             grids[var_name] = subsampled
-        except Exception:
-            # Fill with zeros on failure — downstream handles gracefully
-            grids[var_name] = np.zeros(
-                (HRRR_N_LAT, HRRR_N_LON), dtype=np.float32
+        except Exception as exc:
+            # Fill with NaN on failure so downstream can distinguish
+            # missing data from genuine zero values
+            print(f"  HRRR fetch failed for {var_name}: {exc}")
+            grids[var_name] = np.full(
+                (HRRR_N_LAT, HRRR_N_LON), np.nan, dtype=np.float32
             )
 
     # Persist to cache
