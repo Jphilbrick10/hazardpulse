@@ -1,6 +1,6 @@
 {
   "mode": "append_only",
-  "generated_at": "2026-04-18T07:03:14Z",
+  "generated_at": "2026-04-18T07:43:18Z",
   "entries": [
     {
       "forecast_id": "to_fcst_20260418_0702",
@@ -11,6 +11,17 @@
       "model_version": "tornado_storm_v1_0",
       "probability": 0.5,
       "replay_artifact": "/data/replay/to_fcst_20260418_0702.json",
+      "current": true
+    },
+    {
+      "forecast_id": "eq_fcst_20260418_0700",
+      "hazard": "earthquake",
+      "issued_at": "2026-04-18T07:00:00Z",
+      "hash": "sha256:bf1d98092b3764bf3d02d74124aa82c5c14c35050b734ca6ce4e569104fd5fbe",
+      "prev_hash": "sha256:99dfd5437300e62f1c309e0c7de3cc9855def2717c3017a86c9369bd878e3616",
+      "model_version": "eq_coherence_v1_0",
+      "probability": 0.576,
+      "replay_artifact": "/data/replay/eq_fcst_20260418_0700.json",
       "current": true
     },
     {
@@ -33,7 +44,7 @@
       "model_version": "eq_coherence_v1_0",
       "probability": 0.576,
       "replay_artifact": "/data/replay/eq_fcst_20260418_0300.json",
-      "current": true
+      "current": false
     },
     {
       "forecast_id": "to_fcst_20260418_0201",
