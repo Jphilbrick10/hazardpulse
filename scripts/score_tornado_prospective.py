@@ -361,6 +361,31 @@ def main(argv: list[str] | None = None) -> int:
         total_matched = sum(r["n_matched_storms"] for r in per_forecast_results)
         total_reports = sum(r["n_reports_in_window"] for r in per_forecast_results)
 
+        # Split metrics by scoring tier so tier2 physics-only runs don't
+        # contaminate the tier1 ML-model's measured accuracy.
+        by_tier: dict[str, list[dict]] = {}
+        for r in per_forecast_results:
+            by_tier.setdefault(r.get("scoring_tier", "unknown"), []).append(r)
+
+        per_tier_metrics: dict[str, dict] = {}
+        for tier, rs in by_tier.items():
+            t_aucs = [r["auc"] for r in rs if math.isfinite(r["auc"])]
+            t_briers = [r["brier"] for r in rs if math.isfinite(r["brier"])]
+            t_bss = [r["brier_skill_score"] for r in rs if math.isfinite(r["brier_skill_score"])]
+            t_storms = sum(r["n_storms"] for r in rs)
+            t_matched = sum(r["n_matched_storms"] for r in rs)
+            per_tier_metrics[tier] = {
+                "n_forecasts": len(rs),
+                "n_forecasts_with_valid_auc": len(t_aucs),
+                "total_storms_scored": t_storms,
+                "total_matched_storms": t_matched,
+                "match_rate": round(t_matched / max(t_storms, 1), 4),
+                "mean_auc": round(float(np.mean(t_aucs)), 4) if t_aucs else None,
+                "median_auc": round(float(np.median(t_aucs)), 4) if t_aucs else None,
+                "mean_brier": round(float(np.mean(t_briers)), 4) if t_briers else None,
+                "mean_brier_skill_score": round(float(np.mean(t_bss)), 4) if t_bss else None,
+            }
+
         summary.update({
             "observed_window": {
                 "start": format_utc_z(earliest),
@@ -371,6 +396,9 @@ def main(argv: list[str] | None = None) -> int:
             "total_matched_storms": total_matched,
             "total_tornado_reports_in_windows": total_reports,
             "overall_match_rate": round(total_matched / max(total_storms, 1), 4),
+            # Aggregated metrics — kept for backwards compatibility. Prefer
+            # by_tier for anything driving decisions, since tier1_ml (GBT)
+            # and tier2_analytic (physics) have very different calibration.
             "mean_auc": round(float(np.mean(aucs)), 4) if aucs else None,
             "median_auc": round(float(np.median(aucs)), 4) if aucs else None,
             "mean_brier": round(float(np.mean(briers)), 4) if briers else None,
@@ -379,6 +407,7 @@ def main(argv: list[str] | None = None) -> int:
             "n_forecasts_without_matches": sum(
                 1 for r in per_forecast_results if r["n_matched_storms"] == 0
             ),
+            "by_tier": per_tier_metrics,
         })
     else:
         summary["status"] = "waiting_for_matured_forecasts"

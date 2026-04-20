@@ -1,8 +1,8 @@
 {
-  "scored_as_of": "2026-04-20T08:08:43Z",
-  "replay_dir": "/home/runner/work/hazardpulse/hazardpulse/dist/data/replay",
-  "n_replay_artifacts": 180,
-  "n_matured_forecasts": 170,
+  "scored_as_of": "2026-04-20T20:52:33Z",
+  "replay_dir": "C:\\Users\\Josh\\Projects\\hazardpulse\\dist\\data\\replay",
+  "n_replay_artifacts": 188,
+  "n_matured_forecasts": 177,
   "forecast_horizon_hours": 24,
   "match_radius_km": 40.0,
   "match_window_hours": 4.0,
@@ -10,17 +10,41 @@
   "status": "ok",
   "observed_window": {
     "start": "2026-03-13T03:00:00Z",
-    "end": "2026-04-20T07:18:05Z",
-    "n_tornado_reports": 216
+    "end": "2026-04-20T20:33:05Z",
+    "n_tornado_reports": 236
   },
-  "total_storms_scored": 10615,
-  "total_matched_storms": 40,
-  "total_tornado_reports_in_windows": 1328,
+  "total_storms_scored": 10754,
+  "total_matched_storms": 41,
+  "total_tornado_reports_in_windows": 1544,
   "overall_match_rate": 0.0038,
-  "mean_auc": 0.6942,
+  "mean_auc": 0.6957,
   "median_auc": 0.7712,
-  "mean_brier": 0.027,
-  "mean_brier_skill_score": -0.0871,
+  "mean_brier": 0.0265,
+  "mean_brier_skill_score": -0.0832,
   "n_forecasts_with_valid_auc": 15,
-  "n_forecasts_without_matches": 155
+  "n_forecasts_without_matches": 162,
+  "by_tier": {
+    "unknown": {
+      "n_forecasts": 1,
+      "n_forecasts_with_valid_auc": 0,
+      "total_storms_scored": 0,
+      "total_matched_storms": 0,
+      "match_rate": 0.0,
+      "mean_auc": null,
+      "median_auc": null,
+      "mean_brier": null,
+      "mean_brier_skill_score": null
+    },
+    "tier2_analytic": {
+      "n_forecasts": 176,
+      "n_forecasts_with_valid_auc": 15,
+      "total_storms_scored": 10754,
+      "total_matched_storms": 41,
+      "match_rate": 0.0038,
+      "mean_auc": 0.6957,
+      "median_auc": 0.7712,
+      "mean_brier": 0.0265,
+      "mean_brier_skill_score": -0.0832
+    }
+  }
 }

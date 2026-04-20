@@ -140,7 +140,7 @@ def fetch_hrrr_grid(
     hour: int = 18,
     *,
     cache_dir: Path | None = None,
-) -> dict[str, np.ndarray]:
+) -> dict[str, np.ndarray] | None:
     """Fetch HRRR analysis fields subsampled to the 80 km CONUS grid.
 
     Checks the local ``.npz`` cache first; downloads from the AWS Zarr
@@ -182,13 +182,14 @@ def fetch_hrrr_grid(
         store = fsspec.get_mapper(zarr_root)
         root = zarr.open(store, mode="r")
     except Exception as exc:
+        # Don't return an all-NaN dict silently — callers cannot distinguish
+        # that from "store populated but every variable is nan". Callers get
+        # None and must decide to fallback or fail.
         print(f"  HRRR zarr store unreachable ({zarr_root}): {exc}")
-        return {
-            k: np.full((HRRR_N_LAT, HRRR_N_LON), np.nan, dtype=np.float32)
-            for k in HRRR_VARS
-        }
+        return None  # type: ignore[return-value]
 
     grids: dict[str, np.ndarray] = {}
+    n_failed = 0
     for var_name, zarr_path in HRRR_VARS.items():
         try:
             full = np.asarray(root[zarr_path], dtype=np.float32)
@@ -198,6 +199,16 @@ def fetch_hrrr_grid(
             grids[var_name] = np.full(
                 (HRRR_N_LAT, HRRR_N_LON), np.nan, dtype=np.float32
             )
+            n_failed += 1
+
+    # If more than half the variables failed to fetch, treat the whole pull
+    # as failed — partial data produces misleading ML output.
+    if n_failed > len(HRRR_VARS) // 2:
+        print(
+            f"  HRRR pull failed: {n_failed}/{len(HRRR_VARS)} variables unavailable. "
+            "Discarding partial results."
+        )
+        return None  # type: ignore[return-value]
 
     out_path = _npz_path(date_str, hour, cache_dir=cache_dir)
     out_path.parent.mkdir(parents=True, exist_ok=True)

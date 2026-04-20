@@ -357,3 +357,44 @@ def test_worker_api_smoke() -> None:
         check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_tornado_scoring_runs_ml_when_trained_model_exists() -> None:
+    """Guard against silent regression to physics-only fallback.
+
+    The pre-trained GBT at results/models/tornado_gbt_v1.json must be used
+    whenever it exists. If the latest tornado replay artifact shows
+    scoring_tier = "tier2_analytic" or "tier3_ps_only" while the model file
+    is present, the ML path is broken.
+    """
+    model_path = ROOT / "results" / "models" / "tornado_gbt_v1.json"
+    if not model_path.exists():
+        return  # No model file → nothing to validate
+
+    replay_dir = ROOT / "dist" / "data" / "replay"
+    replays = sorted(replay_dir.glob("to_fcst_*.json"))
+    assert replays, "No tornado replay artifacts found"
+
+    latest = json.loads(replays[-1].read_text(encoding="utf-8"))
+    tier = latest.get("scoring_tier")
+    assert tier == "tier1_ml", (
+        f"Tornado replay {replays[-1].name} has scoring_tier={tier!r} but "
+        "results/models/tornado_gbt_v1.json exists. The trained GBT should "
+        "be running. Likely causes: HRRR unreachable, operational_storm "
+        "import failed, or tier-selection regression."
+    )
+
+
+def test_hurricane_training_data_present() -> None:
+    """The hurricane scorer hard-fails without this file (by design)."""
+    training_path = ROOT / "results" / "hurricane_operational_ri_2000_2024_al_sst.jsonl"
+    assert training_path.exists(), (
+        f"Hurricane training data missing at {training_path}. "
+        "Run scripts/build_hurricane_training_data.py to (re)build."
+    )
+    # Sanity-check: at least 50k cases expected (IBTrACS 2000-2024 × 6 basins).
+    line_count = sum(1 for _ in training_path.open(encoding="utf-8"))
+    assert line_count > 50_000, (
+        f"Hurricane training data is suspiciously small ({line_count} lines). "
+        "Rebuild from IBTrACS."
+    )

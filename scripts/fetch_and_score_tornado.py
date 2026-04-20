@@ -107,8 +107,16 @@ try:
         sigmoid,
     )
     HAS_OPERATIONAL = True
-except ImportError:
+except ImportError as _op_imp_err:
     HAS_OPERATIONAL = False
+    # Print loudly so CI logs flag this — silently disabling the legacy ML
+    # path has bitten us before.
+    print(
+        f"  WARNING: operational_storm module unavailable ({_op_imp_err}). "
+        "Legacy tier1_ml path disabled; scoring will rely on pre-trained GBT "
+        "only.",
+        file=sys.stderr,
+    )
 
 from hazardpulse.tornado.tornado_npe import (  # noqa: E402
     analytic_tornado_probability,

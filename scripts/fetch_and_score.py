@@ -957,8 +957,13 @@ def main() -> None:
     print("Step 3: Loading historical training data...")
     historical = load_historical_cases()
     if not historical:
-        print("  ERROR: Cannot score without historical data. Exiting.")
-        return
+        # Hard fail — CI should NOT mark this green when scoring cannot happen.
+        raise RuntimeError(
+            f"Historical training data missing or empty at {HISTORICAL_DATA}. "
+            "Run scripts/build_hurricane_training_data.py to (re)build, or ensure "
+            "the JSONL file is present before scoring. Cannot emit RI probabilities "
+            "without training data."
+        )
 
     # Step 4: Train and score all storms (NHC + JTWC unified)
     print()
