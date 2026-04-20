@@ -1,0 +1,36 @@
+{
+  "forecast_id": "hu_fcst_20260413_1512",
+  "hazard": "hurricane",
+  "issued_at": "2026-04-13T15:12:04Z",
+  "model_version": "hurricane_ri_v8_1",
+  "forecast_horizon_hours": 24,
+  "n_active_storms": 1,
+  "top_probability": 0.1909,
+  "source_artifacts": [
+    "/data/live-storms.json"
+  ],
+  "storms": [
+    {
+      "storm_id": "WP042026",
+      "storm_name": "Sinlaku",
+      "basin": "WP",
+      "lat": 13.1,
+      "lon": 147.4,
+      "vmax_kt": 150.0,
+      "mslp_hpa": null,
+      "category": "Category 5",
+      "issue_time": "2026-04-13T12:00:00",
+      "ri_probability": 0.1909,
+      "ri_probability_raw": 0.0954,
+      "model_scores": {
+        "gbt_d3": 0.0166,
+        "gbt_d4": 0.038,
+        "logistic": 0.1988,
+        "bagged": 0.1281
+      },
+      "n_features": 17,
+      "model_version": "hurricane_ri_v8_1",
+      "calibration": "platt"
+    }
+  ]
+}

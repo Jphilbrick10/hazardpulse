@@ -15,12 +15,12 @@ ATCF_ROOT = "https://ftp.nhc.noaa.gov/atcf"
 # Aid models to extract forecast features from
 DEFAULT_AID_MODELS = (
     "AVNO", "HWRF", "HMON", "DSHP", "LGEM", "CTCX",
-    "EMX0", "AEMN", "OFCL",
+    "EMX0", "AEMN", "OFCL", "JTWC",
 )
 
 # Priority order for picking analysis (tau=0) record
 DEFAULT_ANALYSIS_PRIORITY = (
-    "BEST", "OFCL", "CARQ", "WRNG",
+    "BEST", "OFCL", "JTWC", "CARQ", "WRNG",
     "AVNO", "HWRF", "HMON",
 )
 
