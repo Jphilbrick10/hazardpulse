@@ -1,7 +1,18 @@
 {
   "gate_set_version": "2026.04",
-  "generated_at": "2026-04-20T20:30:53Z",
+  "generated_at": "2026-04-20T20:36:31Z",
   "decisions": [
+    {
+      "gate_decision_id": "gdec_to_fcst_20260420_2036",
+      "forecast_id": "to_fcst_20260420_2036",
+      "hazard": "tornado",
+      "decision": "pass",
+      "reasons": [],
+      "warnings": [
+        "confidence_interval_unavailable"
+      ],
+      "issued_at": "2026-04-20T20:36:14Z"
+    },
     {
       "gate_decision_id": "gdec_to_fcst_20260420_2030",
       "forecast_id": "to_fcst_20260420_2030",
@@ -23,6 +34,18 @@
         "confidence_interval_unavailable"
       ],
       "issued_at": "2026-04-20T20:16:39Z"
+    },
+    {
+      "gate_decision_id": "gdec_hu_fcst_20260420_2000",
+      "forecast_id": "hu_fcst_20260420_2000",
+      "hazard": "hurricane",
+      "decision": "pass",
+      "reasons": [],
+      "warnings": [
+        "confidence_interval_unavailable",
+        "no_active_tropical_cyclones_in_feed"
+      ],
+      "issued_at": "2026-04-20T20:00:55Z"
     },
     {
       "gate_decision_id": "gdec_hu_fcst_20260420_1959",
