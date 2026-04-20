@@ -510,8 +510,14 @@ def score_storms(
             if isinstance(arr, np.ndarray) and arr.size > 0:
                 nan_ratios.append(float(np.isnan(arr).mean()))
         mean_nan = float(np.mean(nan_ratios)) if nan_ratios else 1.0
-        if mean_nan > 0.5:
-            print(f"  Warning: HRRR is {mean_nan:.0%} NaN — disabling tier1_ml GBT, falling back to tier2")
+        # 5% NaN threshold — HRRR analysis is essentially gap-free (0% NaN
+        # on a healthy fetch). Anything above a couple percent indicates a
+        # partial pull that will feed garbage into the GBT trees.
+        if mean_nan > 0.05:
+            print(
+                f"  Warning: HRRR is {mean_nan:.1%} NaN (threshold 5%) — "
+                "disabling tier1_ml GBT, falling back to tier2_analytic."
+            )
             hrrr_usable = False
         else:
             try:

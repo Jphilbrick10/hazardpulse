@@ -154,8 +154,9 @@ def fetch_probsevere_day(
     time_steps: list[dict] = []
 
     # First try listing actual files from S3 (more reliable than guessing)
-    s3_files = _list_s3_files(date_str)
+    s3_files, s3_listing_ok = _list_s3_files(date_str)
     if s3_files:
+        print(f"  ProbSevere: {len(s3_files)} files found in S3 for {date_str}")
         # Pick files at ~15min intervals
         import re as _re
         seen_slots: set[str] = set()
@@ -179,7 +180,18 @@ def fetch_probsevere_day(
             except Exception:
                 continue
     else:
-        # Fallback: try known time slots
+        # Distinguish two failure modes: S3 listing failed vs listing returned empty.
+        if not s3_listing_ok:
+            print(
+                f"  ProbSevere: S3 listing FAILED for {date_str} "
+                "(bucket unreachable / auth / path change). Trying known time slots."
+            )
+        else:
+            print(
+                f"  ProbSevere: S3 listing OK but empty for {date_str} "
+                "(no convective activity, or data not yet posted). "
+                "Probing known time slots as fallback."
+            )
         for hour in CONVECTIVE_HOURS:
             for minute in SCAN_MINUTES:
                 ts = _fetch_single_timestep(year, month, day, hour, minute)
@@ -204,8 +216,16 @@ def fetch_probsevere_day(
 # ---------------------------------------------------------------------------
 
 
-def _list_s3_files(date_str: str) -> list[str]:
-    """List ProbSevere JSON files for a date from the NOAA MRMS S3 bucket."""
+def _list_s3_files(date_str: str) -> tuple[list[str], bool]:
+    """List ProbSevere JSON files for a date from the NOAA MRMS S3 bucket.
+
+    Returns
+    -------
+    tuple[list[str], bool]
+        ``(keys, listing_ok)`` — ``listing_ok`` is True when the S3 API
+        returned a parseable response (even if empty); False if the request
+        itself failed (network, HTTP error, malformed XML).
+    """
     import re
     import urllib.request as _urllib
 
@@ -215,9 +235,17 @@ def _list_s3_files(date_str: str) -> list[str]:
         req = _urllib.Request(list_url, headers={"User-Agent": "hazardpulse/0.1"})
         resp = _urllib.urlopen(req, timeout=15)
         xml = resp.read().decode("utf-8", errors="replace")
-        return re.findall(r"<Key>(.*?)</Key>", xml)
-    except Exception:
-        return []
+    except Exception as exc:
+        print(f"  ProbSevere S3 listing failed: {exc}")
+        return [], False
+    # Basic structural validation — S3 ListBucketResult is always XML.
+    if "<ListBucketResult" not in xml:
+        print(
+            "  ProbSevere S3 listing returned unexpected response "
+            f"(first 200 bytes: {xml[:200]!r})."
+        )
+        return [], False
+    return re.findall(r"<Key>(.*?)</Key>", xml), True
 
 
 def _fetch_single_timestep(

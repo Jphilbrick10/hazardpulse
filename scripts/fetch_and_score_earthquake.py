@@ -60,6 +60,23 @@ from hazardpulse.earthquake.coherence_engine import (  # noqa: E402
     test_earthquake_singularity,
 )
 
+# Optional ML model imports — gracefully degrade if not available
+try:
+    from hazardpulse.earthquake.definitive_model import (  # noqa: E402
+        ALL_FEATURE_NAMES_ENHANCED as DEFINITIVE_EQ_FEATURE_NAMES,
+        CatalogArrays,
+        compute_block_s,
+        compute_block_c,
+    )
+    HAS_EQ_ML = True
+except ImportError as _eq_imp_err:
+    HAS_EQ_ML = False
+    print(
+        f"  WARNING: definitive_model unavailable ({_eq_imp_err}). "
+        "Earthquake ML path disabled; falling back to heuristic scorer.",
+        file=sys.stderr,
+    )
+
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
@@ -152,8 +169,21 @@ def fetch_usgs_catalog(
         with urlopen(req, timeout=60) as resp:
             raw = resp.read().decode("utf-8")
     except URLError as e:
-        print(f"  Error fetching USGS catalog: {e}")
-        return []
+        # Distinct failure mode from "API healthy but no events".
+        print(f"  ERROR: USGS catalog fetch failed (network/HTTP): {e}")
+        raise RuntimeError(f"USGS FDSNWS unreachable: {e}") from e
+
+    # Validate we got a real CSV response, not an empty body or HTML error page.
+    if not raw or not raw.strip():
+        raise RuntimeError(
+            "USGS returned HTTP 200 with empty body — API may be degraded."
+        )
+    first_line = raw.splitlines()[0].lower() if raw.splitlines() else ""
+    if "time" not in first_line or "latitude" not in first_line:
+        raise RuntimeError(
+            f"USGS response missing expected CSV header (got first line: "
+            f"{first_line[:120]!r})."
+        )
 
     reader = csv.DictReader(io.StringIO(raw))
     events: list[dict] = []
@@ -173,8 +203,96 @@ def fetch_usgs_catalog(
         except (ValueError, KeyError):
             continue
 
-    print(f"  Fetched {len(events)} events from USGS catalog")
+    if not events:
+        # Empty response but healthy API. Unusual for a 30-day global M2.5+
+        # window (baseline ~2000/month); log distinctly from a fetch failure.
+        print(
+            "  WARNING: USGS returned zero events in {}-day window "
+            "(API healthy, just no matches). This is unusual for global "
+            "M2.5+; verify window parameters.".format(days)
+        )
+    else:
+        print(f"  Fetched {len(events)} events from USGS catalog")
     return events
+
+
+# ---------------------------------------------------------------------------
+# Pre-trained GBT model (plus_cft variant: Block S + Block C = 73 features)
+# ---------------------------------------------------------------------------
+
+PRETRAINED_EQ_GBT_PATH = (
+    Path(__file__).resolve().parents[1] / "results" / "models" / "earthquake_gbt_v1.json"
+)
+
+
+def load_pretrained_eq_gbt() -> dict | None:
+    """Load the pre-trained earthquake GBT if present."""
+    if not PRETRAINED_EQ_GBT_PATH.exists():
+        return None
+    if not HAS_EQ_ML:
+        print(
+            "  WARNING: earthquake_gbt_v1.json exists but definitive_model is not "
+            "importable. Cannot run ML path."
+        )
+        return None
+    try:
+        data = json.loads(PRETRAINED_EQ_GBT_PATH.read_text(encoding="utf-8"))
+    except Exception as exc:
+        print(f"  WARNING: Failed to parse earthquake GBT: {exc}")
+        return None
+    if data.get("model_format") != "hazardpulse_gbt_v1":
+        print(f"  WARNING: Unknown earthquake GBT format in {PRETRAINED_EQ_GBT_PATH.name}")
+        return None
+    names = data.get("feature_names", [])
+    if names != DEFINITIVE_EQ_FEATURE_NAMES:
+        print(
+            f"  WARNING: earthquake GBT feature_names ({len(names)}) don't match "
+            f"definitive_model code ({len(DEFINITIVE_EQ_FEATURE_NAMES)}). "
+            "Refusing to use — order mismatch would produce garbage predictions."
+        )
+        return None
+    print(
+        f"  Loaded pre-trained earthquake GBT "
+        f"({data['n_trees']} trees, {len(names)} features) from "
+        f"{PRETRAINED_EQ_GBT_PATH.name}"
+    )
+    return data
+
+
+def _predict_eq_with_gbt(
+    gbt: dict,
+    raw_features_ordered: "np.ndarray",
+) -> float:
+    """Score a single grid cell using the pre-trained earthquake GBT.
+
+    raw_features_ordered must be a 1-D ndarray in DEFINITIVE_EQ_FEATURE_NAMES
+    order (73 values: Block S + Block C).
+    """
+    means = gbt["normalization"]["means"]
+    stds = gbt["normalization"]["stds"]
+
+    # Z-score normalize; treat NaN as missing → 0 post-normalization.
+    x = np.asarray(raw_features_ordered, dtype=np.float64)
+    x = (x - np.asarray(means)) / np.asarray(stds)
+    x = np.where(np.isfinite(x), x, 0.0)
+
+    F = float(gbt["init_pred"])
+    lr = float(gbt["learning_rate"])
+    for tree in gbt["trees"]:
+        node = tree
+        while not node.get("leaf", False):
+            fi = node["feat"]
+            if fi < len(x) and x[fi] <= node["thresh"]:
+                node = node["left"]
+            else:
+                node = node["right"]
+        F += lr * node["val"]
+
+    F = max(-88.0, min(88.0, F))
+    if F >= 0:
+        return 1.0 / (1.0 + math.exp(-F))
+    ef = math.exp(F)
+    return ef / (1.0 + ef)
 
 
 # ---------------------------------------------------------------------------
@@ -203,6 +321,7 @@ def score_grid_cells(
     events: list[dict],
     grid_fields: dict[str, np.ndarray] | None = None,
     now: dt.datetime | None = None,
+    pretrained_gbt: dict | None = None,
 ) -> list[dict]:
     """Score all active grid cells and return ranked list.
 
@@ -212,6 +331,10 @@ def score_grid_cells(
     - Rate acceleration
     - Singularity conditions (0-5)
     - Estimated days to criticality
+
+    If ``pretrained_gbt`` is provided and the earthquake ML module is
+    importable, cell probability comes from the trained GBT (Block S + C,
+    73 features). Otherwise falls back to the heuristic scorer.
     """
     if now is None:
         now = dt.datetime.now(dt.timezone.utc)
@@ -220,13 +343,24 @@ def score_grid_cells(
     cell_bins = bin_events_to_grid(events)
     scored_cells: list[dict] = []
 
+    # If ML tier available, pre-build the CatalogArrays once for the run.
+    cat_arrays = None
+    if pretrained_gbt is not None and HAS_EQ_ML:
+        try:
+            cat_arrays = CatalogArrays(events, verbose=False)
+        except Exception as exc:
+            print(f"  WARNING: CatalogArrays build failed ({exc}); disabling ML tier.")
+            cat_arrays = None
+            pretrained_gbt = None
+
     for (row, col), cell_events in cell_bins.items():
         if len(cell_events) < 5:
             continue
 
         lat, lon = grid_cell_to_latlon(row, col)
 
-        # Extract coherence features
+        # Extract coherence features (used for both tiers — diagnostics always
+        # ride along with the output regardless of which tier produced prob).
         features = extract_coherence_features(
             events, lat, lon,
             radius_km=300.0,
@@ -238,19 +372,31 @@ def score_grid_cells(
         # Test singularity conditions
         sing = test_earthquake_singularity(features)
 
-        # Compute probability estimate from singularity conditions
-        # Base probability from conditions met (empirical calibration)
-        base_prob = sing.conditions_met * 0.08
-        # Boost for rate acceleration
-        rate_accel = features.get("rate_acceleration", 1.0)
-        if not math.isnan(rate_accel) and rate_accel > 1.0:
-            base_prob *= min(rate_accel, 3.0) / 1.5
-        # Boost for b-value depression
-        b_val = features.get("b_value", 1.0)
-        if not math.isnan(b_val) and b_val < 0.85:
-            base_prob *= 1.2
-        # Cap at 0.95
-        prob = min(max(base_prob, 0.0), 0.95)
+        prob = None
+        cell_tier = "tier2_heuristic"
+        if pretrained_gbt is not None and cat_arrays is not None:
+            try:
+                block_s = compute_block_s(lat, lon, ref_epoch, cat_arrays)
+                if block_s is not None:
+                    block_c = compute_block_c(events, lat, lon, ref_epoch)
+                    full_vec = np.concatenate([block_s, block_c])
+                    if full_vec.shape[0] == len(DEFINITIVE_EQ_FEATURE_NAMES):
+                        prob = float(_predict_eq_with_gbt(pretrained_gbt, full_vec))
+                        cell_tier = "tier1_ml"
+            except Exception as exc:
+                print(f"  WARNING: ML scoring failed for cell ({row},{col}): {exc}")
+                prob = None
+
+        if prob is None:
+            # Heuristic fallback (original scorer behaviour).
+            base_prob = sing.conditions_met * 0.08
+            rate_accel = features.get("rate_acceleration", 1.0)
+            if not math.isnan(rate_accel) and rate_accel > 1.0:
+                base_prob *= min(rate_accel, 3.0) / 1.5
+            b_val = features.get("b_value", 1.0)
+            if not math.isnan(b_val) and b_val < 0.85:
+                base_prob *= 1.2
+            prob = min(max(base_prob, 0.0), 0.95)
 
         # Max magnitude in cell in last 30 days
         max_mag = max(
@@ -269,6 +415,7 @@ def score_grid_cells(
             "max_mag": round(max_mag, 1),
             "probability": round(prob, 4),
             "risk_band": risk,
+            "scoring_tier": cell_tier,
             "b_value": round(features.get("b_value", float("nan")), 3),
             "b_trend": round(features.get("b_trend", float("nan")), 4),
             "ell_km": round(features.get("ell", float("nan")), 1),
@@ -1358,8 +1505,15 @@ def score_grid_cells(
     candidate_events: list[dict] | None = None,
     grid_fields: dict[str, np.ndarray] | None = None,
     now: dt.datetime | None = None,
+    pretrained_gbt: dict | None = None,
 ) -> list[dict]:
-    """Score active grid cells using causal history and recent activity."""
+    """Score active grid cells using causal history and recent activity.
+
+    If ``pretrained_gbt`` is provided (and the earthquake ML module is
+    importable), the per-cell probability comes from the trained GBT
+    (73 Block S + C features, plus_cft variant). Otherwise falls back to
+    the singularity-count heuristic.
+    """
     if now is None:
         now = dt.datetime.now(dt.timezone.utc)
     ref_epoch = now.replace(tzinfo=dt.timezone.utc).timestamp()
@@ -1367,8 +1521,20 @@ def score_grid_cells(
     if candidate_events is None:
         candidate_events = history_events
 
+    # Build CatalogArrays once per run if ML tier is active.
+    cat_arrays = None
+    if pretrained_gbt is not None and HAS_EQ_ML:
+        try:
+            cat_arrays = CatalogArrays(history_events, verbose=False)
+            print(f"  ML tier active: CatalogArrays built from {len(history_events)} events")
+        except Exception as exc:
+            print(f"  WARNING: CatalogArrays build failed ({exc}); disabling ML tier.")
+            cat_arrays = None
+            pretrained_gbt = None
+
     cell_bins = bin_events_to_grid(candidate_events)
     scored_cells: list[dict] = []
+    n_ml = n_heur = 0
 
     for (row, col), cell_events in cell_bins.items():
         if len(cell_events) < MIN_CELL_EVENTS:
@@ -1386,14 +1552,32 @@ def score_grid_cells(
         )
         sing = test_earthquake_singularity(features)
 
-        base_prob = sing.conditions_met * 0.08
-        rate_accel = features.get("rate_acceleration", 1.0)
-        if not math.isnan(rate_accel) and rate_accel > 1.0:
-            base_prob *= min(rate_accel, 3.0) / 1.5
-        b_val = features.get("b_value", 1.0)
-        if not math.isnan(b_val) and b_val < 0.85:
-            base_prob *= 1.2
-        prob = min(max(base_prob, 0.0), 0.95)
+        prob = None
+        cell_tier = "tier2_heuristic"
+        if pretrained_gbt is not None and cat_arrays is not None:
+            try:
+                block_s = compute_block_s(lat, lon, ref_epoch, cat_arrays)
+                if block_s is not None:
+                    block_c = compute_block_c(history_events, lat, lon, ref_epoch)
+                    full_vec = np.concatenate([block_s, block_c])
+                    if full_vec.shape[0] == len(DEFINITIVE_EQ_FEATURE_NAMES):
+                        prob = float(_predict_eq_with_gbt(pretrained_gbt, full_vec))
+                        cell_tier = "tier1_ml"
+                        n_ml += 1
+            except Exception as exc:
+                print(f"  WARNING: ML scoring failed for cell ({row},{col}): {exc}")
+                prob = None
+
+        if prob is None:
+            base_prob = sing.conditions_met * 0.08
+            rate_accel = features.get("rate_acceleration", 1.0)
+            if not math.isnan(rate_accel) and rate_accel > 1.0:
+                base_prob *= min(rate_accel, 3.0) / 1.5
+            b_val = features.get("b_value", 1.0)
+            if not math.isnan(b_val) and b_val < 0.85:
+                base_prob *= 1.2
+            prob = min(max(base_prob, 0.0), 0.95)
+            n_heur += 1
 
         max_mag = max(
             (event["mag"] for event in cell_events if event.get("mag") is not None),
@@ -1410,6 +1594,7 @@ def score_grid_cells(
                 "max_mag": round(max_mag, 1),
                 "probability": round(prob, 4),
                 "risk_band": risk,
+                "scoring_tier": cell_tier,
                 "b_value": round(features.get("b_value", float("nan")), 3),
                 "b_trend": round(features.get("b_trend", float("nan")), 4),
                 "ell_km": round(features.get("ell", float("nan")), 1),
@@ -1453,6 +1638,9 @@ def score_grid_cells(
         key=lambda cell: (cell["probability"], cell["conditions_met"]),
         reverse=True,
     )
+
+    if n_ml or n_heur:
+        print(f"  Scored cells by tier: tier1_ml={n_ml}, tier2_heuristic={n_heur}")
     return scored_cells
 
 
@@ -1787,11 +1975,13 @@ def run_pipeline(
 
     print()
     print("Step 3: Scoring active grid cells...")
+    pretrained_eq_gbt = load_pretrained_eq_gbt()
     scored = score_grid_cells(
         history_events,
         candidate_events=recent_events,
         grid_fields=grid_fields,
         now=now,
+        pretrained_gbt=pretrained_eq_gbt,
     )
     print(f"  {len(scored)} cells scored")
 

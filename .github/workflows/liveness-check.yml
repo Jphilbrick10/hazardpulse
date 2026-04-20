@@ -1,0 +1,67 @@
+name: Liveness Check
+
+# Runs every 4 hours and fails loudly if any of the three scorers has gone
+# silent. "Silent" = live-pulse.json for that hazard hasn't refreshed within
+# the expected cadence. This catches the class of bug where CI is green but
+# forecasts have quietly stopped flowing.
+
+on:
+  schedule:
+    - cron: "15 */4 * * *"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check scorer freshness
+        run: |
+          python - <<'PY'
+          import datetime as dt
+          import json
+          import sys
+          from pathlib import Path
+
+          # Max acceptable age per hazard (hours) — based on scheduled cadence.
+          MAX_AGE_HOURS = {
+              "eq": 12,   # earthquake scorer runs every 6h
+              "hu": 36,   # hurricane scorer runs daily
+              "to": 6,    # tornado scorer runs every 2h
+          }
+
+          pulse = json.loads(Path("dist/data/live-pulse.json").read_text())
+          now = dt.datetime.now(dt.timezone.utc)
+          failures: list[str] = []
+
+          for hazard in pulse.get("hazards", []):
+              key = hazard.get("key")
+              if key not in MAX_AGE_HOURS:
+                  continue
+              updated_at = hazard.get("updated_at") or pulse.get("updated_at", "")
+              if not updated_at:
+                  failures.append(f"{key}: no updated_at timestamp")
+                  continue
+              t = dt.datetime.fromisoformat(updated_at.replace("Z", "+00:00"))
+              age_h = (now - t).total_seconds() / 3600.0
+              max_age = MAX_AGE_HOURS[key]
+              status = "OK" if age_h < max_age else "STALE"
+              print(f"  {key}: last_update={updated_at}  age={age_h:.1f}h  limit={max_age}h  {status}")
+              if age_h >= max_age:
+                  failures.append(
+                      f"{key} is stale: {age_h:.1f}h since last update "
+                      f"(threshold: {max_age}h)"
+                  )
+
+          if failures:
+              print()
+              print("LIVENESS CHECK FAILED:")
+              for f in failures:
+                  print(f"  - {f}")
+              sys.exit(1)
+          print()
+          print("All three scorers are fresh.")
+          PY

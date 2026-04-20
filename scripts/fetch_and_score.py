@@ -111,8 +111,27 @@ def _discover_jtwc_storms() -> dict[str, list[ATCFRecord]]:
         print(f"  Warning: Could not fetch JTWC RSS: {e}")
         return {}
 
+    # Structural validation — distinguish "no active storms" from "RSS format changed"
+    if "<rss" not in rss.lower() and "<feed" not in rss.lower():
+        print(
+            "  WARNING: JTWC RSS returned non-RSS response "
+            f"(first 200 bytes: {rss[:200]!r}). Format may have changed."
+        )
+        return {}
+    if "<item" not in rss.lower() and "<entry" not in rss.lower():
+        print(
+            "  JTWC RSS reachable but contains no <item>/<entry> tags — "
+            "treating as no-active-storms state."
+        )
+        return {}
+
     product_ids = JTWC_PRODUCT_RE.findall(rss)
     if not product_ids:
+        # Items exist but our regex matched nothing — likely a schema change.
+        print(
+            "  WARNING: JTWC RSS contains items but product regex "
+            f"{JTWC_PRODUCT_RE.pattern!r} matched zero IDs. Regex may need update."
+        )
         return {}
 
     result: dict[str, list[ATCFRecord]] = {}
@@ -895,7 +914,21 @@ def main() -> None:
     if active_ids:
         print(f"  Found {len(active_ids)} storms in ATCF: {', '.join(active_ids)}")
     else:
-        print("  No storms in NHC ATCF index.")
+        # In peak season (Jun-Nov Atlantic, year-round WP), zero storms is
+        # unusual and worth flagging loudly in case the feed rotted.
+        month = now.month
+        is_peak_atlantic = 6 <= month <= 11
+        if is_peak_atlantic:
+            print(
+                "  WARNING: NHC ATCF returned zero storms during peak Atlantic "
+                f"season (month={month}). Verify ftp.nhc.noaa.gov/atcf/aid_public/ "
+                "is populated — an empty index in August could mean a feed outage."
+            )
+        else:
+            print(
+                f"  No storms in NHC ATCF index (month={month}, "
+                "off-peak for most NHC basins)."
+            )
 
     # Step 1b: Check JTWC for additional storms (WP, IO, SH)
     print()
