@@ -113,6 +113,13 @@ except ImportError:
 from hazardpulse.tornado.tornado_npe import (  # noqa: E402
     analytic_tornado_probability,
 )
+from hazardpulse.tornado.definitive_model import (  # noqa: E402
+    ALL_FEATURE_NAMES_FULL as DEFINITIVE_FEATURE_NAMES,
+    extract_block_c as definitive_extract_c,
+    extract_block_e as definitive_extract_e,
+    extract_block_h as definitive_extract_h,
+    extract_block_p as definitive_extract_p,
+)
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -460,6 +467,7 @@ def score_storms(
     now: dt.datetime,
     scoring_tier: str = "tier3_ps_only",
     coherence_source: str = "none",
+    pretrained_gbt: dict | None = None,
 ) -> list[dict]:
     """Score all active storms from the latest ProbSevere time step.
 
@@ -484,6 +492,28 @@ def score_storms(
     # Build tracks for history
     tracks = build_storm_tracks(time_steps)
 
+    # Pre-compute derived HRRR grids once (needed for Block H feature extraction)
+    derived_hrrr: dict[str, np.ndarray] = {}
+    hrrr_usable = False
+    if hrrr is not None and pretrained_gbt is not None:
+        # Guard against all-NaN HRRR (stale Zarr bucket → meaningless ML output)
+        nan_ratios = []
+        for arr in hrrr.values():
+            if isinstance(arr, np.ndarray) and arr.size > 0:
+                nan_ratios.append(float(np.isnan(arr).mean()))
+        mean_nan = float(np.mean(nan_ratios)) if nan_ratios else 1.0
+        if mean_nan > 0.5:
+            print(f"  Warning: HRRR is {mean_nan:.0%} NaN — disabling tier1_ml GBT, falling back to tier2")
+            hrrr_usable = False
+        else:
+            try:
+                derived_hrrr = compute_derived_hrrr(hrrr)
+                hrrr_usable = True
+            except Exception as exc:
+                print(f"  Warning: compute_derived_hrrr failed: {exc}")
+                derived_hrrr = {}
+                hrrr_usable = False
+
     scored: list[dict] = []
     for storm in storms:
         sid = storm.get("id", 0)
@@ -502,8 +532,45 @@ def score_storms(
         model_scores: dict = {}
         coherence_score: float = 0.0
 
-        if scoring_tier == "tier1_ml" and model is not None and HAS_OPERATIONAL:
-            # Tier 1: Full ML model
+        if (
+            scoring_tier == "tier1_ml"
+            and pretrained_gbt is not None
+            and hrrr is not None
+            and coherence_fields is not None
+            and hrrr_usable
+        ):
+            # Tier 1 (pre-trained GBT): build 41-feature vector then score.
+            try:
+                f_p = definitive_extract_p(storm)
+                f_e = definitive_extract_e(storm, history)
+                f_h = definitive_extract_h(storm, hrrr, derived_hrrr)
+                f_c = definitive_extract_c(storm, coherence_fields, hrrr)
+                full_vec = np.concatenate([f_p, f_e, f_h, f_c])
+                raw_features = {
+                    name: float(full_vec[i])
+                    for i, name in enumerate(DEFINITIVE_FEATURE_NAMES)
+                }
+                prob = predict_with_pretrained(pretrained_gbt, raw_features)
+                prob = round(min(max(prob, 0.0), 0.99), 4)
+                risk = _risk_band(prob)
+                # Surface top 5 features by importance * value magnitude
+                model_scores = {"gbt_prob": prob}
+                top_features = [
+                    {"name": name, "value": round(raw_features[name], 4)}
+                    for name in ("srh01", "hrrr_pwat", "alignment", "tau", "maxllaz")
+                    if name in raw_features
+                ]
+                coherence_score = float(raw_features.get("tau", 0.0))
+            except Exception as exc:
+                print(f"  Warning: pre-trained GBT failed for storm {sid}: {exc}")
+                # Fall through to tier 2 analytic
+                prob = score_storm_analytic(storm, coherence_fields)
+                prob = round(min(max(prob, 0.0), 0.99), 4)
+                risk = _risk_band(prob)
+                model_scores = {"analytic_prob": prob, "gbt_failed": True}
+                coherence_score = prob
+        elif scoring_tier == "tier1_ml" and model is not None and HAS_OPERATIONAL:
+            # Tier 1 (legacy model format): Full ML model
             result = predict_tornado_probability(
                 storm, history, hrrr, coherence_fields, model
             )
@@ -3839,23 +3906,21 @@ def main() -> None:
     pretrained_gbt = load_pretrained_gbt()
     if pretrained_gbt is not None:
         scoring_tier = "tier1_ml"
-        print(f"  -> Tier 1: Pre-trained GBT model (definitive_model)")
+        print(f"  -> Tier 1: Pre-trained GBT model ({pretrained_gbt['n_trees']} trees, "
+              f"{len(pretrained_gbt['feature_names'])} features)")
     else:
         # Fallback: try legacy model format
         model = load_pretrained_model()
-
-    if model is not None and pretrained_gbt is None:
-        scoring_tier = "tier1_ml"
-        print(f"  -> Tier 1: Pre-trained ML model (legacy)")
-    elif coherence_fields is not None:
-        # Tier 2: Use analytic coherence model (no ML needed)
-        scoring_tier = "tier2_analytic"
-        source_label = "HRRR" if coherence_source == "hrrr" else "ProbSevere fallback"
-        print(f"  -> Tier 2: Analytic coherence model (no ML, coherence from {source_label})")
-    else:
-        # Tier 3: ProbSevere-only fallback
-        scoring_tier = "tier3_ps_only"
-        print(f"  -> Tier 3: ProbSevere-only fallback (no ML, no coherence fields)")
+        if model is not None:
+            scoring_tier = "tier1_ml"
+            print(f"  -> Tier 1: Pre-trained ML model (legacy)")
+        elif coherence_fields is not None:
+            scoring_tier = "tier2_analytic"
+            source_label = "HRRR" if coherence_source == "hrrr" else "ProbSevere fallback"
+            print(f"  -> Tier 2: Analytic coherence model (no ML, coherence from {source_label})")
+        else:
+            scoring_tier = "tier3_ps_only"
+            print(f"  -> Tier 3: ProbSevere-only fallback (no ML, no coherence fields)")
 
     # Step 5: Score active storms
     print()
@@ -3864,6 +3929,7 @@ def main() -> None:
         time_steps, hrrr, coherence_fields, model, now,
         scoring_tier=scoring_tier,
         coherence_source=coherence_source,
+        pretrained_gbt=pretrained_gbt,
     )
 
     for s in scored[:10]:

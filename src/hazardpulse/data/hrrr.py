@@ -58,30 +58,32 @@ DY_M: float = DY_KM * 1000.0
 # HRRR variable mapping  (short name -> Zarr group/variable path)
 # ---------------------------------------------------------------------------
 
+# Variable name -> relative path inside the hrrrzarr store.
+# The Utah hrrrzarr bucket nests paths as "{level}/{var}/{level}/{var}".
+# Mixed-layer CAPE is approximated by the 180_0mb layer; MU CAPE by 255_0mb.
 HRRR_VARS: dict[str, str] = {
-    "cape": "surface/CAPE",
-    "cin": "surface/CIN",
-    "mlcape": "surface/MLCAPE",
-    "mlcin": "surface/MLCIN",
-    "mucape": "surface/MUCAPE",
-    "srh_01": "1000_0m_above_ground/HLCY",
-    "srh_03": "3000_0m_above_ground/HLCY",
-    "refc": "entire_atmosphere/REFC",
-    "ushear_01": "0_1000m_above_ground/VUCSH",
-    "vshear_01": "0_1000m_above_ground/VVCSH",
-    "ushear_06": "0_6000m_above_ground/VUCSH",
-    "vshear_06": "0_6000m_above_ground/VVCSH",
-    "ustorm": "0m_above_ground/USTM",
-    "vstorm": "0m_above_ground/VSTM",
-    "t2m": "2m_above_ground/TMP",
-    "td2m": "2m_above_ground/DPT",
-    "pwat": "entire_atmosphere/PWAT",
+    "cape": "surface/CAPE/surface/CAPE",
+    "cin": "surface/CIN/surface/CIN",
+    "mlcape": "180_0mb_above_ground/CAPE/180_0mb_above_ground/CAPE",
+    "mlcin": "180_0mb_above_ground/CIN/180_0mb_above_ground/CIN",
+    "mucape": "255_0mb_above_ground/CAPE/255_0mb_above_ground/CAPE",
+    "srh_01": "1000_0m_above_ground/HLCY/1000_0m_above_ground/HLCY",
+    "srh_03": "3000_0m_above_ground/HLCY/3000_0m_above_ground/HLCY",
+    "refc": "entire_atmosphere/REFC/entire_atmosphere/REFC",
+    "ushear_01": "0_1000m_above_ground/VUCSH/0_1000m_above_ground/VUCSH",
+    "vshear_01": "0_1000m_above_ground/VVCSH/0_1000m_above_ground/VVCSH",
+    "ushear_06": "0_6000m_above_ground/VUCSH/0_6000m_above_ground/VUCSH",
+    "vshear_06": "0_6000m_above_ground/VVCSH/0_6000m_above_ground/VVCSH",
+    "ustorm": "0_6000m_above_ground/USTM/0_6000m_above_ground/USTM",
+    "vstorm": "0_6000m_above_ground/VSTM/0_6000m_above_ground/VSTM",
+    "t2m": "2m_above_ground/TMP/2m_above_ground/TMP",
+    "td2m": "2m_above_ground/DPT/2m_above_ground/DPT",
+    "pwat": "entire_atmosphere_single_layer/PWAT/entire_atmosphere_single_layer/PWAT",
 }
 
-# AWS HRRR Zarr root (NOAA Open Data)
+# Utah hrrrzarr bucket (active, public HRRR analysis Zarr mirror)
 HRRR_ZARR_ROOT = (
-    "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.{date}/conus/"
-    "hrrr.t{hour:02d}z.wrfprsf00.grib2.zarr"
+    "https://hrrrzarr.s3.amazonaws.com/sfc/{date}/{date}_{hour:02d}z_anl.zarr"
 )
 
 # ---------------------------------------------------------------------------
@@ -165,34 +167,41 @@ def fetch_hrrr_grid(
     """
     cached = load_cached_hrrr(date_str, hour, cache_dir=cache_dir)
     if cached is not None:
-        return cached
+        # Treat all-NaN cache as missing so we re-fetch
+        n_nan = sum(
+            float(np.isnan(a).mean()) for a in cached.values() if isinstance(a, np.ndarray)
+        )
+        if n_nan / max(len(cached), 1) < 0.9:
+            return cached
 
-    # Date stays as YYYYMMDD for the S3 key (e.g. hrrr.20240315/conus/...)
+    import zarr
+    import fsspec
+
     zarr_root = HRRR_ZARR_ROOT.format(date=date_str, hour=hour)
+    try:
+        store = fsspec.get_mapper(zarr_root)
+        root = zarr.open(store, mode="r")
+    except Exception as exc:
+        print(f"  HRRR zarr store unreachable ({zarr_root}): {exc}")
+        return {
+            k: np.full((HRRR_N_LAT, HRRR_N_LON), np.nan, dtype=np.float32)
+            for k in HRRR_VARS
+        }
 
     grids: dict[str, np.ndarray] = {}
     for var_name, zarr_path in HRRR_VARS.items():
-        url = f"{zarr_root}/{zarr_path}/0.0"
         try:
-            raw = fetch_bytes(url, namespace="hrrr", timeout=120)
-            # Zarr chunks are raw numpy — decode as float32 and subsample
-            full = np.frombuffer(raw, dtype=np.float32)
-            # HRRR CONUS native is ~1059 x 1799; subsample to 34 x 63
-            subsampled = _subsample_to_grid(full, var_name)
-            grids[var_name] = subsampled
+            full = np.asarray(root[zarr_path], dtype=np.float32)
+            grids[var_name] = _subsample_to_grid(full.ravel(), var_name)
         except Exception as exc:
-            # Fill with NaN on failure so downstream can distinguish
-            # missing data from genuine zero values
             print(f"  HRRR fetch failed for {var_name}: {exc}")
             grids[var_name] = np.full(
                 (HRRR_N_LAT, HRRR_N_LON), np.nan, dtype=np.float32
             )
 
-    # Persist to cache
     out_path = _npz_path(date_str, hour, cache_dir=cache_dir)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(str(out_path), **grids)
-
     return grids
 
 

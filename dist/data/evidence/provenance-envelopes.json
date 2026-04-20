@@ -1,27 +1,47 @@
 {
-  "generated_at": "2026-04-20T20:00:57Z",
+  "generated_at": "2026-04-20T20:30:53Z",
   "envelopes": [
     {
-      "provenance_id": "prov_hu_fcst_20260420_2000",
-      "forecast_id": "hu_fcst_20260420_2000",
-      "hazard": "hurricane",
-      "model_version": "hurricane_ri_v8_1",
-      "input_hash": "sha256:9e387320249c9c0005193a30ad62d4f0e0169f2767a8d0a3cfa03c8deb579107",
-      "output_hash": "sha256:49595570b6a9880aa97aab6b1db820acb03427bea537070c7d1cfd1aa03f5a55",
-      "signed_at": "2026-04-20T20:00:55Z",
+      "provenance_id": "prov_to_fcst_20260420_2030",
+      "forecast_id": "to_fcst_20260420_2030",
+      "hazard": "tornado",
+      "model_version": "tornado_storm_v1_0",
+      "input_hash": "sha256:81ec4f1dfe28cc7f23175d4dae0e7e2bcbdcc703d08cbb9bfeb1f63471c94d21",
+      "output_hash": "sha256:f8c32ccc76850882d933f7c314d5045d042b685c3f8fad88c43b7a2b49c15954",
+      "signed_at": "2026-04-20T20:30:17Z",
       "sources": [
-        "ATCF advisories",
-        "NOAA tropical cyclone feed",
-        "published live storm snapshot"
+        "ProbSevere storm objects",
+        "published live tornado snapshot",
+        "HRRR analysis"
       ],
       "transforms": [
-        "advisory_ingest",
-        "feature_build",
-        "ri_scoring",
-        "calibration",
+        "probsevere_ingest",
+        "coherence_scoring",
+        "storm_ranking",
         "publish_artifact"
       ],
-      "replay_artifact": "/data/replay/hu_fcst_20260420_2000.json"
+      "replay_artifact": "/data/replay/to_fcst_20260420_2030.json"
+    },
+    {
+      "provenance_id": "prov_to_fcst_20260420_2016",
+      "forecast_id": "to_fcst_20260420_2016",
+      "hazard": "tornado",
+      "model_version": "tornado_storm_v1_0",
+      "input_hash": "sha256:09b3e37ae23d5a73ffbc1cc0fe06cda17aa234f5e95abcc3693a5f7579365b62",
+      "output_hash": "sha256:5132fcc7bfc5215c7fb8d61f46fb722b5da2d59a4845ddcdeaf8ab6094a8177b",
+      "signed_at": "2026-04-20T20:16:39Z",
+      "sources": [
+        "ProbSevere storm objects",
+        "published live tornado snapshot",
+        "HRRR analysis"
+      ],
+      "transforms": [
+        "probsevere_ingest",
+        "coherence_scoring",
+        "storm_ranking",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/to_fcst_20260420_2016.json"
     },
     {
       "provenance_id": "prov_hu_fcst_20260420_1959",

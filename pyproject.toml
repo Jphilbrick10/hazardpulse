@@ -37,6 +37,10 @@ classifiers = [
 ]
 dependencies = [
     "numpy>=1.24",
+    "zarr>=2.17,<3",
+    "numcodecs>=0.11,<0.17",
+    "fsspec>=2024.2",
+    "aiohttp>=3.9",
 ]
 
 [project.optional-dependencies]
