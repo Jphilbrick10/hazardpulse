@@ -1,8 +1,8 @@
 {
-  "scored_as_of": "2026-04-21T07:52:01Z",
+  "scored_as_of": "2026-04-22T07:49:13Z",
   "replay_dir": "/home/runner/work/hazardpulse/hazardpulse/dist/data/replay",
-  "n_replay_artifacts": 193,
-  "n_matured_forecasts": 180,
+  "n_replay_artifacts": 203,
+  "n_matured_forecasts": 193,
   "forecast_horizon_hours": 24,
   "match_radius_km": 40.0,
   "match_window_hours": 4.0,
@@ -10,19 +10,19 @@
   "status": "ok",
   "observed_window": {
     "start": "2026-03-13T03:00:00Z",
-    "end": "2026-04-21T06:12:10Z",
-    "n_tornado_reports": 243
+    "end": "2026-04-22T06:00:16Z",
+    "n_tornado_reports": 253
   },
-  "total_storms_scored": 10817,
+  "total_storms_scored": 11180,
   "total_matched_storms": 42,
-  "total_tornado_reports_in_windows": 1619,
-  "overall_match_rate": 0.0039,
+  "total_tornado_reports_in_windows": 1731,
+  "overall_match_rate": 0.0038,
   "mean_auc": 0.696,
   "median_auc": 0.7712,
-  "mean_brier": 0.0262,
-  "mean_brier_skill_score": -0.0816,
+  "mean_brier": 0.0263,
+  "mean_brier_skill_score": -0.0761,
   "n_forecasts_with_valid_auc": 15,
-  "n_forecasts_without_matches": 165,
+  "n_forecasts_without_matches": 178,
   "by_tier": {
     "unknown": {
       "n_forecasts": 1,
@@ -36,15 +36,26 @@
       "mean_brier_skill_score": null
     },
     "tier2_analytic": {
-      "n_forecasts": 179,
+      "n_forecasts": 185,
       "n_forecasts_with_valid_auc": 15,
-      "total_storms_scored": 10817,
+      "total_storms_scored": 10962,
       "total_matched_storms": 42,
-      "match_rate": 0.0039,
+      "match_rate": 0.0038,
       "mean_auc": 0.696,
       "median_auc": 0.7712,
-      "mean_brier": 0.0262,
-      "mean_brier_skill_score": -0.0816
+      "mean_brier": 0.0256,
+      "mean_brier_skill_score": -0.079
+    },
+    "tier1_ml": {
+      "n_forecasts": 7,
+      "n_forecasts_with_valid_auc": 0,
+      "total_storms_scored": 218,
+      "total_matched_storms": 0,
+      "match_rate": 0.0,
+      "mean_auc": null,
+      "median_auc": null,
+      "mean_brier": 0.0461,
+      "mean_brier_skill_score": 0.0
     }
   }
 }
