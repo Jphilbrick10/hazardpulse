@@ -1,0 +1,78 @@
+name: Cross-modality LAIC analyses
+
+on:
+  schedule:
+    # Weekly Monday 11:30 UTC after the cron-pile of scoring runs settles
+    - cron: "30 11 * * 1"
+  workflow_dispatch:
+    inputs:
+      max_eq:
+        description: "Max EQ events for analyses (default 200; --full for all ~1500)"
+        required: false
+        type: string
+        default: "200"
+
+concurrency:
+  group: hazardpulse-scoring
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install numpy scipy
+          pip install -e .
+
+      - name: Cache SWPC archives
+        uses: actions/cache@v4
+        with:
+          path: .cache/swpc
+          key: swpc-archives-v1
+          restore-keys: swpc-archives-
+
+      - name: Bootstrap SWPC archives if missing
+        run: |
+          if [ ! -f .cache/swpc/kp_definitive.npz ]; then
+            python scripts/download_swpc_archives.py --since 2005 --skip dst,xray
+          else
+            echo "SWPC archives present, skipping download"
+          fi
+
+      - name: Run cross-modality analyses
+        run: |
+          MAX_EQ_ARG="${{ github.event.inputs.max_eq || '200' }}"
+          python scripts/run_cross_modality_analyses.py --max-eq "$MAX_EQ_ARG" --skip-lightning
+
+      - name: Verify summary written
+        run: |
+          test -s dist/data/cross-modality-summary.json
+          python -c "
+          import json
+          d = json.loads(open('dist/data/cross-modality-summary.json').read())
+          print(f\"Analyses: {d['n_analyses']}, EQ events: {d['n_eq_events_used']}\")
+          for a in d['analyses']:
+              if 'delta_mean' in a:
+                  print(f\"  {a['analysis_id']:<40s} delta={a['delta_mean']:+.3f}  p={a.get('welch_p_two_sided', a.get('welch_p', float('nan'))):.3f}\")
+          "
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f dist/data/cross-modality-summary.json results/cross_modality/
+          git diff --cached --quiet || git commit -m "data: cross-modality analyses $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push || true

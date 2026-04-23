@@ -821,6 +821,46 @@ async function handleApiRequest(request, env) {
     return jsonResponse(apiEnvelope(registry, 3600), 200, "public, max-age=3600");
   }
 
+  if (path === "/api/v1/laic/summary") {
+    const laic = await fetchAssetJson(env, "/data/cross-modality-summary.json", request);
+    if (!laic) return errorEnvelope("not_found", "LAIC analyses summary is unavailable.");
+    return jsonResponse(apiEnvelope(laic, 3600), 200, "public, max-age=3600");
+  }
+
+  const laicMatch = path.match(/^\/api\/v1\/laic\/(earthquake|hurricane|tornado|cme)$/);
+  if (laicMatch) {
+    const slug = laicMatch[1];
+    const summary = await fetchAssetJson(env, "/data/cross-modality-summary.json", request);
+    if (!summary || !Array.isArray(summary.analyses)) {
+      return errorEnvelope("not_found", `No LAIC analyses for ${slug}.`);
+    }
+    const matches = summary.analyses.filter((a) => a.hazard === slug);
+    if (!matches.length) return errorEnvelope("not_found", `No LAIC analyses for ${slug}.`);
+    return jsonResponse(apiEnvelope({ hazard: slug, analyses: matches }, 3600),
+                        200, "public, max-age=3600");
+  }
+
+  if (path === "/api/v1/alerts/recent") {
+    const recent = await fetchAssetJson(env, "/data/alerts-recent.json", request);
+    if (!recent) return errorEnvelope("not_found", "Recent alerts are unavailable.");
+    return jsonResponse(apiEnvelope(recent, 60), 200, "public, max-age=60");
+  }
+
+  if (path === "/api/v1/federation/atlas") {
+    // Public atlas surface — lists tables this node exposes to peers.
+    // Each peer can query these via signed Ed25519 requests (over the
+    // separate signalbook federated server). This endpoint is the
+    // discovery/handshake hint, not the signed query channel.
+    const fingerprint = await fetchAssetJson(env, "/data/federation-fingerprint.json", request);
+    if (!fingerprint) {
+      return errorEnvelope(
+        "not_configured",
+        "Federation node is not configured. Run scripts/federation_setup.py."
+      );
+    }
+    return jsonResponse(apiEnvelope(fingerprint, 3600), 200, "public, max-age=3600");
+  }
+
   if (path === "/api/v1/ops/status") {
     const snapshot = await buildOpsSnapshot(env, request);
     return jsonResponse(apiEnvelope(snapshot, 300), 200, "public, max-age=300");

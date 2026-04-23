@@ -26,6 +26,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MODELS_DIR = PROJECT_ROOT / "results" / "models"
 OUT_PATH = MODELS_DIR / "model_weights_registry.json"
+# Also publish to the Cloudflare-served path so /api/v1/registry/models picks it up
+WORKER_OUT_PATH = PROJECT_ROOT / "dist" / "data" / "model-registry.json"
 
 try:
     import blake3
@@ -249,10 +251,17 @@ def main() -> int:
         "generated_at": dt.datetime.utcnow().isoformat() + "Z",
         "n_entries": len(entries),
         "entries": entries,
+        # Alias used by the worker API contract (/api/v1/registry/models)
+        # to keep the field name "models" for backwards compat.
+        "models": entries,
     }
 
     OUT_PATH.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     print(f"Wrote {OUT_PATH} ({OUT_PATH.stat().st_size / 1024:.1f} KB)")
+    # Also publish to the worker-served path
+    WORKER_OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    WORKER_OUT_PATH.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    print(f"Wrote {WORKER_OUT_PATH} (served at /api/v1/registry/models)")
     print(f"  Entries: {len(entries)}")
     for e in entries:
         bench = e.get("benchmark", {})

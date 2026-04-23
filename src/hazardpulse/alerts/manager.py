@@ -367,6 +367,80 @@ def hu_ri_rule(threshold: float = 0.30) -> AlertRule:
     )
 
 
+def build_default_manager(
+    *,
+    audit_path: Path | str,
+    recent_path: Path | str | None = None,
+    slack_webhook_url: str | None = None,
+    webhook_url: str | None = None,
+):
+    """Construct an AlertManager with the standard sinks + 3 prebuilt rules.
+
+    Honors environment variables when explicit args are not given:
+      HAZARDPULSE_SLACK_WEBHOOK_URL
+      HAZARDPULSE_ALERT_WEBHOOK_URL
+
+    The "recent" sink (when ``recent_path`` is set) keeps a rolling
+    window of the last N alerts as a JSON file the worker can serve
+    at /api/v1/alerts/recent.
+    """
+    import os
+    sinks: dict[str, AlertSink] = {"file": FileSink(audit_path)}
+    sink_names: list[str] = ["file"]
+
+    slack_url = slack_webhook_url or os.environ.get("HAZARDPULSE_SLACK_WEBHOOK_URL", "")
+    if slack_url:
+        sinks["slack"] = SlackSink(slack_url)
+        sink_names.append("slack")
+
+    webhook = webhook_url or os.environ.get("HAZARDPULSE_ALERT_WEBHOOK_URL", "")
+    if webhook:
+        sinks["webhook"] = WebhookSink(webhook)
+        sink_names.append("webhook")
+
+    if recent_path is not None:
+        sinks["recent"] = RollingRecentSink(recent_path)
+        sink_names.append("recent")
+
+    return AlertManager(
+        rules=[critical_eq_rule(0.50), severe_to_rule(0.30), hu_ri_rule(0.30)],
+        sinks=sinks,
+        default_sinks=tuple(sink_names),
+        audit_path=audit_path,
+    )
+
+
+@dataclass
+class RollingRecentSink(AlertSink):
+    """Keep the last N alerts in a JSON file (worker-served)."""
+
+    path: Path | str
+    name: str = "recent"
+    max_alerts: int = 50
+
+    def __post_init__(self) -> None:
+        self.path = Path(self.path)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+
+    def send(self, alert: "Alert") -> None:
+        existing: list[dict] = []
+        if self.path.exists():
+            try:
+                payload = json.loads(self.path.read_text(encoding="utf-8"))
+                existing = payload.get("alerts", [])
+            except Exception:
+                existing = []
+        existing.insert(0, alert.to_dict())
+        existing = existing[: self.max_alerts]
+        out = {
+            "schema_version": 1,
+            "updated_at": dt.datetime.utcnow().isoformat() + "Z",
+            "n_alerts": len(existing),
+            "alerts": existing,
+        }
+        self.path.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
+
+
 __all__ = [
     "AlertManager",
     "AlertRule",
@@ -375,8 +449,10 @@ __all__ = [
     "FileSink",
     "WebhookSink",
     "SlackSink",
+    "RollingRecentSink",
     "VALID_SEVERITIES",
     "critical_eq_rule",
     "severe_to_rule",
     "hu_ri_rule",
+    "build_default_manager",
 ]

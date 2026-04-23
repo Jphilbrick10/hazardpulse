@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cross-modality LAIC Analyses - HazardPulse</title>
+  <meta name="description" content="Population-scale tests of Lithosphere-Atmosphere-Ionosphere Coupling, lightning-severe-weather, and CME-RI hypotheses on the HazardPulse corpus.">
+  <meta name="theme-color" content="#f6f9ff">
+  <link rel="canonical" href="https://hazardpulse.com/verification/cross-modality/">
+  <script src="/assets/site-shell.js?v=2"></script>
+  <link rel="stylesheet" href="/assets/styles.css?v=10">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="HazardPulse Feed" href="/feed.xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Cross-modality LAIC Analyses - HazardPulse">
+  <meta property="og:description" content="Population-scale Lithosphere-Atmosphere-Ionosphere Coupling tests on the HazardPulse + Signalbook corpus.">
+  <meta property="og:url" content="https://hazardpulse.com/verification/cross-modality/">
+  <meta property="og:site_name" content="HazardPulse">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Cross-modality LAIC Analyses - HazardPulse">
+  <meta name="twitter:description" content="Population-scale Lithosphere-Atmosphere-Ionosphere Coupling tests on the HazardPulse + Signalbook corpus.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "HazardPulse Cross-modality LAIC Analyses",
+    "description": "Six falsifiable hypothesis tests: Sobolev/Hayakawa Kp pre-quake, Freund/Pulinets X-ray pre-quake, IMF Bz pre-quake, Fierro+ GLM-RI hurricane, Steiger+ flash-jump pre-tornado, Thakur+ CME-RI hurricane.",
+    "url": "https://hazardpulse.com/verification/cross-modality/",
+    "isPartOf": { "@type": "WebSite", "name": "HazardPulse", "url": "https://hazardpulse.com/" }
+  }
+  </script>
+</head>
+<body>
+  <div class="live-bar"></div>
+  <div class="emergency-banner" role="alert" aria-live="assertive"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar" role="banner">
+    <div class="container topbar-inner">
+      <a href="/" class="brand" aria-label="HazardPulse home">
+        <img src="/assets/hp-logo.png" alt="HazardPulse" class="brand-logo" width="30" height="30">
+        HazardPulse
+      </a>
+      <input type="checkbox" id="nav-toggle" class="nav-hamburger-input" aria-label="Toggle navigation">
+      <label for="nav-toggle" class="nav-hamburger" aria-hidden="true">
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+        <span class="nav-hamburger-bar"></span>
+      </label>
+      <nav class="nav" aria-label="Primary navigation">
+        <div class="nav-dropdown">
+          <a href="/live/">Live</a>
+          <div class="nav-dropdown-menu">
+            <a href="/live/earthquake/"><span class="hazard-dot eq"></span> Earthquake</a>
+            <a href="/live/hurricane/"><span class="hazard-dot hu"></span> Hurricane</a>
+            <a href="/live/tornado/"><span class="hazard-dot to"></span> Tornado</a>
+          </div>
+        </div>
+        <a href="/verification/" aria-current="page">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+        <a href="/registry/">Registry</a>
+        <a href="/api/">API</a>
+      </nav>
+      <div class="theme-switch">
+        <input id="theme-toggle" class="theme-toggle" type="checkbox" aria-label="Switch to dark mode">
+        <label for="theme-toggle">Dark</label>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="hero">
+      <div class="eyebrow">Cross-modality verification</div>
+      <h1>LAIC + lightning + CME population tests</h1>
+      <p class="subtitle">
+        Six falsifiable hypotheses from the Lithosphere-Atmosphere-Ionosphere Coupling
+        (LAIC), severe-weather lightning, and CME-tropical-cyclone literature, tested
+        at population scale on the HazardPulse forecast corpus + NOAA SWPC + GOES GLM
+        archives. Welch&rsquo;s t-test with bootstrap CIs on each delta. Updated
+        weekly by the cross-modality-analyses workflow.
+      </p>
+      <p class="muted">Source: <a href="/api/v1/laic/summary">/api/v1/laic/summary</a> &middot; Schedule: weekly Monday 11:30 UTC</p>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <h2 style="margin-top:0;">How to read this page</h2>
+        <p>
+          Each row is one population-scale test. <strong>Delta</strong> is
+          (target mean &minus; matched-control mean) for the named feature in the
+          72&nbsp;h before the event. <strong>p</strong> is the two-sided
+          Welch&rsquo;s t-test p-value. Bootstrap CIs are 95&thinsp;% from
+          200&minus;1000 resamples. A non-zero delta with tight CI excluding zero
+          is evidence FOR the hypothesis; a tight CI containing zero is evidence
+          AGAINST. Sample sizes drive statistical power &mdash; the weekly
+          schedule uses 200&nbsp;EQ events; the full ~1500-event population test
+          can be triggered via workflow_dispatch with <code>max_eq=full</code>.
+        </p>
+      </div>
+
+      <div class="card" style="margin-top:var(--space-md);">
+        <h2 style="margin-top:0;">Latest results</h2>
+        <p class="muted" id="generated-at">Loading...</p>
+        <div id="laic-table-wrapper">
+          <p class="muted">Run the cross-modality analyses workflow to populate this page.</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:var(--space-md);">
+        <h2 style="margin-top:0;">Hypotheses tested</h2>
+        <ul>
+          <li><strong>earthquake_geomagnetic_precursor</strong> &mdash; Sobolev / Hayakawa: Kp index elevated 72&nbsp;h pre-M6+ vs &plusmn;1&nbsp;yr controls.</li>
+          <li><strong>earthquake_solar_flare_precursor</strong> &mdash; Freund / Pulinets: GOES M+/X+ flare count elevated pre-quake (LAIC tier 1).</li>
+          <li><strong>earthquake_imf_bz_precursor</strong> &mdash; Sustained negative IMF&nbsp;Bz before M6+ events.</li>
+          <li><strong>hurricane_lightning_correlation</strong> &mdash; Fierro+&nbsp;2014: GLM flash rate inside storm core during RI vs no-RI.</li>
+          <li><strong>tornado_lightning_leadup</strong> &mdash; Steiger+&nbsp;2007 / Schultz+&nbsp;2011: 15&nbsp;min flash-jump ratio pre-tornado vs null cases.</li>
+          <li><strong>cme_hurricane_intensification</strong> &mdash; Thakur+: CME shock arrivals (sw_speed&nbsp;&gt;&nbsp;600&nbsp;km/s AND Bz&nbsp;&lt;&nbsp;&minus;8&nbsp;nT) within 72&nbsp;h pre-RI vs no-RI.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="/live/">Live forecasts</a>
+        <a href="/verification/">Verification</a>
+        <a href="/evidence/">Evidence</a>
+        <a href="/methods/">Methods</a>
+      </div>
+      <div class="footer-col">
+        <h4>Data</h4>
+        <a href="/registry/">Model registry</a>
+        <a href="/api/">API contracts</a>
+        <a href="/ops/status/">System status</a>
+        <a href="/feed.xml">RSS feed</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/legal/disclaimer/">Disclaimer</a>
+        <a href="/legal/privacy/">Privacy</a>
+        <a href="/legal/terms/">Terms</a>
+      </div>
+      <p class="footer-disclaimer">
+        Independent hazard intelligence platform. Always follow official guidance from the USGS, NHC, NWS, SPC, JMA, and IMD.
+      </p>
+    </div>
+  </footer>
+  <script src="/assets/laic-renderer.js?v=1" defer></script>
+</body>
+</html>

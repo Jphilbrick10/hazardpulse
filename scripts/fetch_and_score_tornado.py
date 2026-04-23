@@ -25,6 +25,7 @@ import datetime as dt
 import hashlib
 import json
 import math as _math
+import os
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -3946,6 +3947,23 @@ def main() -> None:
         pretrained_gbt=pretrained_gbt,
     )
 
+    # Step 5a: Block L (lightning) augmentation — score-time multiplier on tier1_ml.
+    # Disabled if HAZARDPULSE_DISABLE_LIGHTNING_AUG is set (A/B kill switch).
+    if scored and not os.environ.get("HAZARDPULSE_DISABLE_LIGHTNING_AUG"):
+        try:
+            from hazardpulse.tornado.lightning_block import apply_lightning_augmentation
+            print()
+            print("Step 5a: Block L lightning augmentation (GLM)...")
+            apply_lightning_augmentation(scored)
+            n_lifted = sum(
+                1 for s in scored
+                if s.get("tornado_probability_pre_lightning", 0)
+                != s.get("tornado_probability", 0)
+            )
+            print(f"  Lightning multiplier applied to {n_lifted}/{len(scored)} storms")
+        except Exception as exc:
+            print(f"  WARNING: Block L augmentation failed: {exc}; continuing with tier1_ml only.")
+
     for s in scored[:10]:
         print(
             f"  Storm {s['storm_id']}: P(tornado) = {s['tornado_probability']:.1%} "
@@ -3995,16 +4013,10 @@ def main() -> None:
     pulse_path = DIST / "data" / "live-pulse.json"
     if pulse_path.exists():
         try:
-            from hazardpulse.alerts import (
-                AlertManager, FileSink,
-                critical_eq_rule, severe_to_rule, hu_ri_rule,
-            )
-            audit_path = RESULTS / "alerts" / "audit.ndjson"
-            mgr = AlertManager(
-                rules=[critical_eq_rule(0.50), severe_to_rule(0.30), hu_ri_rule(0.30)],
-                sinks={"file": FileSink(audit_path)},
-                default_sinks=("file",),
-                audit_path=audit_path,
+            from hazardpulse.alerts import build_default_manager
+            mgr = build_default_manager(
+                audit_path=RESULTS / "alerts" / "audit.ndjson",
+                recent_path=DIST / "data" / "alerts-recent.json",
             )
             pulse = json.loads(pulse_path.read_text(encoding="utf-8"))
             fired = mgr.evaluate(pulse)

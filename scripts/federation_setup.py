@@ -199,6 +199,18 @@ def main(argv: list[str] | None = None) -> int:
     }
     fingerprint_path.write_text(json.dumps(fingerprint, indent=2) + "\n", encoding="utf-8")
 
+    # Also publish a public-safe fingerprint to the worker-served path so
+    # peers can discover this node via /api/v1/federation/atlas.
+    public_fp = dict(fingerprint)
+    public_fp["atlas_tables"] = [
+        {"name": t["name"], "modality": t["modality"], "schema_url": t["schema_url"]}
+        for t in atlas_tables
+    ]
+    public_fp_path = PROJECT_ROOT / "dist" / "data" / "federation-fingerprint.json"
+    public_fp_path.parent.mkdir(parents=True, exist_ok=True)
+    public_fp_path.write_text(json.dumps(public_fp, indent=2) + "\n", encoding="utf-8")
+    print(f"  Public fingerprint (worker-served): {public_fp_path}")
+
     print(f"  Private key:    {key_path}")
     print(f"  Config:         {config_path}")
     print(f"  Peers DB:       {peers_db}")

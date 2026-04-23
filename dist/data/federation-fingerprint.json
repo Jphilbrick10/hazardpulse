@@ -1,0 +1,30 @@
+{
+  "node_id": "hazardpulse-prod-1",
+  "public_key_b64": "KOsjs92CZ/IIJ4a2Rufcm3fHwTHM67CxsaPDon18RVE=",
+  "key_algorithm": "Ed25519",
+  "atlas_tables": [
+    {
+      "name": "hazardpulse_prediction_ledger",
+      "modality": "natural_hazard_prediction",
+      "schema_url": "https://hazardpulse.com/api/contracts/prediction-ledger.json"
+    },
+    {
+      "name": "hazardpulse_provenance_envelopes",
+      "modality": "audit_trail",
+      "schema_url": "https://hazardpulse.com/api/contracts/provenance.json"
+    },
+    {
+      "name": "hazardpulse_model_weights_registry",
+      "modality": "model_weights",
+      "schema_url": "https://hazardpulse.com/api/contracts/model-registry.json"
+    },
+    {
+      "name": "hazardpulse_replay_index",
+      "modality": "natural_hazard_prediction",
+      "schema_url": "https://hazardpulse.com/api/contracts/replay-index.json"
+    }
+  ],
+  "trust_level": "trusted",
+  "generated_at": "2026-04-23T03:17:48.408871Z",
+  "host_os": "win32"
+}

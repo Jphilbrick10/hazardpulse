@@ -34,6 +34,9 @@ jobs:
           python -c "from hazardpulse.earthquake.coherence_engine import extract_coherence_features; print('Import OK')"
 
       - name: Run earthquake scoring pipeline
+        env:
+          HAZARDPULSE_SLACK_WEBHOOK_URL: ${{ secrets.HAZARDPULSE_SLACK_WEBHOOK_URL }}
+          HAZARDPULSE_ALERT_WEBHOOK_URL: ${{ secrets.HAZARDPULSE_ALERT_WEBHOOK_URL }}
         run: |
           python scripts/fetch_and_score_earthquake.py
 

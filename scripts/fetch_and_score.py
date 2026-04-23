@@ -1019,16 +1019,10 @@ def main() -> None:
     pulse_path = DIST / "data" / "live-pulse.json"
     if pulse_path.exists():
         try:
-            from hazardpulse.alerts import (
-                AlertManager, FileSink,
-                critical_eq_rule, severe_to_rule, hu_ri_rule,
-            )
-            audit_path = RESULTS / "alerts" / "audit.ndjson"
-            mgr = AlertManager(
-                rules=[critical_eq_rule(0.50), severe_to_rule(0.30), hu_ri_rule(0.30)],
-                sinks={"file": FileSink(audit_path)},
-                default_sinks=("file",),
-                audit_path=audit_path,
+            from hazardpulse.alerts import build_default_manager
+            mgr = build_default_manager(
+                audit_path=RESULTS / "alerts" / "audit.ndjson",
+                recent_path=DIST / "data" / "alerts-recent.json",
             )
             pulse = json.loads(pulse_path.read_text(encoding="utf-8"))
             fired = mgr.evaluate(pulse)

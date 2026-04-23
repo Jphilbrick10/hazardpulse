@@ -43,6 +43,8 @@ jobs:
         env:
           HAZARDPULSE_HRRR_CACHE: ${{ github.workspace }}/.cache/hrrr
           HAZARDPULSE_PROBSEVERE_CACHE: ${{ github.workspace }}/.cache/probsevere
+          HAZARDPULSE_SLACK_WEBHOOK_URL: ${{ secrets.HAZARDPULSE_SLACK_WEBHOOK_URL }}
+          HAZARDPULSE_ALERT_WEBHOOK_URL: ${{ secrets.HAZARDPULSE_ALERT_WEBHOOK_URL }}
         run: |
           DATE_ARG=""
           if [ -n "${{ inputs.date }}" ]; then
