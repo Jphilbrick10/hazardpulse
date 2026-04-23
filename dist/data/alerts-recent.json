@@ -1,8 +1,23 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-04-23T14:24:36.439264Z",
-  "n_alerts": 13,
+  "updated_at": "2026-04-23T15:49:28.497230Z",
+  "n_alerts": 14,
   "alerts": [
+    {
+      "rule_name": "eq_critical_probability",
+      "severity": "critical",
+      "hazard": "eq",
+      "forecast_id": "eq_fcst_20260423_1400",
+      "probability": 0.7975,
+      "issued_at": "2026-04-23T15:49:20.980187Z",
+      "triggered_at": "2026-04-23T15:49:28.496997Z",
+      "message": "Earthquake critical: 79.8% (forecast eq_fcst_20260423_1400)",
+      "coincidence": null,
+      "sinks_notified": [
+        "file"
+      ],
+      "sink_failures": {}
+    },
     {
       "rule_name": "to_severe_probability",
       "severity": "warning",
