@@ -77,61 +77,19 @@ def solve_helmholtz_2d(
     n_iter: int = HELMHOLTZ_ITERS,
     omega: float = 0.7,
 ) -> np.ndarray:
-    """Solve ``D nabla^2 tau - kappa^2 tau + S = 0`` on a 2-D grid.
+    """Solve ``D nabla^2 tau - kappa^2 tau + S = 0`` on the CONUS grid.
 
-    Uses a Jacobi iterative solver with SOR-style relaxation on
-    Dirichlet (zero) boundary conditions.
-
-    Parameters
-    ----------
-    source : ndarray, shape (ny, nx)
-        Source term S(x).
-    kappa : float or ndarray
-        Screening wavenumber.  If scalar it is broadcast.
-    dx : float
-        Grid spacing (dimensionless units, default 1).
-    D : float or ndarray
-        Diffusivity field.
-    n_iter : int
-        Number of Jacobi iterations.
-    omega : float
-        SOR relaxation parameter (0 < omega <= 1).
-
-    Returns
-    -------
-    ndarray, shape (ny, nx)
-        Coherence field tau.
+    Tornado-grid wrapper around the shared
+    ``hazardpulse.coherence.tau_c_solver.solve_helmholtz_2d``.
+    Uses float32 (large 34x63 CONUS grid; speed over precision).
     """
-    ny, nx = source.shape
-    tau = np.zeros((ny, nx), dtype=np.float32)
-    source = np.asarray(source, dtype=np.float32)
-    kappa2 = np.asarray(kappa, dtype=np.float32) ** 2
-    D_arr = np.asarray(D, dtype=np.float32)
-    dx2 = np.float32(dx ** 2)
-
-    for _ in range(n_iter):
-        # 5-point Laplacian neighbour sum with Dirichlet (zero) BCs
-        # Edges stay at zero -- no Neumann padding
-        neighbors = np.zeros_like(tau)
-        neighbors[1:, :] += tau[:-1, :]   # from above
-        neighbors[:-1, :] += tau[1:, :]   # from below
-        neighbors[:, 1:] += tau[:, :-1]   # from left
-        neighbors[:, :-1] += tau[:, 1:]   # from right
-
-        denom = 4.0 * D_arr / dx2 + kappa2
-        denom = np.maximum(denom, np.float32(1e-12))
-        tau_new = (D_arr * neighbors / dx2 + source) / denom
-
-        # Dirichlet BCs
-        tau_new[0, :] = 0.0
-        tau_new[-1, :] = 0.0
-        tau_new[:, 0] = 0.0
-        tau_new[:, -1] = 0.0
-
-        # SOR blend
-        tau = np.float32(omega) * tau_new + np.float32(1.0 - omega) * tau
-
-    return tau
+    from hazardpulse.coherence.tau_c_solver import (
+        solve_helmholtz_2d as _shared_solver,
+    )
+    return _shared_solver(
+        source, kappa, dx,
+        D=D, n_iter=n_iter, omega=omega, dtype=np.float32,
+    )
 
 
 # ---------------------------------------------------------------------------

@@ -1015,6 +1015,29 @@ def main() -> None:
     render_hurricane_page(scored, now)
     build_site_artifacts()
 
+    # ---- Alert manager evaluation ----
+    pulse_path = DIST / "data" / "live-pulse.json"
+    if pulse_path.exists():
+        try:
+            from hazardpulse.alerts import (
+                AlertManager, FileSink,
+                critical_eq_rule, severe_to_rule, hu_ri_rule,
+            )
+            audit_path = RESULTS / "alerts" / "audit.ndjson"
+            mgr = AlertManager(
+                rules=[critical_eq_rule(0.50), severe_to_rule(0.30), hu_ri_rule(0.30)],
+                sinks={"file": FileSink(audit_path)},
+                default_sinks=("file",),
+                audit_path=audit_path,
+            )
+            pulse = json.loads(pulse_path.read_text(encoding="utf-8"))
+            fired = mgr.evaluate(pulse)
+            for a in fired:
+                if a.severity != "suppressed":
+                    print(f"  ALERT [{a.severity}] {a.rule_name}: {a.message}")
+        except Exception as exc:
+            print(f"  Warning: alert evaluation skipped: {exc}")
+
     print()
     print(f"Done. Scored {len(scored)} storms.")
 

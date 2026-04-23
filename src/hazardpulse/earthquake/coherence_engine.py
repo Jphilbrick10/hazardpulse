@@ -273,58 +273,17 @@ def solve_helmholtz_2d(
 ) -> np.ndarray:
     """Solve ``D nabla^2 tau - kappa^2 tau + S = 0`` on a 2-D grid.
 
-    Uses a Jacobi iterative solver with SOR-style relaxation on
-    Dirichlet (zero) boundary conditions.
-
-    Parameters
-    ----------
-    source : ndarray, shape (ny, nx)
-        Source term S(x) -- seismic moment release density.
-    kappa : float or ndarray
-        Screening wavenumber.  If scalar it is broadcast.
-    dx : float
-        Grid spacing (dimensionless units, default 1).
-    D : float or ndarray
-        Diffusivity field.
-    n_iter : int
-        Number of Jacobi iterations.
-    omega : float
-        SOR relaxation parameter (0 < omega <= 1).
-
-    Returns
-    -------
-    ndarray, shape (ny, nx)
-        Coherence field tau_c.
+    Earthquake-grid wrapper around the shared
+    ``hazardpulse.coherence.tau_c_solver.solve_helmholtz_2d``.
+    Uses float64 (small global 2-degree grid; precision over speed).
     """
-    ny, nx = source.shape
-    tau = np.zeros((ny, nx), dtype=np.float64)
-    source = np.asarray(source, dtype=np.float64)
-    kappa2 = np.asarray(kappa, dtype=np.float64) ** 2
-    D_arr = np.asarray(D, dtype=np.float64)
-    dx2 = dx ** 2
-
-    for _ in range(n_iter):
-        # 5-point Laplacian neighbour sum with Dirichlet (zero) BCs
-        neighbors = np.zeros_like(tau)
-        neighbors[1:, :] += tau[:-1, :]
-        neighbors[:-1, :] += tau[1:, :]
-        neighbors[:, 1:] += tau[:, :-1]
-        neighbors[:, :-1] += tau[:, 1:]
-
-        denom = 4.0 * D_arr / dx2 + kappa2
-        denom = np.maximum(denom, 1e-12)
-        tau_new = (D_arr * neighbors / dx2 + source) / denom
-
-        # Dirichlet BCs
-        tau_new[0, :] = 0.0
-        tau_new[-1, :] = 0.0
-        tau_new[:, 0] = 0.0
-        tau_new[:, -1] = 0.0
-
-        # SOR blend
-        tau = omega * tau_new + (1.0 - omega) * tau
-
-    return tau
+    from hazardpulse.coherence.tau_c_solver import (
+        solve_helmholtz_2d as _shared_solver,
+    )
+    return _shared_solver(
+        source, kappa, dx,
+        D=D, n_iter=n_iter, omega=omega, dtype=np.float64,
+    )
 
 
 # ---------------------------------------------------------------------------
