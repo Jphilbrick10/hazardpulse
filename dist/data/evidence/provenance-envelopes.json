@@ -1,6 +1,28 @@
 {
-  "generated_at": "2026-04-28T10:10:49Z",
+  "generated_at": "2026-04-28T13:22:12Z",
   "envelopes": [
+    {
+      "provenance_id": "prov_hu_fcst_20260428_1322",
+      "forecast_id": "hu_fcst_20260428_1322",
+      "hazard": "hurricane",
+      "model_version": "hurricane_ri_v8_1",
+      "input_hash": "sha256:9e387320249c9c0005193a30ad62d4f0e0169f2767a8d0a3cfa03c8deb579107",
+      "output_hash": "sha256:164cb9c4621cf2b0e15928b24d6c339f6e647955708f54f6d6e081ffd7aadbe4",
+      "signed_at": "2026-04-28T13:22:09Z",
+      "sources": [
+        "ATCF advisories",
+        "NOAA tropical cyclone feed",
+        "published live storm snapshot"
+      ],
+      "transforms": [
+        "advisory_ingest",
+        "feature_build",
+        "ri_scoring",
+        "calibration",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/hu_fcst_20260428_1322.json"
+    },
     {
       "provenance_id": "prov_to_fcst_20260428_1010",
       "forecast_id": "to_fcst_20260428_1010",
