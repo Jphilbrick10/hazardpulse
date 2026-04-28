@@ -1,8 +1,8 @@
 {
-  "scored_as_of": "2026-04-28T08:26:14Z",
+  "scored_as_of": "2026-04-28T14:07:02Z",
   "replay_dir": "/home/runner/work/hazardpulse/hazardpulse/dist/data/replay",
-  "n_replay_artifacts": 264,
-  "n_matured_forecasts": 255,
+  "n_replay_artifacts": 267,
+  "n_matured_forecasts": 257,
   "forecast_horizon_hours": 24,
   "match_radius_km": 40.0,
   "match_window_hours": 4.0,
@@ -10,19 +10,19 @@
   "status": "ok",
   "observed_window": {
     "start": "2026-03-13T03:00:00Z",
-    "end": "2026-04-28T06:25:35Z",
-    "n_tornado_reports": 322
+    "end": "2026-04-28T13:44:43Z",
+    "n_tornado_reports": 323
   },
-  "total_storms_scored": 14097,
+  "total_storms_scored": 14284,
   "total_matched_storms": 54,
-  "total_tornado_reports_in_windows": 2449,
+  "total_tornado_reports_in_windows": 2459,
   "overall_match_rate": 0.0038,
   "mean_auc": 0.672,
   "median_auc": 0.7606,
-  "mean_brier": 0.0263,
-  "mean_brier_skill_score": -0.0634,
+  "mean_brier": 0.0267,
+  "mean_brier_skill_score": -0.0629,
   "n_forecasts_with_valid_auc": 19,
-  "n_forecasts_without_matches": 236,
+  "n_forecasts_without_matches": 238,
   "by_tier": {
     "unknown": {
       "n_forecasts": 2,
@@ -47,15 +47,84 @@
       "mean_brier_skill_score": -0.078
     },
     "tier1_ml": {
-      "n_forecasts": 68,
+      "n_forecasts": 70,
       "n_forecasts_with_valid_auc": 4,
-      "total_storms_scored": 3135,
+      "total_storms_scored": 3322,
       "total_matched_storms": 11,
-      "match_rate": 0.0035,
+      "match_rate": 0.0033,
       "mean_auc": 0.579,
       "median_auc": 0.5479,
-      "mean_brier": 0.0281,
-      "mean_brier_skill_score": -0.0236
+      "mean_brier": 0.0294,
+      "mean_brier_skill_score": -0.0229
     }
-  }
+  },
+  "by_tier_recovery": {
+    "unknown": {
+      "last_24h": {
+        "n_forecasts": 0,
+        "mean_auc": null,
+        "mean_brier": null
+      },
+      "last_3d": {
+        "n_forecasts": 1,
+        "mean_auc": null,
+        "mean_brier": null
+      },
+      "last_7d": {
+        "n_forecasts": 1,
+        "mean_auc": null,
+        "mean_brier": null
+      },
+      "last_14d": {
+        "n_forecasts": 1,
+        "mean_auc": null,
+        "mean_brier": null
+      }
+    },
+    "tier2_analytic": {
+      "last_24h": {
+        "n_forecasts": 0,
+        "mean_auc": null,
+        "mean_brier": null
+      },
+      "last_3d": {
+        "n_forecasts": 0,
+        "mean_auc": null,
+        "mean_brier": null
+      },
+      "last_7d": {
+        "n_forecasts": 0,
+        "mean_auc": null,
+        "mean_brier": null
+      },
+      "last_14d": {
+        "n_forecasts": 67,
+        "mean_auc": 0.7301,
+        "mean_brier": 0.0212
+      }
+    },
+    "tier1_ml": {
+      "last_24h": {
+        "n_forecasts": 0,
+        "mean_auc": null,
+        "mean_brier": null
+      },
+      "last_3d": {
+        "n_forecasts": 18,
+        "mean_auc": 0.5934,
+        "mean_brier": 0.03
+      },
+      "last_7d": {
+        "n_forecasts": 60,
+        "mean_auc": 0.579,
+        "mean_brier": 0.0283
+      },
+      "last_14d": {
+        "n_forecasts": 70,
+        "mean_auc": 0.579,
+        "mean_brier": 0.0294
+      }
+    }
+  },
+  "issued_after_filter": null
 }
