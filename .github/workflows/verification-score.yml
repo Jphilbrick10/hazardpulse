@@ -2,8 +2,10 @@ name: Verification Scoring
 
 on:
   schedule:
-    # Run daily at 06:00 UTC to score matured forecasts
-    - cron: "0 6 * * *"
+    # Every 4 hours so recovery from model fixes is visible same-day
+    # (was daily; tightened on 2026-04-28 to track tier1_ml AUC recovery
+    # after the HRRR + mlcape fix).
+    - cron: "0 */4 * * *"
   workflow_dispatch:
 
 concurrency:

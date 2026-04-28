@@ -308,6 +308,12 @@ def main(argv: list[str] | None = None) -> int:
         "--score-as-of", default=None,
         help="UTC timestamp for determining maturity. Defaults to now.",
     )
+    parser.add_argument(
+        "--issued-after", default=None,
+        help=("Only include forecasts issued AT or AFTER this UTC timestamp. "
+              "Used to isolate metrics from a specific deployment / fix. "
+              "Example: --issued-after 2026-04-28T13:00:00Z"),
+    )
     args = parser.parse_args(argv)
 
     score_as_of = (
@@ -318,6 +324,17 @@ def main(argv: list[str] | None = None) -> int:
 
     artifacts = load_replay_artifacts(args.replay_dir)
     matured = matured_artifacts(artifacts, score_as_of)
+
+    issued_after_dt: dt.datetime | None = None
+    if args.issued_after:
+        issued_after_dt = parse_utc(args.issued_after)
+        before = len(matured)
+        matured = [
+            a for a in matured
+            if parse_utc(a["issued_at"]) >= issued_after_dt
+        ]
+        print(f"  Filter --issued-after {args.issued_after}: "
+              f"kept {len(matured)} of {before} matured forecasts")
 
     output_dir = args.output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -386,6 +403,35 @@ def main(argv: list[str] | None = None) -> int:
                 "mean_brier_skill_score": round(float(np.mean(t_bss)), 4) if t_bss else None,
             }
 
+        # Recovery-curve buckets: roll up per-tier metrics by recency window.
+        # Each bucket is keyed by the cutoff timestamp; "all_time" includes
+        # everything matured. The "last_7d" / "last_3d" / "last_24h" windows
+        # let us watch the AUC trend after a model fix lands.
+        now_dt = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None)
+        recency_windows = [
+            ("last_24h", dt.timedelta(hours=24)),
+            ("last_3d", dt.timedelta(days=3)),
+            ("last_7d", dt.timedelta(days=7)),
+            ("last_14d", dt.timedelta(days=14)),
+        ]
+        per_tier_recovery: dict[str, dict[str, dict]] = {}
+        for tier, rs in by_tier.items():
+            tier_recovery: dict[str, dict] = {}
+            for label, delta in recency_windows:
+                cutoff = now_dt - delta
+                window_rs = [
+                    r for r in rs
+                    if parse_utc(r["issued_at"]) >= cutoff
+                ]
+                w_aucs = [r["auc"] for r in window_rs if math.isfinite(r["auc"])]
+                w_briers = [r["brier"] for r in window_rs if math.isfinite(r["brier"])]
+                tier_recovery[label] = {
+                    "n_forecasts": len(window_rs),
+                    "mean_auc": round(float(np.mean(w_aucs)), 4) if w_aucs else None,
+                    "mean_brier": round(float(np.mean(w_briers)), 4) if w_briers else None,
+                }
+            per_tier_recovery[tier] = tier_recovery
+
         summary.update({
             "observed_window": {
                 "start": format_utc_z(earliest),
@@ -408,6 +454,10 @@ def main(argv: list[str] | None = None) -> int:
                 1 for r in per_forecast_results if r["n_matched_storms"] == 0
             ),
             "by_tier": per_tier_metrics,
+            "by_tier_recovery": per_tier_recovery,
+            "issued_after_filter": (
+                args.issued_after if issued_after_dt is not None else None
+            ),
         })
     else:
         summary["status"] = "waiting_for_matured_forecasts"
@@ -418,6 +468,26 @@ def main(argv: list[str] | None = None) -> int:
 
     summary_path = output_dir / "prospective_summary.json"
     summary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+
+    # Also publish a worker-served subset focused on the recovery curve so
+    # /verification/tornado/ can render it without loading the full payload.
+    recovery_subset = {
+        "schema_version": 1,
+        "generated_at": dt.datetime.now(dt.timezone.utc).replace(tzinfo=None).isoformat() + "Z",
+        "scored_as_of": summary.get("scored_as_of"),
+        "n_matured_forecasts": summary.get("n_matured_forecasts", 0),
+        "issued_after_filter": summary.get("issued_after_filter"),
+        "by_tier": summary.get("by_tier", {}),
+        "by_tier_recovery": summary.get("by_tier_recovery", {}),
+        "fix_landed_at": "2026-04-28T13:50:00Z",  # HRRR + mlcape fix commit
+    }
+    worker_path = (
+        Path(__file__).resolve().parents[1] / "dist" / "data" / "tornado-recovery.json"
+    )
+    worker_path.parent.mkdir(parents=True, exist_ok=True)
+    worker_path.write_text(
+        json.dumps(recovery_subset, indent=2) + "\n", encoding="utf-8"
+    )
 
     print()
     print("Tornado prospective scoring")

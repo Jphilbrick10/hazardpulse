@@ -520,6 +520,23 @@
       </div>
     </section>
 
+    <!-- AUC recovery curve (post-fix tracking) -->
+    <section class="section" aria-labelledby="recovery-heading">
+      <h2 id="recovery-heading">AUC recovery curve (per tier)</h2>
+      <p class="muted" style="margin-top:-8px;margin-bottom:16px;">
+        Per-tier mean test AUC over recency windows. Updates every 4 hours
+        from <a href="/api/v1/verification/tornado-recovery">/api/v1/verification/tornado-recovery</a>.
+        After a model fix lands, the <code>last_24h</code> column should
+        recover toward the retrospective benchmark before <code>all_time</code>
+        catches up.
+      </p>
+      <div class="card">
+        <div id="tornado-recovery-panel">
+          <p class="muted">Loading recovery data&hellip;</p>
+        </div>
+      </div>
+    </section>
+
     <!-- Section 6: What Makes This Different -->
     <section class="section" aria-labelledby="different-heading">
       <h2 id="different-heading">What makes this different</h2>
@@ -603,7 +620,7 @@
       <p class="footer-build">Static-first HTML &middot; Evidence-linked data &middot; Edge geolocation by Cloudflare</p>
     </div>
   </footer>
-
+  <script src="/assets/tornado-recovery-renderer.js?v=1" defer></script>
 </body>
 </html>
 

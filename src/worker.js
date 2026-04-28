@@ -846,6 +846,12 @@ async function handleApiRequest(request, env) {
     return jsonResponse(apiEnvelope(recent, 60), 200, "public, max-age=60");
   }
 
+  if (path === "/api/v1/verification/tornado-recovery") {
+    const recovery = await fetchAssetJson(env, "/data/tornado-recovery.json", request);
+    if (!recovery) return errorEnvelope("not_found", "Tornado recovery data unavailable.");
+    return jsonResponse(apiEnvelope(recovery, 600), 200, "public, max-age=600");
+  }
+
   if (path === "/api/v1/federation/atlas") {
     // Public atlas surface — lists tables this node exposes to peers.
     // Each peer can query these via signed Ed25519 requests (over the

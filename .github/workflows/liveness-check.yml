@@ -56,6 +56,26 @@ jobs:
                       f"(threshold: {max_age}h)"
                   )
 
+          # Tornado scoring tier check — ensure tier1_ml is winning, not falling back.
+          replays = sorted(Path("dist/data/replay").glob("to_fcst_*.json"), reverse=True)[:5]
+          tier_counts: dict[str, int] = {}
+          for r in replays:
+              try:
+                  d = json.loads(r.read_text())
+              except Exception:
+                  continue
+              t = d.get("scoring_tier", "unknown")
+              tier_counts[t] = tier_counts.get(t, 0) + 1
+          if tier_counts:
+              print()
+              print(f"  Tornado tier distribution (last {len(replays)} replays): {tier_counts}")
+              if tier_counts.get("tier1_ml", 0) == 0 and len(replays) >= 3:
+                  failures.append(
+                      "Tornado tier1_ml has NOT triggered in the last "
+                      f"{len(replays)} runs (got {tier_counts}). HRRR or "
+                      "trained-model loading is likely broken."
+                  )
+
           if failures:
               print()
               print("LIVENESS CHECK FAILED:")
@@ -63,5 +83,5 @@ jobs:
                   print(f"  - {f}")
               sys.exit(1)
           print()
-          print("All three scorers are fresh.")
+          print("All three scorers are fresh; tier1_ml is firing.")
           PY
