@@ -3845,33 +3845,69 @@ def main() -> None:
         print("Done. No storms to score.")
         return
 
-    # Step 2: Fetch HRRR analysis
+    # Step 2: Fetch HRRR analysis (most recent available, falling back to yesterday)
     print()
-    print("Step 2: Fetching HRRR 18Z analysis...")
+    print("Step 2: Fetching most-recent available HRRR analysis...")
     hrrr: dict[str, np.ndarray] | None = None
+    hrrr_hour_used: int | None = None
+    hrrr_date_used: str | None = None
 
-    # Try most recent available HRRR hour (current hour rounded down, then earlier)
     current_hour = now.hour
-    hours_to_try = sorted(set([current_hour, current_hour - 1, 18, 15, 12, 9, 6]), reverse=True)
-    hours_to_try = [h for h in hours_to_try if 0 <= h <= 23]
-    for hour in hours_to_try:
-        hrrr = load_cached_hrrr(date_str, hour=hour)
-        if hrrr is not None:
-            print(f"  Loaded HRRR {hour}Z from cache")
+    today_hours = sorted(
+        set([current_hour - 2, current_hour - 1, 18, 15, 12, 9, 6, 0]),
+        reverse=True,
+    )
+    today_hours = [h for h in today_hours if 0 <= h <= 23 and h <= current_hour - 1]
+
+    yesterday = (now - dt.timedelta(days=1)).strftime("%Y%m%d")
+    yesterday_hours = [23, 21, 18, 15, 12, 6]
+
+    # Try cache first (today, then yesterday) at all candidate hours.
+    candidates: list[tuple[str, int]] = []
+    candidates += [(date_str, h) for h in today_hours]
+    candidates += [(yesterday, h) for h in yesterday_hours]
+
+    for cand_date, cand_hour in candidates:
+        cached = load_cached_hrrr(cand_date, hour=cand_hour)
+        if cached is not None:
+            hrrr = cached
+            hrrr_hour_used = cand_hour
+            hrrr_date_used = cand_date
+            print(f"  Loaded HRRR {cand_date} {cand_hour:02d}Z from local cache")
             break
 
+    # If cache miss, fetch from AWS — try every candidate, not just the first 3.
     if hrrr is None:
+        for cand_date, cand_hour in candidates:
+            try:
+                fetched = fetch_hrrr_grid(cand_date, hour=cand_hour)
+            except Exception as e:
+                print(f"  HRRR fetch error for {cand_date} {cand_hour:02d}Z: {e}")
+                fetched = None
+            if fetched is not None:
+                hrrr = fetched
+                hrrr_hour_used = cand_hour
+                hrrr_date_used = cand_date
+                print(f"  Fetched HRRR {cand_date} {cand_hour:02d}Z from AWS")
+                break
+
+    if hrrr is None:
+        print("  Warning: No HRRR analysis available within 24h window. "
+              "Proceeding without HRRR (ProbSevere fallback mode).")
+    else:
+        # Sanity-check the data isn't all-NaN (defends against silent partial pulls)
         try:
-            for fh in hours_to_try[:3]:
-                try:
-                    hrrr = fetch_hrrr_grid(date_str, hour=fh)
-                    print(f"  Fetched HRRR {fh}Z from AWS")
-                    break
-                except Exception:
-                    continue
-        except Exception as e:
-            print(f"  Warning: HRRR fetch failed: {e}")
-            print("  Proceeding without HRRR (ProbSevere fallback mode)")
+            import numpy as _np_check
+            nan_pcts = []
+            for arr in hrrr.values():
+                if isinstance(arr, _np_check.ndarray) and arr.size > 0:
+                    nan_pcts.append(float(_np_check.isnan(arr).mean()))
+            mean_nan = float(_np_check.mean(nan_pcts)) if nan_pcts else 1.0
+            if mean_nan > 0.5:
+                print(f"  Warning: HRRR is {mean_nan:.0%} NaN — discarding.")
+                hrrr = None
+        except Exception:
+            pass
 
     # Step 3: Compute coherence fields
     print()
@@ -3947,14 +3983,16 @@ def main() -> None:
         pretrained_gbt=pretrained_gbt,
     )
 
-    # Step 5a: Block L (lightning) augmentation — score-time multiplier on tier1_ml.
-    # Disabled if HAZARDPULSE_DISABLE_LIGHTNING_AUG is set (A/B kill switch).
-    if scored and not os.environ.get("HAZARDPULSE_DISABLE_LIGHTNING_AUG"):
+    # Step 5a: Block L (lightning) augmentation — score-time multiplier.
+    # OFF by default until measured against SPC outcomes for >=200 forecasts.
+    # Set HAZARDPULSE_ENABLE_LIGHTNING_AUG=1 to opt in (A/B test).
+    # Diagnostics are still recorded on every storm so post-hoc analysis works.
+    if scored and os.environ.get("HAZARDPULSE_ENABLE_LIGHTNING_AUG"):
         try:
             from hazardpulse.tornado.lightning_block import apply_lightning_augmentation
             print()
-            print("Step 5a: Block L lightning augmentation (GLM)...")
-            apply_lightning_augmentation(scored)
+            print("Step 5a: Block L lightning augmentation (GLM, A/B enabled)...")
+            apply_lightning_augmentation(scored, enable=True)
             n_lifted = sum(
                 1 for s in scored
                 if s.get("tornado_probability_pre_lightning", 0)
@@ -3963,6 +4001,14 @@ def main() -> None:
             print(f"  Lightning multiplier applied to {n_lifted}/{len(scored)} storms")
         except Exception as exc:
             print(f"  WARNING: Block L augmentation failed: {exc}; continuing with tier1_ml only.")
+    elif scored:
+        # Diagnostics-only: record lightning context per storm but do NOT
+        # modify the GBT probability. Lets us A/B compare later.
+        try:
+            from hazardpulse.tornado.lightning_block import apply_lightning_augmentation
+            apply_lightning_augmentation(scored, enable=False)
+        except Exception:
+            pass
 
     for s in scored[:10]:
         print(

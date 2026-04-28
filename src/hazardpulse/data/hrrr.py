@@ -61,11 +61,22 @@ DY_M: float = DY_KM * 1000.0
 # Variable name -> relative path inside the hrrrzarr store.
 # The Utah hrrrzarr bucket nests paths as "{level}/{var}/{level}/{var}".
 # Mixed-layer CAPE is approximated by the 180_0mb layer; MU CAPE by 255_0mb.
+#
+# IMPORTANT: hrrrzarr does NOT publish named MLCAPE/MUCAPE/SBCAPE arrays the
+# way the deprecated noaa-hrrr-bdp-pds wrfprsf bucket did. It exposes raw
+# layer-CAPE values at fixed pressure-thickness layers (90/180/255 mb above
+# ground). Standard NWS conventions:
+#   MLCAPE  ≈ 90 mb mixed-layer CAPE  ->  90_0mb_above_ground/CAPE
+#   MUCAPE  ≈ 255 mb most-unstable    ->  255_0mb_above_ground/CAPE
+#   MLCIN   ≈ 90 mb mixed-layer CIN   ->  90_0mb_above_ground/CIN
+# These are the canonical equivalents; the trained tornado GBT was trained
+# against surface/MLCAPE which was NCEP's name for the same 0-90 mb
+# mixed-layer integration, so they should be numerically close.
 HRRR_VARS: dict[str, str] = {
     "cape": "surface/CAPE/surface/CAPE",
     "cin": "surface/CIN/surface/CIN",
-    "mlcape": "180_0mb_above_ground/CAPE/180_0mb_above_ground/CAPE",
-    "mlcin": "180_0mb_above_ground/CIN/180_0mb_above_ground/CIN",
+    "mlcape": "90_0mb_above_ground/CAPE/90_0mb_above_ground/CAPE",
+    "mlcin": "90_0mb_above_ground/CIN/90_0mb_above_ground/CIN",
     "mucape": "255_0mb_above_ground/CAPE/255_0mb_above_ground/CAPE",
     "srh_01": "1000_0m_above_ground/HLCY/1000_0m_above_ground/HLCY",
     "srh_03": "3000_0m_above_ground/HLCY/3000_0m_above_ground/HLCY",
