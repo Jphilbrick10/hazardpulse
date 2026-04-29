@@ -1,8 +1,8 @@
 {
-  "scored_as_of": "2026-04-29T17:27:08Z",
+  "scored_as_of": "2026-04-29T21:03:22Z",
   "replay_dir": "/home/runner/work/hazardpulse/hazardpulse/dist/data/replay",
-  "n_replay_artifacts": 277,
-  "n_matured_forecasts": 268,
+  "n_replay_artifacts": 279,
+  "n_matured_forecasts": 269,
   "forecast_horizon_hours": 24,
   "match_radius_km": 40.0,
   "match_window_hours": 4.0,
@@ -10,18 +10,18 @@
   "status": "ok",
   "observed_window": {
     "start": "2026-03-13T03:00:00Z",
-    "end": "2026-04-29T16:06:21Z",
-    "n_tornado_reports": 338
+    "end": "2026-04-29T19:28:14Z",
+    "n_tornado_reports": 343
   },
-  "total_storms_scored": 15190,
-  "total_matched_storms": 55,
-  "total_tornado_reports_in_windows": 2600,
-  "overall_match_rate": 0.0036,
-  "mean_auc": 0.6576,
-  "median_auc": 0.677,
-  "mean_brier": 0.0309,
-  "mean_brier_skill_score": -0.0995,
-  "n_forecasts_with_valid_auc": 20,
+  "total_storms_scored": 15320,
+  "total_matched_storms": 56,
+  "total_tornado_reports_in_windows": 2650,
+  "overall_match_rate": 0.0037,
+  "mean_auc": 0.6451,
+  "median_auc": 0.5934,
+  "mean_brier": 0.0318,
+  "mean_brier_skill_score": -0.2283,
+  "n_forecasts_with_valid_auc": 21,
   "n_forecasts_without_matches": 248,
   "by_tier": {
     "unknown": {
@@ -47,15 +47,15 @@
       "mean_brier_skill_score": -0.078
     },
     "tier1_ml": {
-      "n_forecasts": 81,
-      "n_forecasts_with_valid_auc": 5,
-      "total_storms_scored": 4228,
-      "total_matched_storms": 12,
-      "match_rate": 0.0028,
-      "mean_auc": 0.5402,
-      "median_auc": 0.5025,
-      "mean_brier": 0.043,
-      "mean_brier_skill_score": -0.1486
+      "n_forecasts": 82,
+      "n_forecasts_with_valid_auc": 6,
+      "total_storms_scored": 4358,
+      "total_matched_storms": 13,
+      "match_rate": 0.003,
+      "mean_auc": 0.516,
+      "median_auc": 0.4743,
+      "mean_brier": 0.0458,
+      "mean_brier_skill_score": -0.5673
     }
   },
   "by_tier_recovery": {
@@ -98,7 +98,7 @@
         "mean_brier": null
       },
       "last_14d": {
-        "n_forecasts": 54,
+        "n_forecasts": 52,
         "mean_auc": 0.8407,
         "mean_brier": 0.0194
       }
@@ -110,19 +110,19 @@
         "mean_brier": null
       },
       "last_3d": {
-        "n_forecasts": 18,
-        "mean_auc": 0.3846,
-        "mean_brier": 0.0961
+        "n_forecasts": 17,
+        "mean_auc": 0.39,
+        "mean_brier": 0.1154
       },
       "last_7d": {
-        "n_forecasts": 58,
-        "mean_auc": 0.4816,
-        "mean_brier": 0.0492
+        "n_forecasts": 57,
+        "mean_auc": 0.4644,
+        "mean_brier": 0.0543
       },
       "last_14d": {
-        "n_forecasts": 81,
-        "mean_auc": 0.5402,
-        "mean_brier": 0.043
+        "n_forecasts": 82,
+        "mean_auc": 0.516,
+        "mean_brier": 0.0458
       }
     }
   },
