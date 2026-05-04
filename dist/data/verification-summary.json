@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-05-04T10:10:16Z",
-  "score_as_of": "2026-05-04T10:10:03Z",
+  "generated_at": "2026-05-04T13:16:52Z",
+  "score_as_of": "2026-05-04T13:16:49Z",
   "system": {
-    "frozen_forecasts": 482,
-    "matured_forecasts": 348,
-    "scored_forecasts": 4,
-    "matured_unscored_backlog": 344,
+    "frozen_forecasts": 483,
+    "matured_forecasts": 352,
+    "scored_forecasts": 5,
+    "matured_unscored_backlog": 347,
     "raw_chain_rows": 525,
     "hash_chain_mismatches": 0,
     "exact_model_benchmarks": 1,
     "alerts": [
-      "344 matured forecast windows are waiting for scoring.",
+      "347 matured forecast windows are waiting for scoring.",
       "Tornado: no exact benchmark is attached to the current live model version."
     ]
   },
@@ -24,20 +24,20 @@
       "verification_status_label": "Prospective live scoring is active for matured earthquake windows.",
       "metric_source": "prospective_live",
       "metric_source_label": "Computed from matured live forecasts.",
-      "auc": 0.7476146529017702,
-      "brier": 0.0008328943788461538,
-      "homepage_line": "4 matured windows scored",
+      "auc": 0.7358689300062627,
+      "brier": 0.0008474234311111111,
+      "homepage_line": "5 matured windows scored",
       "forecast_storage": {
         "n_replay_artifacts": 126,
-        "n_matured_forecasts": 5,
-        "n_scored_forecasts": 4,
+        "n_matured_forecasts": 6,
+        "n_scored_forecasts": 5,
         "n_backlog": 1,
         "first_issued_at": "2026-03-13T03:00:00Z",
         "last_issued_at": "2026-05-04T08:00:00Z",
         "last_forecast_id": "eq_fcst_20260504_0800",
         "latest_replay_artifact": "/data/replay/eq_fcst_20260504_0800.json",
         "forecast_horizon": "30 days",
-        "next_mature_at": "2026-05-04T13:00:00Z"
+        "next_mature_at": "2026-05-04T19:00:00Z"
       },
       "ledger": {
         "supported": true,
@@ -48,7 +48,7 @@
       "prospective": {
         "summary_path": "results/earthquake_prospective/prospective_summary.json",
         "status": "ok",
-        "scored_as_of": "2026-05-04T06:37:36Z",
+        "scored_as_of": "2026-05-04T10:12:36Z",
         "message": null,
         "top_5_hit_rate": 0.0
       },
@@ -82,16 +82,16 @@
       "brier_skill_score": 0.29,
       "homepage_line": "AUC 0.938 retrospective holdout",
       "forecast_storage": {
-        "n_replay_artifacts": 34,
-        "n_matured_forecasts": 32,
+        "n_replay_artifacts": 35,
+        "n_matured_forecasts": 33,
         "n_scored_forecasts": 0,
-        "n_backlog": 32,
+        "n_backlog": 33,
         "first_issued_at": "2026-03-13T03:00:00Z",
-        "last_issued_at": "2026-05-03T12:39:09Z",
-        "last_forecast_id": "hu_fcst_20260503_1239",
-        "latest_replay_artifact": "/data/replay/hu_fcst_20260503_1239.json",
+        "last_issued_at": "2026-05-04T13:16:49Z",
+        "last_forecast_id": "hu_fcst_20260504_1316",
+        "latest_replay_artifact": "/data/replay/hu_fcst_20260504_1316.json",
         "forecast_horizon": "24 hours",
-        "next_mature_at": "2026-05-04T12:39:09Z"
+        "next_mature_at": "2026-05-05T13:16:49Z"
       },
       "ledger": {
         "supported": false,
@@ -130,18 +130,18 @@
       "metric_source_label": "No exact benchmark is currently bound to the live tornado storm-object model version in this repo.",
       "auc": null,
       "brier": null,
-      "homepage_line": "322 frozen forecasts \u00b7 311 matured backlog",
+      "homepage_line": "322 frozen forecasts \u00b7 313 matured backlog",
       "forecast_storage": {
         "n_replay_artifacts": 322,
-        "n_matured_forecasts": 311,
+        "n_matured_forecasts": 313,
         "n_scored_forecasts": 0,
-        "n_backlog": 311,
+        "n_backlog": 313,
         "first_issued_at": "2026-03-13T03:00:00Z",
         "last_issued_at": "2026-05-04T10:10:03Z",
         "last_forecast_id": "to_fcst_20260504_1010",
         "latest_replay_artifact": "/data/replay/to_fcst_20260504_1010.json",
         "forecast_horizon": "24 hours",
-        "next_mature_at": "2026-05-04T10:51:49Z"
+        "next_mature_at": "2026-05-04T14:44:35Z"
       },
       "ledger": {
         "supported": true,
