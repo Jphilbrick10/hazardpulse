@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-05-08T05:54:33Z",
-  "score_as_of": "2026-05-08T05:54:22Z",
+  "generated_at": "2026-05-08T07:24:45Z",
+  "score_as_of": "2026-05-08T07:24:33Z",
   "system": {
-    "frozen_forecasts": 532,
-    "matured_forecasts": 400,
-    "scored_forecasts": 19,
-    "matured_unscored_backlog": 381,
-    "raw_chain_rows": 573,
+    "frozen_forecasts": 533,
+    "matured_forecasts": 402,
+    "scored_forecasts": 20,
+    "matured_unscored_backlog": 382,
+    "raw_chain_rows": 574,
     "hash_chain_mismatches": 0,
     "exact_model_benchmarks": 1,
     "alerts": [
-      "381 matured forecast windows are waiting for scoring.",
+      "382 matured forecast windows are waiting for scoring.",
       "Tornado: no exact benchmark is attached to the current live model version."
     ]
   },
@@ -24,20 +24,20 @@
       "verification_status_label": "Prospective live scoring is active for matured earthquake windows.",
       "metric_source": "prospective_live",
       "metric_source_label": "Computed from matured live forecasts.",
-      "auc": 0.7290434561141446,
-      "brier": 0.0008342342876293295,
-      "homepage_line": "19 matured windows scored",
+      "auc": 0.7289478459420425,
+      "brier": 0.0008338065780769229,
+      "homepage_line": "20 matured windows scored",
       "forecast_storage": {
         "n_replay_artifacts": 141,
-        "n_matured_forecasts": 20,
-        "n_scored_forecasts": 19,
+        "n_matured_forecasts": 21,
+        "n_scored_forecasts": 20,
         "n_backlog": 1,
         "first_issued_at": "2026-03-13T03:00:00Z",
         "last_issued_at": "2026-05-08T03:00:00Z",
         "last_forecast_id": "eq_fcst_20260508_0300",
         "latest_replay_artifact": "/data/replay/eq_fcst_20260508_0300.json",
         "forecast_horizon": "30 days",
-        "next_mature_at": "2026-05-08T07:00:00Z"
+        "next_mature_at": "2026-05-08T14:00:00Z"
       },
       "ledger": {
         "supported": true,
@@ -48,7 +48,7 @@
       "prospective": {
         "summary_path": "results/earthquake_prospective/prospective_summary.json",
         "status": "ok",
-        "scored_as_of": "2026-05-08T02:47:22Z",
+        "scored_as_of": "2026-05-08T05:56:25Z",
         "message": null,
         "top_5_hit_rate": 0.0
       },
@@ -130,23 +130,23 @@
       "metric_source_label": "No exact benchmark is currently bound to the live tornado storm-object model version in this repo.",
       "auc": null,
       "brier": null,
-      "homepage_line": "355 frozen forecasts \u00b7 345 matured backlog",
+      "homepage_line": "356 frozen forecasts \u00b7 346 matured backlog",
       "forecast_storage": {
-        "n_replay_artifacts": 355,
-        "n_matured_forecasts": 345,
+        "n_replay_artifacts": 356,
+        "n_matured_forecasts": 346,
         "n_scored_forecasts": 0,
-        "n_backlog": 345,
+        "n_backlog": 346,
         "first_issued_at": "2026-03-13T03:00:00Z",
-        "last_issued_at": "2026-05-08T05:54:22Z",
-        "last_forecast_id": "to_fcst_20260508_0554",
-        "latest_replay_artifact": "/data/replay/to_fcst_20260508_0554.json",
+        "last_issued_at": "2026-05-08T07:24:33Z",
+        "last_forecast_id": "to_fcst_20260508_0724",
+        "latest_replay_artifact": "/data/replay/to_fcst_20260508_0724.json",
         "forecast_horizon": "24 hours",
-        "next_mature_at": "2026-05-08T06:32:29Z"
+        "next_mature_at": "2026-05-08T10:21:24Z"
       },
       "ledger": {
         "supported": true,
         "path": "/data/tornado-ledger.jsonl",
-        "n_rows": 421,
+        "n_rows": 422,
         "prev_hash_mismatches": 0
       },
       "prospective": {
