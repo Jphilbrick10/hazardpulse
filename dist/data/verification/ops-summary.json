@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-05-12T14:13:01Z",
-  "score_as_of": "2026-05-12T14:12:39Z",
+  "generated_at": "2026-05-12T17:56:41Z",
+  "score_as_of": "2026-05-12T17:56:26Z",
   "system": {
-    "frozen_forecasts": 592,
-    "matured_forecasts": 459,
-    "scored_forecasts": 37,
-    "matured_unscored_backlog": 422,
-    "raw_chain_rows": 631,
+    "frozen_forecasts": 593,
+    "matured_forecasts": 462,
+    "scored_forecasts": 38,
+    "matured_unscored_backlog": 424,
+    "raw_chain_rows": 632,
     "hash_chain_mismatches": 0,
     "exact_model_benchmarks": 1,
     "alerts": [
-      "422 matured forecast windows are waiting for scoring.",
+      "424 matured forecast windows are waiting for scoring.",
       "Tornado: no exact benchmark is attached to the current live model version."
     ]
   },
@@ -24,14 +24,14 @@
       "verification_status_label": "Prospective live scoring is active for matured earthquake windows.",
       "metric_source": "prospective_live",
       "metric_source_label": "Computed from matured live forecasts.",
-      "auc": 0.7440193721967122,
-      "brier": 0.000849045092954493,
-      "homepage_line": "37 matured windows scored",
+      "auc": 0.744767103365338,
+      "brier": 0.0008505187164867298,
+      "homepage_line": "38 matured windows scored",
       "forecast_storage": {
         "n_replay_artifacts": 158,
         "n_matured_forecasts": 38,
-        "n_scored_forecasts": 37,
-        "n_backlog": 1,
+        "n_scored_forecasts": 38,
+        "n_backlog": 0,
         "first_issued_at": "2026-03-13T03:00:00Z",
         "last_issued_at": "2026-05-12T09:00:00Z",
         "last_forecast_id": "eq_fcst_20260512_0900",
@@ -48,7 +48,7 @@
       "prospective": {
         "summary_path": "results/earthquake_prospective/prospective_summary.json",
         "status": "ok",
-        "scored_as_of": "2026-05-12T10:30:32Z",
+        "scored_as_of": "2026-05-12T14:21:48Z",
         "message": null,
         "top_5_hit_rate": 0.0
       },
@@ -83,15 +83,15 @@
       "homepage_line": "AUC 0.938 retrospective holdout",
       "forecast_storage": {
         "n_replay_artifacts": 38,
-        "n_matured_forecasts": 35,
+        "n_matured_forecasts": 36,
         "n_scored_forecasts": 0,
-        "n_backlog": 35,
+        "n_backlog": 36,
         "first_issued_at": "2026-03-13T03:00:00Z",
         "last_issued_at": "2026-05-12T13:31:00Z",
         "last_forecast_id": "hu_fcst_20260512_1331",
         "latest_replay_artifact": "/data/replay/hu_fcst_20260512_1331.json",
         "forecast_horizon": "24 hours",
-        "next_mature_at": "2026-05-12T14:15:57Z"
+        "next_mature_at": "2026-05-13T13:31:00Z"
       },
       "ledger": {
         "supported": false,
@@ -130,23 +130,23 @@
       "metric_source_label": "No exact benchmark is currently bound to the live tornado storm-object model version in this repo.",
       "auc": null,
       "brier": null,
-      "homepage_line": "396 frozen forecasts \u00b7 386 matured backlog",
+      "homepage_line": "397 frozen forecasts \u00b7 388 matured backlog",
       "forecast_storage": {
-        "n_replay_artifacts": 396,
-        "n_matured_forecasts": 386,
+        "n_replay_artifacts": 397,
+        "n_matured_forecasts": 388,
         "n_scored_forecasts": 0,
-        "n_backlog": 386,
+        "n_backlog": 388,
         "first_issued_at": "2026-03-13T03:00:00Z",
-        "last_issued_at": "2026-05-12T14:12:39Z",
-        "last_forecast_id": "to_fcst_20260512_1412",
-        "latest_replay_artifact": "/data/replay/to_fcst_20260512_1412.json",
+        "last_issued_at": "2026-05-12T17:56:26Z",
+        "last_forecast_id": "to_fcst_20260512_1756",
+        "latest_replay_artifact": "/data/replay/to_fcst_20260512_1756.json",
         "forecast_horizon": "24 hours",
-        "next_mature_at": "2026-05-12T14:41:24Z"
+        "next_mature_at": "2026-05-12T19:42:19Z"
       },
       "ledger": {
         "supported": true,
         "path": "/data/tornado-ledger.jsonl",
-        "n_rows": 462,
+        "n_rows": 463,
         "prev_hash_mismatches": 0
       },
       "prospective": {
