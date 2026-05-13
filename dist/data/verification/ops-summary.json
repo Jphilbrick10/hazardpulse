@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-05-13T02:45:06Z",
-  "score_as_of": "2026-05-13T02:44:56Z",
+  "generated_at": "2026-05-13T04:36:36Z",
+  "score_as_of": "2026-05-13T04:00:00Z",
   "system": {
-    "frozen_forecasts": 598,
-    "matured_forecasts": 467,
+    "frozen_forecasts": 599,
+    "matured_forecasts": 468,
     "scored_forecasts": 39,
-    "matured_unscored_backlog": 428,
-    "raw_chain_rows": 637,
+    "matured_unscored_backlog": 429,
+    "raw_chain_rows": 638,
     "hash_chain_mismatches": 0,
     "exact_model_benchmarks": 1,
     "alerts": [
-      "428 matured forecast windows are waiting for scoring.",
+      "429 matured forecast windows are waiting for scoring.",
       "Tornado: no exact benchmark is attached to the current live model version."
     ]
   },
@@ -28,27 +28,27 @@
       "brier": 0.0008515092749945214,
       "homepage_line": "39 matured windows scored",
       "forecast_storage": {
-        "n_replay_artifacts": 159,
-        "n_matured_forecasts": 39,
+        "n_replay_artifacts": 160,
+        "n_matured_forecasts": 40,
         "n_scored_forecasts": 39,
-        "n_backlog": 0,
+        "n_backlog": 1,
         "first_issued_at": "2026-03-13T03:00:00Z",
-        "last_issued_at": "2026-05-12T20:00:00Z",
-        "last_forecast_id": "eq_fcst_20260512_2000",
-        "latest_replay_artifact": "/data/replay/eq_fcst_20260512_2000.json",
+        "last_issued_at": "2026-05-13T04:00:00Z",
+        "last_forecast_id": "eq_fcst_20260513_0400",
+        "latest_replay_artifact": "/data/replay/eq_fcst_20260513_0400.json",
         "forecast_horizon": "30 days",
-        "next_mature_at": "2026-05-13T03:00:00Z"
+        "next_mature_at": "2026-05-13T08:00:00Z"
       },
       "ledger": {
         "supported": true,
         "path": "/data/earthquake-ledger.jsonl",
-        "n_rows": 170,
+        "n_rows": 171,
         "prev_hash_mismatches": 0
       },
       "prospective": {
         "summary_path": "results/earthquake_prospective/prospective_summary.json",
         "status": "ok",
-        "scored_as_of": "2026-05-12T21:18:30Z",
+        "scored_as_of": "2026-05-13T02:54:00Z",
         "message": null,
         "top_5_hit_rate": 0.0
       },
