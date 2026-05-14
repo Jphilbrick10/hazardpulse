@@ -1,8 +1,23 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-05-14T15:12:38.596789Z",
+  "updated_at": "2026-05-14T17:46:35.302674Z",
   "n_alerts": 50,
   "alerts": [
+    {
+      "rule_name": "eq_critical_probability",
+      "severity": "critical",
+      "hazard": "eq",
+      "forecast_id": "eq_fcst_20260514_1500",
+      "probability": 0.8081,
+      "issued_at": "2026-05-14T17:46:20.030263Z",
+      "triggered_at": "2026-05-14T17:46:35.302391Z",
+      "message": "Earthquake critical: 80.8% (forecast eq_fcst_20260514_1500)",
+      "coincidence": null,
+      "sinks_notified": [
+        "file"
+      ],
+      "sink_failures": {}
+    },
     {
       "rule_name": "to_severe_probability",
       "severity": "warning",
@@ -732,21 +747,6 @@
       "issued_at": "2026-05-12T10:28:23.478229Z",
       "triggered_at": "2026-05-12T10:28:36.917205Z",
       "message": "Earthquake critical: 75.3% (forecast eq_fcst_20260512_0900)",
-      "coincidence": null,
-      "sinks_notified": [
-        "file"
-      ],
-      "sink_failures": {}
-    },
-    {
-      "rule_name": "to_severe_probability",
-      "severity": "warning",
-      "hazard": "to",
-      "forecast_id": "to_fcst_20260512_0634",
-      "probability": 0.5071,
-      "issued_at": "2026-05-12T09:00:00Z",
-      "triggered_at": "2026-05-12T09:24:49.662350Z",
-      "message": "Tornado outlook elevated: 50.7% (forecast to_fcst_20260512_0634)",
       "coincidence": null,
       "sinks_notified": [
         "file"
