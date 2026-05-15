@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-05-15T10:19:29Z",
-  "score_as_of": "2026-05-15T10:19:15Z",
+  "generated_at": "2026-05-15T13:21:56Z",
+  "score_as_of": "2026-05-15T13:21:52Z",
   "system": {
-    "frozen_forecasts": 628,
+    "frozen_forecasts": 629,
     "matured_forecasts": 497,
-    "scored_forecasts": 48,
-    "matured_unscored_backlog": 449,
+    "scored_forecasts": 49,
+    "matured_unscored_backlog": 448,
     "raw_chain_rows": 665,
     "hash_chain_mismatches": 0,
     "exact_model_benchmarks": 1,
     "alerts": [
-      "449 matured forecast windows are waiting for scoring.",
+      "448 matured forecast windows are waiting for scoring.",
       "Tornado: no exact benchmark is attached to the current live model version."
     ]
   },
@@ -24,14 +24,14 @@
       "verification_status_label": "Prospective live scoring is active for matured earthquake windows.",
       "metric_source": "prospective_live",
       "metric_source_label": "Computed from matured live forecasts.",
-      "auc": 0.7494852136463117,
-      "brier": 0.0008602845549145299,
-      "homepage_line": "48 matured windows scored",
+      "auc": 0.7494161198992704,
+      "brier": 0.0008625961126809698,
+      "homepage_line": "49 matured windows scored",
       "forecast_storage": {
         "n_replay_artifacts": 169,
         "n_matured_forecasts": 49,
-        "n_scored_forecasts": 48,
-        "n_backlog": 1,
+        "n_scored_forecasts": 49,
+        "n_backlog": 0,
         "first_issued_at": "2026-03-13T03:00:00Z",
         "last_issued_at": "2026-05-15T09:00:00Z",
         "last_forecast_id": "eq_fcst_20260515_0900",
@@ -48,7 +48,7 @@
       "prospective": {
         "summary_path": "results/earthquake_prospective/prospective_summary.json",
         "status": "ok",
-        "scored_as_of": "2026-05-15T06:54:29Z",
+        "scored_as_of": "2026-05-15T10:21:37Z",
         "message": null,
         "top_5_hit_rate": 0.0
       },
@@ -82,14 +82,14 @@
       "brier_skill_score": 0.29,
       "homepage_line": "AUC 0.938 retrospective holdout",
       "forecast_storage": {
-        "n_replay_artifacts": 40,
+        "n_replay_artifacts": 41,
         "n_matured_forecasts": 38,
         "n_scored_forecasts": 0,
         "n_backlog": 38,
         "first_issued_at": "2026-03-13T03:00:00Z",
-        "last_issued_at": "2026-05-14T13:22:40Z",
-        "last_forecast_id": "hu_fcst_20260514_1322",
-        "latest_replay_artifact": "/data/replay/hu_fcst_20260514_1322.json",
+        "last_issued_at": "2026-05-15T13:21:52Z",
+        "last_forecast_id": "hu_fcst_20260515_1321",
+        "latest_replay_artifact": "/data/replay/hu_fcst_20260515_1321.json",
         "forecast_horizon": "24 hours",
         "next_mature_at": "2026-05-15T13:22:40Z"
       },
