@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-05-17T09:43:49Z",
-  "score_as_of": "2026-05-17T09:43:37Z",
+  "generated_at": "2026-05-17T11:02:20Z",
+  "score_as_of": "2026-05-17T11:02:06Z",
   "system": {
-    "frozen_forecasts": 656,
-    "matured_forecasts": 523,
-    "scored_forecasts": 56,
+    "frozen_forecasts": 657,
+    "matured_forecasts": 524,
+    "scored_forecasts": 57,
     "matured_unscored_backlog": 467,
-    "raw_chain_rows": 691,
+    "raw_chain_rows": 692,
     "hash_chain_mismatches": 0,
     "exact_model_benchmarks": 1,
     "alerts": [
@@ -24,14 +24,14 @@
       "verification_status_label": "Prospective live scoring is active for matured earthquake windows.",
       "metric_source": "prospective_live",
       "metric_source_label": "Computed from matured live forecasts.",
-      "auc": 0.7452620177389354,
-      "brier": 0.0008757187035561661,
-      "homepage_line": "56 matured windows scored",
+      "auc": 0.7438052754354835,
+      "brier": 0.0008777890214874795,
+      "homepage_line": "57 matured windows scored",
       "forecast_storage": {
         "n_replay_artifacts": 177,
         "n_matured_forecasts": 57,
-        "n_scored_forecasts": 56,
-        "n_backlog": 1,
+        "n_scored_forecasts": 57,
+        "n_backlog": 0,
         "first_issued_at": "2026-03-13T03:00:00Z",
         "last_issued_at": "2026-05-17T08:00:00Z",
         "last_forecast_id": "eq_fcst_20260517_0800",
@@ -48,7 +48,7 @@
       "prospective": {
         "summary_path": "results/earthquake_prospective/prospective_summary.json",
         "status": "ok",
-        "scored_as_of": "2026-05-17T06:43:08Z",
+        "scored_as_of": "2026-05-17T09:46:08Z",
         "message": null,
         "top_5_hit_rate": 0.0
       },
@@ -130,23 +130,23 @@
       "metric_source_label": "No exact benchmark is currently bound to the live tornado storm-object model version in this repo.",
       "auc": null,
       "brier": null,
-      "homepage_line": "437 frozen forecasts \u00b7 426 matured backlog",
+      "homepage_line": "438 frozen forecasts \u00b7 427 matured backlog",
       "forecast_storage": {
-        "n_replay_artifacts": 437,
-        "n_matured_forecasts": 426,
+        "n_replay_artifacts": 438,
+        "n_matured_forecasts": 427,
         "n_scored_forecasts": 0,
-        "n_backlog": 426,
+        "n_backlog": 427,
         "first_issued_at": "2026-03-13T03:00:00Z",
-        "last_issued_at": "2026-05-17T09:43:37Z",
-        "last_forecast_id": "to_fcst_20260517_0943",
-        "latest_replay_artifact": "/data/replay/to_fcst_20260517_0943.json",
+        "last_issued_at": "2026-05-17T11:02:06Z",
+        "last_forecast_id": "to_fcst_20260517_1102",
+        "latest_replay_artifact": "/data/replay/to_fcst_20260517_1102.json",
         "forecast_horizon": "24 hours",
-        "next_mature_at": "2026-05-17T11:00:09Z"
+        "next_mature_at": "2026-05-17T13:14:27Z"
       },
       "ledger": {
         "supported": true,
         "path": "/data/tornado-ledger.jsonl",
-        "n_rows": 503,
+        "n_rows": 504,
         "prev_hash_mismatches": 0
       },
       "prospective": {
