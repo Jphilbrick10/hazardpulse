@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T12:32:48Z",
+  "generated_at": "2026-05-31T13:06:29Z",
   "envelopes": [
     {
       "provenance_id": "prov_to_fcst_20260531_1232",
@@ -21,6 +21,26 @@
         "publish_artifact"
       ],
       "replay_artifact": "/data/replay/to_fcst_20260531_1232.json"
+    },
+    {
+      "provenance_id": "prov_eq_fcst_20260531_1200",
+      "forecast_id": "eq_fcst_20260531_1200",
+      "hazard": "earthquake",
+      "model_version": "eq_coherence_v1_0",
+      "input_hash": "sha256:7b5dc692b0a2280b3571ba8d8b1a750ead55e13813f43745bfc2fe587dc2c6bd",
+      "output_hash": "sha256:f50f9aa489c839cb41be9dbe2aa201aad73f0920039e3cef0fee2884b71cc0df",
+      "signed_at": "2026-05-31T12:00:00Z",
+      "sources": [
+        "USGS FDSNWS"
+      ],
+      "transforms": [
+        "catalog_ingest",
+        "grid_binning",
+        "coherence_feature_extraction",
+        "singularity_scoring",
+        "publish_artifact"
+      ],
+      "replay_artifact": "/data/replay/eq_fcst_20260531_1200.json"
     },
     {
       "provenance_id": "prov_to_fcst_20260531_1039",
