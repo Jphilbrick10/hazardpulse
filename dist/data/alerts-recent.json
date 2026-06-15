@@ -1,8 +1,38 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-06-15T10:20:17.723249Z",
+  "updated_at": "2026-06-15T14:10:39.562800Z",
   "n_alerts": 50,
   "alerts": [
+    {
+      "rule_name": "to_severe_probability",
+      "severity": "warning",
+      "hazard": "to",
+      "forecast_id": "to_fcst_20260615_1410",
+      "probability": 0.4127,
+      "issued_at": "2026-06-15T14:10:09.635603Z",
+      "triggered_at": "2026-06-15T14:10:39.562572Z",
+      "message": "Tornado outlook elevated: 41.3% (forecast to_fcst_20260615_1410)",
+      "coincidence": null,
+      "sinks_notified": [
+        "file"
+      ],
+      "sink_failures": {}
+    },
+    {
+      "rule_name": "eq_critical_probability",
+      "severity": "critical",
+      "hazard": "eq",
+      "forecast_id": "eq_fcst_20260615_0800",
+      "probability": 0.7322,
+      "issued_at": "2026-06-15T14:10:09.635603Z",
+      "triggered_at": "2026-06-15T14:10:39.561475Z",
+      "message": "Earthquake critical: 73.2% (forecast eq_fcst_20260615_0800)",
+      "coincidence": null,
+      "sinks_notified": [
+        "file"
+      ],
+      "sink_failures": {}
+    },
     {
       "rule_name": "to_severe_probability",
       "severity": "warning",
@@ -716,36 +746,6 @@
       "probability": 0.7633,
       "issued_at": "2026-06-13T22:24:58.781198Z",
       "triggered_at": "2026-06-13T22:25:26.540189Z",
-      "message": "Earthquake critical: 76.3% (forecast eq_fcst_20260613_1800)",
-      "coincidence": null,
-      "sinks_notified": [
-        "file"
-      ],
-      "sink_failures": {}
-    },
-    {
-      "rule_name": "to_severe_probability",
-      "severity": "warning",
-      "hazard": "to",
-      "forecast_id": "to_fcst_20260613_2030",
-      "probability": 0.7252,
-      "issued_at": "2026-06-13T20:30:03.029784Z",
-      "triggered_at": "2026-06-13T20:30:27.900764Z",
-      "message": "Tornado outlook elevated: 72.5% (forecast to_fcst_20260613_2030)",
-      "coincidence": null,
-      "sinks_notified": [
-        "file"
-      ],
-      "sink_failures": {}
-    },
-    {
-      "rule_name": "eq_critical_probability",
-      "severity": "critical",
-      "hazard": "eq",
-      "forecast_id": "eq_fcst_20260613_1800",
-      "probability": 0.7633,
-      "issued_at": "2026-06-13T20:30:03.029784Z",
-      "triggered_at": "2026-06-13T20:30:27.899590Z",
       "message": "Earthquake critical: 76.3% (forecast eq_fcst_20260613_1800)",
       "coincidence": null,
       "sinks_notified": [
