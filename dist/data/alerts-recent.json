@@ -1,8 +1,38 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-06-20T20:30:51.136569Z",
+  "updated_at": "2026-06-20T22:27:55.690310Z",
   "n_alerts": 50,
   "alerts": [
+    {
+      "rule_name": "to_severe_probability",
+      "severity": "warning",
+      "hazard": "to",
+      "forecast_id": "to_fcst_20260620_2227",
+      "probability": 0.5293,
+      "issued_at": "2026-06-20T22:27:15.519513Z",
+      "triggered_at": "2026-06-20T22:27:55.690054Z",
+      "message": "Tornado outlook elevated: 52.9% (forecast to_fcst_20260620_2227)",
+      "coincidence": null,
+      "sinks_notified": [
+        "file"
+      ],
+      "sink_failures": {}
+    },
+    {
+      "rule_name": "eq_critical_probability",
+      "severity": "critical",
+      "hazard": "eq",
+      "forecast_id": "eq_fcst_20260620_1800",
+      "probability": 0.8823,
+      "issued_at": "2026-06-20T22:27:15.519513Z",
+      "triggered_at": "2026-06-20T22:27:55.688963Z",
+      "message": "Earthquake critical: 88.2% (forecast eq_fcst_20260620_1800)",
+      "coincidence": null,
+      "sinks_notified": [
+        "file"
+      ],
+      "sink_failures": {}
+    },
     {
       "rule_name": "to_severe_probability",
       "severity": "warning",
@@ -716,36 +746,6 @@
       "probability": 0.8395,
       "issued_at": "2026-06-19T08:00:00Z",
       "triggered_at": "2026-06-19T08:28:25.043057Z",
-      "message": "Tornado outlook elevated: 84.0% (forecast to_fcst_20260619_0753)",
-      "coincidence": null,
-      "sinks_notified": [
-        "file"
-      ],
-      "sink_failures": {}
-    },
-    {
-      "rule_name": "eq_critical_probability",
-      "severity": "critical",
-      "hazard": "eq",
-      "forecast_id": "eq_fcst_20260619_0800",
-      "probability": 0.8823,
-      "issued_at": "2026-06-19T08:00:00Z",
-      "triggered_at": "2026-06-19T08:28:25.041956Z",
-      "message": "Earthquake critical: 88.2% (forecast eq_fcst_20260619_0800)",
-      "coincidence": null,
-      "sinks_notified": [
-        "file"
-      ],
-      "sink_failures": {}
-    },
-    {
-      "rule_name": "to_severe_probability",
-      "severity": "warning",
-      "hazard": "to",
-      "forecast_id": "to_fcst_20260619_0753",
-      "probability": 0.8395,
-      "issued_at": "2026-06-19T07:53:56.751408Z",
-      "triggered_at": "2026-06-19T07:54:19.091287Z",
       "message": "Tornado outlook elevated: 84.0% (forecast to_fcst_20260619_0753)",
       "coincidence": null,
       "sinks_notified": [
