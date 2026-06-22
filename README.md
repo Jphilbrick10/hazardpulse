@@ -1,5 +1,7 @@
 # HazardPulse
 
+> Part of **[Coherence Energy Labs](https://coherenceenergylabs.com)** — an independent research lab developing coherence field theory and the Coherence Lang language (founded 2024 by Josh Philbrick).
+
 **Three natural hazard prediction systems derived from a single partial differential equation.**
 
 All models are pure Python + NumPy. Every algorithm — logistic regression, gradient boosted trees, ensemble stacking, bootstrap confidence intervals — implemented from scratch. No sklearn. No TensorFlow. No PyTorch.
