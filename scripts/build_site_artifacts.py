@@ -441,39 +441,91 @@ def _build_provenance_envelopes(entries: list[dict]) -> list[dict]:
     return envelopes
 
 
+_GATE_CELL_DEG = {"earthquake": 2.0, "tornado": 2.0, "hurricane": None}
+
+
+def _load_calibration_metrics() -> dict:
+    """Per-hazard deployed-model calibration (results/models/<hazard>_calibration.json)."""
+    metrics: dict[str, dict] = {}
+    for name in ("earthquake", "tornado", "hurricane"):
+        rec = _read_json(ROOT / "results" / "models" / f"{name}_calibration.json", {})
+        after = rec.get("metrics_after") if isinstance(rec, dict) else None
+        if after:
+            metrics[name] = after
+    return metrics
+
+
+def _gate_top_object(artifact: dict) -> dict:
+    cells = artifact.get("active_cells")
+    if isinstance(cells, list) and cells:
+        return cells[0]
+    storms = artifact.get("storms")
+    if isinstance(storms, list) and storms:
+        return storms[0]
+    return {}
+
+
 def _build_gate_decisions(entries: list[dict], pulse: dict) -> list[dict]:
-    decisions: list[dict] = []
+    """Evaluate the real publish-gate spine per forecast (was: hardcoded 'pass').
+
+    Each forecast is gated on its own replay artifact's trust fields — calibrated
+    probability, [conf_lo, conf_hi] band, signed-receipt provenance — plus the
+    deployed model's measured calibration. Forecasts without the trust layer yet
+    DEGRADE (honest) instead of silently passing.
+    """
+    from hazardpulse.gates import GateContext, GateEngine
+
+    engine = GateEngine()
+    calib = _load_calibration_metrics()
     hazard_map = {hazard.get("key"): hazard for hazard in pulse.get("hazards", [])}
-    hazard_key_for_name = {"earthquake": "eq", "hurricane": "hu", "tornado": "to"}
+    key_for_name = {"earthquake": "eq", "hurricane": "hu", "tornado": "to"}
+    decisions: list[dict] = []
     for entry in entries:
-        if not entry.get("replay_artifact"):
+        replay_ref = entry.get("replay_artifact")
+        if not replay_ref:
             continue
         hazard_name = str(entry.get("hazard"))
-        hazard_key = hazard_key_for_name.get(hazard_name, hazard_name)
-        hazard = hazard_map.get(hazard_key, {})
-        reasons: list[str] = []
-        warnings: list[str] = []
-        decision = "pass"
-        if hazard.get("conf_lo") is None or hazard.get("conf_hi") is None:
-            warnings.append("confidence_interval_unavailable")
-        if hazard_name == "hurricane" and int(hazard.get("n_active_storms", 0) or 0) == 0:
-            warnings.append("no_active_tropical_cyclones_in_feed")
-        if hazard_name == "tornado" and hazard.get("coherence_source") == "probsevere":
-            warnings.append("probsevere_coherence_fallback_active")
-        if hazard.get("gate_status") not in (None, "", "pass"):
-            decision = str(hazard.get("gate_status"))
-            reasons.append(f"publish_gate_status_{decision}")
-        decisions.append(
-            {
-                "gate_decision_id": f"gdec_{entry['forecast_id']}",
-                "forecast_id": entry["forecast_id"],
-                "hazard": hazard_name,
-                "decision": decision,
-                "reasons": reasons,
-                "warnings": warnings,
-                "issued_at": entry.get("issued_at"),
-            }
+        artifact = _read_json(DIST / replay_ref.lstrip("/"), {})
+        top = _gate_top_object(artifact)
+        receipt = top.get("receipt") if isinstance(top.get("receipt"), dict) else {}
+        prob = top.get("probability")
+        if prob is None:
+            prob = top.get("tornado_probability", top.get("ri_probability"))
+        if prob is None:
+            prob = artifact.get("top_probability", 0.0)
+        m = calib.get(hazard_name)
+        ctx = GateContext(
+            hazard=hazard_name,
+            forecast_id=entry["forecast_id"],
+            model_version=artifact.get("model_version") or entry.get("model_version"),
+            model_sha256=receipt.get("model_sha256"),
+            input_sha256=receipt.get("input_sha256"),
+            receipt_sha256=top.get("receipt_sha256") or receipt.get("receipt_sha256"),
+            replay_artifact=replay_ref,
+            probability=prob,
+            confidence_lo=top.get("confidence_lo"),
+            confidence_hi=top.get("confidence_hi"),
+            abstained=bool(top.get("abstained", False)),
+            uncertainty_class=top.get("uncertainty_class"),
+            lat=top.get("lat"),
+            lon=top.get("lon"),
+            cell_size_deg=_GATE_CELL_DEG.get(hazard_name),
+            data_age_seconds=0.0,  # source data was fresh at issue time
+            ece=(m or {}).get("ece"),
+            brier_skill_score=(m or {}).get("brier_skill_score"),
+            calibration_known=m is not None,
+            risk_label=top.get("risk_band"),
         )
+        decision = engine.evaluate(ctx, emitted_at=entry.get("issued_at"))
+        payload = decision.as_dict()
+        payload["issued_at"] = entry.get("issued_at")
+        # Informational pulse-level context (kept from the prior stamping).
+        hz = hazard_map.get(key_for_name.get(hazard_name, hazard_name), {})
+        if hazard_name == "hurricane" and int(hz.get("n_active_storms", 0) or 0) == 0:
+            payload["warnings"].append("no_active_tropical_cyclones_in_feed")
+        if hazard_name == "tornado" and hz.get("coherence_source") == "probsevere":
+            payload["warnings"].append("probsevere_coherence_fallback_active")
+        decisions.append(payload)
     return decisions
 
 

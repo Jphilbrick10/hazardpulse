@@ -174,14 +174,20 @@ def g1_source_freshness(ctx: GateContext, cfg: GateConfig) -> GateResult:
 
 def g3_provenance_complete(ctx: GateContext, cfg: GateConfig) -> GateResult:
     gid = "G3_PROVENANCE_COMPLETE"
-    missing = [name for name, v in (
-        ("model_version", ctx.model_version),
+    # Model lineage must always be pinned (always available today) -> hard block.
+    if not ctx.model_version:
+        return GateResult(gid, BLOCK, "model_version missing")
+    # Cryptographic provenance (signed re-runnable receipt) -> degrade if absent,
+    # so the trust layer can roll out across scorers without darking the site;
+    # clears to pass once a forecast carries its receipt + hashes.
+    crypto_missing = [name for name, v in (
         ("model_sha256", ctx.model_sha256),
         ("input_sha256", ctx.input_sha256),
         ("receipt_sha256", ctx.receipt_sha256),
     ) if not v]
-    if missing:
-        return GateResult(gid, BLOCK, "incomplete provenance: " + ", ".join(missing))
+    if crypto_missing:
+        return GateResult(gid, DEGRADE,
+                          "cryptographic provenance incomplete: " + ", ".join(crypto_missing))
     return GateResult(gid, PASS)
 
 

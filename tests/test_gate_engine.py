@@ -60,9 +60,13 @@ def test_stale_source_blocks_aging_degrades():
     assert _decide(replace(_good(), data_age_seconds=None)) == DEGRADE
 
 
-def test_missing_provenance_blocks():
-    assert _decide(replace(_good(), receipt_sha256=None)) == BLOCK
-    assert _decide(replace(_good(), model_sha256=None)) == BLOCK
+def test_provenance_gate():
+    # model lineage is a hard requirement
+    assert _decide(replace(_good(), model_version=None)) == BLOCK
+    # cryptographic provenance degrades (not blocks) while the trust layer rolls out
+    assert _decide(replace(_good(), receipt_sha256=None)) == DEGRADE
+    assert _decide(replace(_good(), model_sha256=None, input_sha256=None,
+                           receipt_sha256=None)) == DEGRADE
 
 
 def test_calibration_floor():
