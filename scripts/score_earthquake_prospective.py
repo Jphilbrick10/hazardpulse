@@ -287,7 +287,18 @@ def score_single_forecast(
             y_true[flat] = 1.0 if count > 0 else 0.0
 
     if calib_acc is not None:
-        _accumulate_calibration(calib_acc, y_score, y_true)
+        # Pool the RAW model score (not the deployed/calibrated one) so re-fitting
+        # the calibrator never double-calibrates. Before any calibrator exists,
+        # raw_probability is absent and equals probability.
+        raw_probs = {
+            (int(cell["row"]), int(cell["col"])): float(
+                cell.get("raw_probability", cell["probability"]))
+            for cell in artifact.get("active_cells", [])
+        }
+        y_score_raw = np.full(n_cells, default_probability, dtype=np.float64)
+        for (r_, c_), rp in raw_probs.items():
+            y_score_raw[r_ * n_lon + c_] = rp
+        _accumulate_calibration(calib_acc, y_score_raw, y_true)
 
     rate_vec = -np.log(np.clip(1.0 - y_score, 1e-12, 1.0))
     total_events = int(sum(cell_counts.values()))

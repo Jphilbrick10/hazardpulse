@@ -1,0 +1,118 @@
+"""Glue between the live scorers and the trust layer.
+
+A scorer produces a list of cell/storm dicts each carrying a raw ``probability``.
+These helpers load the fitted calibrator (if one has been produced from matured
+forecasts yet), load the Ed25519 signing key (if configured), and enrich each
+cell in place with a calibrated probability, an honest [confidence_lo,
+confidence_hi] band, an abstention decision, and a signed re-runnable receipt.
+
+Designed to fail safe: if no calibration record exists yet, ``load_forecaster``
+returns None and the scorer keeps emitting raw (uncalibrated) forecasts — honest
+degradation, never a crash. Once the prospective scorer + ``fit_calibration``
+have run, the calibrator appears and forecasts start being calibrated
+automatically.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+from pathlib import Path
+
+from .forecast import TrustedForecaster
+
+__all__ = ["load_signer", "load_forecaster", "enrich_cell", "enrich_cells", "publish_public_key"]
+
+_SIGNING_KEY_ENV = "HAZARDPULSE_SIGNING_KEY"   # 32-byte Ed25519 seed, hex-encoded
+
+
+def load_signer(env_var: str = _SIGNING_KEY_ENV):
+    """Return an Ed25519 private key from a hex env var, or None (unsigned receipts)."""
+    raw = os.environ.get(env_var, "").strip()
+    if not raw:
+        return None
+    try:
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+        return Ed25519PrivateKey.from_private_bytes(bytes.fromhex(raw))
+    except Exception:
+        return None
+
+
+def publish_public_key(signer, out_path: Path) -> dict | None:
+    """Write the signer's public key (hex) so third parties can verify receipts."""
+    if signer is None:
+        return None
+    try:
+        pub = signer.public_key().public_bytes_raw().hex()
+    except Exception:
+        return None
+    payload = {"alg": "ed25519", "public_key_hex": pub,
+               "verify": "verify_forecast_receipt(receipt, pubkey=load_ed25519_pubkey(bytes.fromhex(public_key_hex)))"}
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return payload
+
+
+def load_forecaster(hazard: str, *, models_dir: Path | None = None, signer=None,
+                    alpha: float = 0.1) -> TrustedForecaster | None:
+    """Build a TrustedForecaster from results/models/<hazard>_calibration.json.
+
+    Returns None if no calibration record exists yet (scorer then stays raw).
+    """
+    models_dir = models_dir or (Path(__file__).resolve().parents[3] / "results" / "models")
+    path = models_dir / f"{hazard}_calibration.json"
+    if not path.is_file():
+        return None
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+        if "calibrator" not in record:
+            return None
+        return TrustedForecaster.from_calibration_dict(record, signer=signer, alpha=alpha)
+    except Exception:
+        return None
+
+
+def enrich_cell(cell: dict, forecaster: TrustedForecaster, *, prob_key: str = "probability",
+                feature_key: str | None = None, data_health_key: str = "data_health_ok",
+                issued_at: str | None = None) -> dict:
+    """Enrich one cell/storm dict in place with calibrated probability + interval +
+    abstention + signed receipt. The raw probability is preserved under
+    ``raw_probability`` for audit."""
+    raw = cell.get(prob_key)
+    if raw is None:
+        return cell
+    features = cell.get(feature_key) if feature_key else None
+    health = bool(cell.get(data_health_key, True))
+    res = forecaster.forecast_one(float(raw), features, data_health_ok=health,
+                                  issued_at=issued_at)
+    cell["raw_probability"] = res.raw_probability
+    # Calibrated probability replaces the displayed/ranked probability when available.
+    if res.probability is not None:
+        cell[prob_key] = round(float(res.probability), 4)
+    cell["confidence_lo"] = None if res.confidence_lo is None else round(res.confidence_lo, 4)
+    cell["confidence_hi"] = None if res.confidence_hi is None else round(res.confidence_hi, 4)
+    cell["uncertainty_class"] = res.uncertainty_class
+    cell["abstained"] = res.abstained
+    cell["abstain_reason"] = res.abstain_reason
+    cell["gateway_mode"] = res.gateway_mode
+    cell["calibrated"] = True
+    cell["receipt"] = res.receipt
+    cell["receipt_sha256"] = res.receipt.get("receipt_sha256")
+    return cell
+
+
+def enrich_cells(cells: list[dict], forecaster: TrustedForecaster | None, *,
+                 prob_key: str = "probability", feature_key: str | None = None,
+                 data_health_key: str = "data_health_ok", issued_at: str | None = None,
+                 resort: bool = True) -> list[dict]:
+    """Enrich a list of cells. If ``forecaster`` is None, returns cells untouched
+    (honest no-op until a calibrator has been produced)."""
+    if forecaster is None:
+        return cells
+    for cell in cells:
+        enrich_cell(cell, forecaster, prob_key=prob_key, feature_key=feature_key,
+                    data_health_key=data_health_key, issued_at=issued_at)
+    if resort:
+        cells.sort(key=lambda c: (c.get("abstained", False),
+                                  -(c.get(prob_key) if c.get(prob_key) is not None else -1.0)))
+    return cells

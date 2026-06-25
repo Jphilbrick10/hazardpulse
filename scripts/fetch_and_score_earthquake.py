@@ -1681,12 +1681,22 @@ def write_outputs(
                 if scored_cells:
                     top = scored_cells[0]
                     hazard["probability"] = top["probability"]
+                    # Real uncertainty band from the calibrator (None until a
+                    # calibrator exists) — populates HazardForecastV1 and removes
+                    # the universal confidence_interval_unavailable gate warning.
+                    hazard["conf_lo"] = top.get("confidence_lo")
+                    hazard["conf_hi"] = top.get("confidence_hi")
+                    hazard["uncertainty_class"] = top.get("uncertainty_class")
+                    hazard["abstained"] = top.get("abstained", False)
+                    hazard["receipt_sha256"] = top.get("receipt_sha256")
                     hazard["risk_band"] = top["risk_band"]
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = MODEL_VERSION
                     hazard["forecast_id"] = forecast_id
                 else:
                     hazard["probability"] = 0.0
+                    hazard["conf_lo"] = None
+                    hazard["conf_hi"] = None
                     hazard["risk_band"] = "minimal"
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = MODEL_VERSION
@@ -1984,6 +1994,28 @@ def run_pipeline(
         pretrained_gbt=pretrained_eq_gbt,
     )
     print(f"  {len(scored)} cells scored")
+
+    # Trust layer: calibrate probabilities, attach honest [conf_lo, conf_hi]
+    # bands + Ed25519-signed re-runnable receipts. Fails safe — if no calibrator
+    # has been produced yet, forecasts stay raw (uncalibrated) and honest.
+    try:
+        from hazardpulse.trust.scoring import enrich_cells, load_forecaster, load_signer
+
+        _signer = load_signer()
+        _forecaster = load_forecaster("earthquake", signer=_signer)
+        if _forecaster is not None:
+            enrich_cells(scored, _forecaster, issued_at=format_utc_z(now))
+            print(
+                f"  Trust layer: calibrated {len(scored)} cells "
+                f"(model {_forecaster.model_version}, signed={_signer is not None})"
+            )
+        else:
+            print(
+                "  Trust layer: no calibrator yet "
+                "(results/models/earthquake_calibration.json); emitting raw forecasts."
+            )
+    except Exception as exc:  # never let the trust layer break a live forecast
+        print(f"  Trust layer: skipped ({exc})")
 
     for cell in scored[:10]:
         print(

@@ -178,6 +178,21 @@ class TrustedForecaster:
         self.model_sha256_: str | None = None
         self.fitted = False
 
+    @classmethod
+    def from_calibration_dict(cls, d: dict, *, signer=None, alpha: float = 0.1) -> "TrustedForecaster":
+        """Build a forecaster from a persisted calibration record (results/models/
+        <hazard>_calibration.json). Loads the fitted probability calibrator; OOD is
+        left unset (no per-cell feature manifold persisted) so abstention is driven
+        by data-health until OOD is fit at scoring time."""
+        from .venn_abers import VennAbersCalibrator
+        tf = cls(model_version=d.get("model_version", "unknown"), alpha=alpha,
+                 ood_reject_quantile=None, signer=signer)
+        tf.calibrator = VennAbersCalibrator.from_dict(d["calibrator"])
+        tf.ood = None
+        tf.model_sha256_ = tf._fingerprint()
+        tf.fitted = True
+        return tf
+
     # -- fitting ----------------------------------------------------------- #
     def fit(self, cal_scores, cal_outcomes, cal_features=None) -> "TrustedForecaster":
         """Fit the calibrator on (raw_score, outcome) and, if given, the OOD
