@@ -162,6 +162,51 @@ class VennAbersCalibrator:
             self._reps = self._P0 = self._P1 = None
             return self
         reps, gsum, gcnt = self._grouped(s, y)
+        return self._fit_from_groups(reps, gsum, gcnt)
+
+    def fit_grouped(self, rep_scores, pos_counts, total_counts) -> "VennAbersCalibrator":
+        """Fit from a pre-pooled histogram: representative scores with the number
+        of positive outcomes and total observations at each. Equivalent to
+        ``fit`` on the expanded (score, outcome) pairs, but lets callers pool huge
+        calibration sets (e.g. millions of grid cells) into a compact histogram.
+        """
+        reps = np.asarray(rep_scores, dtype=np.float64).ravel()
+        pos = np.asarray(pos_counts, dtype=np.float64).ravel()
+        tot = np.asarray(total_counts, dtype=np.float64).ravel()
+        keep = np.isfinite(reps) & (tot > 0)
+        reps, pos, tot = reps[keep], pos[keep], tot[keep]
+        order = np.argsort(reps, kind="mergesort")
+        reps, pos, tot = reps[order], pos[order], tot[order]
+        # merge duplicate representative scores
+        ureps, inv = np.unique(reps, return_inverse=True)
+        gsum = np.zeros(ureps.size)
+        gcnt = np.zeros(ureps.size)
+        np.add.at(gsum, inv, pos)
+        np.add.at(gcnt, inv, tot)
+        self.n_calibration = int(gcnt.sum())
+        if self.n_calibration < self.min_calibration or ureps.size == 0:
+            self.inflated = True
+            self.fitted = True
+            self._reps = self._P0 = self._P1 = None
+            return self
+        # respect max_groups by quantile-merging if too many distinct reps
+        if ureps.size > self.max_groups:
+            edges = np.unique(np.quantile(ureps, np.linspace(0.0, 1.0, self.max_groups + 1)))
+            bidx = np.clip(np.searchsorted(edges[1:-1], ureps, side="right"), 0, edges.size - 2)
+            nb = edges.size - 1
+            wscore = np.zeros(nb); psum = np.zeros(nb); csum = np.zeros(nb)
+            np.add.at(wscore, bidx, ureps * gcnt)
+            np.add.at(psum, bidx, gsum)
+            np.add.at(csum, bidx, gcnt)
+            m = csum > 0
+            ureps, gsum, gcnt = wscore[m] / csum[m], psum[m], csum[m]
+            ureps, inv2 = np.unique(ureps, return_inverse=True)
+            g2 = np.zeros(ureps.size); c2 = np.zeros(ureps.size)
+            np.add.at(g2, inv2, gsum); np.add.at(c2, inv2, gcnt)
+            gsum, gcnt = g2, c2
+        return self._fit_from_groups(ureps, gsum, gcnt)
+
+    def _fit_from_groups(self, reps, gsum, gcnt) -> "VennAbersCalibrator":
         self._reps = reps
         self._P0, self._P1 = self._precompute_gaps(gsum / gcnt, gcnt)
         self.inflated = False
@@ -187,3 +232,28 @@ class VennAbersCalibrator:
     def predict_one(self, s: float) -> VennAbersResult:
         p, lo, hi = self.predict([s])
         return VennAbersResult(float(p[0]), float(lo[0]), float(hi[0]))
+
+    # -- persistence ------------------------------------------------------- #
+    def to_dict(self) -> dict:
+        """Serialize the fitted calibrator (the precomputed step-functions)."""
+        return {
+            "min_calibration": self.min_calibration,
+            "max_groups": self.max_groups,
+            "n_calibration": self.n_calibration,
+            "inflated": self.inflated,
+            "reps": None if self._reps is None else [round(float(v), 8) for v in self._reps],
+            "P0": None if self._P0 is None else [round(float(v), 8) for v in self._P0],
+            "P1": None if self._P1 is None else [round(float(v), 8) for v in self._P1],
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> "VennAbersCalibrator":
+        c = cls(min_calibration=int(d.get("min_calibration", 50)),
+                max_groups=int(d.get("max_groups", 512)))
+        c.n_calibration = int(d.get("n_calibration", 0))
+        c.inflated = bool(d.get("inflated", False))
+        c._reps = None if d.get("reps") is None else np.asarray(d["reps"], dtype=np.float64)
+        c._P0 = None if d.get("P0") is None else np.asarray(d["P0"], dtype=np.float64)
+        c._P1 = None if d.get("P1") is None else np.asarray(d["P1"], dtype=np.float64)
+        c.fitted = True
+        return c

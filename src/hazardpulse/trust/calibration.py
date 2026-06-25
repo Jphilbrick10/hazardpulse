@@ -30,7 +30,42 @@ __all__ = [
     "brier_skill_score",
     "brier_decomposition",
     "BrierDecomposition",
+    "ece_from_counts",
+    "brier_from_counts",
 ]
+
+
+def ece_from_counts(probs, pos, total, n_bins: int = 10) -> float:
+    """Weighted ECE from a pooled histogram (predicted prob, #positive, #total per group)."""
+    p = np.asarray(probs, dtype=np.float64).ravel()
+    pos = np.asarray(pos, dtype=np.float64).ravel()
+    tot = np.asarray(total, dtype=np.float64).ravel()
+    n = float(tot.sum())
+    if n <= 0:
+        return float("nan")
+    edges = np.linspace(0.0, 1.0, n_bins + 1)
+    idx = np.clip(np.digitize(p, edges[1:-1], right=False), 0, n_bins - 1)
+    ece = 0.0
+    for b in range(n_bins):
+        m = idx == b
+        w = float(tot[m].sum())
+        if w > 0:
+            mean_pred = float((p[m] * tot[m]).sum() / w)
+            obs = float(pos[m].sum() / w)
+            ece += w * abs(mean_pred - obs)
+    return ece / n
+
+
+def brier_from_counts(probs, pos, total) -> float:
+    """Brier score from a pooled histogram (each group contributes total*(p^2) - 2*p*pos + pos)."""
+    p = np.asarray(probs, dtype=np.float64).ravel()
+    pos = np.asarray(pos, dtype=np.float64).ravel()
+    tot = np.asarray(total, dtype=np.float64).ravel()
+    n = float(tot.sum())
+    if n <= 0:
+        return float("nan")
+    # sum over rows of (p-y)^2 = total*p^2 - 2*p*pos + pos   (y in {0,1})
+    return float((tot * p * p - 2.0 * p * pos + pos).sum() / n)
 
 
 def _clean(probs, outcomes):
