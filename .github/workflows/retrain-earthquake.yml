@@ -1,0 +1,73 @@
+name: Earthquake Monthly Retrain
+
+# Continuous learning: each month, fold every newly-captured earthquake into the
+# model. retrain_and_deploy.py honestly tunes, gates on a temporal holdout
+# (never-worse), trains the winner on ALL data, and overwrites the deployed
+# earthquake_gbt_v1.json -- so the model keeps learning instead of staying frozen.
+#
+# NOTE: the feature extraction scans the full ~0.5M-event catalog per sample and is
+# CPU-bound; it needs many cores. Run on a SELF-HOSTED runner (the 24-core box where
+# the .cache and omega_one live). GitHub's 2-core hosted runners are too slow for the
+# cold extraction. Locally this is just:  python scripts/retrain_and_deploy.py --deploy
+
+on:
+  schedule:
+    - cron: "0 7 1 * *"   # 07:00 UTC on the 1st of each month
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: "Deploy the winner (overwrite the live model)"
+        type: boolean
+        default: true
+
+concurrency:
+  group: hazardpulse-retrain-earthquake
+  cancel-in-progress: false
+
+jobs:
+  retrain:
+    runs-on: [self-hosted]
+    timeout-minutes: 240
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install numpy scipy xgboost lightgbm
+          pip install -e .
+
+      - name: Refresh catalog to present + retrain + deploy
+        env:
+          # extend the cached USGS catalog through the current year before retraining
+          HAZARDPULSE_EQ_FEATURE_REBUILD: "1"
+        run: |
+          python scripts/retrain_and_deploy.py --hazard earthquake \
+            ${{ (github.event_name == 'schedule' || inputs.deploy) && '--deploy' || '' }}
+
+      - name: Show retrain report
+        run: |
+          python -c "import json; print(json.dumps(json.load(open('results/calibration/earthquake_retrain_report.json')), indent=2))"
+
+      - name: Commit retrained model if it changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- results/models/earthquake_gbt_v1.json results/calibration/earthquake_retrain_report.json; then
+            echo "No model change."
+          else
+            git add -f results/models/earthquake_gbt_v1.json
+            git add results/calibration/earthquake_retrain_report.json
+            git commit -m "model: monthly earthquake retrain on all captured data $(date -u +%Y-%m)
+
+          Automated via retrain_and_deploy.py: honest val-tune -> never-worse gate ->
+          train-on-all -> redeploy. Continuous learning from the growing USGS catalog."
+            git push
+          fi

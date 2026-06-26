@@ -127,7 +127,19 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--deploy", action="store_true",
                     help="export the champion if it passes the never-worse gate")
     ap.add_argument("--out", default="results/calibration/earthquake_retrain_report.json")
+    ap.add_argument("--floor", type=float, default=0.70,
+                    help="GBT-only mode: deploy only if holdout AUC >= floor")
     args = ap.parse_args(argv)
+
+    # The VerifiableForest comparison needs omega_one (a sibling repo). When it is
+    # absent (e.g. GitHub-hosted CI), fall back to a GBT-only retrain -- the GBT wins
+    # earthquakes anyway, and its train-on-all redeploy is the real improvement.
+    try:
+        import omega.verifiable_forest  # noqa: F401
+        have_forest = True
+    except Exception:
+        have_forest = False
+        print("  omega VerifiableForest unavailable -> GBT-only retrain mode")
 
     print("Loading cached features...")
     Xtr, Xval, Xte, ytr, yval, yte = _tbt._load_all_eq_cached(verbose=False)
@@ -136,44 +148,55 @@ def main(argv: list[str] | None = None) -> int:
     yfit, yv, ytest = np.asarray(ytr), np.asarray(yval), np.asarray(yte)
     print(f"  fit={len(yfit)} val={len(yv)} test={len(ytest)} feat={Xfit.shape[1]}")
 
-    # 1) honest tune on validation
     t0 = time.time()
-    tuned = []
-    for name, kw in _GRID:
-        m = _fit(name, Xfit, yfit, kw)
-        p, _, _ = _forest_proba(name, m, Xv)
-        tuned.append((name, kw, roc_auc(yv, p)))
-        print(f"  tune {name:8s} {kw.get('n_estimators')}t d{kw.get('max_depth')} "
-              f"lr{kw.get('learning_rate')}: val AUC {tuned[-1][2]:.4f}")
-    best_name, best_kw, best_val = max(tuned, key=lambda t: t[2])
-    print(f"  -> best on val: {best_name} {best_kw} (val AUC {best_val:.4f})")
-
-    # 2) gate on the TEST holdout: tuned forest (refit on fit+val) vs incumbent GBT
     Xtv = np.vstack([Xfit, Xv]); ytv = np.concatenate([yfit, yv])
-    m_tv = _fit(best_name, Xtv, ytv, best_kw)
-    p_test, _, _ = _forest_proba(best_name, m_tv, Xtest)
-    forest_auc, forest_brier = roc_auc(ytest, p_test), brier(ytest, p_test)
     base_proba = _tbt._baseline_earthquake(Xtv, ytv, Xtest)
     inc_auc, inc_brier = roc_auc(ytest, base_proba), brier(ytest, base_proba)
-    gate_pass = bool(forest_auc >= inc_auc)
-    print(f"\n  GATE (test holdout): forest {forest_auc:.4f} vs incumbent {inc_auc:.4f}"
-          f"  -> {'PASS' if gate_pass else 'FAIL (keep incumbent)'}")
 
     report = {
         "hazard": args.hazard, "variant": v, "n_features": int(Xfit.shape[1]),
-        "best_config": {"booster": best_name, **best_kw}, "val_auc": best_val,
-        "forest_test_auc": forest_auc, "forest_test_brier": forest_brier,
         "incumbent_test_auc": inc_auc, "incumbent_test_brier": inc_brier,
-        "delta_auc": forest_auc - inc_auc, "gate_pass": gate_pass,
-        "tune_seconds": round(time.time() - t0, 1), "deployed": False,
+        "deployed": False,
     }
 
-    # 3-4) TRAIN-ON-ALL + ship the gate WINNER (fold the held-out years back in so
-    # the deployed model knows every earthquake we have captured, not just 2005-2017).
-    Xall = np.vstack([Xfit, Xv, Xtest]); yall = np.concatenate([yfit, yv, ytest])
-    winner = "verifiable_forest" if gate_pass else "gbt"
+    if have_forest:
+        # 1) honest tune on validation; 2) gate tuned forest vs incumbent on test
+        tuned = []
+        for name, kw in _GRID:
+            m = _fit(name, Xfit, yfit, kw)
+            p, _, _ = _forest_proba(name, m, Xv)
+            tuned.append((name, kw, roc_auc(yv, p)))
+            print(f"  tune {name:8s} {kw.get('n_estimators')}t d{kw.get('max_depth')} "
+                  f"lr{kw.get('learning_rate')}: val AUC {tuned[-1][2]:.4f}")
+        best_name, best_kw, best_val = max(tuned, key=lambda t: t[2])
+        print(f"  -> best on val: {best_name} {best_kw} (val AUC {best_val:.4f})")
+        m_tv = _fit(best_name, Xtv, ytv, best_kw)
+        p_test, _, _ = _forest_proba(best_name, m_tv, Xtest)
+        forest_auc, forest_brier = roc_auc(ytest, p_test), brier(ytest, p_test)
+        gate_pass = bool(forest_auc >= inc_auc)
+        print(f"\n  GATE (test holdout): forest {forest_auc:.4f} vs incumbent {inc_auc:.4f}"
+              f"  -> {'forest wins' if gate_pass else 'GBT wins (keep incumbent arch)'}")
+        report.update(best_config={"booster": best_name, **best_kw}, val_auc=best_val,
+                      forest_test_auc=forest_auc, forest_test_brier=forest_brier,
+                      delta_auc=forest_auc - inc_auc)
+        winner = "verifiable_forest" if gate_pass else "gbt"
+    else:
+        # GBT-only: gate the incumbent architecture on the holdout vs a skill floor.
+        gate_pass = bool(inc_auc >= args.floor)
+        print(f"  GATE (test holdout): GBT {inc_auc:.4f} vs floor {args.floor:.2f}"
+              f"  -> {'PASS' if gate_pass else 'FAIL (do not deploy)'}")
+        winner = "gbt" if gate_pass else None
+        best_name = best_kw = None
+
     report["winner"] = winner
-    if args.deploy:
+    report["tune_seconds"] = round(time.time() - t0, 1)
+
+    # 3-4) TRAIN-ON-ALL + ship the winner (fold the held-out years back in so the
+    # deployed model knows every earthquake we have captured, not just 2005-2017).
+    Xall = np.vstack([Xfit, Xv, Xtest]); yall = np.concatenate([yfit, yv, ytest])
+    if args.deploy and winner is None:
+        print("  gate FAILED -> not deploying (keeping the current model).")
+    elif args.deploy:
         print(f"  TRAIN-ON-ALL: refit the gate winner ({winner}) on every year "
               f"({len(yall)} samples)...")
         if winner == "verifiable_forest":

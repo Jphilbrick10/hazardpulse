@@ -2,6 +2,9 @@
   "hazard": "earthquake",
   "variant": "enhanced",
   "n_features": 73,
+  "incumbent_test_auc": 0.7539718288353633,
+  "incumbent_test_brier": 0.19558581907023193,
+  "deployed": false,
   "best_config": {
     "booster": "xgboost",
     "n_estimators": 300,
@@ -16,15 +19,7 @@
   "val_auc": 0.742289687456973,
   "forest_test_auc": 0.7506279344963166,
   "forest_test_brier": 0.19780290065895226,
-  "incumbent_test_auc": 0.7567813108371197,
-  "incumbent_test_brier": 0.19506979998318436,
-  "delta_auc": -0.006153376340803152,
-  "gate_pass": false,
-  "tune_seconds": 75.6,
-  "deployed": true,
+  "delta_auc": -0.0033438943390466935,
   "winner": "gbt",
-  "n_train_all": 4185,
-  "n_trees": 300,
-  "deployed_path": "results\\models\\earthquake_gbt_v1.json",
-  "model_version": "eq_coherence_v1_retrain_all"
+  "tune_seconds": 77.3
 }
