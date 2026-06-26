@@ -83,54 +83,105 @@ def _forest_proba(constants, F):
     return _sigmoid(margin)
 
 
-def _verifiable_forest(X_tr, y_tr, X_te, *, seed=0):
-    """Fit XGBoost, then FREEZE it into a portable integer forest (omega's
-    VerifiableForest). The frozen ``fp_constants`` is a pure-JSON model a numpy
-    reproducer re-runs bit-for-bit -- so THIS frozen forest is the champion that
-    serves in HazardPulse's numpy-only live path AND emits a 0-ULP signed receipt,
-    unlike BestTabular (which needs the heavy SOTA libs at inference).
-
-    Accuracy is measured on the FROZEN FOREST's own probabilities (what serves).
-    ``self_reproduce`` proves a third party holding ONLY the round-tripped JSON
-    constants reproduces the decision exactly (the servability guarantee).
-    ``xgb_agreement`` (how often the frozen forest's argmax matches xgboost's
-    float32 path) is an informational diagnostic, not a correctness gate -- the two
-    differ only at float32-vs-float64 split boundaries.
-    """
-    if str(_OMEGA) not in sys.path:
-        sys.path.insert(0, str(_OMEGA))
+def _fit_xgboost(Xtr, ytr, seed):
     from xgboost import XGBClassifier
-    from omega.verifiable_forest import VerifiableForest, predict_fp_from_forest_constants
-
-    Xtr = np.asarray(X_tr, float); Xte = np.asarray(X_te, float)
     clf = XGBClassifier(
         n_estimators=400, max_depth=4, learning_rate=0.05,
         subsample=0.7, colsample_bytree=0.7, reg_lambda=1.0,
         eval_metric="logloss", tree_method="hist", random_state=int(seed),
     )
-    clf.fit(Xtr, np.asarray(y_tr))
+    clf.fit(np.asarray(Xtr, float), np.asarray(ytr))
+    return clf
 
-    vf = VerifiableForest.from_xgboost(clf)
-    constants = vf.fp_constants()
 
-    # The served probability comes from the FROZEN forest's own decision function.
-    labels_self, F = predict_fp_from_forest_constants(constants, Xte)
-    proba = _forest_proba(constants, F)
+def _fit_lightgbm(Xtr, ytr, seed):
+    from lightgbm import LGBMClassifier
+    clf = LGBMClassifier(
+        n_estimators=400, max_depth=4, learning_rate=0.05, num_leaves=15,
+        subsample=0.7, colsample_bytree=0.7, reg_lambda=1.0,
+        random_state=int(seed), verbose=-1,
+    )
+    clf.fit(np.asarray(Xtr, float), np.asarray(ytr))
+    return clf
+
+
+# Each booster: (name matching VerifiableForest.from_<name>, fit fn).
+_FOREST_BOOSTERS = (("xgboost", _fit_xgboost), ("lightgbm", _fit_lightgbm))
+
+
+def _freeze(name, model):
+    """Freeze a fitted booster into a VerifiableForest + its JSON constants."""
+    from omega.verifiable_forest import VerifiableForest
+    vf = getattr(VerifiableForest, f"from_{name}")(model)
+    return vf, vf.fp_constants()
+
+
+def _forest_proba_from_constants(constants, X):
+    from omega.verifiable_forest import predict_fp_from_forest_constants
+    labels, F = predict_fp_from_forest_constants(constants, np.asarray(X, float))
+    return labels, F, _forest_proba(constants, F)
+
+
+def _verifiable_forest(X_tr, y_tr, X_te, *, seed=0):
+    """Fit the best available booster (XGBoost / LightGBM) and FREEZE it into a
+    portable integer forest (omega's VerifiableForest). The frozen ``fp_constants``
+    is a pure-JSON model a numpy reproducer re-runs bit-for-bit -- so THIS frozen
+    forest is the champion that serves in HazardPulse's numpy-only live path AND
+    emits a 0-ULP signed receipt, unlike BestTabular (heavy libs at inference).
+
+    The booster is chosen HONESTLY on an internal validation split carved from the
+    training data (never the test holdout), each candidate scored by its FROZEN
+    forest's own probability so the selection reflects what actually serves. The
+    winner is refit on the full training set.
+
+    Accuracy is then measured on the frozen forest's own test probabilities (what
+    serves). ``self_reproduce`` proves a third party holding ONLY the round-tripped
+    JSON reproduces the decision exactly (the servability guarantee).
+    ``origin_agreement`` (frozen-forest argmax vs the source booster's own predict)
+    is informational -- it can be <1.0 only for float32-`<` libraries (xgboost) at
+    split boundaries, not for `<=` libraries (lightgbm).
+    """
+    if str(_OMEGA) not in sys.path:
+        sys.path.insert(0, str(_OMEGA))
+
+    Xtr = np.asarray(X_tr, float); Xte = np.asarray(X_te, float); ytr = np.asarray(y_tr)
+    # internal validation split for booster SELECTION (last 20% of train; no test leak)
+    cut = max(1, int(0.8 * len(ytr)))
+    Xfit, yfit, Xval, yval = Xtr[:cut], ytr[:cut], Xtr[cut:], ytr[cut:]
+
+    candidates = []
+    for name, fit_fn in _FOREST_BOOSTERS:
+        try:
+            model = fit_fn(Xfit, yfit, seed)
+            _, c = _freeze(name, model)
+            _, _, pval = _forest_proba_from_constants(c, Xval)
+            candidates.append((name, roc_auc(yval, pval)))
+        except Exception as exc:  # booster not installed / freeze failed -> skip
+            print(f"    [{name}] unavailable or failed: {exc}")
+    if not candidates:
+        raise RuntimeError("no forest booster available (need xgboost or lightgbm)")
+    best_name, best_val_auc = max(candidates, key=lambda kv: kv[1])
+
+    # Refit the winner on the FULL training set, then freeze the served model.
+    model = dict(_FOREST_BOOSTERS)[best_name](Xtr, ytr, seed)
+    vf, constants = _freeze(best_name, model)
+
+    labels_self, F, proba = _forest_proba_from_constants(constants, Xte)
 
     # Servability proof: a third party with ONLY the JSON file reproduces the decision.
-    constants_roundtrip = json.loads(json.dumps(constants))
-    labels_3p, F_3p = predict_fp_from_forest_constants(constants_roundtrip, Xte)
+    labels_3p, F_3p, _ = _forest_proba_from_constants(json.loads(json.dumps(constants)), Xte)
     self_reproduce = float(np.mean(np.asarray(labels_3p) == np.asarray(labels_self))
                            ) if len(labels_self) else 1.0
     bit_exact = bool(np.array_equal(F_3p, F))
-
-    # Informational: agreement with xgboost's own float32 prediction path.
-    xgb_agreement = float(np.mean(np.asarray(labels_self) == np.asarray(clf.predict(Xte))))
+    origin_agreement = float(np.mean(np.asarray(labels_self) == np.asarray(model.predict(Xte))))
     return {
         "proba": proba,
+        "booster": best_name,
+        "val_auc": best_val_auc,
+        "candidates": {n: round(a, 4) for n, a in candidates},
         "self_reproduce": self_reproduce,
         "bit_exact": bit_exact,
-        "xgb_agreement": xgb_agreement,
+        "origin_agreement": origin_agreement,
         "fp_sha256": vf.fp_model_sha256(),
         "constants": constants,
         "n_trees": int(len(constants["tree_root"])),
@@ -253,16 +304,20 @@ def main(argv: list[str] | None = None) -> int:
         report["verifiable_forest"] = {
             "auc": vf_auc,
             "brier": brier(y_te, forest["proba"]),
+            "booster": forest["booster"],                 # best of {xgboost, lightgbm}
+            "val_auc": forest["val_auc"],                 # internal-validation selection score
+            "candidates": forest["candidates"],
             "self_reproduce": forest["self_reproduce"],   # JSON-only third party reproduces it
             "bit_exact": forest["bit_exact"],
-            "xgb_agreement": forest["xgb_agreement"],     # informational diagnostic
+            "origin_agreement": forest["origin_agreement"],   # informational diagnostic
             "fp_sha256": forest["fp_sha256"],
             "n_trees": forest["n_trees"],
             "delta_auc_vs_baseline": (vf_auc - base_auc) if base_auc is not None else None,
             "servable": True,   # re-runs from JSON constants in the numpy live path
         }
-        print(f"  VerifiableForest AUC {vf_auc:.4f}  self_reproduce {forest['self_reproduce']:.4f}  "
-              f"bit_exact {forest['bit_exact']}  ({time.time()-tf:.0f}s)")
+        print(f"  VerifiableForest[{forest['booster']}] AUC {vf_auc:.4f}  "
+              f"self_reproduce {forest['self_reproduce']:.4f}  bit_exact {forest['bit_exact']}  "
+              f"candidates={forest['candidates']}  ({time.time()-tf:.0f}s)")
 
     # Deployable champion = the best candidate that BEATS the incumbent AND can serve.
     # VerifiableForest serves + signs natively; BestTabular is the (non-servable) ceiling.

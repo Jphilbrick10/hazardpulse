@@ -81,5 +81,6 @@ def test_verifiable_forest_serves_and_self_reproduces():
     assert vf["bit_exact"] is True
     assert vf["proba"].shape == (len(yte),)
     assert m.roc_auc(yte, vf["proba"]) > 0.6         # the served forest actually learned signal
-    assert 0.9 <= vf["xgb_agreement"] <= 1.0         # close to its xgboost origin (diagnostic)
+    assert vf["booster"] in ("xgboost", "lightgbm")  # best booster was selected
+    assert 0.9 <= vf["origin_agreement"] <= 1.0      # close to its source booster (diagnostic)
     assert len(vf["fp_sha256"]) == 64 and vf["n_trees"] >= 1
