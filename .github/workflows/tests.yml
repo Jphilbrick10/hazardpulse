@@ -45,10 +45,20 @@ jobs:
             tests/test_scoring_integration.py \
             tests/test_external_verify.py
 
+      - name: Run accuracy + tornado-HRRR pipeline tests
+        run: |
+          python -m pytest -q \
+            tests/test_hrrr_pooling.py \
+            tests/test_group_conformal.py \
+            tests/test_forest_serve.py \
+            tests/test_tornado_hrrr_dataset.py \
+            tests/test_tornado_hrrr_env.py \
+            tests/test_eq_forest_wiring.py
+
       - name: Run site integrity checks
         run: python -m pytest tests/test_site_integrity.py -q
 
-      - name: Compile all scoring scripts
+      - name: Compile all scoring + training scripts
         run: |
           python -m py_compile \
             scripts/fetch_and_score_earthquake.py \
@@ -59,4 +69,9 @@ jobs:
             scripts/score_hurricane_prospective.py \
             scripts/build_site_artifacts.py \
             scripts/fit_calibration.py \
-            scripts/verify_forecast.py
+            scripts/verify_forecast.py \
+            scripts/train_best_tabular.py \
+            scripts/retrain_and_deploy.py \
+            scripts/build_tornado_hrrr_dataset.py \
+            scripts/train_tornado_hrrr.py \
+            scripts/score_tornado_hrrr_env.py
