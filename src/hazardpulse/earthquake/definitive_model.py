@@ -45,6 +45,7 @@ from __future__ import annotations
 import datetime as _dt
 import json
 import math
+import os
 import sys
 import time
 from pathlib import Path
@@ -1235,7 +1236,19 @@ def compute_block_s(
 
     # ---- Clustering ----
     if N >= 20:
-        sample_idx = np.random.choice(N, min(N, 60), replace=False)
+        # Deterministic subsample: seed a LOCAL RNG from the query cell so the same
+        # (lat, lon, ref_epoch) always yields identical clustering features. Previously
+        # this drew from the global unseeded RNG, making st_nn / st_nn_std / frac_clust
+        # non-reproducible -- the live scorer and the training pipeline computed
+        # DIFFERENT features for the same cell (train/serve skew), and the result could
+        # not be cached. Uses a stable integer spatial hash (NOT Python's per-process
+        # salted hash()) so train, serve, cache, and parallel workers all agree.
+        _seed = (
+            (int(round(ev_lat * 1000)) * 73856093)
+            ^ (int(round(ev_lon * 1000)) * 19349663)
+            ^ (int(ev_time) * 83492791)
+        ) & 0xFFFFFFFF
+        sample_idx = np.random.RandomState(_seed).choice(N, min(N, 60), replace=False)
         st_dists_list = []
         for i in sample_idx:
             other = np.arange(N) != i
@@ -1564,11 +1577,83 @@ def compute_block_x(
 
 
 # ===================================================================
+# PARALLEL FEATURE EXTRACTION
+# ===================================================================
+# Per-sample feature extraction is independent and CPU-bound (catalog scans), so it
+# fans out cleanly across cores. Each worker rebuilds the catalog + CatalogArrays
+# from the local CSV cache in its initializer (no pickling of the 0.5M-event catalog),
+# then maps the SAME compute_block_* functions the serial path uses -> byte-identical
+# matrices, just ~Ncores faster. The serial path stays the reference.
+
+_PAR_CAT = None        # per-worker CatalogArrays (read-only)
+_PAR_CATALOG = None    # per-worker full catalog list
+
+
+def _par_worker_init():
+    global _PAR_CAT, _PAR_CATALOG
+    _PAR_CATALOG = load_usgs_catalog(min_year=2000, max_year=2024, min_mag=2.5)
+    _PAR_CAT = CatalogArrays(_PAR_CATALOG, verbose=False)
+
+
+def _par_worker_extract(sample):
+    """One sample -> (X_s, X_c, X_x, label, skipped). Mirrors the serial loop exactly."""
+    lat = sample["latitude"]; lon = sample["longitude"]; ref_epoch = sample["ref_epoch"]
+    s = compute_block_s(lat, lon, ref_epoch, _PAR_CAT)
+    skipped = 1 if s is None else 0
+    X_s = np.zeros(N_FEAT_S, np.float32) if s is None else np.asarray(s, np.float32)
+    X_c = np.nan_to_num(compute_block_c(_PAR_CATALOG, lat, lon, ref_epoch), nan=0.0).astype(np.float32)
+    X_x = np.nan_to_num(compute_block_x(X_s, X_c), nan=0.0).astype(np.float32)
+    return X_s, X_c, X_x, np.float32(sample["label"]), skipped
+
+
+def extract_features_parallel(split_samples, split_name="", n_workers=None, verbose=True):
+    """Process-pool version of the per-split feature extraction.
+
+    Returns ``(X_dict, y)`` with X_dict = {baseline, enhanced, full}, identical to the
+    serial closure inside ``load_all_data``.
+    """
+    from concurrent.futures import ProcessPoolExecutor
+
+    n = len(split_samples)
+    X_s = np.zeros((n, N_FEAT_S), dtype=np.float32)
+    X_c = np.zeros((n, N_FEAT_C), dtype=np.float32)
+    X_x = np.zeros((n, N_FEAT_X), dtype=np.float32)
+    y = np.zeros(n, dtype=np.float32)
+    if n == 0:
+        return ({"baseline": X_s.copy(),
+                 "enhanced": np.hstack([X_s, X_c]),
+                 "full": np.hstack([X_s, X_c, X_x])}, y)
+
+    workers = int(n_workers) if n_workers else max(1, (os.cpu_count() or 2) - 2)
+    t0 = time.time()
+    n_skipped = 0
+    with ProcessPoolExecutor(max_workers=workers, initializer=_par_worker_init) as ex:
+        for idx, (s, c, x, lab, sk) in enumerate(
+            ex.map(_par_worker_extract, split_samples, chunksize=8)
+        ):
+            X_s[idx] = s; X_c[idx] = c; X_x[idx] = x; y[idx] = lab; n_skipped += sk
+            if verbose and (idx + 1) % 200 == 0:
+                rate = (idx + 1) / max(time.time() - t0, 1e-9)
+                print(f"      {split_name} (parallel x{workers}): {idx + 1}/{n} "
+                      f"({100 * (idx + 1) / n:.0f}%, {rate:.0f}/s)")
+                sys.stdout.flush()
+    if verbose:
+        print(f"      {split_name}: {n}/{n} (100%) -- {time.time() - t0:.1f}s, "
+              f"{n_skipped} skipped [{workers} workers]")
+        sys.stdout.flush()
+    return ({"baseline": X_s.copy(),
+             "enhanced": np.hstack([X_s, X_c]),
+             "full": np.hstack([X_s, X_c, X_x])}, y)
+
+
+# ===================================================================
 # DATA LOADING AND SAMPLE PIPELINE
 # ===================================================================
 
 def load_all_data(
     verbose: bool = True,
+    parallel: bool = False,
+    n_workers: int | None = None,
 ) -> tuple[
     dict[str, np.ndarray],  # X_train
     dict[str, np.ndarray],  # X_val
@@ -1743,9 +1828,18 @@ def load_all_data(
         }
         return X_dict, y
 
-    X_train, y_train = _extract_features_for_split(train_samples, "train")
-    X_val, y_val = _extract_features_for_split(val_samples, "val")
-    X_test, y_test = _extract_features_for_split(test_samples, "test")
+    if parallel:
+        if verbose:
+            print(f"    Parallel extraction across "
+                  f"{n_workers or max(1, (os.cpu_count() or 2) - 2)} workers...")
+            sys.stdout.flush()
+        X_train, y_train = extract_features_parallel(train_samples, "train", n_workers, verbose)
+        X_val, y_val = extract_features_parallel(val_samples, "val", n_workers, verbose)
+        X_test, y_test = extract_features_parallel(test_samples, "test", n_workers, verbose)
+    else:
+        X_train, y_train = _extract_features_for_split(train_samples, "train")
+        X_val, y_val = _extract_features_for_split(val_samples, "val")
+        X_test, y_test = _extract_features_for_split(test_samples, "test")
 
     # Impute NaN with training mean (per feature)
     for variant in ["baseline", "enhanced", "full"]:

@@ -88,26 +88,41 @@ def _forest_proba(constants, F):
     return _sigmoid(margin)
 
 
+# GPU is opt-in via env (the boosters fit in seconds either way; the real cost is
+# the feature extraction, which is CPU-bound). Falls back to CPU automatically.
+_USE_GPU = os.environ.get("HAZARDPULSE_GPU", "1") != "0"
+
+
 def _fit_xgboost(Xtr, ytr, seed):
     from xgboost import XGBClassifier
-    clf = XGBClassifier(
+    kw = dict(
         n_estimators=400, max_depth=4, learning_rate=0.05,
         subsample=0.7, colsample_bytree=0.7, reg_lambda=1.0,
         eval_metric="logloss", tree_method="hist", random_state=int(seed),
     )
-    clf.fit(np.asarray(Xtr, float), np.asarray(ytr))
-    return clf
+    X = np.asarray(Xtr, float); y = np.asarray(ytr)
+    if _USE_GPU:
+        try:
+            clf = XGBClassifier(device="cuda", **kw); clf.fit(X, y); return clf
+        except Exception as exc:
+            print(f"    [xgboost] GPU unavailable ({exc}); using CPU.")
+    clf = XGBClassifier(**kw); clf.fit(X, y); return clf
 
 
 def _fit_lightgbm(Xtr, ytr, seed):
     from lightgbm import LGBMClassifier
-    clf = LGBMClassifier(
+    kw = dict(
         n_estimators=400, max_depth=4, learning_rate=0.05, num_leaves=15,
         subsample=0.7, colsample_bytree=0.7, reg_lambda=1.0,
         random_state=int(seed), verbose=-1,
     )
-    clf.fit(np.asarray(Xtr, float), np.asarray(ytr))
-    return clf
+    X = np.asarray(Xtr, float); y = np.asarray(ytr)
+    if _USE_GPU:
+        try:
+            clf = LGBMClassifier(device="gpu", **kw); clf.fit(X, y); return clf
+        except Exception as exc:
+            print(f"    [lightgbm] GPU unavailable ({exc}); using CPU.")
+    clf = LGBMClassifier(**kw); clf.fit(X, y); return clf
 
 
 # Each booster: (name matching VerifiableForest.from_<name>, fit fn).
@@ -253,7 +268,8 @@ def _load_all_eq_cached(verbose: bool = True):
         return X_tr, X_val, X_te, d["y_tr"], d["y_val"], d["y_te"]
 
     from hazardpulse.earthquake.definitive_model import load_all_data
-    X_tr, X_val, X_te, y_tr, y_val, y_te, _meta = load_all_data(verbose=verbose)
+    # Parallel extraction across cores (deterministic now -> safe to fan out + cache).
+    X_tr, X_val, X_te, y_tr, y_val, y_te, _meta = load_all_data(verbose=verbose, parallel=True)
     _EQ_FEATURE_CACHE.parent.mkdir(parents=True, exist_ok=True)
     arrays = {}
     for v in _EQ_VARIANTS:
