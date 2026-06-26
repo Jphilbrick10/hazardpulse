@@ -67,3 +67,19 @@ def test_best_tabular_beats_a_weak_baseline():
     report, _ = m.compare(Xtr, ytr, Xte, yte, baseline_proba=weak, seeds=(0,))
     assert report["delta_auc"] > 0.0                 # BestTabular beats climatology
     assert report["champion"] == "best_tabular"
+
+
+def test_verifiable_forest_serves_and_self_reproduces():
+    pytest.importorskip("xgboost")
+    pytest.importorskip("omega.verifiable_forest", reason="omega_one not importable")
+    m = _load()
+    Xtr, ytr, Xte, yte = _synth(seed=2)
+    vf = m._verifiable_forest(Xtr, ytr, Xte, seed=0)
+    # THE servability guarantee: a third party with only the round-tripped JSON
+    # constants reproduces the frozen forest's decision bit-for-bit.
+    assert vf["self_reproduce"] == 1.0
+    assert vf["bit_exact"] is True
+    assert vf["proba"].shape == (len(yte),)
+    assert m.roc_auc(yte, vf["proba"]) > 0.6         # the served forest actually learned signal
+    assert 0.9 <= vf["xgb_agreement"] <= 1.0         # close to its xgboost origin (diagnostic)
+    assert len(vf["fp_sha256"]) == 64 and vf["n_trees"] >= 1
