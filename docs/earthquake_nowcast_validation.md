@@ -61,8 +61,8 @@ Key constraint: the controls share the positive's *location*, so only
 | GSRM strain rate, fault distance (static) | cannot help | identical for a quake and its same-place control |
 | GNSS crustal deformation (2.5 GB cached) | coverage-limited | only ~5–10% of M6+ events have a land GPS station within 50–100 km (most are offshore subduction); a *regional* lever, not global |
 | Tidal stress (fortnightly/anomalistic/semidiurnal) | ΔAUC −0.003, CI [−0.014,+0.009] | null — the ~1% tidal triggering washes out |
-| Teleseismic dynamic triggering | ΔAUC +0.007, CI [−0.005,+0.019] | small, not significant |
-| Natural-time seismic clock | ΔAUC +0.011, CI [−0.003,+0.025] | best lead; physically motivated; borderline (re-tested on the larger 2025 holdout) |
+| Teleseismic dynamic triggering | ΔAUC +0.007 (2024) / +0.002 (2025), ns | faded on the larger holdout |
+| Natural-time seismic clock | ΔAUC **+0.011 (2024) / +0.010 (2025)**, CI lower bound ≈ 0 | **consistent ~+0.01 across two independent holdouts** — real but marginal, borderline significant. Worth folding into Block S at the next retrain (the re-extraction happens there anyway). |
 
 **Conclusion of the search:** the seismicity catalog is the only globally-complete
 signal, which is why the model is seismicity-driven. Exotic instrument data is either
