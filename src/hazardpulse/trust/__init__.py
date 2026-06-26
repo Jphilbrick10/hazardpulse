@@ -66,8 +66,13 @@ from .forecast import (
     verify_forecast_receipt,
 )
 from .venn_abers import VennAbersCalibrator, VennAbersResult
+from .monitor import ProductionMonitor, forecast_drift_status, psi
 
 __all__ = [
+    # drift monitoring
+    "ProductionMonitor",
+    "psi",
+    "forecast_drift_status",
     # HazardPulse trust surface (the wrapper all scorers use)
     "TrustedForecaster",
     "TrustedForecastResult",

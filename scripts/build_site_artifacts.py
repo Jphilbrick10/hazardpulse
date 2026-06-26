@@ -999,6 +999,34 @@ def _build_verification_summary(pulse: dict) -> dict:
     return summary
 
 
+_SCOREBOARD_PREFIX = {"earthquake": "eq", "tornado": "to", "hurricane": "hu"}
+
+
+def _latest_forecast_scores(hazard: str) -> list[float]:
+    """Raw probabilities of the most recent forecast (for distribution-drift PSI)."""
+    prefix = _SCOREBOARD_PREFIX.get(hazard)
+    if not prefix or not REPLAY_DIR.exists():
+        return []
+    paths = sorted(REPLAY_DIR.glob(f"{prefix}_fcst_*.json"))
+    if not paths:
+        return []
+    art = _read_replay_cached(paths[-1])
+    scores: list[float] = []
+    for item in (art.get("active_cells") or art.get("storms") or []):
+        if not isinstance(item, dict):
+            continue
+        v = item.get("raw_probability")
+        if v is None:
+            v = item.get("probability",
+                         item.get("tornado_probability", item.get("ri_probability")))
+        if v is not None:
+            try:
+                scores.append(float(v))
+            except (TypeError, ValueError):
+                continue
+    return scores
+
+
 def _render_calibration_scoreboard() -> str:
     """Reliability diagrams + before/after calibration metrics per hazard, drawn
     from the platform's OWN matured forecasts. Empty until a calibrator exists,
@@ -1034,6 +1062,15 @@ def _render_calibration_scoreboard() -> str:
         except Exception:
             continue
         before = rec.get("metrics_before", {})
+        drift = {"status": "insufficient_data", "psi": 0.0}
+        try:
+            from hazardpulse.trust.monitor import expand_histogram, forecast_drift_status
+            cur_scores = _latest_forecast_scores(name)
+            if cur_scores:
+                drift = forecast_drift_status(
+                    expand_histogram(ds["scores"], ds["total"]), cur_scores)
+        except Exception:
+            pass
         cards.append(
             '<div class="card col-4">'
             f'<h3 style="margin-top:0;">{_esc(_hazard_label(name))}</h3>'
@@ -1042,6 +1079,8 @@ def _render_calibration_scoreboard() -> str:
             f'<strong>{_m(before, "ece")} &rarr; {_m(after, "ece")}</strong></div>'
             f'<div class="kv"><span>Brier skill</span>'
             f'<strong>{_m(before, "brier_skill_score")} &rarr; {_m(after, "brier_skill_score")}</strong></div>'
+            f'<div class="kv"><span>Distribution drift</span>'
+            f'<strong>{_esc(str(drift["status"]).replace("_", " "))} (PSI {drift["psi"]:.3f})</strong></div>'
             f'<div class="kv"><span>Calibration sample</span>'
             f'<strong>{int(rec.get("n_calibration", 0) or 0):,}</strong></div>'
             "</div>"

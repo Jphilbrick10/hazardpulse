@@ -18,6 +18,7 @@ from .trusted import TrustedDecision, fast_trusted_decision, load_ed25519_pubkey
 from .regression import ConformalRegressor, CQRRegressor, AdaptiveConformalRegressor, TrustedRegression, regression_coverage, verify_regression_receipt
 from .guardian import CoherenceGuardian, GatewayMode
 from .batchsign import sign_batch, sign_batch_full, verify_batch_signature, merkle_root, merkle_proof, verify_merkle_proof
+from .monitoring import ProductionMonitor, psi
 
 __all__ = [
     "ConformalPredictor",
@@ -51,4 +52,6 @@ __all__ = [
     "merkle_root",
     "merkle_proof",
     "verify_merkle_proof",
+    "ProductionMonitor",
+    "psi",
 ]

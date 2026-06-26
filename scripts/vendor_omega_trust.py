@@ -55,6 +55,7 @@ MODULES = (
     "trusted.py",
     "regression.py",
     "guardian.py",
+    "monitoring.py",
 )
 
 # The public API the trust layer re-exports (kept in lockstep with omega_one's
@@ -71,6 +72,7 @@ REEXPORTS = {
     "guardian": ["CoherenceGuardian", "GatewayMode"],
     "batchsign": ["sign_batch", "sign_batch_full", "verify_batch_signature",
                   "merkle_root", "merkle_proof", "verify_merkle_proof"],
+    "monitoring": ["ProductionMonitor", "psi"],
 }
 
 
