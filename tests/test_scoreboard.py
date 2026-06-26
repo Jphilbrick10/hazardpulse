@@ -29,7 +29,7 @@ def test_scoreboard_empty_without_calibration(tmp_path):
 def test_scoreboard_renders_with_calibration(tmp_path):
     bsa = _bsa()
     bsa.ROOT = tmp_path
-    (tmp_path / "results" / "models").mkdir(parents=True)
+    (tmp_path / "results" / "calibration").mkdir(parents=True)
     (tmp_path / "results" / "earthquake_prospective").mkdir(parents=True)
 
     rng = np.random.RandomState(0)
@@ -43,7 +43,7 @@ def test_scoreboard_renders_with_calibration(tmp_path):
         "metrics_after": {"ece": 0.02, "brier_skill_score": 0.34},
         "n_calibration": 5000,
     }
-    (tmp_path / "results" / "models" / "earthquake_calibration.json").write_text(json.dumps(rec))
+    (tmp_path / "results" / "calibration" / "earthquake_calibration.json").write_text(json.dumps(rec))
     g = np.round(np.linspace(0.05, 0.95, 10), 6)
     tot = [500] * 10
     pos = [int(round(t * gi)) for t, gi in zip(tot, g)]

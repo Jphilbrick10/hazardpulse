@@ -59,7 +59,7 @@ def load_forecaster(hazard: str, *, models_dir: Path | None = None, signer=None,
 
     Returns None if no calibration record exists yet (scorer then stays raw).
     """
-    models_dir = models_dir or (Path(__file__).resolve().parents[3] / "results" / "models")
+    models_dir = models_dir or (Path(__file__).resolve().parents[3] / "results" / "calibration")
     path = models_dir / f"{hazard}_calibration.json"
     if not path.is_file():
         return None

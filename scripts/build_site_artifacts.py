@@ -464,7 +464,7 @@ def _load_calibration_metrics() -> dict:
     """Per-hazard deployed-model calibration (results/models/<hazard>_calibration.json)."""
     metrics: dict[str, dict] = {}
     for name in ("earthquake", "tornado", "hurricane"):
-        rec = _read_json(ROOT / "results" / "models" / f"{name}_calibration.json", {})
+        rec = _read_json(ROOT / "results" / "calibration" / f"{name}_calibration.json", {})
         after = rec.get("metrics_after") if isinstance(rec, dict) else None
         if after:
             metrics[name] = after
@@ -1048,7 +1048,7 @@ def _render_calibration_scoreboard() -> str:
 
     cards: list[str] = []
     for name in ("earthquake", "tornado", "hurricane"):
-        rec = _read_json(ROOT / "results" / "models" / f"{name}_calibration.json", {})
+        rec = _read_json(ROOT / "results" / "calibration" / f"{name}_calibration.json", {})
         ds = _read_json(ROOT / "results" / f"{name}_prospective" / "calibration_dataset.json", {})
         after = rec.get("metrics_after") if isinstance(rec, dict) else None
         if not after or not ds.get("scores"):
