@@ -259,6 +259,44 @@ def load_pretrained_eq_gbt() -> dict | None:
     return data
 
 
+# Optional: the deployable accuracy champion (frozen VerifiableForest). Activates
+# only when the offline trainer has exported a never-worse winner; pure-numpy serve.
+try:
+    from hazardpulse.trust.forest_serve import load_forest_scorer as _load_forest_scorer
+    HAS_FOREST_SERVE = True
+except Exception:  # pragma: no cover - trust package optional at import time
+    HAS_FOREST_SERVE = False
+
+
+def load_eq_forest(directory=None):
+    """Load the exported earthquake VerifiableForest champion if present + compatible.
+
+    The forest serves RAW enhanced features (Block S + Block C, 73 dims). Gate on the
+    feature indices fitting that space so a stale/mismatched export can never produce
+    garbage. Returns a ForestScorer or None.
+    """
+    if not HAS_FOREST_SERVE:
+        return None
+    if directory is None:
+        directory = Path(__file__).resolve().parents[1] / "results" / "calibration"
+    scorer = _load_forest_scorer("earthquake", directory)
+    if scorer is None:
+        return None
+    max_feat = max((int(f) for f in scorer.constants.get("feat", []) if int(f) >= 0), default=-1)
+    n_expected = len(DEFINITIVE_EQ_FEATURE_NAMES)
+    if max_feat >= n_expected:
+        print(
+            f"  WARNING: earthquake forest references feature index {max_feat} >= "
+            f"{n_expected} enhanced features. Refusing to use (train/serve mismatch)."
+        )
+        return None
+    print(
+        f"  Loaded earthquake VerifiableForest champion "
+        f"({len(scorer.constants['tree_root'])} trees) - serves raw enhanced features."
+    )
+    return scorer
+
+
 def _predict_eq_with_gbt(
     gbt: dict,
     raw_features_ordered: "np.ndarray",
@@ -1525,13 +1563,15 @@ def score_grid_cells(
     grid_fields: dict[str, np.ndarray] | None = None,
     now: dt.datetime | None = None,
     pretrained_gbt: dict | None = None,
+    eq_forest=None,
 ) -> list[dict]:
     """Score active grid cells using causal history and recent activity.
 
-    If ``pretrained_gbt`` is provided (and the earthquake ML module is
-    importable), the per-cell probability comes from the trained GBT
-    (73 Block S + C features, plus_cft variant). Otherwise falls back to
-    the singularity-count heuristic.
+    The per-cell probability comes from the ML tier when available: the exported
+    VerifiableForest champion (``eq_forest``, raw enhanced features) takes
+    precedence over the incumbent GBT (``pretrained_gbt``, z-scored). Either uses
+    the same 73 Block S + C features (plus_cft variant). Otherwise falls back to the
+    singularity-count heuristic.
     """
     if now is None:
         now = dt.datetime.now(dt.timezone.utc)
@@ -1540,9 +1580,9 @@ def score_grid_cells(
     if candidate_events is None:
         candidate_events = history_events
 
-    # Build CatalogArrays once per run if ML tier is active.
+    # Build CatalogArrays once per run if EITHER ML model is active.
     cat_arrays = None
-    if pretrained_gbt is not None and HAS_EQ_ML:
+    if (pretrained_gbt is not None or eq_forest is not None) and HAS_EQ_ML:
         try:
             cat_arrays = CatalogArrays(history_events, verbose=False)
             print(f"  ML tier active: CatalogArrays built from {len(history_events)} events")
@@ -1550,6 +1590,7 @@ def score_grid_cells(
             print(f"  WARNING: CatalogArrays build failed ({exc}); disabling ML tier.")
             cat_arrays = None
             pretrained_gbt = None
+            eq_forest = None
 
     cell_bins = bin_events_to_grid(candidate_events)
     scored_cells: list[dict] = []
@@ -1573,14 +1614,21 @@ def score_grid_cells(
 
         prob = None
         cell_tier = "tier2_heuristic"
-        if pretrained_gbt is not None and cat_arrays is not None:
+        model_id = None
+        if (pretrained_gbt is not None or eq_forest is not None) and cat_arrays is not None:
             try:
                 block_s = compute_block_s(lat, lon, ref_epoch, cat_arrays)
                 if block_s is not None:
                     block_c = compute_block_c(history_events, lat, lon, ref_epoch)
                     full_vec = np.concatenate([block_s, block_c])
                     if full_vec.shape[0] == len(DEFINITIVE_EQ_FEATURE_NAMES):
-                        prob = float(_predict_eq_with_gbt(pretrained_gbt, full_vec))
+                        if eq_forest is not None:
+                            # Champion forest serves RAW features (no z-scoring).
+                            prob = float(eq_forest.raw_proba_one(full_vec))
+                            model_id = "verifiable_forest_fp"
+                        else:
+                            prob = float(_predict_eq_with_gbt(pretrained_gbt, full_vec))
+                            model_id = "gbt_v1"
                         cell_tier = "tier1_ml"
                         n_ml += 1
             except Exception as exc:
@@ -1614,6 +1662,7 @@ def score_grid_cells(
                 "probability": round(prob, 4),
                 "risk_band": risk,
                 "scoring_tier": cell_tier,
+                "model_id": model_id,
                 "b_value": round(features.get("b_value", float("nan")), 3),
                 "b_trend": round(features.get("b_trend", float("nan")), 4),
                 "ell_km": round(features.get("ell", float("nan")), 1),
@@ -2008,12 +2057,14 @@ def run_pipeline(
     print()
     print("Step 3: Scoring active grid cells...")
     pretrained_eq_gbt = load_pretrained_eq_gbt()
+    eq_forest = load_eq_forest()        # deployable champion; precedence over the GBT when present
     scored = score_grid_cells(
         history_events,
         candidate_events=recent_events,
         grid_fields=grid_fields,
         now=now,
         pretrained_gbt=pretrained_eq_gbt,
+        eq_forest=eq_forest,
     )
     print(f"  {len(scored)} cells scored")
 
