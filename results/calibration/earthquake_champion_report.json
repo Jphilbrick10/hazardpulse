@@ -1,0 +1,42 @@
+{
+  "n_train": 3459,
+  "n_test": 726,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "best_tabular": {
+    "auc_mean": 0.7643317937168369,
+    "auc_std": 0.0,
+    "brier_mean": 0.2094523841207421
+  },
+  "baseline": {
+    "auc": 0.7567965797610416,
+    "brier": 0.19476552457089638
+  },
+  "delta_auc": 0.007535213955795261,
+  "champion": "best_tabular",
+  "hazard": "earthquake",
+  "variant": "enhanced",
+  "n_features": 73,
+  "verifiable_forest": {
+    "auc": 0.7474596327823799,
+    "brier": 0.21204788108687725,
+    "booster": "lightgbm",
+    "val_auc": 0.6998219331862336,
+    "candidates": {
+      "xgboost": 0.694,
+      "lightgbm": 0.6998
+    },
+    "self_reproduce": 1.0,
+    "bit_exact": true,
+    "origin_agreement": 1.0,
+    "fp_sha256": "70000a6946bd04f66da3176ec6739f3c4c44dd9b8d0eb0cc2e8ef780293225c3",
+    "n_trees": 400,
+    "delta_auc_vs_baseline": -0.00933694697866172,
+    "servable": true
+  },
+  "deployable_champion": "baseline",
+  "train_seconds": 168.0
+}
