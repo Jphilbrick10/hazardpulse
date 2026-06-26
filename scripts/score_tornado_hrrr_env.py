@@ -29,8 +29,18 @@ from hazardpulse.data.hrrr import (  # noqa: E402
 )
 from hazardpulse.tornado.hrrr_env import grid_feature_matrix, FEATURE_NAMES  # noqa: E402
 from hazardpulse.trust.forest_serve import load_forest_scorer  # noqa: E402
+from hazardpulse.trust.venn_abers import VennAbersCalibrator  # noqa: E402
 
 _FP_DIR = REPO / "results" / "calibration"
+
+
+def _load_calibrator():
+    """The Venn-Abers calibrator fit at deploy time (raw forest score -> honest prob)."""
+    path = _FP_DIR / "tornado_hrrr_calibration.json"
+    if not path.exists():
+        return None
+    rec = json.loads(path.read_text(encoding="utf-8"))
+    return VennAbersCalibrator.from_dict(rec["calibrator"])
 
 
 def _risk_band(p: float) -> str:
@@ -71,35 +81,46 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     X, cape = grid_feature_matrix(grids)
-    proba = scorer.raw_proba(X)                     # P(tornado) per cell (raw forest)
+    raw = scorer.raw_proba(X)                        # raw (overconfident) forest score
+    cal = _load_calibrator()
+    if cal is not None:
+        proba, lo, hi = cal.predict(raw)             # honest calibrated prob + validity band
+    else:
+        proba, lo, hi = raw, raw, raw
+        print("  WARNING: no calibrator -> emitting RAW (overconfident) probabilities.")
     cape_flat = np.asarray(cape, float).ravel()
     convective = np.isfinite(cape_flat) & (cape_flat >= args.min_cape)
 
     cells = []
     for flat in np.where(convective)[0]:
         i, j = divmod(int(flat), HRRR_N_LON)
-        p = float(proba[flat])
         cells.append({
             "lat": round(float(GRID_LATS[i]), 2), "lon": round(float(GRID_LONS[j]), 2),
-            "row": i, "col": j, "probability": round(p, 4),
-            "risk_band": _risk_band(p), "mlcape": round(float(cape_flat[flat]), 0),
+            "row": i, "col": j, "probability": round(float(proba[flat]), 4),
+            "conf_lo": round(float(lo[flat]), 4), "conf_hi": round(float(hi[flat]), 4),
+            "raw_probability": round(float(raw[flat]), 4),
+            "risk_band": _risk_band(float(proba[flat])),
+            "mlcape": round(float(cape_flat[flat]), 0),
         })
     cells.sort(key=lambda c: c["probability"], reverse=True)
+    forecast_calibrated = cal is not None
 
     forecast = {
         "hazard": "tornado", "method": "hrrr_environment_forest",
-        "date": args.date, "hour": args.hour,
+        "date": args.date, "hour": args.hour, "calibrated": forecast_calibrated,
         "model_sha256": scorer.constants.get("model_sha256") or scorer.model_sha256,
         "n_convective_cells": int(convective.sum()),
         "max_probability": (cells[0]["probability"] if cells else 0.0),
         "top_cells": cells[: args.top],
     }
-    print(f"HRRR-env tornado forecast {args.date} {args.hour}z: "
+    print(f"HRRR-env tornado forecast {args.date} {args.hour}z "
+          f"({'calibrated' if forecast_calibrated else 'RAW'}): "
           f"{forecast['n_convective_cells']} convective cells, "
           f"max P(tor)={forecast['max_probability']:.3f}")
     for c in cells[: args.top]:
-        print(f"  ({c['lat']:.1f},{c['lon']:.1f})  P={c['probability']:.3f}  "
-              f"{c['risk_band']:9s} cape={c['mlcape']:.0f}")
+        print(f"  ({c['lat']:.1f},{c['lon']:.1f})  P={c['probability']:.3f} "
+              f"[{c['conf_lo']:.3f},{c['conf_hi']:.3f}]  {c['risk_band']:9s} "
+              f"cape={c['mlcape']:.0f}  (raw {c['raw_probability']:.2f})")
     if args.out:
         Path(args.out).write_text(json.dumps(forecast, indent=2) + "\n", encoding="utf-8")
         print(f"  wrote {args.out}")

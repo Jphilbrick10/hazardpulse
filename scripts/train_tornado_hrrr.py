@@ -81,8 +81,10 @@ def main(argv: list[str] | None = None) -> int:
     print(f"  xgboost      AUC {report['xgboost']['auc']:.4f}  Brier {report['xgboost']['brier']:.4f}")
 
     # servable + signed VerifiableForest (best of xgb/lgbm, honest selection)
+    vf_holdout_proba = None
     try:
         vf = _tbt._verifiable_forest(Xtr, ytr, Xte, seed=0)
+        vf_holdout_proba = np.asarray(vf["proba"], float)   # held-out -> honest calibration set
         report["verifiable_forest"] = {
             "auc": roc_auc(yte, vf["proba"]), "brier": brier(yte, vf["proba"]),
             "booster": vf["booster"], "self_reproduce": vf["self_reproduce"],
@@ -129,6 +131,28 @@ def main(argv: list[str] | None = None) -> int:
                       n_trees=int(len(constants["tree_root"])))
         print(f"  SHIPPED signed tornado forest ({report['n_trees']} trees, "
               f"sha {report['model_sha256'][:12]}) -> {fp.name}")
+
+        # Honest calibration: fit Venn-Abers on the HELD-OUT forest probs vs outcomes
+        # so the live scorer turns the raw (overconfident) forest score into a
+        # calibrated P(tornado) with a validity interval -- not a bare 0.99.
+        if vf_holdout_proba is not None:
+            from hazardpulse.trust.venn_abers import VennAbersCalibrator
+            from hazardpulse.trust.calibration import (
+                expected_calibration_error as _ece, brier_score as _bs)
+            cal = VennAbersCalibrator().fit(vf_holdout_proba, yte.astype(int))
+            cal_p, _, _ = cal.predict(vf_holdout_proba)
+            rec = {"hazard": "tornado_hrrr", "model_version": "tornado_hrrr_env_v1",
+                   "n_calibration": int(len(yte)), "calibrator": cal.to_dict(),
+                   "ece_before": round(float(_ece(vf_holdout_proba, yte)), 4),
+                   "ece_after": round(float(_ece(cal_p, yte)), 4),
+                   "brier_before": round(float(_bs(vf_holdout_proba, yte)), 4),
+                   "brier_after": round(float(_bs(cal_p, yte)), 4)}
+            (_FP := REPO / "results" / "calibration" / "tornado_hrrr_calibration.json").write_text(
+                json.dumps(rec) + "\n", encoding="utf-8")
+            report["calibration"] = {k: rec[k] for k in
+                                     ("ece_before", "ece_after", "brier_before", "brier_after")}
+            print(f"  calibrated: ECE {rec['ece_before']:.3f} -> {rec['ece_after']:.3f}, "
+                  f"Brier {rec['brier_before']:.3f} -> {rec['brier_after']:.3f}")
 
     out = REPO / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
