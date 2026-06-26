@@ -1,0 +1,26 @@
+{
+  "n": 3693,
+  "n_pos": 573,
+  "n_features": 26,
+  "split_cut": 20240624,
+  "n_test": 904,
+  "live_ceiling": 0.64,
+  "xgboost": {
+    "auc": 0.8111778846153856,
+    "brier": 0.07987639221958105
+  },
+  "verifiable_forest": {
+    "auc": 0.8112379807692317,
+    "brier": 0.08922255557106328,
+    "booster": "xgboost",
+    "self_reproduce": 1.0,
+    "bit_exact": true,
+    "n_trees": 400
+  },
+  "best_tabular": {
+    "auc": 0.8498437500000049,
+    "brier": 0.07743405166280998
+  },
+  "best_auc": 0.8498437500000049,
+  "beats_live_ceiling": true
+}

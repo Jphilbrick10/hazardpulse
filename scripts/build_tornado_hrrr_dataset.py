@@ -40,6 +40,7 @@ from hazardpulse.data.hrrr import (  # noqa: E402
     HRRR_N_LAT,
     HRRR_N_LON,
     fetch_hrrr_grid,
+    load_cached_hrrr,
     latlon_to_hrrr_cell,
 )
 from hazardpulse.tornado.coherence_engine import compute_derived_hrrr  # noqa: E402
@@ -123,6 +124,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--max-dates", type=int, default=0, help="0 = no cap")
     ap.add_argument("--tornado-days-only", action="store_true",
                     help="only fetch days with >=1 tornado (cheaper, balanced)")
+    ap.add_argument("--cached-only", action="store_true",
+                    help="use only already-cached HRRR dates (no network) -- instant rebuild")
     ap.add_argument("--out", default=str(_OUT))
     args = ap.parse_args(argv)
 
@@ -135,23 +138,30 @@ def main(argv: list[str] | None = None) -> int:
     print(f"{len(dates)} candidate dates ({args.start}..{args.end}), "
           f"{sum(1 for d in dates if reports.get(d))} with tornadoes")
 
-    # Parallel fetch (I/O-bound; per-date npz cache, retrying per variable).
+    # Gather HRRR grids: cached-only (instant, no network) or parallel fetch.
     fetched: dict[str, dict] = {}
-    done = 0
-    with ThreadPoolExecutor(max_workers=args.workers) as ex:
-        futs = {ex.submit(fetch_hrrr_grid, d, args.hour): d for d in dates}
-        for fut in as_completed(futs):
-            d = futs[fut]
-            done += 1
-            try:
-                g = fut.result()
-            except Exception as exc:
-                print(f"  {d}: fetch error {exc}"); g = None
+    if args.cached_only:
+        for d in dates:
+            g = load_cached_hrrr(d, args.hour)
             if g is not None:
                 fetched[d] = g
-            if done % 25 == 0:
-                print(f"  fetched {done}/{len(dates)} ({len(fetched)} ok)")
-    print(f"HRRR available for {len(fetched)}/{len(dates)} dates")
+        print(f"HRRR cached for {len(fetched)}/{len(dates)} dates (no network)")
+    else:
+        done = 0
+        with ThreadPoolExecutor(max_workers=args.workers) as ex:
+            futs = {ex.submit(fetch_hrrr_grid, d, args.hour): d for d in dates}
+            for fut in as_completed(futs):
+                d = futs[fut]
+                done += 1
+                try:
+                    g = fut.result()
+                except Exception as exc:
+                    print(f"  {d}: fetch error {exc}"); g = None
+                if g is not None:
+                    fetched[d] = g
+                if done % 25 == 0:
+                    print(f"  fetched {done}/{len(dates)} ({len(fetched)} ok)")
+        print(f"HRRR available for {len(fetched)}/{len(dates)} dates")
 
     X_rows, y_rows, date_rows = [], [], []
     for d in sorted(fetched):
