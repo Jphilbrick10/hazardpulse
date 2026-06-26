@@ -52,6 +52,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--data", default=".cache/tornado/hrrr_env_dataset.npz")
     ap.add_argument("--test-frac", type=float, default=0.25)
     ap.add_argument("--out", default="results/calibration/tornado_hrrr_report.json")
+    ap.add_argument("--deploy", action="store_true",
+                    help="train the forest on ALL data + export a signed tornado_forest_fp.json")
     args = ap.parse_args(argv)
 
     d = np.load(REPO / args.data if not Path(args.data).is_absolute() else args.data,
@@ -106,6 +108,28 @@ def main(argv: list[str] | None = None) -> int:
                    if isinstance(v, dict) and "auc" in v)
     report["best_auc"] = best_auc
     report["beats_live_ceiling"] = bool(best_auc > 0.64)
+
+    # Deploy: train the signed forest on ALL data and export. Trains on RAW features
+    # (with NaNs) -- xgboost learns the missing-value routing, which VerifiableForest
+    # freezes as default_left, so the live scorer can feed raw HRRR (gaps and all) and
+    # the frozen forest routes them correctly. No imputation means/stds to drift.
+    if args.deploy and report.get("verifiable_forest"):
+        from omega.verifiable_forest import VerifiableForest
+        clf = _tbt._fit_xgboost(np.asarray(X, float), y, 0)   # X is raw (NaN-native)
+        vf_all = VerifiableForest.from_xgboost(clf)
+        constants = vf_all.fp_constants()
+        fp = REPO / "results" / "calibration" / "tornado_forest_fp.json"
+        fp.write_text(json.dumps(constants) + "\n", encoding="utf-8")
+        # sidecar: feature order the live scorer must reproduce
+        (REPO / "results" / "calibration" / "tornado_forest_features.json").write_text(
+            json.dumps({"feature_names": names, "spec": "hazardpulse/tornado/hrrr-env/v1"}) + "\n",
+            encoding="utf-8")
+        report.update(deployed=True, deployed_n=int(len(y)),
+                      model_sha256=vf_all.fp_model_sha256(),
+                      n_trees=int(len(constants["tree_root"])))
+        print(f"  SHIPPED signed tornado forest ({report['n_trees']} trees, "
+              f"sha {report['model_sha256'][:12]}) -> {fp.name}")
+
     out = REPO / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
