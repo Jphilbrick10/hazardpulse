@@ -101,6 +101,22 @@ def _read_jsonl(path: Path) -> list[dict]:
     return rows
 
 
+# Per-build read cache for replay artifacts. Provenance and gate evaluation each
+# read every forecast's replay artifact; caching halves that disk I/O. Read-only
+# consumers only (the verification summary keeps its own reads because it mutates
+# the artifact dicts). Cleared at the start of each build_site_artifacts() run.
+_REPLAY_READ_CACHE: dict[str, dict] = {}
+
+
+def _read_replay_cached(path: Path) -> dict:
+    key = str(path)
+    cached = _REPLAY_READ_CACHE.get(key)
+    if cached is None:
+        cached = _read_json(path, {})
+        _REPLAY_READ_CACHE[key] = cached
+    return cached
+
+
 def _parse_utc(value: object) -> dt.datetime | None:
     if not value:
         return None
@@ -345,7 +361,7 @@ def _collect_prediction_entries(pulse: dict, replay_index: dict) -> list[dict]:
         replay_path = DIST / replay_artifact.lstrip("/")
         if not replay_path.exists():
             continue
-        artifact = _read_json(replay_path, {})
+        artifact = _read_replay_cached(replay_path)
         entry_hash = f"sha256:{_canonical_hash(artifact)}"
         seen_hurricane.add(forecast_id)
         entries.append(
@@ -375,7 +391,7 @@ def _build_provenance_envelopes(entries: list[dict]) -> list[dict]:
         replay_path = DIST / replay_artifact.lstrip("/")
         if not replay_path.exists():
             continue
-        artifact = _read_json(replay_path, {})
+        artifact = _read_replay_cached(replay_path)
         hazard = entry.get("hazard")
         if hazard == "earthquake":
             input_manifest = {
@@ -441,39 +457,91 @@ def _build_provenance_envelopes(entries: list[dict]) -> list[dict]:
     return envelopes
 
 
+_GATE_CELL_DEG = {"earthquake": 2.0, "tornado": 2.0, "hurricane": None}
+
+
+def _load_calibration_metrics() -> dict:
+    """Per-hazard deployed-model calibration (results/models/<hazard>_calibration.json)."""
+    metrics: dict[str, dict] = {}
+    for name in ("earthquake", "tornado", "hurricane"):
+        rec = _read_json(ROOT / "results" / "models" / f"{name}_calibration.json", {})
+        after = rec.get("metrics_after") if isinstance(rec, dict) else None
+        if after:
+            metrics[name] = after
+    return metrics
+
+
+def _gate_top_object(artifact: dict) -> dict:
+    cells = artifact.get("active_cells")
+    if isinstance(cells, list) and cells:
+        return cells[0]
+    storms = artifact.get("storms")
+    if isinstance(storms, list) and storms:
+        return storms[0]
+    return {}
+
+
 def _build_gate_decisions(entries: list[dict], pulse: dict) -> list[dict]:
-    decisions: list[dict] = []
+    """Evaluate the real publish-gate spine per forecast (was: hardcoded 'pass').
+
+    Each forecast is gated on its own replay artifact's trust fields — calibrated
+    probability, [conf_lo, conf_hi] band, signed-receipt provenance — plus the
+    deployed model's measured calibration. Forecasts without the trust layer yet
+    DEGRADE (honest) instead of silently passing.
+    """
+    from hazardpulse.gates import GateContext, GateEngine
+
+    engine = GateEngine()
+    calib = _load_calibration_metrics()
     hazard_map = {hazard.get("key"): hazard for hazard in pulse.get("hazards", [])}
-    hazard_key_for_name = {"earthquake": "eq", "hurricane": "hu", "tornado": "to"}
+    key_for_name = {"earthquake": "eq", "hurricane": "hu", "tornado": "to"}
+    decisions: list[dict] = []
     for entry in entries:
-        if not entry.get("replay_artifact"):
+        replay_ref = entry.get("replay_artifact")
+        if not replay_ref:
             continue
         hazard_name = str(entry.get("hazard"))
-        hazard_key = hazard_key_for_name.get(hazard_name, hazard_name)
-        hazard = hazard_map.get(hazard_key, {})
-        reasons: list[str] = []
-        warnings: list[str] = []
-        decision = "pass"
-        if hazard.get("conf_lo") is None or hazard.get("conf_hi") is None:
-            warnings.append("confidence_interval_unavailable")
-        if hazard_name == "hurricane" and int(hazard.get("n_active_storms", 0) or 0) == 0:
-            warnings.append("no_active_tropical_cyclones_in_feed")
-        if hazard_name == "tornado" and hazard.get("coherence_source") == "probsevere":
-            warnings.append("probsevere_coherence_fallback_active")
-        if hazard.get("gate_status") not in (None, "", "pass"):
-            decision = str(hazard.get("gate_status"))
-            reasons.append(f"publish_gate_status_{decision}")
-        decisions.append(
-            {
-                "gate_decision_id": f"gdec_{entry['forecast_id']}",
-                "forecast_id": entry["forecast_id"],
-                "hazard": hazard_name,
-                "decision": decision,
-                "reasons": reasons,
-                "warnings": warnings,
-                "issued_at": entry.get("issued_at"),
-            }
+        artifact = _read_replay_cached(DIST / replay_ref.lstrip("/"))
+        top = _gate_top_object(artifact)
+        receipt = top.get("receipt") if isinstance(top.get("receipt"), dict) else {}
+        prob = top.get("probability")
+        if prob is None:
+            prob = top.get("tornado_probability", top.get("ri_probability"))
+        if prob is None:
+            prob = artifact.get("top_probability", 0.0)
+        m = calib.get(hazard_name)
+        ctx = GateContext(
+            hazard=hazard_name,
+            forecast_id=entry["forecast_id"],
+            model_version=artifact.get("model_version") or entry.get("model_version"),
+            model_sha256=receipt.get("model_sha256"),
+            input_sha256=receipt.get("input_sha256"),
+            receipt_sha256=top.get("receipt_sha256") or receipt.get("receipt_sha256"),
+            replay_artifact=replay_ref,
+            probability=prob,
+            confidence_lo=top.get("confidence_lo"),
+            confidence_hi=top.get("confidence_hi"),
+            abstained=bool(top.get("abstained", False)),
+            uncertainty_class=top.get("uncertainty_class"),
+            lat=top.get("lat"),
+            lon=top.get("lon"),
+            cell_size_deg=_GATE_CELL_DEG.get(hazard_name),
+            data_age_seconds=0.0,  # source data was fresh at issue time
+            ece=(m or {}).get("ece"),
+            brier_skill_score=(m or {}).get("brier_skill_score"),
+            calibration_known=m is not None,
+            risk_label=top.get("risk_band"),
         )
+        decision = engine.evaluate(ctx, emitted_at=entry.get("issued_at"))
+        payload = decision.as_dict()
+        payload["issued_at"] = entry.get("issued_at")
+        # Informational pulse-level context (kept from the prior stamping).
+        hz = hazard_map.get(key_for_name.get(hazard_name, hazard_name), {})
+        if hazard_name == "hurricane" and int(hz.get("n_active_storms", 0) or 0) == 0:
+            payload["warnings"].append("no_active_tropical_cyclones_in_feed")
+        if hazard_name == "tornado" and hz.get("coherence_source") == "probsevere":
+            payload["warnings"].append("probsevere_coherence_fallback_active")
+        decisions.append(payload)
     return decisions
 
 
@@ -931,9 +999,110 @@ def _build_verification_summary(pulse: dict) -> dict:
     return summary
 
 
+_SCOREBOARD_PREFIX = {"earthquake": "eq", "tornado": "to", "hurricane": "hu"}
+
+
+def _latest_forecast_scores(hazard: str) -> list[float]:
+    """Raw probabilities of the most recent forecast (for distribution-drift PSI)."""
+    prefix = _SCOREBOARD_PREFIX.get(hazard)
+    if not prefix or not REPLAY_DIR.exists():
+        return []
+    paths = sorted(REPLAY_DIR.glob(f"{prefix}_fcst_*.json"))
+    if not paths:
+        return []
+    art = _read_replay_cached(paths[-1])
+    scores: list[float] = []
+    for item in (art.get("active_cells") or art.get("storms") or []):
+        if not isinstance(item, dict):
+            continue
+        v = item.get("raw_probability")
+        if v is None:
+            v = item.get("probability",
+                         item.get("tornado_probability", item.get("ri_probability")))
+        if v is not None:
+            try:
+                scores.append(float(v))
+            except (TypeError, ValueError):
+                continue
+    return scores
+
+
+def _render_calibration_scoreboard() -> str:
+    """Reliability diagrams + before/after calibration metrics per hazard, drawn
+    from the platform's OWN matured forecasts. Empty until a calibrator exists,
+    so the section simply does not appear until real calibration data flows."""
+    try:
+        from hazardpulse.trust.calibration import reliability_curve_from_counts
+        from hazardpulse.trust.venn_abers import VennAbersCalibrator
+        from hazardpulse.trust.viz import reliability_diagram_svg
+    except Exception:
+        return ""
+
+    accents = {"earthquake": "#e65100", "tornado": "#6a1b9a", "hurricane": "#1976d2"}
+
+    def _m(d: dict, key: str) -> str:
+        v = (d or {}).get(key)
+        if v is None:
+            return "--"
+        return f"{v:.3f}" if isinstance(v, (int, float)) else _esc(v)
+
+    cards: list[str] = []
+    for name in ("earthquake", "tornado", "hurricane"):
+        rec = _read_json(ROOT / "results" / "models" / f"{name}_calibration.json", {})
+        ds = _read_json(ROOT / "results" / f"{name}_prospective" / "calibration_dataset.json", {})
+        after = rec.get("metrics_after") if isinstance(rec, dict) else None
+        if not after or not ds.get("scores"):
+            continue
+        try:
+            cal = VennAbersCalibrator.from_dict(rec["calibrator"])
+            cal_scores, _, _ = cal.predict(ds["scores"])
+            curve = reliability_curve_from_counts(cal_scores, ds["pos"], ds["total"])
+            svg = reliability_diagram_svg(
+                curve, title=f"{name.title()} (deployed)", accent=accents.get(name, "#1976d2"))
+        except Exception:
+            continue
+        before = rec.get("metrics_before", {})
+        drift = {"status": "insufficient_data", "psi": 0.0}
+        try:
+            from hazardpulse.trust.monitor import expand_histogram, forecast_drift_status
+            cur_scores = _latest_forecast_scores(name)
+            if cur_scores:
+                drift = forecast_drift_status(
+                    expand_histogram(ds["scores"], ds["total"]), cur_scores)
+        except Exception:
+            pass
+        cards.append(
+            '<div class="card col-4">'
+            f'<h3 style="margin-top:0;">{_esc(_hazard_label(name))}</h3>'
+            f'{svg}'
+            f'<div class="kv"><span>ECE (raw &rarr; calibrated)</span>'
+            f'<strong>{_m(before, "ece")} &rarr; {_m(after, "ece")}</strong></div>'
+            f'<div class="kv"><span>Brier skill</span>'
+            f'<strong>{_m(before, "brier_skill_score")} &rarr; {_m(after, "brier_skill_score")}</strong></div>'
+            f'<div class="kv"><span>Distribution drift</span>'
+            f'<strong>{_esc(str(drift["status"]).replace("_", " "))} (PSI {drift["psi"]:.3f})</strong></div>'
+            f'<div class="kv"><span>Calibration sample</span>'
+            f'<strong>{int(rec.get("n_calibration", 0) or 0):,}</strong></div>'
+            "</div>"
+        )
+    if not cards:
+        return ""
+    return (
+        '<section class="section" aria-labelledby="calib-heading">'
+        '<h2 id="calib-heading">Calibration scoreboard</h2>'
+        '<p class="muted" style="margin-top:-8px;margin-bottom:16px;">'
+        "Reliability of the deployed (calibrated) forecasts, measured against the "
+        "platform's own realized outcomes. A perfectly calibrated forecaster sits on "
+        "the dashed diagonal; ECE and Brier-skill are shown raw &rarr; calibrated.</p>"
+        f'<div class="grid">{"".join(cards)}</div>'
+        "</section>"
+    )
+
+
 def _render_verification_page(summary: dict) -> None:
     system = summary.get("system", {})
     hazards = list(summary.get("hazards", []))
+    calibration_section = _render_calibration_scoreboard()
 
     system_cards = [
         (
@@ -1155,6 +1324,7 @@ def _render_verification_page(summary: dict) -> None:
         {''.join(hazard_cards)}
       </div>
     </section>
+    {calibration_section}
     <section class="section">
       <h2>Benchmark provenance</h2>
       <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Exact benchmarks are safe to cite for the current live model version. Related benchmarks are useful for research context, but not as proof of live performance.</p>
@@ -1716,12 +1886,26 @@ def _normalize_html_accessibility_labels() -> None:
             html_path.write_text(normalized, encoding="utf-8")
 
 
+def _publish_signing_key() -> None:
+    """Publish the Ed25519 public key so anyone can verify forecast receipts
+    independently (scripts/verify_forecast.py). No-op if no key is configured."""
+    try:
+        from hazardpulse.trust.scoring import load_signer, publish_public_key
+        signer = load_signer()
+        if signer is not None:
+            publish_public_key(signer, DIST / "data" / "evidence" / "public-key.json")
+    except Exception:
+        pass
+
+
 def build_site_artifacts() -> dict:
+    _REPLAY_READ_CACHE.clear()
     pulse, replay_index = _ensure_live_publish_artifacts()
     entries = _collect_prediction_entries(pulse, replay_index)
     envelopes = _build_provenance_envelopes(entries)
     gate_decisions = _build_gate_decisions(entries, pulse)
     verification_summary = _build_verification_summary(pulse)
+    _publish_signing_key()
 
     _write_json(
         PREDICTION_LEDGER_PATH,

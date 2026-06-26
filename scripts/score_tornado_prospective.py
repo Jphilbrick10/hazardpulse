@@ -220,9 +220,45 @@ def matured_artifacts(
     return matured
 
 
+def _accumulate_calibration(calib_acc: dict, scores: np.ndarray, y_true: np.ndarray) -> None:
+    """Pool (storm probability -> #positive, #total) into a histogram."""
+    rscore = np.round(scores, 6)
+    uniq, inv = np.unique(rscore, return_inverse=True)
+    tot = np.bincount(inv)
+    pos = np.bincount(inv, weights=y_true).astype(np.int64)
+    for u, t, p in zip(uniq, tot, pos):
+        key = float(u)
+        slot = calib_acc.get(key)
+        if slot is None:
+            calib_acc[key] = [int(t), int(p)]
+        else:
+            slot[0] += int(t)
+            slot[1] += int(p)
+
+
+def write_calibration_dataset(output_dir: Path, calib_acc: dict, hazard: str = "tornado") -> Path:
+    keys = sorted(calib_acc.keys())
+    total = [int(calib_acc[k][0]) for k in keys]
+    pos = [int(calib_acc[k][1]) for k in keys]
+    n = int(sum(total))
+    payload = {
+        "hazard": hazard,
+        "n": n,
+        "n_groups": len(keys),
+        "base_rate": (sum(pos) / n) if n else 0.0,
+        "scores": [round(float(k), 6) for k in keys],
+        "pos": pos,
+        "total": total,
+    }
+    path = output_dir / "calibration_dataset.json"
+    path.write_text(json.dumps(payload) + "\n", encoding="utf-8")
+    return path
+
+
 def score_single_forecast(
     artifact: dict,
     tornado_reports: list[dict],
+    calib_acc: dict | None = None,
 ) -> dict:
     """Score a single tornado forecast against observed reports.
 
@@ -272,6 +308,15 @@ def score_single_forecast(
                 y_true[i] = 1.0
                 break
 
+    if calib_acc is not None:
+        # Pool the RAW model score (not the deployed/calibrated one) so re-fitting
+        # never double-calibrates. Before any calibrator exists raw == probability.
+        raw = np.array(
+            [float(s.get("raw_probability", s.get("tornado_probability", 0.0))) for s in storms],
+            dtype=np.float64,
+        )
+        _accumulate_calibration(calib_acc, raw, y_true)
+
     n_matched = int(np.sum(y_true))
     auc = compute_auc(y_true, y_score)
     bs = brier_score(y_true, y_score)
@@ -314,6 +359,11 @@ def main(argv: list[str] | None = None) -> int:
               "Used to isolate metrics from a specific deployment / fix. "
               "Example: --issued-after 2026-04-28T13:00:00Z"),
     )
+    parser.add_argument(
+        "--emit-calibration", action="store_true",
+        help="Pool per-storm (probability -> outcome) into calibration_dataset.json "
+        "for the calibrator fitter (scripts/fit_calibration.py).",
+    )
     args = parser.parse_args(argv)
 
     score_as_of = (
@@ -351,6 +401,8 @@ def main(argv: list[str] | None = None) -> int:
         "status": "ok",
     }
 
+    calib_acc: dict | None = {} if args.emit_calibration else None
+
     per_forecast_path = output_dir / "per_forecast_scores.jsonl"
     per_forecast_results: list[dict] = []
 
@@ -367,9 +419,14 @@ def main(argv: list[str] | None = None) -> int:
 
         with open(per_forecast_path, "w", encoding="utf-8") as handle:
             for artifact in matured:
-                result = score_single_forecast(artifact, all_reports)
+                result = score_single_forecast(artifact, all_reports, calib_acc=calib_acc)
                 per_forecast_results.append(result)
                 handle.write(json.dumps(result) + "\n")
+
+        if calib_acc is not None:
+            calib_path = write_calibration_dataset(output_dir, calib_acc, hazard="tornado")
+            summary["calibration_dataset"] = str(calib_path)
+            summary["calibration_n"] = int(sum(slot[0] for slot in calib_acc.values()))
 
         aucs = [r["auc"] for r in per_forecast_results if math.isfinite(r["auc"])]
         briers = [r["brier"] for r in per_forecast_results if math.isfinite(r["brier"])]

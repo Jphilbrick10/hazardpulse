@@ -205,10 +205,51 @@ def write_observed_events_csv(path: Path, events: list[dict]) -> None:
             )
 
 
+def _accumulate_calibration(calib_acc: dict, y_score: np.ndarray, y_true: np.ndarray) -> None:
+    """Pool per-cell (forecast probability -> #positive, #total) into a histogram.
+
+    Rounding to 1e-6 keeps it compact (active cells share the same default
+    probability), giving the honest calibration signal: what the model said vs
+    what actually happened, over every scored grid cell.
+    """
+    rscore = np.round(y_score, 6)
+    uniq, inv = np.unique(rscore, return_inverse=True)
+    tot = np.bincount(inv)
+    pos = np.bincount(inv, weights=y_true).astype(np.int64)
+    for u, t, p in zip(uniq, tot, pos):
+        key = float(u)
+        slot = calib_acc.get(key)
+        if slot is None:
+            calib_acc[key] = [int(t), int(p)]
+        else:
+            slot[0] += int(t)
+            slot[1] += int(p)
+
+
+def write_calibration_dataset(output_dir: Path, calib_acc: dict, hazard: str = "earthquake") -> Path:
+    keys = sorted(calib_acc.keys())
+    total = [int(calib_acc[k][0]) for k in keys]
+    pos = [int(calib_acc[k][1]) for k in keys]
+    n = int(sum(total))
+    payload = {
+        "hazard": hazard,
+        "n": n,
+        "n_groups": len(keys),
+        "base_rate": (sum(pos) / n) if n else 0.0,
+        "scores": [round(float(k), 6) for k in keys],
+        "pos": pos,
+        "total": total,
+    }
+    path = output_dir / "calibration_dataset.json"
+    path.write_text(json.dumps(payload) + "\n", encoding="utf-8")
+    return path
+
+
 def score_single_forecast(
     artifact: dict,
     observed_events: list[dict],
     output_dir: Path,
+    calib_acc: dict | None = None,
 ) -> dict | None:
     issued_at = parse_utc_datetime(artifact["issued_at"])
     horizon_days = int(artifact.get("forecast_horizon_days", 30))
@@ -244,6 +285,20 @@ def score_single_forecast(
             count = cell_counts.get((row, col), 0)
             count_vec[flat] = count
             y_true[flat] = 1.0 if count > 0 else 0.0
+
+    if calib_acc is not None:
+        # Pool the RAW model score (not the deployed/calibrated one) so re-fitting
+        # the calibrator never double-calibrates. Before any calibrator exists,
+        # raw_probability is absent and equals probability.
+        raw_probs = {
+            (int(cell["row"]), int(cell["col"])): float(
+                cell.get("raw_probability", cell["probability"]))
+            for cell in artifact.get("active_cells", [])
+        }
+        y_score_raw = np.full(n_cells, default_probability, dtype=np.float64)
+        for (r_, c_), rp in raw_probs.items():
+            y_score_raw[r_ * n_lon + c_] = rp
+        _accumulate_calibration(calib_acc, y_score_raw, y_true)
 
     rate_vec = -np.log(np.clip(1.0 - y_score, 1e-12, 1.0))
     total_events = int(sum(cell_counts.values()))
@@ -316,6 +371,12 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="UTC timestamp for determining maturity. Defaults to now.",
     )
+    parser.add_argument(
+        "--emit-calibration",
+        action="store_true",
+        help="Pool per-cell (probability -> outcome) into calibration_dataset.json "
+        "for the calibrator fitter (scripts/fit_calibration.py).",
+    )
     args = parser.parse_args(argv)
 
     score_as_of = (
@@ -323,6 +384,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.score_as_of
         else dt.datetime.now(dt.timezone.utc)
     )
+
+    calib_acc: dict | None = {} if args.emit_calibration else None
 
     artifacts = load_replay_artifacts(args.replay_dir)
     matured = matured_artifacts(artifacts, score_as_of)
@@ -368,11 +431,17 @@ def main(argv: list[str] | None = None) -> int:
                     for event in observed_catalog
                     if issued_at <= parse_utc_datetime(event["time"]) < window_end
                 ]
-                result = score_single_forecast(artifact, observed_events, output_dir)
+                result = score_single_forecast(
+                    artifact, observed_events, output_dir, calib_acc=calib_acc)
                 if result is None:
                     continue
                 per_forecast_results.append(result)
                 handle.write(json.dumps(result) + "\n")
+
+        if calib_acc is not None:
+            calib_path = write_calibration_dataset(output_dir, calib_acc, hazard="earthquake")
+            summary["calibration_dataset"] = str(calib_path)
+            summary["calibration_n"] = int(sum(slot[0] for slot in calib_acc.values()))
 
         aucs = [result["auc"] for result in per_forecast_results if math.isfinite(result["auc"])]
         pr_aucs = [result["pr_auc"] for result in per_forecast_results if math.isfinite(result["pr_auc"])]

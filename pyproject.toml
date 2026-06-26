@@ -41,6 +41,9 @@ dependencies = [
     "numcodecs>=0.11,<0.17",
     "fsspec>=2024.2",
     "aiohttp>=3.9",
+    # Ed25519 signing/verification for the trust layer (signed, re-runnable
+    # forecast receipts). Vendored omega_one trust subset imports it lazily.
+    "cryptography>=42.0",
 ]
 
 [project.optional-dependencies]

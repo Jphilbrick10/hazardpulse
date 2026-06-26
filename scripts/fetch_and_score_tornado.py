@@ -780,8 +780,13 @@ def write_outputs(
                 if scored_storms:
                     top = scored_storms[0]  # Already sorted by probability
                     hazard["probability"] = top["tornado_probability"]
-                    hazard["conf_lo"] = None
-                    hazard["conf_hi"] = None
+                    # Real uncertainty band from the calibrator (None until one
+                    # exists) — removes the confidence_interval_unavailable gate warning.
+                    hazard["conf_lo"] = top.get("confidence_lo")
+                    hazard["conf_hi"] = top.get("confidence_hi")
+                    hazard["uncertainty_class"] = top.get("uncertainty_class")
+                    hazard["abstained"] = top.get("abstained", False)
+                    hazard["receipt_sha256"] = top.get("receipt_sha256")
                     hazard["risk_band"] = top["risk_band"]
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = MODEL_VERSION
@@ -1095,6 +1100,20 @@ def _confidence_text(probability: object, lo: object, hi: object) -> str:
     return f"{_pct(lo_v)} to {_pct(hi_v)}"
 
 
+def _band_text(lo: object, hi: object) -> str:
+    """Calibrated 90% band, e.g. ' (90% band: 8.0%-18.0%)'; empty when unavailable
+    so the label is unchanged for raw (uncalibrated) forecasts."""
+    if lo is None or hi is None:
+        return ""
+    try:
+        lo_f, hi_f = float(lo), float(hi)
+    except (TypeError, ValueError):
+        return ""
+    if lo_f != lo_f or hi_f != hi_f:   # NaN
+        return ""
+    return f" (90% band: {lo_f * 100:.1f}%-{hi_f * 100:.1f}%)"
+
+
 def _trend_text(delta: object) -> str:
     """Render a safe ASCII trend string."""
     try:
@@ -1280,7 +1299,8 @@ def _render_storm_rows(storms: list[dict]) -> str:
             f'                  <div class="detail-score" style="color:{risk_color};">{_pct(prob)}</div>'
         )
         lines.append(
-            f'                  <div class="detail-score-label">Estimated tornado probability for this storm object</div>'
+            '                  <div class="detail-score-label">Estimated tornado probability for this storm object'
+            f'{_band_text(s.get("confidence_lo"), s.get("confidence_hi"))}</div>'
         )
         lines.append(f'                </div>')
         lines.append(f'              </div>')
@@ -1576,7 +1596,8 @@ def _render_coherence_deep_dive(top: dict) -> str:
     lines.append('          <div class="card col-6 hazard-to">')
     lines.append(f'            <h3>Storm {_esc(str(top["storm_id"]))} -- Coherence fields</h3>')
     lines.append(f'            <div class="metric" style="color:{risk_color}">{_pct(top["tornado_probability"])}</div>')
-    lines.append('            <div class="metric-label">Tornado probability</div>')
+    lines.append('            <div class="metric-label">Tornado probability'
+                 f'{_band_text(top.get("confidence_lo"), top.get("confidence_hi"))}</div>')
 
     coh_keys = [
         ("tau", "tau"), ("grad_tau", "grad_tau"), ("torsion", "torsion"),
@@ -4009,6 +4030,29 @@ def main() -> None:
             apply_lightning_augmentation(scored, enable=False)
         except Exception:
             pass
+
+    # Trust layer: calibrate tornado probabilities, attach honest [conf_lo,
+    # conf_hi] bands + Ed25519-signed re-runnable receipts. Fail-safe: raw until
+    # a calibrator (results/models/tornado_calibration.json) exists.
+    try:
+        from hazardpulse.trust.scoring import enrich_cells, load_forecaster, load_signer
+
+        _signer = load_signer()
+        _forecaster = load_forecaster("tornado", signer=_signer)
+        if _forecaster is not None and scored:
+            enrich_cells(scored, _forecaster, prob_key="tornado_probability",
+                         issued_at=now.strftime("%Y-%m-%dT%H:%M:%SZ"))
+            print(
+                f"  Trust layer: calibrated {len(scored)} storms "
+                f"(model {_forecaster.model_version}, signed={_signer is not None})"
+            )
+        elif scored:
+            print(
+                "  Trust layer: no calibrator yet "
+                "(results/models/tornado_calibration.json); emitting raw forecasts."
+            )
+    except Exception as exc:  # never let the trust layer break a live forecast
+        print(f"  Trust layer: skipped ({exc})")
 
     for s in scored[:10]:
         print(

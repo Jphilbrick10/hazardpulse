@@ -34,13 +34,20 @@ jobs:
           pip install -e .
 
       - name: Score earthquake forecasts
-        run: python scripts/score_earthquake_prospective.py
+        run: python scripts/score_earthquake_prospective.py --emit-calibration
 
       - name: Score tornado forecasts
-        run: python scripts/score_tornado_prospective.py
+        run: python scripts/score_tornado_prospective.py --emit-calibration
 
       - name: Score hurricane forecasts
-        run: python scripts/score_hurricane_prospective.py
+        run: python scripts/score_hurricane_prospective.py --emit-calibration
+
+      - name: Fit probability calibrators from matured forecasts
+        # Turns the platform's own predictions-vs-outcomes into per-hazard
+        # calibration constants (results/models/<hazard>_calibration.json). The
+        # live scorers then start emitting calibrated forecasts + intervals +
+        # signed receipts automatically. Prints measured ECE/BSS before -> after.
+        run: python scripts/fit_calibration.py
 
       - name: Show results
         run: |
@@ -63,7 +70,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add results/earthquake_prospective/ results/tornado_prospective/ results/hurricane_prospective/
+          git add results/earthquake_prospective/ results/tornado_prospective/ results/hurricane_prospective/ results/models/
           git add -f dist/data/tornado-recovery.json
           git commit -m "data: verification scoring update $(date -u +%Y-%m-%dT%H:%MZ)
 

@@ -179,7 +179,42 @@ def matured_artifacts(
     return matured
 
 
-def score_single_forecast(artifact: dict) -> dict:
+def _accumulate_calibration(calib_acc: dict, scores: np.ndarray, y_true: np.ndarray) -> None:
+    """Pool (storm RI probability -> #positive, #total) into a histogram."""
+    rscore = np.round(scores, 6)
+    uniq, inv = np.unique(rscore, return_inverse=True)
+    tot = np.bincount(inv)
+    pos = np.bincount(inv, weights=y_true).astype(np.int64)
+    for u, t, p in zip(uniq, tot, pos):
+        key = float(u)
+        slot = calib_acc.get(key)
+        if slot is None:
+            calib_acc[key] = [int(t), int(p)]
+        else:
+            slot[0] += int(t)
+            slot[1] += int(p)
+
+
+def write_calibration_dataset(output_dir: Path, calib_acc: dict, hazard: str = "hurricane") -> Path:
+    keys = sorted(calib_acc.keys())
+    total = [int(calib_acc[k][0]) for k in keys]
+    pos = [int(calib_acc[k][1]) for k in keys]
+    n = int(sum(total))
+    payload = {
+        "hazard": hazard,
+        "n": n,
+        "n_groups": len(keys),
+        "base_rate": (sum(pos) / n) if n else 0.0,
+        "scores": [round(float(k), 6) for k in keys],
+        "pos": pos,
+        "total": total,
+    }
+    path = output_dir / "calibration_dataset.json"
+    path.write_text(json.dumps(payload) + "\n", encoding="utf-8")
+    return path
+
+
+def score_single_forecast(artifact: dict, calib_acc: dict | None = None) -> dict:
     """Score a single hurricane forecast.
 
     For forecasts with storms: fetch best-track, check if RI occurred.
@@ -216,6 +251,7 @@ def score_single_forecast(artifact: dict) -> dict:
             "storm_id": storm_id,
             "storm_name": storm.get("storm_name", storm_id),
             "predicted_ri_probability": round(pred_prob, 4),
+            "raw_ri_probability": round(float(storm.get("raw_probability", pred_prob)), 4),
             "ri_occurred": ri_occurred,
             "vmax_at_issue": vmax_issue,
             "vmax_at_end": vmax_end,
@@ -228,6 +264,10 @@ def score_single_forecast(artifact: dict) -> dict:
 
     y_true = np.array([1.0 if p["ri_occurred"] else 0.0 for p in predictions])
     y_score = np.array([p["predicted_ri_probability"] for p in predictions])
+
+    if calib_acc is not None:
+        raw = np.array([p["raw_ri_probability"] for p in predictions], dtype=np.float64)
+        _accumulate_calibration(calib_acc, raw, y_true)
 
     auc = compute_auc(y_true, y_score)
     bs = brier_score(y_true, y_score)
@@ -258,6 +298,11 @@ def main(argv: list[str] | None = None) -> int:
         "--score-as-of", default=None,
         help="UTC timestamp for determining maturity. Defaults to now.",
     )
+    parser.add_argument(
+        "--emit-calibration", action="store_true",
+        help="Pool per-storm (probability -> outcome) into calibration_dataset.json "
+        "for the calibrator fitter (scripts/fit_calibration.py).",
+    )
     args = parser.parse_args(argv)
 
     score_as_of = (
@@ -283,15 +328,22 @@ def main(argv: list[str] | None = None) -> int:
         "status": "ok",
     }
 
+    calib_acc: dict | None = {} if args.emit_calibration else None
+
     per_forecast_path = output_dir / "per_forecast_scores.jsonl"
     per_forecast_results: list[dict] = []
 
     if matured:
         with open(per_forecast_path, "w", encoding="utf-8") as handle:
             for artifact in matured:
-                result = score_single_forecast(artifact)
+                result = score_single_forecast(artifact, calib_acc=calib_acc)
                 per_forecast_results.append(result)
                 handle.write(json.dumps(result) + "\n")
+
+        if calib_acc is not None:
+            calib_path = write_calibration_dataset(output_dir, calib_acc, hazard="hurricane")
+            summary["calibration_dataset"] = str(calib_path)
+            summary["calibration_n"] = int(sum(slot[0] for slot in calib_acc.values()))
 
         n_null = sum(1 for r in per_forecast_results if r.get("null_forecast"))
         n_with_storms = sum(1 for r in per_forecast_results if not r.get("null_forecast"))

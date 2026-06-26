@@ -1,0 +1,62 @@
+name: Tests
+
+# Runs the trust/gate/calibration unit tests + the vendored-omega drift check on
+# every push and PR. These gate the trust spine (calibration, conformal
+# intervals, OOD/abstention, signed receipts, the publish-gate engine) so a
+# regression can't reach the live scoring pipeline.
+
+on:
+  push:
+    branches: [main, platform-trust-program]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install numpy scipy pytest
+          pip install -e .
+
+      - name: Verify vendored omega_one trust subset has not drifted
+        run: python scripts/vendor_omega_trust.py --verify
+
+      - name: Run trust + gate + calibration + verifier tests
+        run: |
+          python -m pytest -q \
+            tests/test_vendor_omega.py \
+            tests/test_calibration.py \
+            tests/test_venn_abers.py \
+            tests/test_trusted_forecast.py \
+            tests/test_gate_engine.py \
+            tests/test_fit_calibration.py \
+            tests/test_scoring_integration.py \
+            tests/test_external_verify.py
+
+      - name: Run site integrity checks
+        run: python -m pytest tests/test_site_integrity.py -q
+
+      - name: Compile all scoring scripts
+        run: |
+          python -m py_compile \
+            scripts/fetch_and_score_earthquake.py \
+            scripts/fetch_and_score_tornado.py \
+            scripts/fetch_and_score.py \
+            scripts/score_earthquake_prospective.py \
+            scripts/score_tornado_prospective.py \
+            scripts/score_hurricane_prospective.py \
+            scripts/build_site_artifacts.py \
+            scripts/fit_calibration.py \
+            scripts/verify_forecast.py
