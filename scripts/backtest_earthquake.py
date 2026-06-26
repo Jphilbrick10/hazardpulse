@@ -65,11 +65,33 @@ def _reliability(y, p, bins=10):
     return out
 
 
+def _test_meta(max_year):
+    """Re-derive (year, lat, lon) for each TEST sample in the SAME order as the cached
+    features. Mirrors load_all_data's deterministic construction (Gardner-Knopoff +
+    build_samples with a fixed seed; test is NOT downsampled), so it aligns row-for-row
+    with the cached X_test -- without re-running the expensive feature extraction.
+    """
+    from hazardpulse.earthquake.definitive_model import (
+        load_usgs_catalog, decluster_gardner_knopoff, build_samples,
+        TEST_START, TEST_END)
+    catalog = load_usgs_catalog(min_year=2000, max_year=max_year, min_mag=2.5)
+    mainshocks, _ = decluster_gardner_knopoff(catalog)
+    samples = build_samples(mainshocks, catalog, verbose=False)
+    test_end = max(TEST_END, int(max_year))
+    test = [s for s in samples if TEST_START <= s["year"] <= test_end]
+    return (np.array([s["year"] for s in test]),
+            np.array([s["latitude"] for s in test], float),
+            np.array([s["longitude"] for s in test], float))
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--max-year", type=int, default=2024)
     ap.add_argument("--boot", type=int, default=1000)
+    ap.add_argument("--breakdown", action="store_true",
+                    help="per-year (walk-forward) + per-region AUC (re-derives sample "
+                         "metadata; ~6 min for declustering, no feature extraction)")
     ap.add_argument("--out", default="results/calibration/earthquake_backtest.json")
     args = ap.parse_args(argv)
 
@@ -151,6 +173,40 @@ def main(argv=None) -> int:
           f"{'SIGNIFICANT' if rep['edge_over_persistence']['significant'] else 'NOT significant'}")
 
     rep["calibration_reliability"] = _reliability(ye, model_proba)
+
+    # --- walk-forward (per-year) + per-region breakdown ------------------------ #
+    if args.breakdown:
+        print("  deriving test-sample metadata (declustering, no feature extraction)...")
+        years, lats, lons = _test_meta(args.max_year)
+        if len(years) == len(ye):
+            from hazardpulse.trust.group_conformal import geo_region
+            by_year = {}
+            for y in sorted(set(int(v) for v in years)):
+                m = years == y
+                if m.sum() >= 20 and 0 < ye[m].sum() < m.sum():
+                    by_year[int(y)] = {"auc": round(roc_auc(ye[m], model_proba[m]), 4),
+                                       "n": int(m.sum()), "pos": int(ye[m].sum())}
+            regions = np.array([geo_region(la, lo) for la, lo in zip(lats, lons)])
+            by_region = {}
+            for r in sorted(set(regions)):
+                m = regions == r
+                if m.sum() >= 20 and 0 < ye[m].sum() < m.sum():
+                    pers = Xe[:, names.index(best_pers_name)].astype(float)
+                    if roc_auc(ye, pers) < 0.5:
+                        pers = -pers
+                    by_region[r] = {"auc": round(roc_auc(ye[m], model_proba[m]), 4),
+                                    "persistence_auc": round(roc_auc(ye[m], pers[m]), 4),
+                                    "n": int(m.sum()), "pos": int(ye[m].sum())}
+            rep["walk_forward_by_year"] = by_year
+            rep["by_region"] = by_region
+            print("  walk-forward (per test year): " +
+                  "  ".join(f"{y}:{d['auc']:.3f}" for y, d in by_year.items()))
+            print("  per-region AUC (model vs persistence):")
+            for r, d in by_region.items():
+                print(f"    {r:16s} model {d['auc']:.3f}  pers {d['persistence_auc']:.3f}  (n={d['n']})")
+        else:
+            print(f"  WARNING: meta length {len(years)} != test {len(ye)}; skipping breakdown.")
+
     out = REPO / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rep, indent=2) + "\n", encoding="utf-8")
