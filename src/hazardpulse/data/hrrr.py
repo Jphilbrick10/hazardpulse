@@ -232,36 +232,69 @@ def fetch_hrrr_grid(
 # ---------------------------------------------------------------------------
 
 
-def _subsample_to_grid(flat: np.ndarray, var_name: str) -> np.ndarray:
-    """Subsample a flat HRRR array to the 80 km grid.
+# Fields where the 80 km cell's PEAK is the meaningful tornado signal (instability,
+# storm-relative helicity, reflectivity) -> block-MAX. Everything else (winds,
+# temperature, moisture, inhibition) -> block-MEAN. Striding (one native point per
+# 80 km cell) discards 99.9% of the field and misses these peaks; pooling keeps them.
+_HRRR_MAX_FIELDS = frozenset({
+    "cape", "mlcape", "mucape", "srh_01", "srh_03", "refc",
+})
 
-    If the raw array cannot be reshaped to the native HRRR dimensions we
-    fall back to an interpolated or zero-filled grid.
+# Extraction mode. "stride" reproduces the legacy single-point subsample (kept as
+# the default so the CURRENTLY-TRAINED live model never sees a shifted feature
+# distribution). The retrain pipeline sets HAZARDPULSE_HRRR_POOL=max to use the
+# physically-correct block pooling; once a model is retrained on it, flip the default.
+HRRR_POOL_MODE: str = os.environ.get("HAZARDPULSE_HRRR_POOL", "stride").strip().lower()
+
+NATIVE_NY, NATIVE_NX = 1059, 1799
+
+
+def _block_pool(full2d: np.ndarray, var_name: str) -> np.ndarray:
+    """Reduce the native HRRR grid to the 80 km grid by NaN-aware block pooling.
+
+    Each 80 km cell aggregates the native ~3 km points it contains: MAX for
+    instability/helicity/reflectivity (capture the convective peak), MEAN
+    otherwise.
     """
-    native_ny, native_nx = 1059, 1799
-    target_shape = (HRRR_N_LAT, HRRR_N_LON)
+    ny, nx = full2d.shape
+    by, bx = ny // HRRR_N_LAT, nx // HRRR_N_LON
+    if by < 1 or bx < 1:
+        return np.zeros((HRRR_N_LAT, HRRR_N_LON), dtype=np.float32)
+    cropped = full2d[: by * HRRR_N_LAT, : bx * HRRR_N_LON]
+    blocks = cropped.reshape(HRRR_N_LAT, by, HRRR_N_LON, bx)
+    with np.errstate(invalid="ignore"):
+        if var_name in _HRRR_MAX_FIELDS:
+            pooled = np.nanmax(blocks, axis=(1, 3))
+        else:
+            pooled = np.nanmean(blocks, axis=(1, 3))
+    return np.asarray(pooled, dtype=np.float32)
 
-    if flat.size == native_ny * native_nx:
-        full2d = flat.reshape((native_ny, native_nx))
+
+def _subsample_to_grid(flat: np.ndarray, var_name: str, *, mode: str | None = None) -> np.ndarray:
+    """Reduce a flat native HRRR array to the 80 km grid (pooling or legacy stride)."""
+    target_shape = (HRRR_N_LAT, HRRR_N_LON)
+    mode = (mode or HRRR_POOL_MODE)
+
+    if flat.size == NATIVE_NY * NATIVE_NX:
+        full2d = flat.reshape((NATIVE_NY, NATIVE_NX))
     elif flat.size >= HRRR_N_LAT * HRRR_N_LON:
-        # Already subsampled or different shape — take first N_LAT*N_LON
-        full2d = flat[: HRRR_N_LAT * HRRR_N_LON].reshape(target_shape)
-        return full2d.astype(np.float32)
+        # Already subsampled / different shape — take first N_LAT*N_LON.
+        return flat[: HRRR_N_LAT * HRRR_N_LON].reshape(target_shape).astype(np.float32)
     else:
         return np.zeros(target_shape, dtype=np.float32)
 
-    # Compute stride to subsample from native grid
-    stride_y = native_ny // HRRR_N_LAT
-    stride_x = native_nx // HRRR_N_LON
-    subsampled = full2d[::stride_y, ::stride_x][:HRRR_N_LAT, :HRRR_N_LON]
+    if mode == "max" or mode == "pool":
+        return _block_pool(full2d, var_name)
 
-    # Pad if subsample came up short
+    # Legacy striding (one native point per 80 km cell).
+    stride_y = NATIVE_NY // HRRR_N_LAT
+    stride_x = NATIVE_NX // HRRR_N_LON
+    subsampled = full2d[::stride_y, ::stride_x][:HRRR_N_LAT, :HRRR_N_LON]
     if subsampled.shape != target_shape:
         result = np.zeros(target_shape, dtype=np.float32)
         sy, sx = subsampled.shape
         result[:sy, :sx] = subsampled[:sy, :sx]
         return result
-
     return subsampled.astype(np.float32)
 
 
