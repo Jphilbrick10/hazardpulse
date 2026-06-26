@@ -18,6 +18,8 @@ import numpy as np
 # tornado signal, so a brief retry is worth it.
 _HRRR_FETCH_ATTEMPTS = int(os.environ.get("HAZARDPULSE_HRRR_ATTEMPTS", "3"))
 _HRRR_FETCH_BACKOFF = 1.5  # seconds, multiplied by attempt index
+_HRRR_HTTP_TIMEOUT = float(os.environ.get("HAZARDPULSE_HRRR_TIMEOUT", "30"))  # per-request seconds
+_HRRR_EARLY_BAIL = int(os.environ.get("HAZARDPULSE_HRRR_EARLY_BAIL", "4"))  # give up after N var failures
 
 from hazardpulse.data.http import fetch_bytes
 
@@ -195,9 +197,19 @@ def fetch_hrrr_grid(
     import zarr
     import fsspec
 
+    # Hard network timeout: the public archive can stall a read indefinitely (no
+    # bytes, no error), which would hang the whole fetch. A bounded client timeout
+    # turns a stall into an exception the per-variable retry can handle.
+    client_kwargs = {}
+    try:
+        import aiohttp
+        client_kwargs = {"timeout": aiohttp.ClientTimeout(total=_HRRR_HTTP_TIMEOUT)}
+    except Exception:
+        pass
+
     zarr_root = HRRR_ZARR_ROOT.format(date=date_str, hour=hour)
     try:
-        store = fsspec.get_mapper(zarr_root)
+        store = fsspec.get_mapper(zarr_root, client_kwargs=client_kwargs)
         root = zarr.open(store, mode="r")
     except Exception as exc:
         # Don't return an all-NaN dict silently — callers cannot distinguish
@@ -230,6 +242,12 @@ def fetch_hrrr_grid(
                 (HRRR_N_LAT, HRRR_N_LON), np.nan, dtype=np.float32
             )
             n_failed += 1
+            # Early bail: if the store is clearly dead (several vars failed), stop
+            # rather than grinding through all 17 x retries x timeout for this date.
+            if n_failed >= _HRRR_EARLY_BAIL:
+                print(f"  HRRR store for {date_str} {hour}z looks dead "
+                      f"({n_failed} vars failed); abandoning this date.")
+                return None  # type: ignore[return-value]
 
     # If more than half the variables failed to fetch, treat the whole pull
     # as failed — partial data produces misleading ML output.
