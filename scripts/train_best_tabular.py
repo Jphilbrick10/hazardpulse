@@ -178,10 +178,13 @@ def compare(X_tr, y_tr, X_te, y_te, *, baseline_proba=None, seeds=(0, 1, 2)) -> 
 # --------------------------------------------------------------------------- #
 # Hazard data adapters (real training data via the existing research pipelines)
 # --------------------------------------------------------------------------- #
-def _load_earthquake(variant: str = "full"):
+def _load_earthquake(variant: str = "enhanced"):
+    # IMPORTANT: the live scorer serves the "enhanced" variant (Block S + Block C =
+    # 73 features = ALL_FEATURE_NAMES_ENHANCED). Training/comparing on any other
+    # variant would be train/serve skew and the exported forest would reference
+    # features the live path cannot build. Default MUST match serve.
     from hazardpulse.earthquake.definitive_model import load_all_data
     X_tr, X_val, X_te, y_tr, y_val, y_te, _meta = load_all_data(verbose=True)
-    # load_all_data returns {"baseline","enhanced","full"} -> pick the full feature set
     Xtr = np.vstack([X_tr[variant], X_val[variant]])    # fold val into train for the final fit
     y_tr = np.concatenate([y_tr, y_val])
     return Xtr, y_tr, X_te[variant], y_te
@@ -212,13 +215,17 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--hazard", choices=sorted(_LOADERS), required=True)
     parser.add_argument("--seeds", default="0,1,2")
+    parser.add_argument("--variant", default="enhanced",
+                        help="earthquake feature variant; MUST match the live scorer "
+                             "(default 'enhanced' = Block S+C = the served 73 features)")
     parser.add_argument("--no-forest", action="store_true",
                         help="skip the VerifiableForest (servable) candidate")
     args = parser.parse_args(argv)
     seeds = tuple(int(x) for x in args.seeds.split(",") if x.strip())
 
-    print(f"Loading {args.hazard} training data...")
-    X_tr, y_tr, X_te, y_te = _LOADERS[args.hazard]()
+    print(f"Loading {args.hazard} training data (variant={args.variant})...")
+    load_kw = {"variant": args.variant} if args.hazard == "earthquake" else {}
+    X_tr, y_tr, X_te, y_te = _LOADERS[args.hazard](**load_kw)
     print(f"  train={len(y_tr)}  test={len(y_te)}  features={X_tr.shape[1]}")
 
     baseline_proba = None
@@ -233,6 +240,8 @@ def main(argv: list[str] | None = None) -> int:
     report, _bt_proba = compare(X_tr, y_tr, X_te, y_te,
                                 baseline_proba=baseline_proba, seeds=seeds)
     report["hazard"] = args.hazard
+    report["variant"] = args.variant
+    report["n_features"] = int(X_tr.shape[1])
 
     # VerifiableForest: the SERVABLE, SIGNABLE candidate (frozen integer forest).
     forest = None
