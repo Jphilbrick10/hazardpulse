@@ -129,6 +129,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out", default="results/calibration/earthquake_retrain_report.json")
     ap.add_argument("--floor", type=float, default=0.70,
                     help="GBT-only mode: deploy only if holdout AUC >= floor")
+    ap.add_argument("--max-year", type=int, default=2024,
+                    help="include the catalog through this year (extend to present to "
+                         "learn from newly captured earthquakes)")
     args = ap.parse_args(argv)
 
     # The VerifiableForest comparison needs omega_one (a sibling repo). When it is
@@ -141,8 +144,8 @@ def main(argv: list[str] | None = None) -> int:
         have_forest = False
         print("  omega VerifiableForest unavailable -> GBT-only retrain mode")
 
-    print("Loading cached features...")
-    Xtr, Xval, Xte, ytr, yval, yte = _tbt._load_all_eq_cached(verbose=False)
+    print(f"Loading cached features (catalog through {args.max_year})...")
+    Xtr, Xval, Xte, ytr, yval, yte = _tbt._load_all_eq_cached(verbose=False, max_year=args.max_year)
     v = "enhanced"   # the served variant
     Xfit, Xv, Xtest = Xtr[v].astype(float), Xval[v].astype(float), Xte[v].astype(float)
     yfit, yv, ytest = np.asarray(ytr), np.asarray(yval), np.asarray(yte)
@@ -155,6 +158,7 @@ def main(argv: list[str] | None = None) -> int:
 
     report = {
         "hazard": args.hazard, "variant": v, "n_features": int(Xfit.shape[1]),
+        "max_year": int(args.max_year),
         "incumbent_test_auc": inc_auc, "incumbent_test_brier": inc_brier,
         "deployed": False,
     }

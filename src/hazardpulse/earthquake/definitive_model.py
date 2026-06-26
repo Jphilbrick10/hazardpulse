@@ -1589,9 +1589,9 @@ _PAR_CAT = None        # per-worker CatalogArrays (read-only)
 _PAR_CATALOG = None    # per-worker full catalog list
 
 
-def _par_worker_init():
+def _par_worker_init(max_year=2024):
     global _PAR_CAT, _PAR_CATALOG
-    _PAR_CATALOG = load_usgs_catalog(min_year=2000, max_year=2024, min_mag=2.5)
+    _PAR_CATALOG = load_usgs_catalog(min_year=2000, max_year=max_year, min_mag=2.5)
     _PAR_CAT = CatalogArrays(_PAR_CATALOG, verbose=False)
 
 
@@ -1606,11 +1606,13 @@ def _par_worker_extract(sample):
     return X_s, X_c, X_x, np.float32(sample["label"]), skipped
 
 
-def extract_features_parallel(split_samples, split_name="", n_workers=None, verbose=True):
+def extract_features_parallel(split_samples, split_name="", n_workers=None, verbose=True,
+                              max_year=2024):
     """Process-pool version of the per-split feature extraction.
 
     Returns ``(X_dict, y)`` with X_dict = {baseline, enhanced, full}, identical to the
-    serial closure inside ``load_all_data``.
+    serial closure inside ``load_all_data``. ``max_year`` is passed to each worker so
+    its catalog matches the parent's.
     """
     from concurrent.futures import ProcessPoolExecutor
 
@@ -1627,7 +1629,8 @@ def extract_features_parallel(split_samples, split_name="", n_workers=None, verb
     workers = int(n_workers) if n_workers else max(1, (os.cpu_count() or 2) - 2)
     t0 = time.time()
     n_skipped = 0
-    with ProcessPoolExecutor(max_workers=workers, initializer=_par_worker_init) as ex:
+    with ProcessPoolExecutor(max_workers=workers, initializer=_par_worker_init,
+                             initargs=(max_year,)) as ex:
         for idx, (s, c, x, lab, sk) in enumerate(
             ex.map(_par_worker_extract, split_samples, chunksize=8)
         ):
@@ -1654,6 +1657,7 @@ def load_all_data(
     verbose: bool = True,
     parallel: bool = False,
     n_workers: int | None = None,
+    max_year: int = 2024,
 ) -> tuple[
     dict[str, np.ndarray],  # X_train
     dict[str, np.ndarray],  # X_val
@@ -1679,7 +1683,7 @@ def load_all_data(
         print("    Loading USGS catalog (2000-2024, M2.5+)...")
         sys.stdout.flush()
 
-    full_catalog = load_usgs_catalog(min_year=2000, max_year=2024, min_mag=2.5)
+    full_catalog = load_usgs_catalog(min_year=2000, max_year=max_year, min_mag=2.5)
 
     if verbose:
         print(f"    Loaded {len(full_catalog)} events")
@@ -1711,10 +1715,12 @@ def load_all_data(
 
     samples = build_samples(mainshocks, full_catalog, verbose=verbose)
 
-    # Step 5: Temporal split
+    # Step 5: Temporal split. The test window extends to max_year so newly captured
+    # years (e.g. 2025+) flow into evaluation -- and, for deployment, get folded in.
+    test_end = max(TEST_END, int(max_year))
     train_samples = [s for s in samples if TRAIN_START <= s["year"] <= TRAIN_END]
     val_samples = [s for s in samples if VAL_START <= s["year"] <= VAL_END]
-    test_samples = [s for s in samples if TEST_START <= s["year"] <= TEST_END]
+    test_samples = [s for s in samples if TEST_START <= s["year"] <= test_end]
 
     # ASSERT temporal integrity
     for s in train_samples:
@@ -1726,8 +1732,8 @@ def load_all_data(
             f"LEAKAGE: Val sample year {s['year']} outside [{VAL_START}, {VAL_END}]"
         )
     for s in test_samples:
-        assert TEST_START <= s["year"] <= TEST_END, (
-            f"LEAKAGE: Test sample year {s['year']} outside [{TEST_START}, {TEST_END}]"
+        assert TEST_START <= s["year"] <= test_end, (
+            f"LEAKAGE: Test sample year {s['year']} outside [{TEST_START}, {test_end}]"
         )
 
     # Cross-boundary assertion
@@ -1833,9 +1839,9 @@ def load_all_data(
             print(f"    Parallel extraction across "
                   f"{n_workers or max(1, (os.cpu_count() or 2) - 2)} workers...")
             sys.stdout.flush()
-        X_train, y_train = extract_features_parallel(train_samples, "train", n_workers, verbose)
-        X_val, y_val = extract_features_parallel(val_samples, "val", n_workers, verbose)
-        X_test, y_test = extract_features_parallel(test_samples, "test", n_workers, verbose)
+        X_train, y_train = extract_features_parallel(train_samples, "train", n_workers, verbose, max_year)
+        X_val, y_val = extract_features_parallel(val_samples, "val", n_workers, verbose, max_year)
+        X_test, y_test = extract_features_parallel(test_samples, "test", n_workers, verbose, max_year)
     else:
         X_train, y_train = _extract_features_for_split(train_samples, "train")
         X_val, y_val = _extract_features_for_split(val_samples, "val")

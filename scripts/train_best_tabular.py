@@ -252,31 +252,41 @@ def compare(X_tr, y_tr, X_te, y_te, *, baseline_proba=None, seeds=(0, 1, 2)) -> 
 _EQ_VARIANTS = ("baseline", "enhanced", "full")
 
 
-def _load_all_eq_cached(verbose: bool = True):
+def _eq_cache_path(max_year: int) -> Path:
+    # Key the cache by max_year so the 2024 and 2025+ datasets never collide.
+    return _EQ_FEATURE_CACHE.with_name(f"features_v1_my{int(max_year)}.npz")
+
+
+def _load_all_eq_cached(verbose: bool = True, max_year: int = 2024):
     """``load_all_data`` with its expensive (~hours) feature extraction cached to .npz.
 
     All three variants are cached in one pass (extraction is variant-independent), so
-    switching --variant never re-extracts. Rebuild with HAZARDPULSE_EQ_FEATURE_REBUILD=1.
+    switching --variant never re-extracts. Cache is keyed by ``max_year``; rebuild with
+    HAZARDPULSE_EQ_FEATURE_REBUILD=1. (Legacy un-keyed cache is honored for max_year 2024.)
     """
-    if _EQ_FEATURE_CACHE.exists() and os.environ.get("HAZARDPULSE_EQ_FEATURE_REBUILD") != "1":
-        d = np.load(_EQ_FEATURE_CACHE, allow_pickle=False)
+    cache = _eq_cache_path(max_year)
+    legacy = _EQ_FEATURE_CACHE
+    use = cache if cache.exists() else (legacy if (max_year == 2024 and legacy.exists()) else cache)
+    if use.exists() and os.environ.get("HAZARDPULSE_EQ_FEATURE_REBUILD") != "1":
+        d = np.load(use, allow_pickle=False)
         X_tr = {v: d[f"Xtr_{v}"] for v in _EQ_VARIANTS}
         X_val = {v: d[f"Xval_{v}"] for v in _EQ_VARIANTS}
         X_te = {v: d[f"Xte_{v}"] for v in _EQ_VARIANTS}
-        print(f"  [cache] loaded EQ features from {_EQ_FEATURE_CACHE.name} "
+        print(f"  [cache] loaded EQ features from {use.name} "
               f"(train={len(d['y_tr'])}, val={len(d['y_val'])}, test={len(d['y_te'])})")
         return X_tr, X_val, X_te, d["y_tr"], d["y_val"], d["y_te"]
 
     from hazardpulse.earthquake.definitive_model import load_all_data
     # Parallel extraction across cores (deterministic now -> safe to fan out + cache).
-    X_tr, X_val, X_te, y_tr, y_val, y_te, _meta = load_all_data(verbose=verbose, parallel=True)
-    _EQ_FEATURE_CACHE.parent.mkdir(parents=True, exist_ok=True)
+    X_tr, X_val, X_te, y_tr, y_val, y_te, _meta = load_all_data(
+        verbose=verbose, parallel=True, max_year=max_year)
+    cache.parent.mkdir(parents=True, exist_ok=True)
     arrays = {}
     for v in _EQ_VARIANTS:
         arrays[f"Xtr_{v}"] = X_tr[v]; arrays[f"Xval_{v}"] = X_val[v]; arrays[f"Xte_{v}"] = X_te[v]
     arrays.update(y_tr=y_tr, y_val=y_val, y_te=y_te)
-    np.savez(_EQ_FEATURE_CACHE, **arrays)
-    print(f"  [cache] saved EQ features -> {_EQ_FEATURE_CACHE.name} (future runs load in seconds)")
+    np.savez(cache, **arrays)
+    print(f"  [cache] saved EQ features -> {cache.name} (future runs load in seconds)")
     return X_tr, X_val, X_te, y_tr, y_val, y_te
 
 

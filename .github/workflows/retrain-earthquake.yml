@@ -46,10 +46,11 @@ jobs:
 
       - name: Refresh catalog to present + retrain + deploy
         env:
-          # extend the cached USGS catalog through the current year before retraining
+          # rebuild features so newly captured earthquakes flow in
           HAZARDPULSE_EQ_FEATURE_REBUILD: "1"
         run: |
-          python scripts/retrain_and_deploy.py --hazard earthquake \
+          YEAR=$(date -u +%Y)
+          python scripts/retrain_and_deploy.py --hazard earthquake --max-year "$YEAR" \
             ${{ (github.event_name == 'schedule' || inputs.deploy) && '--deploy' || '' }}
 
       - name: Show retrain report
