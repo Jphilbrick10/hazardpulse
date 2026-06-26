@@ -705,6 +705,19 @@ def _esc(value: object) -> str:
     )
 
 
+def _band_text(lo: object, hi: object) -> str:
+    """Calibrated 90% band, e.g. ' (90% band: 8.0%-18.0%)'; empty when unavailable."""
+    if lo is None or hi is None:
+        return ""
+    try:
+        lo_f, hi_f = float(lo), float(hi)
+    except (TypeError, ValueError):
+        return ""
+    if lo_f != lo_f or hi_f != hi_f:   # NaN
+        return ""
+    return f" (90% band: {lo_f * 100:.1f}%-{hi_f * 100:.1f}%)"
+
+
 def _format_time(ts: dt.datetime) -> str:
     return ts.strftime("%a, %d %b %Y %H:%M:%S UTC")
 
@@ -741,7 +754,8 @@ def render_hurricane_page(
             f"<div class=\"card hazard-hu\">"
             f"<h2 style=\"margin-top:0;\">Top storm</h2>"
             f"<div class=\"metric\">{float(scored_storms[0].get('ri_probability', 0) or 0) * 100:.1f}%</div>"
-            f"<div class=\"metric-label\">Rapid intensification in 24h</div>"
+            f"<div class=\"metric-label\">Rapid intensification in 24h"
+            f"{_band_text(scored_storms[0].get('confidence_lo'), scored_storms[0].get('confidence_hi'))}</div>"
             f"<div class=\"kv\"><span>Name</span><strong>{_esc(scored_storms[0].get('storm_name', scored_storms[0].get('storm_id', 'Storm')))}</strong></div>"
             f"<div class=\"kv\"><span>Status</span><strong>{_esc(scored_storms[0].get('category', '--'))} &middot; {scored_storms[0].get('vmax_kt', '--')} kt</strong></div>"
             f"</div>"

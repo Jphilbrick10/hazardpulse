@@ -101,6 +101,22 @@ def _read_jsonl(path: Path) -> list[dict]:
     return rows
 
 
+# Per-build read cache for replay artifacts. Provenance and gate evaluation each
+# read every forecast's replay artifact; caching halves that disk I/O. Read-only
+# consumers only (the verification summary keeps its own reads because it mutates
+# the artifact dicts). Cleared at the start of each build_site_artifacts() run.
+_REPLAY_READ_CACHE: dict[str, dict] = {}
+
+
+def _read_replay_cached(path: Path) -> dict:
+    key = str(path)
+    cached = _REPLAY_READ_CACHE.get(key)
+    if cached is None:
+        cached = _read_json(path, {})
+        _REPLAY_READ_CACHE[key] = cached
+    return cached
+
+
 def _parse_utc(value: object) -> dt.datetime | None:
     if not value:
         return None
@@ -345,7 +361,7 @@ def _collect_prediction_entries(pulse: dict, replay_index: dict) -> list[dict]:
         replay_path = DIST / replay_artifact.lstrip("/")
         if not replay_path.exists():
             continue
-        artifact = _read_json(replay_path, {})
+        artifact = _read_replay_cached(replay_path)
         entry_hash = f"sha256:{_canonical_hash(artifact)}"
         seen_hurricane.add(forecast_id)
         entries.append(
@@ -375,7 +391,7 @@ def _build_provenance_envelopes(entries: list[dict]) -> list[dict]:
         replay_path = DIST / replay_artifact.lstrip("/")
         if not replay_path.exists():
             continue
-        artifact = _read_json(replay_path, {})
+        artifact = _read_replay_cached(replay_path)
         hazard = entry.get("hazard")
         if hazard == "earthquake":
             input_manifest = {
@@ -485,7 +501,7 @@ def _build_gate_decisions(entries: list[dict], pulse: dict) -> list[dict]:
         if not replay_ref:
             continue
         hazard_name = str(entry.get("hazard"))
-        artifact = _read_json(DIST / replay_ref.lstrip("/"), {})
+        artifact = _read_replay_cached(DIST / replay_ref.lstrip("/"))
         top = _gate_top_object(artifact)
         receipt = top.get("receipt") if isinstance(top.get("receipt"), dict) else {}
         prob = top.get("probability")
@@ -1781,6 +1797,7 @@ def _publish_signing_key() -> None:
 
 
 def build_site_artifacts() -> dict:
+    _REPLAY_READ_CACHE.clear()
     pulse, replay_index = _ensure_live_publish_artifacts()
     entries = _collect_prediction_entries(pulse, replay_index)
     envelopes = _build_provenance_envelopes(entries)
