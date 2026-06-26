@@ -657,8 +657,12 @@ def write_outputs(
                     # Use highest RI probability storm
                     top = max(scored_storms, key=lambda s: s["ri_probability"])
                     hazard["probability"] = top["ri_probability"]
-                    hazard["conf_lo"] = None
-                    hazard["conf_hi"] = None
+                    # Real uncertainty band from the calibrator (None until one exists).
+                    hazard["conf_lo"] = top.get("confidence_lo")
+                    hazard["conf_hi"] = top.get("confidence_hi")
+                    hazard["uncertainty_class"] = top.get("uncertainty_class")
+                    hazard["abstained"] = top.get("abstained", False)
+                    hazard["receipt_sha256"] = top.get("receipt_sha256")
                     hazard["risk_band"] = _risk_band(top["ri_probability"])
                     hazard["gate_status"] = "pass"
                     hazard["model_version"] = "hurricane_ri_v8_1"
@@ -1007,6 +1011,29 @@ def main() -> None:
         ri = s.get("ri_probability", 0) or 0
         print(f"  {s.get('storm_name', s['storm_id'])}: P(RI) = {ri:.1%} "
               f"({s['category']}, {s['vmax_kt']} kt)")
+
+    # Trust layer: recalibrate RI probabilities on live outcomes + attach honest
+    # [conf_lo, conf_hi] bands + Ed25519-signed receipts. Fail-safe: the model's
+    # own Platt-calibrated ri_probability stands until a live calibrator exists.
+    try:
+        from hazardpulse.trust.scoring import enrich_cells, load_forecaster, load_signer
+
+        _signer = load_signer()
+        _forecaster = load_forecaster("hurricane", signer=_signer)
+        if _forecaster is not None and scored:
+            enrich_cells(scored, _forecaster, prob_key="ri_probability",
+                         issued_at=now.strftime("%Y-%m-%dT%H:%M:%SZ"))
+            print(
+                f"  Trust layer: calibrated {len(scored)} storms "
+                f"(model {_forecaster.model_version}, signed={_signer is not None})"
+            )
+        elif scored:
+            print(
+                "  Trust layer: no calibrator yet "
+                "(results/models/hurricane_calibration.json); emitting model-calibrated forecasts."
+            )
+    except Exception as exc:  # never let the trust layer break a live forecast
+        print(f"  Trust layer: skipped ({exc})")
 
     # Step 5: Write outputs
     print()
