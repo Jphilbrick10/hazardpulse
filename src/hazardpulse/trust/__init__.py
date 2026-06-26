@@ -67,6 +67,7 @@ from .forecast import (
 )
 from .venn_abers import VennAbersCalibrator, VennAbersResult
 from .monitor import ProductionMonitor, forecast_drift_status, psi
+from .group_conformal import GroupConformal, geo_region
 
 __all__ = [
     # drift monitoring
@@ -92,6 +93,9 @@ __all__ = [
     "MondrianConformalPredictor",
     "coverage",
     "group_coverage",
+    # per-group (region / tier / basin) coverage guarantees
+    "GroupConformal",
+    "geo_region",
     "ConformalRegressor",
     "CQRRegressor",
     "AdaptiveConformalRegressor",
