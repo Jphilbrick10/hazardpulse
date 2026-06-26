@@ -1,0 +1,139 @@
+{
+  "max_year": 2024,
+  "n_train": 3459,
+  "n_test": 726,
+  "test_base_rate": 0.4614,
+  "persistence": {
+    "best_feature": "rate_7_30",
+    "auc": 0.6701,
+    "top5_rate_feats": [
+      [
+        "rate_7_30",
+        0.6701
+      ],
+      [
+        "rate_30_90",
+        0.6663
+      ],
+      [
+        "rate_1m",
+        0.664
+      ],
+      [
+        "n_14d",
+        0.6574
+      ],
+      [
+        "n_7d",
+        0.6535
+      ]
+    ]
+  },
+  "best_single_feature": {
+    "feature": "quiescence_7d",
+    "auc": 0.6748,
+    "top5": [
+      [
+        "quiescence_7d",
+        0.6748
+      ],
+      [
+        "rate_7_30",
+        0.6701
+      ],
+      [
+        "rate_30_90",
+        0.6663
+      ],
+      [
+        "rate_1m",
+        0.664
+      ],
+      [
+        "n_14d",
+        0.6574
+      ]
+    ]
+  },
+  "model": {
+    "auc_mean": 0.7513,
+    "auc_std": 0.0026,
+    "auc_seeds": [
+      0.7485,
+      0.7534,
+      0.7481,
+      0.7525,
+      0.7542
+    ],
+    "brier": 0.2144
+  },
+  "ablation": {
+    "S_only": 0.7419,
+    "S+C": 0.7485,
+    "S+C+X": 0.7492
+  },
+  "model_auc_ci95": [
+    0.7159,
+    0.782
+  ],
+  "edge_over_persistence": {
+    "delta_auc": 0.0794,
+    "ci95": [
+      0.0395,
+      0.1211
+    ],
+    "significant": true
+  },
+  "calibration_reliability": [
+    {
+      "p_pred": 0.04,
+      "p_obs": 0.039,
+      "n": 103
+    },
+    {
+      "p_pred": 0.156,
+      "p_obs": 0.324,
+      "n": 105
+    },
+    {
+      "p_pred": 0.253,
+      "p_obs": 0.431,
+      "n": 137
+    },
+    {
+      "p_pred": 0.348,
+      "p_obs": 0.531,
+      "n": 128
+    },
+    {
+      "p_pred": 0.45,
+      "p_obs": 0.541,
+      "n": 74
+    },
+    {
+      "p_pred": 0.547,
+      "p_obs": 0.677,
+      "n": 65
+    },
+    {
+      "p_pred": 0.645,
+      "p_obs": 0.523,
+      "n": 44
+    },
+    {
+      "p_pred": 0.743,
+      "p_obs": 0.8,
+      "n": 25
+    },
+    {
+      "p_pred": 0.848,
+      "p_obs": 0.818,
+      "n": 11
+    },
+    {
+      "p_pred": 0.968,
+      "p_obs": 1.0,
+      "n": 34
+    }
+  ]
+}
