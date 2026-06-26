@@ -24,6 +24,7 @@ __all__ = [
     "ReliabilityBin",
     "ReliabilityCurve",
     "reliability_curve",
+    "reliability_curve_from_counts",
     "expected_calibration_error",
     "maximum_calibration_error",
     "brier_score",
@@ -101,6 +102,33 @@ class ReliabilityCurve:
             "base_rate": self.base_rate,
             "bins": [asdict(b) for b in self.bins],
         }
+
+
+def reliability_curve_from_counts(scores, pos, total, n_bins: int = 10) -> "ReliabilityCurve":
+    """Reliability curve from a pooled histogram (predicted prob, #positive, #total).
+
+    Same predicted-vs-observed bins as ``reliability_curve`` but for the compact
+    histogram the prospective scorers emit, so the public scoreboard can draw a
+    calibration diagram without expanding millions of grid cells / storms.
+    """
+    p = np.asarray(scores, dtype=np.float64).ravel()
+    ps = np.asarray(pos, dtype=np.float64).ravel()
+    tt = np.asarray(total, dtype=np.float64).ravel()
+    edges = np.linspace(0.0, 1.0, n_bins + 1)
+    idx = np.clip(np.digitize(p, edges[1:-1], right=False), 0, n_bins - 1)
+    bins: list[ReliabilityBin] = []
+    for b in range(n_bins):
+        m = idx == b
+        cnt = int(tt[m].sum())
+        if cnt:
+            mp = float((p[m] * tt[m]).sum() / cnt)
+            of = float(ps[m].sum() / cnt)
+        else:
+            mp = of = float("nan")
+        bins.append(ReliabilityBin(float(edges[b]), float(edges[b + 1]), cnt, mp, of))
+    n = int(tt.sum())
+    base = float(ps.sum() / n) if n else float("nan")
+    return ReliabilityCurve(bins=bins, n=n, base_rate=base)
 
 
 def reliability_curve(probs, outcomes, n_bins: int = 10) -> ReliabilityCurve:

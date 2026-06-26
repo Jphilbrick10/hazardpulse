@@ -999,9 +999,71 @@ def _build_verification_summary(pulse: dict) -> dict:
     return summary
 
 
+def _render_calibration_scoreboard() -> str:
+    """Reliability diagrams + before/after calibration metrics per hazard, drawn
+    from the platform's OWN matured forecasts. Empty until a calibrator exists,
+    so the section simply does not appear until real calibration data flows."""
+    try:
+        from hazardpulse.trust.calibration import reliability_curve_from_counts
+        from hazardpulse.trust.venn_abers import VennAbersCalibrator
+        from hazardpulse.trust.viz import reliability_diagram_svg
+    except Exception:
+        return ""
+
+    accents = {"earthquake": "#e65100", "tornado": "#6a1b9a", "hurricane": "#1976d2"}
+
+    def _m(d: dict, key: str) -> str:
+        v = (d or {}).get(key)
+        if v is None:
+            return "--"
+        return f"{v:.3f}" if isinstance(v, (int, float)) else _esc(v)
+
+    cards: list[str] = []
+    for name in ("earthquake", "tornado", "hurricane"):
+        rec = _read_json(ROOT / "results" / "models" / f"{name}_calibration.json", {})
+        ds = _read_json(ROOT / "results" / f"{name}_prospective" / "calibration_dataset.json", {})
+        after = rec.get("metrics_after") if isinstance(rec, dict) else None
+        if not after or not ds.get("scores"):
+            continue
+        try:
+            cal = VennAbersCalibrator.from_dict(rec["calibrator"])
+            cal_scores, _, _ = cal.predict(ds["scores"])
+            curve = reliability_curve_from_counts(cal_scores, ds["pos"], ds["total"])
+            svg = reliability_diagram_svg(
+                curve, title=f"{name.title()} (deployed)", accent=accents.get(name, "#1976d2"))
+        except Exception:
+            continue
+        before = rec.get("metrics_before", {})
+        cards.append(
+            '<div class="card col-4">'
+            f'<h3 style="margin-top:0;">{_esc(_hazard_label(name))}</h3>'
+            f'{svg}'
+            f'<div class="kv"><span>ECE (raw &rarr; calibrated)</span>'
+            f'<strong>{_m(before, "ece")} &rarr; {_m(after, "ece")}</strong></div>'
+            f'<div class="kv"><span>Brier skill</span>'
+            f'<strong>{_m(before, "brier_skill_score")} &rarr; {_m(after, "brier_skill_score")}</strong></div>'
+            f'<div class="kv"><span>Calibration sample</span>'
+            f'<strong>{int(rec.get("n_calibration", 0) or 0):,}</strong></div>'
+            "</div>"
+        )
+    if not cards:
+        return ""
+    return (
+        '<section class="section" aria-labelledby="calib-heading">'
+        '<h2 id="calib-heading">Calibration scoreboard</h2>'
+        '<p class="muted" style="margin-top:-8px;margin-bottom:16px;">'
+        "Reliability of the deployed (calibrated) forecasts, measured against the "
+        "platform's own realized outcomes. A perfectly calibrated forecaster sits on "
+        "the dashed diagonal; ECE and Brier-skill are shown raw &rarr; calibrated.</p>"
+        f'<div class="grid">{"".join(cards)}</div>'
+        "</section>"
+    )
+
+
 def _render_verification_page(summary: dict) -> None:
     system = summary.get("system", {})
     hazards = list(summary.get("hazards", []))
+    calibration_section = _render_calibration_scoreboard()
 
     system_cards = [
         (
@@ -1223,6 +1285,7 @@ def _render_verification_page(summary: dict) -> None:
         {''.join(hazard_cards)}
       </div>
     </section>
+    {calibration_section}
     <section class="section">
       <h2>Benchmark provenance</h2>
       <p class="muted" style="margin-top:-8px;margin-bottom:16px;">Exact benchmarks are safe to cite for the current live model version. Related benchmarks are useful for research context, but not as proof of live performance.</p>
