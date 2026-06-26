@@ -8,9 +8,16 @@ from __future__ import annotations
 
 import math
 import os
+import time
 from pathlib import Path
 
 import numpy as np
+
+# Transient-failure retry for the public HRRR Zarr archive (it drops connections
+# mid-read under load). A poisoned variable becomes all-NaN and silently kills the
+# tornado signal, so a brief retry is worth it.
+_HRRR_FETCH_ATTEMPTS = int(os.environ.get("HAZARDPULSE_HRRR_ATTEMPTS", "3"))
+_HRRR_FETCH_BACKOFF = 1.5  # seconds, multiplied by attempt index
 
 from hazardpulse.data.http import fetch_bytes
 
@@ -202,11 +209,23 @@ def fetch_hrrr_grid(
     grids: dict[str, np.ndarray] = {}
     n_failed = 0
     for var_name, zarr_path in HRRR_VARS.items():
-        try:
-            full = np.asarray(root[zarr_path], dtype=np.float32)
+        full = None
+        # The public archive throws transient "Server disconnected" mid-read; a
+        # single flake must not poison a variable (which then becomes all-NaN and,
+        # via _HRRR_MAX_FIELDS, silently kills the tornado signal). Retry briefly.
+        for attempt in range(_HRRR_FETCH_ATTEMPTS):
+            try:
+                full = np.asarray(root[zarr_path], dtype=np.float32)
+                break
+            except Exception as exc:
+                if attempt == _HRRR_FETCH_ATTEMPTS - 1:
+                    print(f"  HRRR fetch failed for {var_name} after "
+                          f"{_HRRR_FETCH_ATTEMPTS} tries: {exc}")
+                else:
+                    time.sleep(_HRRR_FETCH_BACKOFF * (attempt + 1))
+        if full is not None:
             grids[var_name] = _subsample_to_grid(full.ravel(), var_name)
-        except Exception as exc:
-            print(f"  HRRR fetch failed for {var_name}: {exc}")
+        else:
             grids[var_name] = np.full(
                 (HRRR_N_LAT, HRRR_N_LON), np.nan, dtype=np.float32
             )
