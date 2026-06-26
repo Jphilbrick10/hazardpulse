@@ -102,7 +102,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  {hazard}: no calibration_dataset.json yet (run the prospective scorer with "
                   f"--emit-calibration); skipping.")
             continue
-        out = REPO_ROOT / "results" / "models" / f"{hazard}_calibration.json"
+        out = REPO_ROOT / "results" / "calibration" / f"{hazard}_calibration.json"
         payload = fit_one(ds, out, model_version=DEFAULT_MODEL_VERSION[hazard],
                           min_calibration=args.min_calibration, max_groups=args.max_groups)
         b, a = payload["metrics_before"], payload["metrics_after"]
