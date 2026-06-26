@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -31,6 +32,10 @@ from pathlib import Path
 import numpy as np
 
 REPO = Path(__file__).resolve().parents[1]
+# The earthquake feature extraction scans the full catalog per sample (~hours for a
+# full split). Cache the extracted matrices so the cost is paid ONCE; delete the file
+# (or set HAZARDPULSE_EQ_FEATURE_REBUILD=1) to rebuild after a feature-code change.
+_EQ_FEATURE_CACHE = REPO / ".cache" / "earthquake" / "features_v1.npz"
 sys.path.insert(0, str(REPO / "src"))
 # omega_one is a sibling repo; import only for offline training.
 _OMEGA = REPO.parent / "Coherence" / "omega_one"
@@ -229,13 +234,42 @@ def compare(X_tr, y_tr, X_te, y_te, *, baseline_proba=None, seeds=(0, 1, 2)) -> 
 # --------------------------------------------------------------------------- #
 # Hazard data adapters (real training data via the existing research pipelines)
 # --------------------------------------------------------------------------- #
+_EQ_VARIANTS = ("baseline", "enhanced", "full")
+
+
+def _load_all_eq_cached(verbose: bool = True):
+    """``load_all_data`` with its expensive (~hours) feature extraction cached to .npz.
+
+    All three variants are cached in one pass (extraction is variant-independent), so
+    switching --variant never re-extracts. Rebuild with HAZARDPULSE_EQ_FEATURE_REBUILD=1.
+    """
+    if _EQ_FEATURE_CACHE.exists() and os.environ.get("HAZARDPULSE_EQ_FEATURE_REBUILD") != "1":
+        d = np.load(_EQ_FEATURE_CACHE, allow_pickle=False)
+        X_tr = {v: d[f"Xtr_{v}"] for v in _EQ_VARIANTS}
+        X_val = {v: d[f"Xval_{v}"] for v in _EQ_VARIANTS}
+        X_te = {v: d[f"Xte_{v}"] for v in _EQ_VARIANTS}
+        print(f"  [cache] loaded EQ features from {_EQ_FEATURE_CACHE.name} "
+              f"(train={len(d['y_tr'])}, val={len(d['y_val'])}, test={len(d['y_te'])})")
+        return X_tr, X_val, X_te, d["y_tr"], d["y_val"], d["y_te"]
+
+    from hazardpulse.earthquake.definitive_model import load_all_data
+    X_tr, X_val, X_te, y_tr, y_val, y_te, _meta = load_all_data(verbose=verbose)
+    _EQ_FEATURE_CACHE.parent.mkdir(parents=True, exist_ok=True)
+    arrays = {}
+    for v in _EQ_VARIANTS:
+        arrays[f"Xtr_{v}"] = X_tr[v]; arrays[f"Xval_{v}"] = X_val[v]; arrays[f"Xte_{v}"] = X_te[v]
+    arrays.update(y_tr=y_tr, y_val=y_val, y_te=y_te)
+    np.savez(_EQ_FEATURE_CACHE, **arrays)
+    print(f"  [cache] saved EQ features -> {_EQ_FEATURE_CACHE.name} (future runs load in seconds)")
+    return X_tr, X_val, X_te, y_tr, y_val, y_te
+
+
 def _load_earthquake(variant: str = "enhanced"):
     # IMPORTANT: the live scorer serves the "enhanced" variant (Block S + Block C =
     # 73 features = ALL_FEATURE_NAMES_ENHANCED). Training/comparing on any other
     # variant would be train/serve skew and the exported forest would reference
     # features the live path cannot build. Default MUST match serve.
-    from hazardpulse.earthquake.definitive_model import load_all_data
-    X_tr, X_val, X_te, y_tr, y_val, y_te, _meta = load_all_data(verbose=True)
+    X_tr, X_val, X_te, y_tr, y_val, y_te = _load_all_eq_cached(verbose=True)
     Xtr = np.vstack([X_tr[variant], X_val[variant]])    # fold val into train for the final fit
     y_tr = np.concatenate([y_tr, y_val])
     return Xtr, y_tr, X_te[variant], y_te
