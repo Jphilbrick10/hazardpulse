@@ -42,9 +42,18 @@ from hazardpulse.data.hrrr import (  # noqa: E402
     fetch_hrrr_grid,
     latlon_to_hrrr_cell,
 )
+from hazardpulse.tornado.coherence_engine import compute_derived_hrrr  # noqa: E402
 from hazardpulse.tornado.definitive_model import load_spc_tornado_reports  # noqa: E402
 
+# Raw HRRR vars + the canonical derived tornado discriminators (bulk shear, LCL
+# height, 0-500 m SRH, Significant Tornado Parameter, streamwise vorticity). STP/SRH/
+# shear are what actually separate tornadic from non-tornadic storm environments.
 _VAR_NAMES = list(HRRR_VARS)
+_DERIVED_NAMES = [
+    "shear_01", "shear_06", "storm_speed", "td_depression", "lcl_est",
+    "srh_05_est", "stp_eff", "rfd_warmth", "streamwise_vort",
+]
+_FEATURE_NAMES = _VAR_NAMES + _DERIVED_NAMES
 _SPC_CSV = REPO / ".cache" / "spc" / "1950-2024_actual_tornadoes.csv"
 _OUT = REPO / ".cache" / "tornado" / "hrrr_env_dataset.npz"
 
@@ -60,13 +69,20 @@ def _date_range(start: str, end: str) -> list[str]:
     return out
 
 
-def _feature_vector(grids: dict, i: int, j: int) -> np.ndarray:
-    return np.array([float(grids[v][i, j]) for v in _VAR_NAMES], dtype=np.float32)
+def _feature_vector(grids: dict, derived: dict, i: int, j: int) -> np.ndarray:
+    raw = [float(grids[v][i, j]) for v in _VAR_NAMES]
+    der = [float(derived[v][i, j]) for v in _DERIVED_NAMES]
+    return np.array(raw + der, dtype=np.float32)
 
 
 def _cells_for(grids: dict, reports: list[dict], neg_per_day: int,
                neg_min_cape: float, rng: np.random.RandomState):
     """Positive (tornado) + hard-negative (convective, no-tornado) cells for one day."""
+    try:
+        derived = compute_derived_hrrr(grids)
+    except Exception:
+        # a missing raw var would break derived; skip the day rather than emit garbage
+        return [], []
     pos_cells = set()
     for r in reports:
         try:
@@ -79,7 +95,7 @@ def _cells_for(grids: dict, reports: list[dict], neg_per_day: int,
         cape = grids.get("cape")
     rows, labels = [], []
     for (i, j) in pos_cells:
-        rows.append(_feature_vector(grids, i, j)); labels.append(1)
+        rows.append(_feature_vector(grids, derived, i, j)); labels.append(1)
     # hard negatives: convective cells (cape >= threshold), not tornadic
     cand = [
         (i, j)
@@ -91,7 +107,7 @@ def _cells_for(grids: dict, reports: list[dict], neg_per_day: int,
         k = min(neg_per_day, len(cand))
         for idx in rng.choice(len(cand), k, replace=False):
             i, j = cand[idx]
-            rows.append(_feature_vector(grids, i, j)); labels.append(0)
+            rows.append(_feature_vector(grids, derived, i, j)); labels.append(0)
     return rows, labels
 
 
@@ -149,7 +165,7 @@ def main(argv: list[str] | None = None) -> int:
     dates_arr = np.asarray(date_rows, dtype=np.int64)
     out = Path(args.out); out.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(out, X=X, y=y, dates=dates_arr,
-                        feature_names=np.array(_VAR_NAMES))
+                        feature_names=np.array(_FEATURE_NAMES))
     n_pos = int(y.sum())
     print(f"dataset: {len(y)} cells  ({n_pos} tornado, {len(y) - n_pos} convective-null)  "
           f"features={X.shape[1]}  dates={len(set(date_rows))}")
