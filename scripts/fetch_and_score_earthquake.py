@@ -1851,6 +1851,9 @@ def append_ledger(
         "n_cells_scored": len(scored_cells),
         "top_probability": scored_cells[0]["probability"] if scored_cells else 0.0,
         "top_conditions": scored_cells[0]["conditions_met"] if scored_cells else 0,
+        "top_receipt_sha256": (
+            scored_cells[0].get("receipt_sha256") if scored_cells else None
+        ),
         "prev_hash": prev_hash,
     }
     if replay_path is not None:

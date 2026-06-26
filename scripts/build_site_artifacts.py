@@ -1768,12 +1768,25 @@ def _normalize_html_accessibility_labels() -> None:
             html_path.write_text(normalized, encoding="utf-8")
 
 
+def _publish_signing_key() -> None:
+    """Publish the Ed25519 public key so anyone can verify forecast receipts
+    independently (scripts/verify_forecast.py). No-op if no key is configured."""
+    try:
+        from hazardpulse.trust.scoring import load_signer, publish_public_key
+        signer = load_signer()
+        if signer is not None:
+            publish_public_key(signer, DIST / "data" / "evidence" / "public-key.json")
+    except Exception:
+        pass
+
+
 def build_site_artifacts() -> dict:
     pulse, replay_index = _ensure_live_publish_artifacts()
     entries = _collect_prediction_entries(pulse, replay_index)
     envelopes = _build_provenance_envelopes(entries)
     gate_decisions = _build_gate_decisions(entries, pulse)
     verification_summary = _build_verification_summary(pulse)
+    _publish_signing_key()
 
     _write_json(
         PREDICTION_LEDGER_PATH,
