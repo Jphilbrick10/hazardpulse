@@ -83,7 +83,9 @@ TEST_END: int = 2024
 # Label parameters
 LABEL_RADIUS_KM: float = 300.0
 FORWARD_WINDOW_DAYS: float = 365.0
-MIN_MAINSHOCK_MAG: float = 6.0
+# Target magnitude. Env-overridable so we can test lower thresholds (M5+/M5.5+ give
+# ~5-10x more positive samples -- denser precursory signal, more training data).
+MIN_MAINSHOCK_MAG: float = float(os.environ.get("HAZARDPULSE_MIN_MAINSHOCK_MAG", "6.0"))
 CONTROL_RATIO: int = 2  # negatives per positive
 CONTROL_OFFSET_RANGE: tuple[float, float] = (1.5, 4.5)  # years
 

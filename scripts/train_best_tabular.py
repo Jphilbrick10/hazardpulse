@@ -253,8 +253,11 @@ _EQ_VARIANTS = ("baseline", "enhanced", "full")
 
 
 def _eq_cache_path(max_year: int) -> Path:
-    # Key the cache by max_year so the 2024 and 2025+ datasets never collide.
-    return _EQ_FEATURE_CACHE.with_name(f"features_v1_my{int(max_year)}.npz")
+    # Key the cache by max_year AND target magnitude so the 2024/2025 and M6/M5.5
+    # datasets never collide.
+    mag = os.environ.get("HAZARDPULSE_MIN_MAINSHOCK_MAG", "6.0")
+    suffix = "" if mag in ("6.0", "6") else f"_m{mag}"
+    return _EQ_FEATURE_CACHE.with_name(f"features_v1_my{int(max_year)}{suffix}.npz")
 
 
 def _load_all_eq_cached(verbose: bool = True, max_year: int = 2024):
