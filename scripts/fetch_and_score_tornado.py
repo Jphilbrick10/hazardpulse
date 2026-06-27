@@ -1545,6 +1545,7 @@ def _render_storm_rows(storms: list[dict]) -> str:
         lines.append(f'              <div class="kv"><span>Atmospheric data</span><strong>ProbSevere v3 via NOAA MRMS (2-minute update cycle)</strong></div>')
         lines.append(f'              <div class="kv"><span>Coherence field</span><strong>Helmholtz PDE solved on {_esc(coh_source_desc)}</strong></div>')
         lines.append(f'              <div class="kv"><span>Model</span><strong>hp-tornado-coherence-v1 (GBT, 41 features, AUC 0.894 on 2024 test data)</strong></div>')
+        lines.append(f'              <div class="kv"><span>New tier (research)</span><strong>hp-tornado-hrrr-env-v1 -- HRRR atmospheric-environment forest (26 features incl. STP/SRH/shear), AUC 0.88 on a 2022-2024 multi-year out-of-sample holdout; calibrated (ECE 0.008) and 0-ULP-signed. Not yet the live tier.</strong></div>')
 
         # --- WHY THIS PROBABILITY ---
         lines.append(_hr)
@@ -2454,8 +2455,9 @@ def _legacy_render_homepage_cards(
             </div>
             <div class="card col-4">
               <h3>Earthquake</h3>
-              <div class="metric mono">0.799</div>
-              <div class="metric-label">Temporal AUC <span class="tooltip" title="Area Under ROC Curve. 1.0 = perfect, 0.5 = random chance. Higher is better.">(?)</span> (same-location)</div>
+              <div class="metric mono">0.77</div>
+              <div class="metric-label">AUC <span class="tooltip" title="Area Under ROC Curve. 1.0 = perfect, 0.5 = random chance. Higher is better.">(?)</span> on the hard same-location holdout (leakage-audited)</div>
+              <div class="metric-ci mono">+0.079 vs smoothed-seismicity <span class="muted">(significant; the honest baseline, not 0.5)</span></div>
             </div>
             <div class="card col-4">
               <h3>Hurricane</h3>

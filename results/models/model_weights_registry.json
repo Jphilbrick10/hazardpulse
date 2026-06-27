@@ -1,0 +1,296 @@
+{
+  "schema_version": 1,
+  "publisher": "HazardPulse / Coherence Energy Labs",
+  "generated_at": "2026-04-23T03:20:35.198845Z",
+  "n_entries": 3,
+  "entries": [
+    {
+      "record_id": "weights_hazardpulse_tornado_gbt_v1",
+      "name": "HazardPulse Tornado GBT v1 (definitive)",
+      "description": "Gradient-boosted tree ensemble for storm-object tornado probability over CONUS. 41 features (Block P ProbSevere + Block E evolution + Block H HRRR atm + Block C coherence field theory). Trained on SPC reports 2021-2023 / tested on 2024 holdout (5,310 events, 16.7% positive base rate).",
+      "weights_uri": "hazardpulse://results/models/tornado_gbt_v1.json",
+      "weights_path": "results\\models\\tornado_gbt_v1.json",
+      "size_bytes": 136792,
+      "blake3": "2e605d7a2117e21aa7714eb0d4ebbf26ac6a190e2dea6fd66cffe4a9907f4664",
+      "sha256": "9ac22a31fa268bda1668d385b53f5ec3e226a0d62c157278471fc0707b10a6ba",
+      "framework": "hazardpulse_gbt_v1",
+      "format": "json",
+      "input_schema": {
+        "n_features": 41,
+        "blocks": [
+          "P (13 ProbSevere)",
+          "E (6 evolution)",
+          "H (12 HRRR)",
+          "C (10 coherence)"
+        ],
+        "feature_names_path": "src/hazardpulse/tornado/definitive_model.py"
+      },
+      "output_schema": {
+        "outputs": [
+          "tornado_probability_24h"
+        ],
+        "domain": "[0, 1]",
+        "calibration": "logit-link via boosted trees, no Platt"
+      },
+      "benchmark": {
+        "test_auc": 0.8942990839158551,
+        "test_brier": 0.1143939459213997,
+        "test_bss": 0.17636358936592222,
+        "test_pr_auc": 0.6095794803881629,
+        "test_window": "2024 SPC tornado reports",
+        "n_test_samples": 5310,
+        "n_train_samples": 6120
+      },
+      "paper_doi": null,
+      "paper_url": "https://github.com/Jphilbrick10/hazardpulse",
+      "license": "Apache-2.0",
+      "publisher": "HazardPulse / Coherence Energy Labs",
+      "publisher_url": "https://hazardpulse.com",
+      "release_utc": "2026-04-23T03:20:35.081116Z",
+      "rf_npe_compatible": false,
+      "modality": "natural_hazard_prediction",
+      "source": "hazardpulse_publish"
+    },
+    {
+      "record_id": "weights_hazardpulse_earthquake_gbt_v1",
+      "name": "HazardPulse Earthquake GBT v1 (plus_cft)",
+      "description": "Gradient-boosted tree ensemble for global M6+ earthquake probability per 2-degree grid cell, 30-day forward window. 73 features = Block S (61 seismicity) + Block C (12 coherence field theory). Trained on declustered USGS catalog 2005-2017, validated 2018-2019, tested 2020-2024 (plus_cft variant of trained_models_v3).",
+      "weights_uri": "hazardpulse://results/models/earthquake_gbt_v1.json",
+      "weights_path": "results\\models\\earthquake_gbt_v1.json",
+      "size_bytes": 115932,
+      "blake3": "141554a685c1894148ed3452431d7dc4a77635c20cd67733b5ceb4b64f32cc02",
+      "sha256": "92a8f5be3470d0fba6505c0d07394a96781b0ccd2ae26cbd6945ff7cf983bec3",
+      "framework": "hazardpulse_gbt_v1",
+      "format": "json",
+      "input_schema": {
+        "n_features": 73,
+        "blocks": [
+          "S (61 seismicity)",
+          "C (12 coherence)"
+        ],
+        "feature_names_path": "src/hazardpulse/earthquake/definitive_model.py:ALL_FEATURE_NAMES_ENHANCED"
+      },
+      "output_schema": {
+        "outputs": [
+          "m6_probability_30d"
+        ],
+        "domain": "[0, 1]",
+        "calibration": "logit-link via boosted trees"
+      },
+      "benchmark": {
+        "headline_task": "same-location nowcast (controls are the SAME location at a different time -- the hard, honest task)",
+        "test_auc_same_location_holdout": 0.77,
+        "edge_over_smoothed_seismicity_auc": 0.079,
+        "edge_over_smoothed_seismicity_ci95": [0.04, 0.121],
+        "edge_significant": true,
+        "edge_note": "the honest baseline is smoothed seismicity (~0.67), not 0.5; the model significantly beats it",
+        "test_auc_easy_negatives_reference": 0.907,
+        "test_auc_easy_negatives_note": "different-region negatives -- an EASIER task, shown only for reference, not the headline",
+        "test_brier": 0.11605939643081976,
+        "test_bss": 0.3416581890180549,
+        "test_window": "USGS M6+ events; leakage-audited same-location holdout 2018-2025",
+        "validation_doc": "docs/earthquake_nowcast_validation.md"
+      },
+      "paper_doi": null,
+      "paper_url": "https://github.com/Jphilbrick10/hazardpulse",
+      "license": "Apache-2.0",
+      "publisher": "HazardPulse / Coherence Energy Labs",
+      "publisher_url": "https://hazardpulse.com",
+      "release_utc": "2026-04-23T03:20:35.082801Z",
+      "rf_npe_compatible": false,
+      "modality": "natural_hazard_prediction",
+      "source": "hazardpulse_publish"
+    },
+    {
+      "record_id": "weights_hazardpulse_hurricane_ri_v8_1",
+      "name": "HazardPulse Hurricane RI v8.1 (ensemble)",
+      "description": "Rapid intensification ensemble: histogram-GBT depth-3 + depth-4 + L2 logistic + 50-bagged logistic, Platt-calibrated. Trained in-process per scoring run from IBTrACS 2000-2024 (133,882 6-hour observations across 6 global basins, 1,512 RI events). Ablation study reports AUC 0.967 on retrospective post-season holdout.",
+      "weights_uri": "hazardpulse://results/models/hurricane_operational_ri_2000_2024_al_sst.jsonl",
+      "weights_path": "results\\hurricane_operational_ri_2000_2024_al_sst.jsonl",
+      "size_bytes": 86130293,
+      "blake3": "b859a08b033c1efcf5205ac8cd3f434f7d7f990460a670542826c4861bf8454f",
+      "sha256": "feace170830ca32f27d1ddc03ae9f18e279080c4891d84b9c97f4ee86105d38d",
+      "framework": "hazardpulse_ri_ensemble_v8_1",
+      "format": "jsonl",
+      "input_schema": {
+        "n_features_select": 25,
+        "feature_categories": [
+          "ATCF advisories (12/24/36/48/72h)",
+          "Climatological SST proxy (lat/lon/season)",
+          "Cross-aid consensus deltas",
+          "Interaction terms"
+        ],
+        "feature_names_path": "src/hazardpulse/hurricane/operational_ri.py"
+      },
+      "output_schema": {
+        "outputs": [
+          "ri_probability_24h"
+        ],
+        "domain": "[0, 1]",
+        "calibration": "Platt scaling (a, b fit on training)"
+      },
+      "benchmark": {
+        "test_auc_full": 0.967,
+        "test_auc_climatology": 0.94,
+        "n_train_samples": 133882,
+        "n_ri_events": 1512,
+        "ri_threshold_kt_24h": 30,
+        "test_window": "IBTrACS 2000-2024 retrospective ablation"
+      },
+      "paper_doi": null,
+      "paper_url": "https://github.com/Jphilbrick10/hazardpulse",
+      "license": "Apache-2.0",
+      "publisher": "HazardPulse / Coherence Energy Labs",
+      "publisher_url": "https://hazardpulse.com",
+      "release_utc": "2026-04-23T03:20:35.198771Z",
+      "rf_npe_compatible": false,
+      "modality": "natural_hazard_prediction",
+      "source": "hazardpulse_publish"
+    }
+  ],
+  "models": [
+    {
+      "record_id": "weights_hazardpulse_tornado_gbt_v1",
+      "name": "HazardPulse Tornado GBT v1 (definitive)",
+      "description": "Gradient-boosted tree ensemble for storm-object tornado probability over CONUS. 41 features (Block P ProbSevere + Block E evolution + Block H HRRR atm + Block C coherence field theory). Trained on SPC reports 2021-2023 / tested on 2024 holdout (5,310 events, 16.7% positive base rate).",
+      "weights_uri": "hazardpulse://results/models/tornado_gbt_v1.json",
+      "weights_path": "results\\models\\tornado_gbt_v1.json",
+      "size_bytes": 136792,
+      "blake3": "2e605d7a2117e21aa7714eb0d4ebbf26ac6a190e2dea6fd66cffe4a9907f4664",
+      "sha256": "9ac22a31fa268bda1668d385b53f5ec3e226a0d62c157278471fc0707b10a6ba",
+      "framework": "hazardpulse_gbt_v1",
+      "format": "json",
+      "input_schema": {
+        "n_features": 41,
+        "blocks": [
+          "P (13 ProbSevere)",
+          "E (6 evolution)",
+          "H (12 HRRR)",
+          "C (10 coherence)"
+        ],
+        "feature_names_path": "src/hazardpulse/tornado/definitive_model.py"
+      },
+      "output_schema": {
+        "outputs": [
+          "tornado_probability_24h"
+        ],
+        "domain": "[0, 1]",
+        "calibration": "logit-link via boosted trees, no Platt"
+      },
+      "benchmark": {
+        "test_auc": 0.8942990839158551,
+        "test_brier": 0.1143939459213997,
+        "test_bss": 0.17636358936592222,
+        "test_pr_auc": 0.6095794803881629,
+        "test_window": "2024 SPC tornado reports",
+        "n_test_samples": 5310,
+        "n_train_samples": 6120
+      },
+      "paper_doi": null,
+      "paper_url": "https://github.com/Jphilbrick10/hazardpulse",
+      "license": "Apache-2.0",
+      "publisher": "HazardPulse / Coherence Energy Labs",
+      "publisher_url": "https://hazardpulse.com",
+      "release_utc": "2026-04-23T03:20:35.081116Z",
+      "rf_npe_compatible": false,
+      "modality": "natural_hazard_prediction",
+      "source": "hazardpulse_publish"
+    },
+    {
+      "record_id": "weights_hazardpulse_earthquake_gbt_v1",
+      "name": "HazardPulse Earthquake GBT v1 (plus_cft)",
+      "description": "Gradient-boosted tree ensemble for global M6+ earthquake probability per 2-degree grid cell, 30-day forward window. 73 features = Block S (61 seismicity) + Block C (12 coherence field theory). Trained on declustered USGS catalog 2005-2017, validated 2018-2019, tested 2020-2024 (plus_cft variant of trained_models_v3).",
+      "weights_uri": "hazardpulse://results/models/earthquake_gbt_v1.json",
+      "weights_path": "results\\models\\earthquake_gbt_v1.json",
+      "size_bytes": 115932,
+      "blake3": "141554a685c1894148ed3452431d7dc4a77635c20cd67733b5ceb4b64f32cc02",
+      "sha256": "92a8f5be3470d0fba6505c0d07394a96781b0ccd2ae26cbd6945ff7cf983bec3",
+      "framework": "hazardpulse_gbt_v1",
+      "format": "json",
+      "input_schema": {
+        "n_features": 73,
+        "blocks": [
+          "S (61 seismicity)",
+          "C (12 coherence)"
+        ],
+        "feature_names_path": "src/hazardpulse/earthquake/definitive_model.py:ALL_FEATURE_NAMES_ENHANCED"
+      },
+      "output_schema": {
+        "outputs": [
+          "m6_probability_30d"
+        ],
+        "domain": "[0, 1]",
+        "calibration": "logit-link via boosted trees"
+      },
+      "benchmark": {
+        "headline_task": "same-location nowcast (controls are the SAME location at a different time -- the hard, honest task)",
+        "test_auc_same_location_holdout": 0.77,
+        "edge_over_smoothed_seismicity_auc": 0.079,
+        "edge_over_smoothed_seismicity_ci95": [0.04, 0.121],
+        "edge_significant": true,
+        "edge_note": "the honest baseline is smoothed seismicity (~0.67), not 0.5; the model significantly beats it",
+        "test_auc_easy_negatives_reference": 0.907,
+        "test_auc_easy_negatives_note": "different-region negatives -- an EASIER task, shown only for reference, not the headline",
+        "test_brier": 0.11605939643081976,
+        "test_bss": 0.3416581890180549,
+        "test_window": "USGS M6+ events; leakage-audited same-location holdout 2018-2025",
+        "validation_doc": "docs/earthquake_nowcast_validation.md"
+      },
+      "paper_doi": null,
+      "paper_url": "https://github.com/Jphilbrick10/hazardpulse",
+      "license": "Apache-2.0",
+      "publisher": "HazardPulse / Coherence Energy Labs",
+      "publisher_url": "https://hazardpulse.com",
+      "release_utc": "2026-04-23T03:20:35.082801Z",
+      "rf_npe_compatible": false,
+      "modality": "natural_hazard_prediction",
+      "source": "hazardpulse_publish"
+    },
+    {
+      "record_id": "weights_hazardpulse_hurricane_ri_v8_1",
+      "name": "HazardPulse Hurricane RI v8.1 (ensemble)",
+      "description": "Rapid intensification ensemble: histogram-GBT depth-3 + depth-4 + L2 logistic + 50-bagged logistic, Platt-calibrated. Trained in-process per scoring run from IBTrACS 2000-2024 (133,882 6-hour observations across 6 global basins, 1,512 RI events). Ablation study reports AUC 0.967 on retrospective post-season holdout.",
+      "weights_uri": "hazardpulse://results/models/hurricane_operational_ri_2000_2024_al_sst.jsonl",
+      "weights_path": "results\\hurricane_operational_ri_2000_2024_al_sst.jsonl",
+      "size_bytes": 86130293,
+      "blake3": "b859a08b033c1efcf5205ac8cd3f434f7d7f990460a670542826c4861bf8454f",
+      "sha256": "feace170830ca32f27d1ddc03ae9f18e279080c4891d84b9c97f4ee86105d38d",
+      "framework": "hazardpulse_ri_ensemble_v8_1",
+      "format": "jsonl",
+      "input_schema": {
+        "n_features_select": 25,
+        "feature_categories": [
+          "ATCF advisories (12/24/36/48/72h)",
+          "Climatological SST proxy (lat/lon/season)",
+          "Cross-aid consensus deltas",
+          "Interaction terms"
+        ],
+        "feature_names_path": "src/hazardpulse/hurricane/operational_ri.py"
+      },
+      "output_schema": {
+        "outputs": [
+          "ri_probability_24h"
+        ],
+        "domain": "[0, 1]",
+        "calibration": "Platt scaling (a, b fit on training)"
+      },
+      "benchmark": {
+        "test_auc_full": 0.967,
+        "test_auc_climatology": 0.94,
+        "n_train_samples": 133882,
+        "n_ri_events": 1512,
+        "ri_threshold_kt_24h": 30,
+        "test_window": "IBTrACS 2000-2024 retrospective ablation"
+      },
+      "paper_doi": null,
+      "paper_url": "https://github.com/Jphilbrick10/hazardpulse",
+      "license": "Apache-2.0",
+      "publisher": "HazardPulse / Coherence Energy Labs",
+      "publisher_url": "https://hazardpulse.com",
+      "release_utc": "2026-04-23T03:20:35.198771Z",
+      "rf_npe_compatible": false,
+      "modality": "natural_hazard_prediction",
+      "source": "hazardpulse_publish"
+    }
+  ]
+}
