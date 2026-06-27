@@ -269,7 +269,11 @@ def _load_all_eq_cached(verbose: bool = True, max_year: int = 2024):
     """
     cache = _eq_cache_path(max_year)
     legacy = _EQ_FEATURE_CACHE
-    use = cache if cache.exists() else (legacy if (max_year == 2024 and legacy.exists()) else cache)
+    # Legacy un-keyed cache is the M6/2024 dataset ONLY -- never reuse it for a
+    # non-default target magnitude (that would silently measure M6 numbers).
+    _default_mag = os.environ.get("HAZARDPULSE_MIN_MAINSHOCK_MAG", "6.0") in ("6.0", "6")
+    use = cache if cache.exists() else (
+        legacy if (max_year == 2024 and _default_mag and legacy.exists()) else cache)
     if use.exists() and os.environ.get("HAZARDPULSE_EQ_FEATURE_REBUILD") != "1":
         d = np.load(use, allow_pickle=False)
         X_tr = {v: d[f"Xtr_{v}"] for v in _EQ_VARIANTS}
