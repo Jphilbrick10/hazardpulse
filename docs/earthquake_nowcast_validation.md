@@ -91,6 +91,24 @@ the next rupture among *all* active regions — is far harder, and there the mod
 near random. Both are true. The precursory signal exists but is not specific enough to
 localize.
 
+**Definitive operational number** (`backtest_operational_grid.py`, declustered forward
+labels, 3 reference times, 450 active-cell forecasts): **pooled operational AUC = 0.509
+(random).** Per-snapshot: 0.54 / 0.54 / 0.33. As a "which active region gets the next
+M6+ within 300 km in the next 365 days" FORECASTER, the model has **no skill**. The
+0.77 nowcast scores positives AT the mainshock moment (precursors peak); the operational
+forecast scores at arbitrary times months ahead, where the short-lived signal is absent.
+The model is a short-term NOWCAST, not an operational forecaster -- and is presented as
+such.
+
+**Data-lever result** (M5.5, 2.7x more samples): the ~0.76 nowcast ceiling holds, but
+the edge over persistence *strengthens* (+0.087, CI [0.064,0.109], 3x more seed-stable).
+**Deep representation learning** on raw event sequences (GRU+attention, incl. raw depth)
+learns real signal (0.73) but loses to the hand-crafted GBT (0.77) -- domain knowledge
+beats raw learning at this data size. **External forces** (tidal/celestial/moon, +0.007;
+teleseismic; seasonality) are all non-significant nulls. The catalog seismicity is the
+signal; the nowcast ceiling is ~0.76; operational forecasting is unsolved here as
+everywhere.
+
 **Consequence:** the earthquake nowcast is presented as an honest, calibrated,
 research-grade nowcast with a real statistical edge — **explicitly NOT operational
 prediction**, and **not** a front-and-center "we predict earthquakes" claim. The
