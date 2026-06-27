@@ -109,6 +109,7 @@ def main(argv=None) -> int:
     ap.add_argument("--K", type=int, default=48)
     ap.add_argument("--radius-km", type=float, default=500.0)
     ap.add_argument("--epochs", type=int, default=40)
+    ap.add_argument("--seeds", type=int, default=1, help="train N seeds -> AUC mean+/-std + ensemble")
     ap.add_argument("--out", default="results/calibration/earthquake_deep_sequence.json")
     args = ap.parse_args(argv)
 
@@ -116,11 +117,25 @@ def main(argv=None) -> int:
     import torch.nn as nn
     dev = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"device: {dev}")
-    print("reconstructing metadata + building raw sequences (causal)...")
-    mtr, mva, mte, cat = _meta(args.max_year)
-    Xtr, Mtr, ytr = _sequences(mtr, cat, args.K, args.radius_km)
-    Xva, Mva, yva = _sequences(mva, cat, args.K, args.radius_km)
-    Xte, Mte, yte = _sequences(mte, cat, args.K, args.radius_km)
+    import os
+    mag = os.environ.get("HAZARDPULSE_MIN_MAINSHOCK_MAG", "6.0")
+    seq_cache = REPO / ".cache" / "earthquake" / f"deepseq_my{args.max_year}_m{mag}_K{args.K}.npz"
+    if seq_cache.exists() and os.environ.get("HAZARDPULSE_DEEPSEQ_REBUILD") != "1":
+        z = np.load(seq_cache)
+        Xtr, Mtr, ytr = z["Xtr"], z["Mtr"], z["ytr"]
+        Xva, Mva, yva = z["Xva"], z["Mva"], z["yva"]
+        Xte, Mte, yte = z["Xte"], z["Mte"], z["yte"]
+        print(f"  [cache] loaded sequences from {seq_cache.name}")
+    else:
+        print("reconstructing metadata + building raw sequences (causal)...")
+        mtr, mva, mte, cat = _meta(args.max_year)
+        Xtr, Mtr, ytr = _sequences(mtr, cat, args.K, args.radius_km)
+        Xva, Mva, yva = _sequences(mva, cat, args.K, args.radius_km)
+        Xte, Mte, yte = _sequences(mte, cat, args.K, args.radius_km)
+        seq_cache.parent.mkdir(parents=True, exist_ok=True)
+        np.savez_compressed(seq_cache, Xtr=Xtr, Mtr=Mtr, ytr=ytr, Xva=Xva, Mva=Mva, yva=yva,
+                            Xte=Xte, Mte=Mte, yte=yte)
+        print(f"  [cache] saved sequences -> {seq_cache.name}")
     print(f"  train {len(ytr)} ({ytr.sum()} pos)  val {len(yva)}  test {len(yte)} ({yte.sum()} pos)")
     # normalize features by train stats (per channel)
     flat = Xtr[Mtr.astype(bool)]
@@ -150,36 +165,41 @@ def main(argv=None) -> int:
     Xva_t, Mva_t, _ = tens(Xva, Mva, yva)
     Xte_t, Mte_t, _ = tens(Xte, Mte, yte)
 
-    torch.manual_seed(0)
-    model = SeqModel().to(dev)
-    opt = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
     pos_w = torch.tensor([(ytr == 0).sum() / max((ytr == 1).sum(), 1)], device=dev, dtype=torch.float32)
     lossf = nn.BCEWithLogitsLoss(pos_weight=pos_w)
-    best_va, best_state = 0.0, None
     bs = 256
-    for ep in range(args.epochs):
-        model.train(); perm = torch.randperm(len(ytr_t), device=dev)
-        for j in range(0, len(perm), bs):
-            b = perm[j:j + bs]
-            opt.zero_grad()
-            loss = lossf(model(Xtr_t[b], Mtr_t[b]), ytr_t[b]); loss.backward(); opt.step()
-        model.eval()
+    seed_aucs, ens = [], np.zeros(len(yte))
+    for seed in range(args.seeds):
+        torch.manual_seed(seed)
+        model = SeqModel().to(dev)
+        opt = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
+        best_va, best_state = 0.0, None
+        for ep in range(args.epochs):
+            model.train(); perm = torch.randperm(len(ytr_t), device=dev)
+            for j in range(0, len(perm), bs):
+                b = perm[j:j + bs]
+                opt.zero_grad()
+                loss = lossf(model(Xtr_t[b], Mtr_t[b]), ytr_t[b]); loss.backward(); opt.step()
+            model.eval()
+            with torch.no_grad():
+                va = _auc(yva, torch.sigmoid(model(Xva_t, Mva_t)).cpu().numpy())
+            if va > best_va:
+                best_va = va; best_state = {k: v.clone() for k, v in model.state_dict().items()}
+        model.load_state_dict(best_state); model.eval()
         with torch.no_grad():
-            va = _auc(yva, torch.sigmoid(model(Xva_t, Mva_t)).cpu().numpy())
-        if va > best_va:
-            best_va = va; best_state = {k: v.clone() for k, v in model.state_dict().items()}
-    model.load_state_dict(best_state); model.eval()
-    with torch.no_grad():
-        pte = torch.sigmoid(model(Xte_t, Mte_t)).cpu().numpy()
-    deep_auc = _auc(yte, pte)
-    print(f"\n  DEEP sequence model (raw events, GRU+attention): test AUC {deep_auc:.4f}  "
-          f"(best val {best_va:.4f})")
+            pte = torch.sigmoid(model(Xte_t, Mte_t)).cpu().numpy()
+        a = _auc(yte, pte); seed_aucs.append(a); ens += pte
+        print(f"  seed {seed}: test AUC {a:.4f} (best val {best_va:.4f})")
+    deep_auc = float(np.mean(seed_aucs)); ens_auc = _auc(yte, ens / args.seeds)
+    print(f"\n  DEEP sequence model (raw events, GRU+attention): "
+          f"test AUC {deep_auc:.4f} +/- {np.std(seed_aucs):.4f}  (ensemble {ens_auc:.4f})")
     print(f"  hand-crafted GBT reference on same task: ~0.77")
 
-    # does the deep model ADD to the hand-crafted model? blend the two on test
     import json
-    rep = {"max_year": args.max_year, "K": args.K, "deep_auc": round(float(deep_auc), 4),
-           "best_val_auc": round(float(best_va), 4), "n_test": int(len(yte))}
+    rep = {"max_year": args.max_year, "K": args.K, "seeds": args.seeds,
+           "deep_auc_mean": round(deep_auc, 4), "deep_auc_std": round(float(np.std(seed_aucs)), 4),
+           "deep_auc_seeds": [round(a, 4) for a in seed_aucs],
+           "ensemble_auc": round(float(ens_auc), 4), "n_test": int(len(yte))}
     out = REPO / args.out; out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rep, indent=2) + "\n", encoding="utf-8")
     print(f"  wrote {out}")
