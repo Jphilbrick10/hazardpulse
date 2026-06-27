@@ -123,7 +123,48 @@ def _teleseismic_features(cat, epoch):
             float((w30 & (mg >= 6.0)).sum()), float((w30 & (mg >= 7.0)).sum())]
 
 
+def _celestial_matrix(metas):
+    """REAL sun+moon ephemeris (astropy) -> solid-earth tidal volumetric strain at each
+    quake's location/time, plus lunar phase, lunar declination (18.6-yr nodal cycle) and
+    seasonality. Vectorized over all samples. The 'moon's pull' + 'time of year', for real.
+    """
+    from astropy.time import Time
+    from astropy.coordinates import get_sun, get_body
+    import astropy.units as u
+
+    lat = np.concatenate([m[0] for m in metas]).astype(float)
+    lon = np.concatenate([m[1] for m in metas]).astype(float)
+    ep = np.concatenate([m[2] for m in metas]).astype(float)
+    t = Time(ep, format="unix")
+    gmst = t.sidereal_time("apparent", "greenwich").rad        # f(time)
+    sun = get_sun(t); moon = get_body("moon", t)
+    s_ra, s_dec = sun.ra.rad, sun.dec.rad
+    s_r = sun.distance.to(u.km).value
+    m_ra, m_dec = moon.ra.rad, moon.dec.rad
+    m_r = moon.distance.to(u.km).value
+    latr = np.radians(lat); lonr = np.radians(lon)
+
+    def tide(ra, dec, r, a_mean, weight):
+        H = (gmst + lonr) - ra                                  # local hour angle
+        cospsi = np.sin(latr) * np.sin(dec) + np.cos(latr) * np.cos(dec) * np.cos(H)
+        return weight * (a_mean / r) ** 3 * (3 * cospsi ** 2 - 1.0) / 2.0  # degree-2 zonal tidal potential
+
+    W_moon = tide(m_ra, m_dec, m_r, 384400.0, 1.0)
+    W_sun = tide(s_ra, s_dec, s_r, 1.496e8, 0.46)              # solar tide ~0.46x lunar
+    W_tot = W_moon + W_sun
+    lunar_phase = np.arctan2(np.sin(m_ra - s_ra), np.cos(m_ra - s_ra))  # ~synodic angle
+    doy = (ep / 86400.0 % 365.25) / 365.25 * 2 * np.pi
+    feats = np.column_stack([
+        W_tot, W_moon, W_sun, m_dec, np.abs(m_dec),            # tidal strain + lunar declination
+        np.cos(lunar_phase), np.sin(lunar_phase),              # spring/neap
+        np.cos(doy), np.sin(doy), np.cos(2 * doy), np.sin(2 * doy),  # annual + semiannual
+    ]).astype(float)
+    return np.nan_to_num(feats, nan=0.0)
+
+
 def _candidate_matrix(name, metas, cat):
+    if name == "celestial":
+        return _celestial_matrix(metas)
     rows = []
     for (lat, lon, ep, _y) in metas:
         for i in range(len(lat)):
