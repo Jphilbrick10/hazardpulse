@@ -70,6 +70,32 @@ coverage-starved (GNSS, geomagnetic, ionospheric — sparse networks vs offshore
 or too weak (tidal). The realistic levers are **more catalog data** (proven) and
 **better seismicity features** (the natural-time clock is the live candidate).
 
+## Operational reality check — recent real M6+ events (the hard truth)
+
+`scripts/backtest_recent_earthquakes.py` scored every M6+ event of the last 30 days
+(June 2026) at its true location/time with the deployed model, using only prior data.
+This is the "would we have predicted them, and where?" test, and it is humbling:
+
+- **Mean epicenter rank: 47th percentile** among globally-active cells — essentially
+  random. The model does **not** reliably pick which active region ruptures next.
+- Only **4/19 (21%)** epicenters landed in the top quintile.
+- **But 74% beat their own quiet-time control** — the precursory signal is real: a
+  location's pre-mainshock setting does look more critical than a random earlier time.
+- Spread of outcomes: the **M7.5 Venezuela was nailed** (top 1%, regional peak 0 km),
+  while the **M7.8 Philippines (17th pct) and M6.9 Japan (17th pct) would have been
+  missed.**
+
+**Reconciliation:** the case-control AUC (0.77, +0.079 over persistence) is a real
+*statistical* skill on balanced same-location pairs. The operational task — localizing
+the next rupture among *all* active regions — is far harder, and there the model is
+near random. Both are true. The precursory signal exists but is not specific enough to
+localize.
+
+**Consequence:** the earthquake nowcast is presented as an honest, calibrated,
+research-grade nowcast with a real statistical edge — **explicitly NOT operational
+prediction**, and **not** a front-and-center "we predict earthquakes" claim. The
+recent-events table is published as honest evidence, hits and misses alike.
+
 ## How it compares to the field
 
 - **vs USGS:** different task; USGS doesn't claim short-term prediction. Not comparable
