@@ -110,6 +110,7 @@ def main(argv=None) -> int:
     ap.add_argument("--radius-km", type=float, default=500.0)
     ap.add_argument("--epochs", type=int, default=40)
     ap.add_argument("--seeds", type=int, default=1, help="train N seeds -> AUC mean+/-std + ensemble")
+    ap.add_argument("--arch", default="gru", choices=["gru", "transformer"])
     ap.add_argument("--out", default="results/calibration/earthquake_deep_sequence.json")
     args = ap.parse_args(argv)
 
@@ -158,6 +159,25 @@ def main(argv=None) -> int:
             a = torch.softmax(a, 1).unsqueeze(-1)
             return self.head((z * a).sum(1)).squeeze(-1)
 
+    class TransformerSeq(nn.Module):
+        def __init__(self, d=6, h=64, nlayers=2, nhead=4):
+            super().__init__()
+            self.proj = nn.Linear(d, h)
+            self.pos = nn.Parameter(torch.randn(1, args.K, h) * 0.02)   # learned positional
+            enc = nn.TransformerEncoderLayer(h, nhead, 4 * h, dropout=0.3, batch_first=True)
+            self.tf = nn.TransformerEncoder(enc, nlayers)
+            self.att = nn.Linear(h, 1)
+            self.head = nn.Sequential(nn.Linear(h, h), nn.ReLU(), nn.Dropout(0.3), nn.Linear(h, 1))
+
+        def forward(self, x, m):
+            z = self.proj(x) + self.pos
+            z = self.tf(z, src_key_padding_mask=(m == 0))
+            a = self.att(z).squeeze(-1).masked_fill(m == 0, -1e9)
+            a = torch.softmax(a, 1).unsqueeze(-1)
+            return self.head((z * a).sum(1)).squeeze(-1)
+
+    Arch = TransformerSeq if args.arch == "transformer" else SeqModel
+
     def tens(X, M, y):
         return (torch.tensor(X, device=dev), torch.tensor(M, device=dev),
                 torch.tensor(y, dtype=torch.float32, device=dev))
@@ -171,7 +191,7 @@ def main(argv=None) -> int:
     seed_aucs, ens = [], np.zeros(len(yte))
     for seed in range(args.seeds):
         torch.manual_seed(seed)
-        model = SeqModel().to(dev)
+        model = Arch().to(dev)
         opt = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
         best_va, best_state = 0.0, None
         for ep in range(args.epochs):
