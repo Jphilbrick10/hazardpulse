@@ -285,8 +285,12 @@ def _load_all_eq_cached(verbose: bool = True, max_year: int = 2024):
 
     from hazardpulse.earthquake.definitive_model import load_all_data
     # Parallel extraction across cores (deterministic now -> safe to fan out + cache).
+    # Each worker holds a full catalog copy (~0.6GB), so cap workers at high magnitudes
+    # / large sample counts to avoid OOM (HAZARDPULSE_EQ_WORKERS).
+    _nw = os.environ.get("HAZARDPULSE_EQ_WORKERS")
     X_tr, X_val, X_te, y_tr, y_val, y_te, _meta = load_all_data(
-        verbose=verbose, parallel=True, max_year=max_year)
+        verbose=verbose, parallel=True, max_year=max_year,
+        n_workers=int(_nw) if _nw else None)
     cache.parent.mkdir(parents=True, exist_ok=True)
     arrays = {}
     for v in _EQ_VARIANTS:
