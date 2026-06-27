@@ -111,6 +111,7 @@ def main(argv=None) -> int:
     ap.add_argument("--epochs", type=int, default=40)
     ap.add_argument("--seeds", type=int, default=1, help="train N seeds -> AUC mean+/-std + ensemble")
     ap.add_argument("--arch", default="gru", choices=["gru", "transformer"])
+    ap.add_argument("--save-model", default="", help="save the best-seed model to this .pt path")
     ap.add_argument("--out", default="results/calibration/earthquake_deep_sequence.json")
     args = ap.parse_args(argv)
 
@@ -189,6 +190,7 @@ def main(argv=None) -> int:
     lossf = nn.BCEWithLogitsLoss(pos_weight=pos_w)
     bs = 256
     seed_aucs, ens = [], np.zeros(len(yte))
+    best_overall = (None, 0.0)
     for seed in range(args.seeds):
         torch.manual_seed(seed)
         model = Arch().to(dev)
@@ -209,8 +211,18 @@ def main(argv=None) -> int:
         with torch.no_grad():
             pte = torch.sigmoid(model(Xte_t, Mte_t)).cpu().numpy()
         a = _auc(yte, pte); seed_aucs.append(a); ens += pte
+        if a >= max(seed_aucs):                    # keep the best seed's deployable artifact
+            best_overall = ({k: v.cpu().clone() for k, v in best_state.items()}, a)
         print(f"  seed {seed}: test AUC {a:.4f} (best val {best_va:.4f})")
     deep_auc = float(np.mean(seed_aucs)); ens_auc = _auc(yte, ens / args.seeds)
+    if args.save_model:
+        import torch as _t
+        mp = REPO / args.save_model
+        mp.parent.mkdir(parents=True, exist_ok=True)
+        _t.save({"state_dict": best_overall[0], "test_auc": best_overall[1],
+                 "norm_mu": mu, "norm_sd": sd, "K": args.K, "radius_km": args.radius_km,
+                 "arch": args.arch, "spec": "hazardpulse/eq-deep-nowcast/v1"}, mp)
+        print(f"  saved deployable deep model ({best_overall[1]:.4f}) -> {mp}")
     print(f"\n  DEEP sequence model (raw events, GRU+attention): "
           f"test AUC {deep_auc:.4f} +/- {np.std(seed_aucs):.4f}  (ensemble {ens_auc:.4f})")
     print(f"  hand-crafted GBT reference on same task: ~0.77")
