@@ -131,8 +131,40 @@ class DeepEQScorer:
         return self.forward(X, m)
 
 
+class OperationalEQScorer(DeepEQScorer):
+    """Operational forecaster: ranks "which active cell ruptures next" (real WHERE-skill,
+    beats climatology). Input adds 3 cross-location context channels (abs lat/lon + recent
+    rate) to the 6 per-event channels -- d=9. Forward is inherited (dim-agnostic)."""
+
+    def build_sequence(self, cat, lat, lon, ref_epoch):
+        K, R = self.K, self.radius_km
+        X = np.zeros((K, 9), np.float64); m = np.zeros(K, np.float64)
+        t0 = ref_epoch - 5 * 365 * SEC_DAY
+        sel = ((cat.times >= t0) & (cat.times < ref_epoch)
+               & (np.abs(cat.lats - lat) < 6) & (np.abs(cat.lons - lon) < 6))
+        idx = np.where(sel)[0]
+        if idx.size:
+            dist, az = _hav_az(lat, lon, cat.lats[idx], cat.lons[idx])
+            near = dist < R
+            idx, dist, az = idx[near], dist[near], az[near]
+            if idx.size:
+                order = np.argsort(cat.times[idx])[-K:]
+                idx, dist, az = idx[order], dist[order], az[order]
+                dd = (ref_epoch - cat.times[idx]) / SEC_DAY
+                n_1yr = float((dd < 365).sum())
+                loc = [lat / 90.0, lon / 180.0, np.log1p(n_1yr) / 6.0]
+                seq = np.stack([np.log1p(dd), cat.mags[idx], dist / R,
+                                np.clip(cat.depths[idx], 0, 700) / 700.0, np.sin(az), np.cos(az)]
+                               + [np.full(len(idx), c) for c in loc], axis=1)
+                X[K - len(idx):] = seq; m[K - len(idx):] = 1.0
+        return X, m
+
+
 def load_deep_eq_scorer(npz_path, calib_path=None):
     npz_path = Path(npz_path)
     if not npz_path.exists():
         return None
-    return DeepEQScorer(npz_path, calib_path)
+    z = np.load(npz_path)
+    kind = str(z["kind"]) if "kind" in z else "nowcast"
+    cls = OperationalEQScorer if kind == "operational" else DeepEQScorer
+    return cls(npz_path, calib_path)

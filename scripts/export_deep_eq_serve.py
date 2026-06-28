@@ -34,10 +34,13 @@ def main(argv=None) -> int:
     from hazardpulse.earthquake.deep_serve import DeepEQScorer
 
     ck = torch.load(REPO / args.model, map_location="cpu", weights_only=False)
-    h = 64
+    sd0 = ck["state_dict"]
+    h = sd0["proj.weight"].shape[0]   # hidden size (64 nowcast / 96 operational)
+    d = sd0["proj.weight"].shape[1]   # input channels (6 nowcast / 9 operational w/ location)
+    print(f"  model dims: d={d} input channels, h={h} hidden")
 
     class SeqModel(nn.Module):
-        def __init__(self, d=6, h=64):
+        def __init__(self, d=d, h=h):
             super().__init__()
             self.proj = nn.Linear(d, h)
             self.gru = nn.GRU(h, h, batch_first=True, bidirectional=True)
@@ -50,7 +53,7 @@ def main(argv=None) -> int:
             a = torch.softmax(a, 1).unsqueeze(-1)
             return self.head((z * a).sum(1)).squeeze(-1)
 
-    net = SeqModel(h=h); net.load_state_dict(ck["state_dict"]); net.eval()
+    net = SeqModel(d=d, h=h); net.load_state_dict(sd0); net.eval()
     g = net.gru
 
     def npy(t):
@@ -67,16 +70,21 @@ def main(argv=None) -> int:
         head_w2=npy(net.head[3].weight), head_b2=npy(net.head[3].bias),
         norm_mu=np.asarray(ck["norm_mu"], np.float64), norm_sd=np.asarray(ck["norm_sd"], np.float64),
         K=np.int64(ck.get("K", args.K)), radius_km=np.float64(ck.get("radius_km", 500.0)),
+        n_channels=np.int64(d), kind=("operational" if d >= 9 else "nowcast"),
     )
     out = REPO / (args.out or args.model.replace(".pt", ".serve.npz"))
     np.savez(out, **arrays)
-    print(f"  wrote {out.name}")
+    print(f"  wrote {out.name} (kind={arrays['kind']}, d={d})")
 
     # --- verify numpy forward == torch on the test sequences ---
     seq_path = (REPO / args.seq_cache) if args.seq_cache else (
         REPO / ".cache" / "earthquake" / f"deepseq_my{args.max_year}_m{args.mag}_K{args.K}.npz")
     dz = np.load(seq_path)
-    Xte, Mte = dz["Xte"], dz["Mte"]
+    if "Xte" in dz:                      # nowcast cache (pre-split)
+        Xte, Mte = dz["Xte"], dz["Mte"]
+    else:                                # operational cache (X/M/Y/T -> split by test epoch)
+        te = dz["T"] >= 1577836800.0     # 2020-01-01
+        Xte, Mte = dz["X"][te], dz["M"][te]
     mu, sd = ck["norm_mu"], ck["norm_sd"]
     n = min(500, len(Xte))
     Xn = ((Xte[:n] - mu) / sd).astype(np.float32)

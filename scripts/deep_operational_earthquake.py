@@ -135,6 +135,7 @@ def main(argv=None) -> int:
     ap.add_argument("--epochs", type=int, default=30)
     ap.add_argument("--seeds", type=int, default=3)
     ap.add_argument("--workers", type=int, default=8)
+    ap.add_argument("--save-model", default="", help="save the best-seed model (.pt) for serving")
     ap.add_argument("--out", default="results/calibration/earthquake_deep_operational.json")
     args = ap.parse_args(argv)
 
@@ -232,6 +233,7 @@ def main(argv=None) -> int:
     pos_w = T_(np.array([(Y[tr] == 0).sum() / max((Y[tr] == 1).sum(), 1)], np.float32))
     lossf = nn.BCEWithLogitsLoss(pos_weight=pos_w)
     seed_aucs = []; ens = np.zeros(te.sum())
+    best_overall = (None, 0.0)
     for seed in range(args.seeds):
         torch.manual_seed(seed)
         model = OpModel().to(dev)
@@ -250,7 +252,18 @@ def main(argv=None) -> int:
         model.load_state_dict(best_state); model.eval()
         p = predict(model, Xte, Mte)
         au = _auc(yte, p); seed_aucs.append(au); ens += p
+        if au >= max(seed_aucs):
+            best_overall = ({k: v.cpu().clone() for k, v in best_state.items()}, au)
         print(f"  seed {seed}: TEST operational AUC {au:.4f} (best val {best_va:.4f})")
+    if args.save_model:
+        mp = REPO / args.save_model
+        mp.parent.mkdir(parents=True, exist_ok=True)
+        torch.save({"state_dict": best_overall[0], "test_op_auc": best_overall[1],
+                    "norm_mu": mu, "norm_sd": sd, "K": args.K, "radius_km": args.input_radius,
+                    "n_channels": int(X.shape[-1]), "label_mag": args.label_mag,
+                    "label_radius_km": args.label_radius, "label_days": args.label_days,
+                    "spec": "hazardpulse/eq-operational-forecaster/v1"}, mp)
+        print(f"  saved operational forecaster ({best_overall[1]:.4f}) -> {mp}")
     import json
     op_auc = float(np.mean(seed_aucs)); ens_auc = _auc(yte, ens / args.seeds)
     print(f"\n  OPERATIONAL deep model (cross-location ranking, +location context): "
