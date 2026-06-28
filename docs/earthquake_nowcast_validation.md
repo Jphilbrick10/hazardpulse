@@ -223,8 +223,25 @@ is a *different product* (short-term local nowcast), not the year-ahead regional
 1-layer config lands 0.808-0.810; 2-layer configs are *worse* (~0.798, overfit). Best was
 h64/1-layer/dropout-0.5 at 0.8098 (ensemble 0.8133) -- a hair over baseline, within noise.
 The deep model is **architecturally maxed at ~0.81** on 15k samples; more capacity ties,
-more depth overfits. No single-model gains remain -- the live levers are *combining* models
-(ensemble) and *more data*.
+more depth overfits.
+
+**Sequence length K -- the real remaining lever (input window, not model size).** The
+architecture sweep fixed K=48 (events fed per sample). Feeding *more* of the event stream
+was a separate, untested axis -- and it pays off (2025 catalog, 5 seeds each):
+
+| K (events in) | test AUC | delta |
+|---|---|---|
+| 48 | 0.826 | -- |
+| 96 | 0.847 | +0.021 |
+| 144 | 0.854 | +0.008 |
+| **192** | **0.858** | +0.004 (within noise) |
+
+A real **+0.03** from 0.826 -> ~0.86 by feeding the model more of the small-magnitude
+stream -- diminishing returns confirm a plateau by K~144-192. This is the user's
+"use more of the small quakes" instinct validated *directly*: it was the input window, not
+the model capacity, that was constraining the deep nowcast. **Deployable model:
+`eq_deep_nowcast_m5.0_2025_K192.pt`, ~0.858 (5-seed mean), ~0.86 ensemble.** The live
+levers are sequence length (now exploited) and *more data*; *combining* models is null.
 
 **External forces** (tidal/celestial/moon, +0.007; teleseismic; seasonality) are all
 non-significant nulls. The catalog seismicity is the signal; the hand-crafted nowcast

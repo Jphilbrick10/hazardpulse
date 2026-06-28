@@ -63,6 +63,7 @@ def main(argv=None) -> int:
     ap.add_argument("--model", default="results/models/eq_deep_nowcast_m5.0_2025.pt")
     ap.add_argument("--mag", default="5.0")
     ap.add_argument("--max-year", type=int, default=2025)
+    ap.add_argument("--K", type=int, default=48, help="must match the model's sequence length")
     args = ap.parse_args(argv)
 
     import torch
@@ -71,7 +72,7 @@ def main(argv=None) -> int:
 
     ck = torch.load(REPO / args.model, map_location="cpu", weights_only=False)
     mu, sd = ck["norm_mu"], ck["norm_sd"]
-    dz = np.load(REPO / ".cache" / "earthquake" / f"deepseq_my{args.max_year}_m{args.mag}_K48.npz")
+    dz = np.load(REPO / ".cache" / "earthquake" / f"deepseq_my{args.max_year}_m{args.mag}_K{args.K}.npz")
     Xva, Mva, yva = dz["Xva"], dz["Mva"], np.asarray(dz["yva"]).astype(int)
     Xte, Mte, yte = dz["Xte"], dz["Mte"], np.asarray(dz["yte"]).astype(int)
 
