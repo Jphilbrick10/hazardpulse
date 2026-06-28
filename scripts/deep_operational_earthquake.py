@@ -93,9 +93,7 @@ def _build_one(arg):
     order = np.argsort(cat.times[idx])[-K:]
     idx, dist, az = idx[order], dist[order], az[order]
     dd = (ref - cat.times[idx]) / SEC_DAY
-    # per-event seismicity channels (6) + cross-location context channels (3):
-    #   lat/90, lon/180 (absolute location), and log1p(recent rate) -- the same value on
-    #   every step so the GRU/attention can read "where am I + how active am I overall".
+    # 6 per-event channels + 3 cross-location context (abs location + recent rate)
     n_1yr = float(((ref - cat.times[idx]) < 365 * SEC_DAY).sum())
     loc_lat = lat / 90.0; loc_lon = lon / 180.0; rate = np.log1p(n_1yr) / 6.0
     seq = np.stack([np.log1p(dd), cat.mags[idx], dist / R,
@@ -204,7 +202,7 @@ def main(argv=None) -> int:
     Xn = ((X - mu) / sd).astype(np.float32)
 
     class OpModel(nn.Module):
-        def __init__(self, d=9, h=96):
+        def __init__(self, d=X.shape[-1], h=96):
             super().__init__()
             self.proj = nn.Linear(d, h)
             self.gru = nn.GRU(h, h, batch_first=True, bidirectional=True)
