@@ -744,19 +744,17 @@ def compute_correlation_length_evolution(
         Each dict has keys: epoch, ell_km, b_value, rate, moment_rate,
         n_events.  Sorted chronologically.
     """
-    # Parse all event times
-    parsed: list[tuple[dict, float]] = []
-    for e in events:
-        lat = e.get("latitude")
-        lon = e.get("longitude")
-        t_str = e.get("time", "")
-        if lat is None or lon is None:
-            continue
-        t = _parse_event_time(t_str) if isinstance(t_str, str) else float(t_str)
-        if t > 0:
-            dist = _haversine_km(center_lat, center_lon, lat, lon)
-            if dist <= radius_km:
-                parsed.append((e, t))
+    # Parse + spatial-filter via the cached/vectorized path. The per-event Python
+    # parse+haversine here was the remaining block_c hot spot (a full catalog pass per
+    # sample, bypassing the memo). _parsed_catalog_arrays memoizes the parse and
+    # _haversine_km_arrays vectorizes the distance. Identical result: 'parsed' is sorted
+    # by time below, so build order is irrelevant.
+    evs, lats_a, lons_a, eps_a = _parsed_catalog_arrays(events)
+    if len(evs) == 0:
+        return []
+    d = _haversine_km_arrays(center_lat, center_lon, lats_a, lons_a)
+    keep = np.where((d <= radius_km) & (eps_a > 0))[0]
+    parsed: list[tuple[dict, float]] = [(evs[i], float(eps_a[i])) for i in keep]
 
     if not parsed:
         return []
