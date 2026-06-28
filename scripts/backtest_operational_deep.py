@@ -103,7 +103,8 @@ def main(argv=None) -> int:
                          for e in mainshocks if e.get("mag", 0) >= min_mag])
     tags = [f"M{mg:g}" for mg in args.label_mags]
     ms_by_tag = {f"M{mg:g}": _ms_array(mg) for mg in args.label_mags}
-    print(f"catalog {len(cat_list)} events, {len(m6)} M6+ / {len(m5)} M5+ declustered mainshocks")
+    print(f"catalog {len(cat_list)} events; declustered mainshocks: "
+          + ", ".join(f"{len(ms_by_tag[t])} {t}+" for t in tags))
     print(f"deep model {args.model} (K={K}, radius={radius:.0f}km)")
 
     def seq_score(lat, lon, ep):

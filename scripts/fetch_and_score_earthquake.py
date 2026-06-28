@@ -297,30 +297,36 @@ def load_eq_forest(directory=None):
     return scorer
 
 
-DEEP_EQ_SERVE_NPZ = (
-    Path(__file__).resolve().parents[1] / "results" / "models" /
-    "eq_deep_nowcast_m5.0_2025_K192.serve.npz"
-)
+_MODELS_DIR = Path(__file__).resolve().parents[1] / "results" / "models"
+# Year-ahead regional nowcast (M5+ within 300km/365d) and short-term local watch
+# (M4.5+ within 50km/30d) -- two distinct products, both served torch-free.
+DEEP_EQ_SERVE_NPZ = _MODELS_DIR / "eq_deep_nowcast_m5.0_2025_K192.serve.npz"
+DEEP_EQ_SHORTTERM_NPZ = _MODELS_DIR / "eq_deep_shortterm_m4.5_r50_d30_ir100_K384.serve.npz"
 
 
-def load_deep_eq_scorer_model():
-    """Load the deep GRU nowcast champion for torch-free serving (pure-numpy forward).
-
-    Served RAW (uncalibrated): the static val-period isotonic/temperature calibrator did
-    not transfer to the test period (raw test ECE 0.085 < temp-calibrated 0.092), so raw
-    probabilities are the honest choice; periodic recalibration is the right fix. Returns
-    a DeepEQScorer or None.
-    """
+def _load_deep_scorer(npz_path, label):
+    """Load a deep GRU scorer for torch-free serving (pure-numpy forward). Served RAW
+    (the static val-period calibrator did not transfer; periodic recalibration is the fix)."""
     try:
         from hazardpulse.earthquake.deep_serve import load_deep_eq_scorer
     except Exception as exc:  # pragma: no cover - numpy-only, should import
         print(f"  WARNING: deep_serve import failed ({exc}); deep tier disabled.")
         return None
-    scorer = load_deep_eq_scorer(DEEP_EQ_SERVE_NPZ, calib_path=None)
+    scorer = load_deep_eq_scorer(npz_path, calib_path=None)
     if scorer is not None:
-        print(f"  Loaded deep GRU nowcast champion (K={scorer.K}, radius={scorer.radius_km:.0f}km) "
-              f"from {DEEP_EQ_SERVE_NPZ.name}")
+        print(f"  Loaded deep {label} (K={scorer.K}, input radius={scorer.radius_km:.0f}km) "
+              f"from {npz_path.name}")
     return scorer
+
+
+def load_deep_eq_scorer_model():
+    """Year-ahead regional nowcast champion (the primary tier-1 probability)."""
+    return _load_deep_scorer(DEEP_EQ_SERVE_NPZ, "year-ahead regional nowcast")
+
+
+def load_deep_eq_shortterm_model():
+    """Short-term LOCAL watch: P(M4.5+ within 50km / 30 days). A second, distinct field."""
+    return _load_deep_scorer(DEEP_EQ_SHORTTERM_NPZ, "short-term local watch (30d/50km)")
 
 
 def _predict_eq_with_gbt(
@@ -1591,14 +1597,16 @@ def score_grid_cells(
     pretrained_gbt: dict | None = None,
     eq_forest=None,
     deep_scorer=None,
+    deep_scorer_st=None,
 ) -> list[dict]:
     """Score active grid cells using causal history and recent activity.
 
-    Per-cell probability precedence: the deep GRU nowcast (``deep_scorer``, raw event
-    sequence, AUC ~0.86 / operational ~0.60 -- the measured champion) > the exported
-    VerifiableForest champion (``eq_forest``) > the incumbent GBT (``pretrained_gbt``).
-    The deep tier reads the raw K most-recent events per cell; the forest/GBT use the 73
-    Block S + C features. Otherwise falls back to the singularity-count heuristic.
+    Per-cell PRIMARY probability precedence: the deep GRU year-ahead nowcast
+    (``deep_scorer``, AUC ~0.86 -- the measured champion) > the exported VerifiableForest
+    champion (``eq_forest``) > the incumbent GBT (``pretrained_gbt``) > singularity
+    heuristic. If ``deep_scorer_st`` is given, each cell ALSO gets a second, independent
+    field ``prob_30d_local`` = P(M4.5+ within 50km / 30 days) from the short-term local
+    model (AUC ~0.895) -- a distinct product, not a fallback.
     """
     if now is None:
         now = dt.datetime.now(dt.timezone.utc)
@@ -1609,7 +1617,8 @@ def score_grid_cells(
 
     # Build CatalogArrays once per run if ANY ML model is active (deep/forest/GBT).
     cat_arrays = None
-    if (pretrained_gbt is not None or eq_forest is not None or deep_scorer is not None) and HAS_EQ_ML:
+    if (pretrained_gbt is not None or eq_forest is not None
+            or deep_scorer is not None or deep_scorer_st is not None) and HAS_EQ_ML:
         try:
             cat_arrays = CatalogArrays(history_events, verbose=False)
             tiers = [n for n, on in (("deep", deep_scorer is not None),
@@ -1691,6 +1700,16 @@ def score_grid_cells(
             prob = min(max(base_prob, 0.0), 0.95)
             n_heur += 1
 
+        # Second, independent product: short-term local watch P(M4.5+ within 50km / 30d).
+        prob_30d_local = None
+        if deep_scorer_st is not None and cat_arrays is not None:
+            try:
+                stp = deep_scorer_st.score(cat_arrays, lat, lon, ref_epoch)
+                if stp is not None:
+                    prob_30d_local = round(float(stp), 4)
+            except Exception as exc:
+                print(f"  WARNING: short-term scoring failed for cell ({row},{col}): {exc}")
+
         max_mag = max(
             (event["mag"] for event in cell_events if event.get("mag") is not None),
             default=0.0,
@@ -1705,6 +1724,7 @@ def score_grid_cells(
                 "n_events": len(cell_events),
                 "max_mag": round(max_mag, 1),
                 "probability": round(prob, 4),
+                "prob_30d_local": prob_30d_local,
                 "risk_band": risk,
                 "scoring_tier": cell_tier,
                 "model_id": model_id,
@@ -2103,7 +2123,8 @@ def run_pipeline(
     print("Step 3: Scoring active grid cells...")
     pretrained_eq_gbt = load_pretrained_eq_gbt()
     eq_forest = load_eq_forest()        # deployable champion; precedence over the GBT when present
-    deep_eq_scorer = load_deep_eq_scorer_model()   # deep GRU nowcast; precedence over forest/GBT
+    deep_eq_scorer = load_deep_eq_scorer_model()       # year-ahead regional nowcast (primary)
+    deep_eq_scorer_st = load_deep_eq_shortterm_model()  # short-term local watch (2nd field)
     scored = score_grid_cells(
         history_events,
         candidate_events=recent_events,
@@ -2112,6 +2133,7 @@ def run_pipeline(
         pretrained_gbt=pretrained_eq_gbt,
         eq_forest=eq_forest,
         deep_scorer=deep_eq_scorer,
+        deep_scorer_st=deep_eq_scorer_st,
     )
     print(f"  {len(scored)} cells scored")
 
