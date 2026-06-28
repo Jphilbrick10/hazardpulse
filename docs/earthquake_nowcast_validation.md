@@ -187,6 +187,14 @@ label rarity and contrast, is where abundant small-quake data is most predictabl
 (aftershock/swarm clustering), and is where this transfer would actually pay off -- but it
 is a *different product* (short-term local nowcast), not the year-ahead regional one.
 
+**Architecture/regularization sweep -- saturated.** Hidden size {64,96,128}, GRU depth
+{1,2}, dropout {0.3,0.4,0.5}, lr {7e-4,1e-3}, 5 seeds each on the cached M5.0 set: every
+1-layer config lands 0.808-0.810; 2-layer configs are *worse* (~0.798, overfit). Best was
+h64/1-layer/dropout-0.5 at 0.8098 (ensemble 0.8133) -- a hair over baseline, within noise.
+The deep model is **architecturally maxed at ~0.81** on 15k samples; more capacity ties,
+more depth overfits. No single-model gains remain -- the live levers are *combining* models
+(ensemble) and *more data*.
+
 **External forces** (tidal/celestial/moon, +0.007; teleseismic; seasonality) are all
 non-significant nulls. The catalog seismicity is the signal; the hand-crafted nowcast
 ceiling is ~0.76 but deep+data reaches ~0.82; operational forecasting is unsolved here

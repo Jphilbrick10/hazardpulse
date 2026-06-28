@@ -235,6 +235,10 @@ def main(argv=None) -> int:
     ap.add_argument("--epochs", type=int, default=40)
     ap.add_argument("--seeds", type=int, default=1, help="train N seeds -> AUC mean+/-std + ensemble")
     ap.add_argument("--arch", default="gru", choices=["gru", "transformer"])
+    ap.add_argument("--hidden", type=int, default=64, help="GRU/attention hidden size")
+    ap.add_argument("--gru-layers", type=int, default=1, help="stacked GRU layers")
+    ap.add_argument("--dropout", type=float, default=0.3)
+    ap.add_argument("--lr", type=float, default=1e-3, help="from-scratch learning rate")
     ap.add_argument("--save-model", default="", help="save the best-seed model to this .pt path")
     ap.add_argument("--workers", type=int, default=8, help="parallel sequence-build workers (each ~0.6GB)")
     ap.add_argument("--pretrain-anchors", type=int, default=0,
@@ -283,12 +287,13 @@ def main(argv=None) -> int:
     Xtr, Xva, Xte = norm(Xtr), norm(Xva), norm(Xte)
 
     class SeqModel(nn.Module):
-        def __init__(self, d=6, h=64):
+        def __init__(self, d=6, h=args.hidden, nlayers=args.gru_layers, dropout=args.dropout):
             super().__init__()
             self.proj = nn.Linear(d, h)
-            self.gru = nn.GRU(h, h, batch_first=True, bidirectional=True)
+            self.gru = nn.GRU(h, h, num_layers=nlayers, batch_first=True, bidirectional=True,
+                              dropout=dropout if nlayers > 1 else 0.0)
             self.att = nn.Linear(2 * h, 1)
-            self.head = nn.Sequential(nn.Linear(2 * h, h), nn.ReLU(), nn.Dropout(0.3), nn.Linear(h, 1))
+            self.head = nn.Sequential(nn.Linear(2 * h, h), nn.ReLU(), nn.Dropout(dropout), nn.Linear(h, 1))
 
         def forward(self, x, m):
             z = torch.relu(self.proj(x))
@@ -400,7 +405,7 @@ def main(argv=None) -> int:
             model.gru.load_state_dict(pre_enc["gru"])
             model.att.load_state_dict(pre_enc["att"])
             enc_params = list(model.proj.parameters()) + list(model.gru.parameters()) + list(model.att.parameters())
-        lr = args.ft_lr if pre_enc is not None else 1e-3
+        lr = args.ft_lr if pre_enc is not None else args.lr
         opt = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
         best_va, best_state = 0.0, None
         for ep in range(args.epochs):
