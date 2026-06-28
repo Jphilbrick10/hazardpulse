@@ -46,10 +46,17 @@ shook" (smoothed seismicity / clustering) is strong. On the held-out test set
 - **Ablation:** seismicity-only 0.742 → +coherence (CFT) 0.749 → +cross-terms 0.749.
   Coherence-field features add a small, real lift on top of seismicity.
 
-## 3. More data helps (signature of real signal)
+## 3. Robust over a longer horizon (honest framing of the "2025 catalog" result)
 
-Retraining with the 2025 catalog folded in raised the holdout AUC from **0.757 → 0.774**.
-Overfit noise does not improve with more data; real signal does.
+Folding in the 2025 catalog raises the measured holdout AUC (GBT 0.757 → 0.774; deep
+0.810 → 0.826). **Important caveat, verified:** the temporal split has a *fixed* train
+window (2005–2017), so adding a later catalog year does **not** add training data — the
+train inputs are identical (every train sample's events predate 2017). What changes is the
+**test set extends** (2020–2024 → 2020–2025, 4788 → 6060 samples). So this is not "more
+training data lifted the model"; it is "the 2005–2017-trained model holds up — slightly
+better — over a *longer forward horizon*," which is a genuine **robustness** signal (skill
+does not decay 2024→2025), just not the one the older wording implied. Truly adding
+training data would require moving the split (TRAIN_END later), a separate experiment.
 
 ## 4. New-signal search — what was tested and what it showed
 
