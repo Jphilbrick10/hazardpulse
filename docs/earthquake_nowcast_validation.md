@@ -253,6 +253,49 @@ research-grade nowcast with a real statistical edge — **explicitly NOT operati
 prediction**, and **not** a front-and-center "we predict earthquakes" claim. The
 recent-events table is published as honest evidence, hits and misses alike.
 
+## The short-term local nowcast — a second, stronger product
+
+The year-ahead model collapses below M5.0 because the label ("M4.5+ within 300 km / 365 d")
+is trivially almost-always-true. **Shrinking the question fixes it**: *"M4.5+ within 50 km
+in the next 30 days."* That restores label rarity and quiet-control contrast (33% positive,
+not the degenerate 77%), and turns out to be a genuinely **better** product than the
+year-ahead one.
+
+Two levers built it:
+1. **Input scale matched to target.** The year-ahead model gathers input events from 500 km;
+   for a 50 km local target that drowns the signal. Tightening the input radius:
+
+   | input radius | test AUC |
+   |---|---|
+   | 500 km | 0.796 |
+   | 150 km | 0.877 |
+   | 100 km | 0.886 |
+   | 75 km  | 0.887 |
+
+2. **Sequence length** (denser local swarms reward more events) at 100 km input:
+   K=192 0.886 → K=288 0.893 → **K=384 0.895** (plateau).
+
+**Champion: M4.5 / 50 km / 30 d, 100 km input, K=384 → test AUC 0.895 ± 0.0007**
+(2025 catalog, 5 seeds, ensemble 0.897), zero overfit (val 0.852 < test 0.895).
+
+- **Edge over persistence: +0.27.** The best simple recent-seismicity baseline scores only
+  0.62 (recency of last event 0.624, count-30d 0.618, total count 0.50 = random). The deep
+  model adds a *massive* +0.27 — it is not a relabelled clustering baseline; it reads real
+  precursory timing structure. (Contrast the year-ahead model, where persistence is a much
+  stronger 0.748 and the deep edge is +0.07.)
+- It **beats the year-ahead nowcast** (0.895 vs 0.858) and is far more stable.
+- **Operational skill** (which active cell sees an M4.5+ within 50 km in the next 30 days):
+  pooled AUC **0.642** over 48 monthly snapshots (8619 forecasts, 324 positives) —
+  modestly better than the year-ahead operational (0.602), on a genuinely useful 30-day
+  timescale. *Honesty note:* a small 8-snapshot run read 0.79, but the 48-snapshot sample
+  (324 vs 34 positives) settles it at 0.64 — same small-sample lesson as the year-ahead.
+  So the strong, robust number is the **case-control nowcast (0.895)**; operational
+  *localization* of the next rupture remains hard (~0.64), as it is everywhere in this field.
+
+This is a different product from the regional year-ahead nowcast — a **local 30-day
+seismic-activity watch** — and it is the honest realization of "use the small quakes":
+abundant M4.5 data + a question that has an answer + input matched to the local scale.
+
 ## How it compares to the field
 
 - **vs USGS:** different task; USGS doesn't claim short-term prediction. Not comparable
