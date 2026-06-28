@@ -894,10 +894,20 @@ def decluster_gardner_knopoff(
 # ===================================================================
 
 def _event_epoch(event: dict) -> float:
-    """Extract epoch seconds from an event dict."""
+    """Extract epoch seconds from an event dict.
+
+    The parsed epoch is memoized on the dict (`_epoch`) -- strptime is ~80% of block_c
+    cost and the same ~494k events are re-parsed millions of times per sample. Memoizing
+    makes every parse after the first O(1). Identical value; string events only.
+    """
     t_str = event.get("time", "")
     if isinstance(t_str, str):
-        return _parse_event_time(t_str)
+        cached = event.get("_epoch")
+        if cached is not None:
+            return cached
+        v = _parse_event_time(t_str)
+        event["_epoch"] = v
+        return v
     return 0.0
 
 

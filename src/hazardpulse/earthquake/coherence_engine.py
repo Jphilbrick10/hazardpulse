@@ -595,8 +595,11 @@ def _parsed_catalog_arrays(events):
             lat = e.get("latitude"); lon = e.get("longitude")
             if lat is None or lon is None:
                 continue
-            t_str = e.get("time", "")
-            t = _parse_event_time(t_str) if isinstance(t_str, str) else float(t_str)
+            t = e.get("_epoch")                      # memoized parse (strptime is the hot spot)
+            if t is None:
+                t_str = e.get("time", "")
+                t = _parse_event_time(t_str) if isinstance(t_str, str) else float(t_str)
+                e["_epoch"] = t
             evs.append(e); lats.append(lat); lons.append(lon); eps.append(t)
         _PARSED_CATALOG_CACHE.clear()       # keep only the latest list (bounded memory)
         cached = (evs, np.asarray(lats, float), np.asarray(lons, float), np.asarray(eps, float))
