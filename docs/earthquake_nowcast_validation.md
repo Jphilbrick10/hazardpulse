@@ -145,6 +145,29 @@ M4.5 is past the optimum. Remaining caveat: the M5.0 result carries a val>test g
 GBT-at-M5.0 comparison is the last confirming run; it is still NOWCAST skill (the
 operational forecast limit of 0.51 is separate physics).
 
+**Self-supervised pretraining on the small-magnitude stream -- tested, measured NULL.**
+A natural idea: pretrain the sequence encoder on the abundant unlabeled event stream
+(120k anchors in the train window, self-supervised target = next-30-day max magnitude
+within 500 km), then transfer the encoder to the rare M5.0 nowcast head -- "use the small
+quakes to teach the big-quake task." Two fine-tuning regimes were run, 5 seeds each:
+
+| config | test AUC | val AUC |
+|---|---|---|
+| **from scratch (deployed)** | **0.810 +/- 0.004** | ~0.93 |
+| pretrained, naive FT (lr 1e-3) | 0.796 +/- 0.004 | 0.87 |
+| pretrained, discriminative FT (freeze 8ep, lr 3e-4) | 0.789 +/- 0.004 | 0.86 |
+
+Pretraining **did not help** (both configs ~0.79 < 0.81). The mechanism is informative,
+not a failure: the deep model *already* reads every M2.5+ event as raw input, so "small
+quakes inform big quakes" is the existing mechanism -- it is *why* deep beats the
+hand-crafted GBT. The proxy-task pretraining tried to inject that same signal a second
+time and the direct supervised data already saturates it, so the warm start only moved
+the encoder to a slightly worse basin. (It *did* regularize -- val fell 0.93->0.86,
+closing the era-overfit gap -- but that did not convert to test skill.) The harness lives
+behind `--pretrain-anchors` for reproducibility; the deployable model stays from-scratch.
+The remaining *direct* lever (feed MORE of the stream: larger K / longer lookback) is the
+honest next experiment.
+
 **External forces** (tidal/celestial/moon, +0.007; teleseismic; seasonality) are all
 non-significant nulls. The catalog seismicity is the signal; the hand-crafted nowcast
 ceiling is ~0.76 but deep+data reaches ~0.82; operational forecasting is unsolved here
