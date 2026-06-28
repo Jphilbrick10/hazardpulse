@@ -302,6 +302,9 @@ _MODELS_DIR = Path(__file__).resolve().parents[1] / "results" / "models"
 # (M4.5+ within 50km/30d) -- two distinct products, both served torch-free.
 DEEP_EQ_SERVE_NPZ = _MODELS_DIR / "eq_deep_nowcast_m5.0_2025_K192.serve.npz"
 DEEP_EQ_SHORTTERM_NPZ = _MODELS_DIR / "eq_deep_shortterm_m4.5_r50_d30_ir100_K384.serve.npz"
+# Operational forecaster -- the real "which region ruptures next" (M5+ within 100km/30d),
+# trained on the operational objective: beats climatology by +0.14 (genuine temporal skill).
+DEEP_EQ_OPERATIONAL_NPZ = _MODELS_DIR / "eq_operational_m5_30d_ir150_grid1.serve.npz"
 
 
 def _load_deep_scorer(npz_path, label):
@@ -327,6 +330,12 @@ def load_deep_eq_scorer_model():
 def load_deep_eq_shortterm_model():
     """Short-term LOCAL watch: P(M4.5+ within 50km / 30 days). A second, distinct field."""
     return _load_deep_scorer(DEEP_EQ_SHORTTERM_NPZ, "short-term local watch (30d/50km)")
+
+
+def load_deep_eq_operational_model():
+    """Operational forecaster: P(M5+ within 100km / 30 days) -- the real WHERE-skill
+    (beats climatology +0.14). A third, distinct field."""
+    return _load_deep_scorer(DEEP_EQ_OPERATIONAL_NPZ, "operational forecaster (M5+/100km/30d)")
 
 
 def _predict_eq_with_gbt(
@@ -1598,6 +1607,7 @@ def score_grid_cells(
     eq_forest=None,
     deep_scorer=None,
     deep_scorer_st=None,
+    deep_scorer_op=None,
 ) -> list[dict]:
     """Score active grid cells using causal history and recent activity.
 
@@ -1617,11 +1627,12 @@ def score_grid_cells(
 
     # Build CatalogArrays once per run if ANY ML model is active (deep/forest/GBT).
     cat_arrays = None
-    if (pretrained_gbt is not None or eq_forest is not None
-            or deep_scorer is not None or deep_scorer_st is not None) and HAS_EQ_ML:
+    if (pretrained_gbt is not None or eq_forest is not None or deep_scorer is not None
+            or deep_scorer_st is not None or deep_scorer_op is not None) and HAS_EQ_ML:
         try:
             cat_arrays = CatalogArrays(history_events, verbose=False)
             tiers = [n for n, on in (("deep", deep_scorer is not None),
+                                     ("op", deep_scorer_op is not None),
                                      ("forest", eq_forest is not None),
                                      ("gbt", pretrained_gbt is not None)) if on]
             print(f"  ML tier active ({'+'.join(tiers)}): CatalogArrays built from {len(history_events)} events")
@@ -1631,6 +1642,8 @@ def score_grid_cells(
             pretrained_gbt = None
             eq_forest = None
             deep_scorer = None
+            deep_scorer_st = None
+            deep_scorer_op = None
 
     cell_bins = bin_events_to_grid(candidate_events)
     scored_cells: list[dict] = []
@@ -1710,6 +1723,16 @@ def score_grid_cells(
             except Exception as exc:
                 print(f"  WARNING: short-term scoring failed for cell ({row},{col}): {exc}")
 
+        # Third product: operational forecaster P(M5+ within 100km / 30d) -- the WHERE-skill.
+        prob_op_m5_30d = None
+        if deep_scorer_op is not None and cat_arrays is not None:
+            try:
+                opp = deep_scorer_op.score(cat_arrays, lat, lon, ref_epoch)
+                if opp is not None:
+                    prob_op_m5_30d = round(float(opp), 4)
+            except Exception as exc:
+                print(f"  WARNING: operational scoring failed for cell ({row},{col}): {exc}")
+
         max_mag = max(
             (event["mag"] for event in cell_events if event.get("mag") is not None),
             default=0.0,
@@ -1725,6 +1748,7 @@ def score_grid_cells(
                 "max_mag": round(max_mag, 1),
                 "probability": round(prob, 4),
                 "prob_30d_local": prob_30d_local,
+                "prob_op_m5_30d": prob_op_m5_30d,
                 "risk_band": risk,
                 "scoring_tier": cell_tier,
                 "model_id": model_id,
@@ -2125,6 +2149,7 @@ def run_pipeline(
     eq_forest = load_eq_forest()        # deployable champion; precedence over the GBT when present
     deep_eq_scorer = load_deep_eq_scorer_model()       # year-ahead regional nowcast (primary)
     deep_eq_scorer_st = load_deep_eq_shortterm_model()  # short-term local watch (2nd field)
+    deep_eq_scorer_op = load_deep_eq_operational_model()  # operational forecaster (3rd, the WHERE-skill)
     scored = score_grid_cells(
         history_events,
         candidate_events=recent_events,
@@ -2134,6 +2159,7 @@ def run_pipeline(
         eq_forest=eq_forest,
         deep_scorer=deep_eq_scorer,
         deep_scorer_st=deep_eq_scorer_st,
+        deep_scorer_op=deep_eq_scorer_op,
     )
     print(f"  {len(scored)} cells scored")
 
