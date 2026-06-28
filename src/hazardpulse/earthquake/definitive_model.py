@@ -938,6 +938,27 @@ def identify_target_mainshocks(
     return targets
 
 
+# Cache the qualifying-mainshock (mag >= MIN_MAINSHOCK_MAG) arrays once per mainshock
+# list, so the per-target control generation is a vectorized proximity check instead of
+# a Python loop over all ~256k mainshocks (the O(targets x mainshocks) bottleneck that
+# made M4.5 build_samples take ~9h). Keyed by id() of the list (stable within a run).
+_CONTROL_QUAL_CACHE: dict = {}
+
+
+def _control_qual_arrays(mainshocks):
+    key = id(mainshocks)
+    cached = _CONTROL_QUAL_CACHE.get(key)
+    if cached is None:
+        lats, lons, eps = [], [], []
+        for m in mainshocks:
+            if m.get("mag", 0) >= MIN_MAINSHOCK_MAG:
+                lats.append(m["latitude"]); lons.append(m["longitude"]); eps.append(_event_epoch(m))
+        _CONTROL_QUAL_CACHE.clear()   # keep only the latest list (bounded memory)
+        cached = (np.asarray(lats, float), np.asarray(lons, float), np.asarray(eps, float))
+        _CONTROL_QUAL_CACHE[key] = cached
+    return cached
+
+
 def generate_control_samples(
     target: dict,
     mainshocks: list[dict],
@@ -956,6 +977,16 @@ def generate_control_samples(
     target_lat = target["latitude"]
     target_lon = target["longitude"]
 
+    # Vectorized proximity precompute: epochs of qualifying mainshocks within the label
+    # radius of this target (distance is fixed per target). The per-candidate check then
+    # only tests the time window -- identical result to the old per-mainshock Python loop,
+    # ~50x faster.
+    ql, qo, qe = _control_qual_arrays(mainshocks)
+    if len(ql):
+        near_epochs = qe[haversine_vec(target_lat, target_lon, ql, qo) <= label_radius_km]
+    else:
+        near_epochs = np.empty(0, dtype=float)
+
     controls: list[dict] = []
     max_attempts = n_controls * 10
 
@@ -969,22 +1000,9 @@ def generate_control_samples(
         offset_sec = offset_years * 365.25 * 86400.0
         control_epoch = target_epoch + offset_sec
 
-        has_m6_forward = False
-        for ms in mainshocks:
-            ms_mag = ms.get("mag", 0)
-            if ms_mag < MIN_MAINSHOCK_MAG:
-                continue
-            ms_epoch = _event_epoch(ms)
-            dt_days = (ms_epoch - control_epoch) / 86400.0
-            if dt_days < 0 or dt_days > forward_days:
-                continue
-            dist = haversine_km(
-                target_lat, target_lon,
-                ms["latitude"], ms["longitude"],
-            )
-            if dist <= label_radius_km:
-                has_m6_forward = True
-                break
+        # any qualifying mainshock within radius AND in (control_epoch, +forward_days]?
+        dt_days = (near_epochs - control_epoch) / 86400.0
+        has_m6_forward = bool(((dt_days >= 0) & (dt_days <= forward_days)).any())
 
         if not has_m6_forward:
             ctrl_dt = _dt.datetime.fromtimestamp(
