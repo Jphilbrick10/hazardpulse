@@ -1639,8 +1639,9 @@ def extract_features_parallel(split_samples, split_name="", n_workers=None, verb
             X_s[idx] = s; X_c[idx] = c; X_x[idx] = x; y[idx] = lab; n_skipped += sk
             if verbose and (idx + 1) % 200 == 0:
                 rate = (idx + 1) / max(time.time() - t0, 1e-9)
+                eta = (n - idx - 1) / rate / 60.0
                 print(f"      {split_name} (parallel x{workers}): {idx + 1}/{n} "
-                      f"({100 * (idx + 1) / n:.0f}%, {rate:.0f}/s)")
+                      f"({100 * (idx + 1) / n:.0f}%, {rate:.0f}/s, ETA {eta:.1f}min)")
                 sys.stdout.flush()
     if verbose:
         print(f"      {split_name}: {n}/{n} (100%) -- {time.time() - t0:.1f}s, "

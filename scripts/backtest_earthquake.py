@@ -96,7 +96,7 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
 
     from hazardpulse.earthquake.definitive_model import BLOCK_S_NAMES, BLOCK_C_NAMES
-    Xtr, Xval, Xte, ytr, yval, yte = _tbt._load_all_eq_cached(verbose=False, max_year=args.max_year)
+    Xtr, Xval, Xte, ytr, yval, yte = _tbt._load_all_eq_cached(verbose=True, max_year=args.max_year)
     enh = "enhanced"
     Xt = np.vstack([Xtr[enh], Xval[enh]]); yt = np.concatenate([ytr, yval])
     Xe, ye = Xte[enh], np.asarray(yte).astype(int)
