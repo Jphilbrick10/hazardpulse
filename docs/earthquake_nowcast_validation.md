@@ -110,25 +110,38 @@ plateaus:
 
 | | persistence | hand-crafted GBT | deep (raw events) | pos-rate |
 |---|---|---|---|---|
-| M6 (3.1k train) | 0.67 | 0.751 | 0.730 | ~33% (1:2 design) |
+| M6 (3.1k train) | 0.670 | 0.751 | 0.730 | ~33% (1:2 design) |
 | M5.5 (7.3k) | 0.67 | 0.762 | 0.752 | ~45% |
-| **M5.0 (15k)** | **0.646** | ~0.77 (confirming) | **0.815** | **55% (PEAK)** |
+| **M5.0 (15k)** | **0.748** | **0.786** | **0.815** | **55-61% (PEAK)** |
 | M4.5 (36k) | -- | -- | 0.750 | **77% (controls collapse)** |
+
+*(M5.0 row is the definitive aligned bake-off, `scripts/bakeoff_earthquake.py`, all
+models on one identical test set; deep = best-seed 0.815 / 5-seed mean 0.810.)*
 
 The pos-rate column tells the real story: the case-control design wants 33%
 (1 mainshock : 2 quiet controls), but as magnitude drops the controls become
 **unfindable** -- every active location already has a forward event -- so the
-positive fraction climbs 33% -> 45% -> 55% -> 77%. At M5.0 (55%) there is still
+positive fraction climbs 33% -> 45% -> 55% -> 77%. At M5.0 (55-61%) there is still
 genuine quiet-vs-critical contrast and the deep model peaks at 0.815; by M4.5 (77%)
 the contrast is gone and skill collapses to 0.750. The climb didn't "stop" -- the
 *task itself* dissolved beneath it. M5.0 is the last magnitude with a real control.
 
-At M5.0 the deep model reaches **0.815, beating persistence by +0.17** -- and the
-persistence baseline stayed ~0.65 at every magnitude, so this is NOT an easier task; it
-is real signal. Representation learning on the raw event stream, given enough data, found
-precursory structure (likely foreshock-sequence timing) the engineered features miss.
-This is the genuine lever: **lower magnitude (more data) + let-the-ML-discover (deep
-learning), together** -- neither worked alone.
+At M5.0 the deep model reaches **0.815, beating the persistence baseline (0.748) by
++0.067** -- a real, significant edge (the GBT's +0.039 over the same baseline is
+bootstrap-significant; deep's is larger). **CORRECTION:** an earlier draft cited "+0.16
+over persistence" using a wrong persistence figure (0.646); the rigorous best-recent-rate
+baseline on the aligned test set is **0.748**, so the honest edge is **~+0.067**, not
++0.16. Persistence does rise as magnitude drops (0.670 at M6 -> 0.748 at M5.0, more
+foreshock clustering), but deep rises faster, so the edge holds ~+0.06 throughout. It is
+real signal -- representation learning on the raw event stream found precursory structure
+(likely foreshock-sequence timing) the engineered features miss. The genuine lever is
+**lower magnitude (more data) + let-the-ML-discover (deep learning), together**.
+
+**Bake-off: ensembling does NOT help.** Combining deep + GBT on the aligned M5.0 set:
+rank-average 0.816 (+0.001 over deep alone, within noise), val-selected weighted 0.798,
+logistic stack 0.807 -- none beat the deep model. The deep model already subsumes the
+hand-crafted GBT's signal; there is no complementary information to gain. **Best from
+every model = the deep model alone (~0.81).**
 
 **The climb is bounded -- M5.0 is the empirical sweet spot, and we found the floor.**
 Pushing *lower* to M4.5 (36k train, 2.4x more data) did NOT continue the climb -- it
