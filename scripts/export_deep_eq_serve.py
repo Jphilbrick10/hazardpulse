@@ -23,6 +23,9 @@ def main(argv=None) -> int:
     ap.add_argument("--mag", default="5.0")
     ap.add_argument("--max-year", type=int, default=2025)
     ap.add_argument("--K", type=int, default=192)
+    ap.add_argument("--seq-cache", default="",
+                    help="explicit sequence cache .npz for verification (short-term products "
+                         "have label/input-radius suffixes the default name omits)")
     ap.add_argument("--out", default="")
     args = ap.parse_args(argv)
 
@@ -70,7 +73,9 @@ def main(argv=None) -> int:
     print(f"  wrote {out.name}")
 
     # --- verify numpy forward == torch on the test sequences ---
-    dz = np.load(REPO / ".cache" / "earthquake" / f"deepseq_my{args.max_year}_m{args.mag}_K{args.K}.npz")
+    seq_path = (REPO / args.seq_cache) if args.seq_cache else (
+        REPO / ".cache" / "earthquake" / f"deepseq_my{args.max_year}_m{args.mag}_K{args.K}.npz")
+    dz = np.load(seq_path)
     Xte, Mte = dz["Xte"], dz["Mte"]
     mu, sd = ck["norm_mu"], ck["norm_sd"]
     n = min(500, len(Xte))

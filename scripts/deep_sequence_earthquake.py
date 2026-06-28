@@ -261,7 +261,13 @@ def main(argv=None) -> int:
     print(f"device: {dev}")
     import os
     mag = os.environ.get("HAZARDPULSE_MIN_MAINSHOCK_MAG", "6.0")
-    seq_cache = REPO / ".cache" / "earthquake" / f"deepseq_my{args.max_year}_m{mag}_K{args.K}.npz"
+    # Label window in the key: the SHORT-TERM local product (small radius / short window)
+    # has different LABELS than the year-ahead one, so its sequence cache must not collide.
+    _lr = os.environ.get("HAZARDPULSE_LABEL_RADIUS_KM", "300.0")
+    _fw = os.environ.get("HAZARDPULSE_FORWARD_WINDOW_DAYS", "365.0")
+    _lbl = "" if (_lr in ("300.0", "300") and _fw in ("365.0", "365")) else f"_r{_lr}d{_fw}"
+    _inr = "" if abs(args.radius_km - 500.0) < 1e-6 else f"_ir{args.radius_km:.0f}"
+    seq_cache = REPO / ".cache" / "earthquake" / f"deepseq_my{args.max_year}_m{mag}_K{args.K}{_lbl}{_inr}.npz"
     if seq_cache.exists() and os.environ.get("HAZARDPULSE_DEEPSEQ_REBUILD") != "1":
         z = np.load(seq_cache)
         Xtr, Mtr, ytr = z["Xtr"], z["Mtr"], z["ytr"]
@@ -327,6 +333,14 @@ def main(argv=None) -> int:
     Xtr_t, Mtr_t, ytr_t = tens(Xtr, Mtr, ytr)
     Xva_t, Mva_t, _ = tens(Xva, Mva, yva)
     Xte_t, Mte_t, _ = tens(Xte, Mte, yte)
+
+    def _predict(model, X_t, M_t, bs=2048):
+        """Batched inference -- a full-set forward OOMs the GPU at large N / large K."""
+        outs = []
+        with torch.no_grad():
+            for j in range(0, len(X_t), bs):
+                outs.append(torch.sigmoid(model(X_t[j:j + bs], M_t[j:j + bs])))
+        return torch.cat(outs).cpu().numpy()
 
     # --- self-supervised pretraining of the encoder (optional, gru only) ------- #
     pre_enc = None
@@ -419,13 +433,11 @@ def main(argv=None) -> int:
                 opt.zero_grad()
                 loss = lossf(model(Xtr_t[b], Mtr_t[b]), ytr_t[b]); loss.backward(); opt.step()
             model.eval()
-            with torch.no_grad():
-                va = _auc(yva, torch.sigmoid(model(Xva_t, Mva_t)).cpu().numpy())
+            va = _auc(yva, _predict(model, Xva_t, Mva_t))
             if va > best_va:
                 best_va = va; best_state = {k: v.clone() for k, v in model.state_dict().items()}
         model.load_state_dict(best_state); model.eval()
-        with torch.no_grad():
-            pte = torch.sigmoid(model(Xte_t, Mte_t)).cpu().numpy()
+        pte = _predict(model, Xte_t, Mte_t)
         a = _auc(yte, pte); seed_aucs.append(a); ens += pte
         if a >= max(seed_aucs):                    # keep the best seed's deployable artifact
             best_overall = ({k: v.cpu().clone() for k, v in best_state.items()}, a)

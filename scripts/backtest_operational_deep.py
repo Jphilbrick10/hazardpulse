@@ -64,6 +64,8 @@ def main(argv=None) -> int:
     ap.add_argument("--max-cells", type=int, default=180)
     ap.add_argument("--model", default="results/models/eq_deep_nowcast_m5.0.pt")
     ap.add_argument("--max-year", type=int, default=2025)
+    ap.add_argument("--label-mags", type=float, nargs="+", default=[6.0, 5.0],
+                    help="forward-label magnitudes to score (short-term product uses 4.5)")
     args = ap.parse_args(argv)
 
     import torch
@@ -99,7 +101,8 @@ def main(argv=None) -> int:
         return np.array([[e["latitude"], e["longitude"],
                           dt.datetime.fromisoformat(e["time"].replace("Z", "+00:00")).timestamp()]
                          for e in mainshocks if e.get("mag", 0) >= min_mag])
-    m6 = _ms_array(6.0); m5 = _ms_array(5.0)
+    tags = [f"M{mg:g}" for mg in args.label_mags]
+    ms_by_tag = {f"M{mg:g}": _ms_array(mg) for mg in args.label_mags}
     print(f"catalog {len(cat_list)} events, {len(m6)} M6+ / {len(m5)} M5+ declustered mainshocks")
     print(f"deep model {args.model} (K={K}, radius={radius:.0f}km)")
 
@@ -127,7 +130,7 @@ def main(argv=None) -> int:
             return float(torch.sigmoid(net(torch.tensor(Xn[None]), torch.tensor(m[None])))[0])
 
     g = args.grid
-    pools = {"M6": ([], []), "M5": ([], [])}
+    pools = {tag: ([], []) for tag in tags}
     for ref in args.ref:
         t = dt.datetime.fromisoformat(ref + "T00:00:00+00:00").timestamp()
         recent = (cat.times > t - 2 * 365 * SEC_DAY) & (cat.times < t)
@@ -139,32 +142,32 @@ def main(argv=None) -> int:
         rng = np.random.RandomState(0)
         if len(active) > args.max_cells:
             active = [active[i] for i in rng.choice(len(active), args.max_cells, replace=False)]
-        rowy = {"M6": [], "M5": []}; rows = []
+        rowy = {tag: [] for tag in tags}; rows = []
         for (la, lo) in active:
             sc = seq_score(la, lo, t)
             if sc is None:
                 continue
             rows.append(sc)
-            for tag, arr in (("M6", m6), ("M5", m5)):
+            for tag in tags:
+                arr = ms_by_tag[tag]
                 if len(arr):
                     d = _hav(la, lo, arr[:, 0], arr[:, 1])
                     fwd = (arr[:, 2] > t) & (arr[:, 2] <= t + args.horizon_days * SEC_DAY)
                     rowy[tag].append(int(((d < args.radius_km) & fwd).any()))
                 else:
                     rowy[tag].append(0)
-        for tag in ("M6", "M5"):
+        for tag in tags:
             pools[tag][0].extend(rowy[tag]); pools[tag][1].extend(rows)
             print(f"  {ref} [{tag}+]: {len(rows)} active cells, {int(np.sum(rowy[tag]))} positive, "
                   f"operational AUC {_auc(rowy[tag], rows):.4f}")
 
     print()
-    for tag in ("M6", "M5"):
+    for tag in tags:
         y, s = pools[tag]
-        print(f"POOLED operational AUC [{tag}+ forward] ({len(y)} forecasts, "
-              f"{int(np.sum(y))} positive): {_auc(y, s):.4f}")
-    print("\nCompare: the hand-crafted GBT scored pooled operational AUC 0.509 (M6+). This is\n"
-          "the honest 'which active region ruptures next' skill -- separate from the 0.81\n"
-          "case-control NOWCAST AUC (which scores positives AT the mainshock moment).")
+        print(f"POOLED operational AUC [{tag}+ forward, {args.horizon_days}d/{args.radius_km:.0f}km] "
+              f"({len(y)} forecasts, {int(np.sum(y))} positive): {_auc(y, s):.4f}")
+    print("\nThe honest 'which active cell sees the next event in-window' operational skill, "
+          "distinct from the case-control NOWCAST AUC.")
     return 0
 
 

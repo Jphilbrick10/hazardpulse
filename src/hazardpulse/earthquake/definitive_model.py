@@ -80,9 +80,12 @@ VAL_END: int = 2019
 TEST_START: int = 2020
 TEST_END: int = 2024
 
-# Label parameters
-LABEL_RADIUS_KM: float = 300.0
-FORWARD_WINDOW_DAYS: float = 365.0
+# Label parameters. Env-overridable so we can build a SHORT-TERM LOCAL nowcast (small
+# radius / short window) alongside the year-ahead regional one: shrinking the window
+# restores label rarity (and thus quiet-control contrast) at low magnitudes, where the
+# year-ahead label is trivially almost-always-true.
+LABEL_RADIUS_KM: float = float(os.environ.get("HAZARDPULSE_LABEL_RADIUS_KM", "300.0"))
+FORWARD_WINDOW_DAYS: float = float(os.environ.get("HAZARDPULSE_FORWARD_WINDOW_DAYS", "365.0"))
 # Target magnitude. Env-overridable so we can test lower thresholds (M5+/M5.5+ give
 # ~5-10x more positive samples -- denser precursory signal, more training data).
 MIN_MAINSHOCK_MAG: float = float(os.environ.get("HAZARDPULSE_MIN_MAINSHOCK_MAG", "6.0"))
