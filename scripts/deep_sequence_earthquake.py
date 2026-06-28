@@ -40,13 +40,18 @@ def _auc(y, s):
 
 def _meta(max_year):
     """(lat,lon,epoch,label) for train(downsampled)+val+test in cached order."""
+    import time
     from hazardpulse.earthquake.definitive_model import (
-        load_usgs_catalog, decluster_gardner_knopoff, build_samples, CatalogArrays,
+        load_usgs_catalog, decluster_gardner_knopoff, build_samples,
         TRAIN_START, TRAIN_END, VAL_START, VAL_END, TEST_START, TEST_END)
+    t0 = time.time()
+    print("  [meta] loading catalog...", flush=True)
     catalog = load_usgs_catalog(min_year=2000, max_year=max_year, min_mag=2.5)
-    cat = CatalogArrays(catalog, verbose=False)
-    ms, _ = decluster_gardner_knopoff(catalog)
+    print(f"  [meta] {len(catalog)} events; declustering... ({time.time()-t0:.0f}s)", flush=True)
+    ms, _ = decluster_gardner_knopoff(catalog)              # workers build their own catalog
+    print(f"  [meta] {len(ms)} mainshocks; building samples... ({time.time()-t0:.0f}s)", flush=True)
     samples = build_samples(ms, catalog, verbose=False)
+    print(f"  [meta] {len(samples)} samples built ({time.time()-t0:.0f}s)", flush=True)
     te_end = max(TEST_END, int(max_year))
     tr = [s for s in samples if TRAIN_START <= s["year"] <= TRAIN_END]
     va = [s for s in samples if VAL_START <= s["year"] <= VAL_END]
@@ -64,7 +69,7 @@ def _meta(max_year):
                 np.array([s["longitude"] for s in ss], float),
                 np.array([s["ref_epoch"] for s in ss], float),
                 np.array([s["label"] for s in ss], int))
-    return pack(tr), pack(va), pack(teh), cat
+    return pack(tr), pack(va), pack(teh)
 
 
 def _haversine(lat, lon, lats, lons):
@@ -76,30 +81,65 @@ def _haversine(lat, lon, lats, lons):
         np.sin(dlon) * np.cos(lats), np.cos(lat) * np.sin(lats) - np.sin(lat) * np.cos(lats) * np.cos(dlon))
 
 
-def _sequences(meta, cat, K, radius_km):
-    """For each sample, the K most-recent events < ev_time within radius -> (N,K,6) + mask."""
+# Parallel sequence building with progress CHECKPOINTS + ETA. The single-threaded loop
+# took ~11h on the M4.5 dataset and printed nothing; fan out across cores and report
+# %/rate/ETA every 2000 samples so a long build is never a black box again.
+_SEQ_CAT = None
+_SEQ_K = 48
+_SEQ_R = 500.0
+
+
+def _seq_worker_init(max_year, K, radius_km):
+    global _SEQ_CAT, _SEQ_K, _SEQ_R
+    from hazardpulse.earthquake.definitive_model import load_usgs_catalog, CatalogArrays
+    _SEQ_CAT = CatalogArrays(load_usgs_catalog(min_year=2000, max_year=max_year, min_mag=2.5),
+                             verbose=False)
+    _SEQ_K, _SEQ_R = K, radius_km
+
+
+def _seq_one(s):
+    lat, lon, ep = s
+    cat, K, radius_km = _SEQ_CAT, _SEQ_K, _SEQ_R
+    X = np.zeros((K, 6), np.float32); m = np.zeros(K, np.float32)
+    t0 = ep - 5 * 365 * SEC_DAY
+    sel = (cat.times >= t0) & (cat.times < ep) & (np.abs(cat.lats - lat) < 6) & (np.abs(cat.lons - lon) < 6)
+    idx = np.where(sel)[0]
+    if idx.size == 0:
+        return X, m
+    d, az = _haversine(lat, lon, cat.lats[idx], cat.lons[idx])
+    near = d < radius_km
+    idx, d, az = idx[near], d[near], az[near]
+    if idx.size == 0:
+        return X, m
+    order = np.argsort(cat.times[idx])[-K:]                # most recent K, chronological
+    idx, d, az = idx[order], d[order], az[order]
+    dt = (ep - cat.times[idx]) / SEC_DAY
+    seq = np.stack([np.log1p(dt), cat.mags[idx], d / radius_km,
+                    np.clip(cat.depths[idx], 0, 700) / 700.0, np.sin(az), np.cos(az)], axis=1)
+    X[K - len(idx):] = seq; m[K - len(idx):] = 1.0
+    return X, m
+
+
+def _sequences(meta, max_year, K, radius_km, workers, split=""):
+    """Parallel: K most-recent events < ev_time within radius -> (N,K,6)+mask, with ETA."""
+    from concurrent.futures import ProcessPoolExecutor
+    import time
     lat, lon, ep, y = meta
     n = len(lat)
     X = np.zeros((n, K, 6), np.float32); M = np.zeros((n, K), np.float32)
-    for i in range(n):
-        t0 = ep[i] - 5 * 365 * SEC_DAY
-        sel = (cat.times >= t0) & (cat.times < ep[i]) & \
-              (np.abs(cat.lats - lat[i]) < 6) & (np.abs(cat.lons - lon[i]) < 6)
-        idx = np.where(sel)[0]
-        if idx.size == 0:
-            continue
-        d, az = _haversine(lat[i], lon[i], cat.lats[idx], cat.lons[idx])
-        near = d < radius_km
-        idx, d, az = idx[near], d[near], az[near]
-        if idx.size == 0:
-            continue
-        order = np.argsort(cat.times[idx])[-K:]            # most recent K, chronological
-        idx, d, az = idx[order], d[order], az[order]
-        dt = (ep[i] - cat.times[idx]) / SEC_DAY
-        seq = np.stack([np.log1p(dt), cat.mags[idx], d / radius_km,
-                        np.clip(cat.depths[idx], 0, 700) / 700.0,
-                        np.sin(az), np.cos(az)], axis=1)
-        X[i, K - len(idx):] = seq; M[i, K - len(idx):] = 1.0
+    if n == 0:
+        return X, M, y
+    samples = list(zip(lat.tolist(), lon.tolist(), ep.tolist()))
+    t0 = time.time()
+    with ProcessPoolExecutor(max_workers=workers, initializer=_seq_worker_init,
+                             initargs=(max_year, K, radius_km)) as ex:
+        for i, (xr, mr) in enumerate(ex.map(_seq_one, samples, chunksize=32)):
+            X[i] = xr; M[i] = mr
+            if (i + 1) % 2000 == 0 or (i + 1) == n:
+                rate = (i + 1) / max(time.time() - t0, 1e-9)
+                eta = (n - i - 1) / rate / 60.0
+                print(f"      [{split}] sequences {i+1}/{n} ({100*(i+1)//n}%, "
+                      f"{rate:.0f}/s, ETA {eta:.1f}min)", flush=True)
     return X, M, y
 
 
@@ -112,6 +152,7 @@ def main(argv=None) -> int:
     ap.add_argument("--seeds", type=int, default=1, help="train N seeds -> AUC mean+/-std + ensemble")
     ap.add_argument("--arch", default="gru", choices=["gru", "transformer"])
     ap.add_argument("--save-model", default="", help="save the best-seed model to this .pt path")
+    ap.add_argument("--workers", type=int, default=8, help="parallel sequence-build workers (each ~0.6GB)")
     ap.add_argument("--out", default="results/calibration/earthquake_deep_sequence.json")
     args = ap.parse_args(argv)
 
@@ -129,11 +170,12 @@ def main(argv=None) -> int:
         Xte, Mte, yte = z["Xte"], z["Mte"], z["yte"]
         print(f"  [cache] loaded sequences from {seq_cache.name}")
     else:
-        print("reconstructing metadata + building raw sequences (causal)...")
-        mtr, mva, mte, cat = _meta(args.max_year)
-        Xtr, Mtr, ytr = _sequences(mtr, cat, args.K, args.radius_km)
-        Xva, Mva, yva = _sequences(mva, cat, args.K, args.radius_km)
-        Xte, Mte, yte = _sequences(mte, cat, args.K, args.radius_km)
+        print(f"reconstructing metadata + building raw sequences (causal, x{args.workers} workers)...")
+        mtr, mva, mte = _meta(args.max_year)
+        kw = (args.max_year, args.K, args.radius_km, args.workers)
+        Xtr, Mtr, ytr = _sequences(mtr, *kw, "train")
+        Xva, Mva, yva = _sequences(mva, *kw, "val")
+        Xte, Mte, yte = _sequences(mte, *kw, "test")
         seq_cache.parent.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(seq_cache, Xtr=Xtr, Mtr=Mtr, ytr=ytr, Xva=Xva, Mva=Mva, yva=yva,
                             Xte=Xte, Mte=Mte, yte=yte)
