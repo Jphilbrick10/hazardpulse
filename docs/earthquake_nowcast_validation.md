@@ -98,14 +98,25 @@ the next rupture among *all* active regions — is far harder, and there the mod
 near random. Both are true. The precursory signal exists but is not specific enough to
 localize.
 
-**Definitive operational number** (`backtest_operational_grid.py`, declustered forward
-labels, 3 reference times, 450 active-cell forecasts): **pooled operational AUC = 0.509
-(random).** Per-snapshot: 0.54 / 0.54 / 0.33. As a "which active region gets the next
-M6+ within 300 km in the next 365 days" FORECASTER, the model has **no skill**. The
-0.77 nowcast scores positives AT the mainshock moment (precursors peak); the operational
-forecast scores at arbitrary times months ahead, where the short-lived signal is absent.
-The model is a short-term NOWCAST, not an operational forecaster -- and is presented as
-such.
+**Definitive operational number -- the deep model is meaningfully better here too.**
+The honest "which active region gets the next M6+ within 300 km / 365 days" FORECASTER
+test, declustered forward labels:
+
+| model | pooled operational AUC (M6+) | M5+ |
+|---|---|---|
+| hand-crafted GBT (`backtest_operational_grid.py`, 3 ref times) | **0.509** (random) | -- |
+| **deep GRU (`backtest_operational_deep.py`, 8 ref times, 1440 forecasts)** | **0.595** | 0.626 |
+
+The GBT had **no** operational skill (0.509). The deep model has **weak but real** skill
+(0.595 over 8 snapshots 2021-2024, +0.086 over the GBT, above random) -- but it is **highly
+variable** across time: per-snapshot M6+ ranges 0.47 -> 0.79, and in some periods (0.468,
+0.475) it is no better than chance. So the deep model partially localizes the next rupture
+where the hand-crafted model could not, but it is **not a reliable operational forecaster**
+-- operational earthquake forecasting remains fundamentally hard. The strong number is the
+case-control NOWCAST (~0.81-0.83, scoring positives AT the mainshock moment where precursors
+peak); the operational forecast scores at arbitrary times months ahead, where the signal is
+weaker and intermittent. Presented as such: a strong nowcast with modest, honest,
+*variable* operational skill -- explicitly not deterministic prediction.
 
 **Data-lever result** (M5.5, 2.7x more samples): the ~0.76 nowcast ceiling holds for the
 hand-crafted GBT, but the edge over persistence *strengthens* (+0.087, CI [0.064,0.109],
