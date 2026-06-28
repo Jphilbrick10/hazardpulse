@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-06-28T00:44:37Z",
-  "score_as_of": "2026-06-28T00:44:17Z",
+  "generated_at": "2026-06-28T01:35:18Z",
+  "score_as_of": "2026-06-28T01:00:00Z",
   "system": {
-    "frozen_forecasts": 1302,
-    "matured_forecasts": 1167,
+    "frozen_forecasts": 1303,
+    "matured_forecasts": 1168,
     "scored_forecasts": 222,
-    "matured_unscored_backlog": 945,
-    "raw_chain_rows": 1327,
+    "matured_unscored_backlog": 946,
+    "raw_chain_rows": 1328,
     "hash_chain_mismatches": 0,
     "exact_model_benchmarks": 1,
     "alerts": [
-      "945 matured forecast windows are waiting for scoring.",
+      "946 matured forecast windows are waiting for scoring.",
       "Tornado: no exact benchmark is attached to the current live model version."
     ]
   },
@@ -28,27 +28,27 @@
       "brier": 0.0022981435404596903,
       "homepage_line": "222 matured windows scored",
       "forecast_storage": {
-        "n_replay_artifacts": 344,
-        "n_matured_forecasts": 222,
+        "n_replay_artifacts": 345,
+        "n_matured_forecasts": 223,
         "n_scored_forecasts": 222,
-        "n_backlog": 0,
+        "n_backlog": 1,
         "first_issued_at": "2026-03-13T03:00:00Z",
-        "last_issued_at": "2026-06-27T18:00:00Z",
-        "last_forecast_id": "eq_fcst_20260627_1800",
-        "latest_replay_artifact": "/data/replay/eq_fcst_20260627_1800.json",
+        "last_issued_at": "2026-06-28T01:00:00Z",
+        "last_forecast_id": "eq_fcst_20260628_0100",
+        "latest_replay_artifact": "/data/replay/eq_fcst_20260628_0100.json",
         "forecast_horizon": "30 days",
-        "next_mature_at": "2026-06-28T01:00:00Z"
+        "next_mature_at": "2026-06-28T07:00:00Z"
       },
       "ledger": {
         "supported": true,
         "path": "/data/earthquake-ledger.jsonl",
-        "n_rows": 355,
+        "n_rows": 356,
         "prev_hash_mismatches": 0
       },
       "prospective": {
         "summary_path": "results/earthquake_prospective/prospective_summary.json",
         "status": "ok",
-        "scored_as_of": "2026-06-27T20:26:27Z",
+        "scored_as_of": "2026-06-28T00:50:20Z",
         "message": null,
         "top_5_hit_rate": 0.0
       },
