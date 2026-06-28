@@ -1146,24 +1146,27 @@ def compute_block_s(
     -------
     ndarray, shape (60,), dtype float32, or None if insufficient data.
     """
-    # Select events: before ev_time, within 5 years, within ~500km box
+    # Select events: before ev_time, within 5 years, within ~500km box.
+    # cat.times is sorted -> binary-search the [t_start, ev_time) window (O(log N))
+    # instead of an O(N) boolean mask over all ~0.5M events, then spatial-mask the
+    # (much smaller) slice. Identical event set, just faster.
     t_start = ev_time - 5.0 * SEC_PER_YEAR
-    time_mask = (cat.times >= t_start) & (cat.times < ev_time)
+    i0 = int(np.searchsorted(cat.times, t_start, side="left"))
+    i1 = int(np.searchsorted(cat.times, ev_time, side="left"))
     box_deg = 4.5
-    spatial_mask = (
-        (np.abs(cat.lats - ev_lat) < box_deg)
-        & (np.abs(cat.lons - ev_lon) < box_deg)
+    sm = (
+        (np.abs(cat.lats[i0:i1] - ev_lat) < box_deg)
+        & (np.abs(cat.lons[i0:i1] - ev_lon) < box_deg)
     )
-    mask = time_mask & spatial_mask
 
-    if np.sum(mask) < 10:
+    if np.sum(sm) < 10:
         return None
 
-    t = cat.times[mask]
-    la = cat.lats[mask]
-    lo = cat.lons[mask]
-    m = cat.mags[mask]
-    d = cat.depths[mask]
+    t = cat.times[i0:i1][sm]
+    la = cat.lats[i0:i1][sm]
+    lo = cat.lons[i0:i1][sm]
+    m = cat.mags[i0:i1][sm]
+    d = cat.depths[i0:i1][sm]
     dists = haversine_vec(ev_lat, ev_lon, la, lo)
 
     # Precise radius: 500km
