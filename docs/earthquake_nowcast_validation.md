@@ -110,10 +110,18 @@ plateaus:
 
 | | persistence | hand-crafted GBT | deep (raw events) | pos-rate |
 |---|---|---|---|---|
-| M6 (3.1k train) | 0.67 | 0.751 | 0.730 | ~33% (balanced) |
-| M5.5 (7.3k) | 0.67 | 0.762 | 0.752 | ~33% |
-| **M5.0 (15k)** | **0.646** | ~0.77 (confirming) | **0.815** | ~33% (PEAK) |
+| M6 (3.1k train) | 0.67 | 0.751 | 0.730 | ~33% (1:2 design) |
+| M5.5 (7.3k) | 0.67 | 0.762 | 0.752 | ~45% |
+| **M5.0 (15k)** | **0.646** | ~0.77 (confirming) | **0.815** | **55% (PEAK)** |
 | M4.5 (36k) | -- | -- | 0.750 | **77% (controls collapse)** |
+
+The pos-rate column tells the real story: the case-control design wants 33%
+(1 mainshock : 2 quiet controls), but as magnitude drops the controls become
+**unfindable** -- every active location already has a forward event -- so the
+positive fraction climbs 33% -> 45% -> 55% -> 77%. At M5.0 (55%) there is still
+genuine quiet-vs-critical contrast and the deep model peaks at 0.815; by M4.5 (77%)
+the contrast is gone and skill collapses to 0.750. The climb didn't "stop" -- the
+*task itself* dissolved beneath it. M5.0 is the last magnitude with a real control.
 
 At M5.0 the deep model reaches **0.815, beating persistence by +0.17** -- and the
 persistence baseline stayed ~0.65 at every magnitude, so this is NOT an easier task; it
