@@ -562,36 +562,46 @@ def _filter_events(
     time_window_days: float,
     ref_epoch: float | None = None,
 ) -> list[dict]:
-    """Filter events by spatial radius and time window."""
-    # Parse times
-    parsed: list[tuple[dict, float]] = []
-    for e in events:
-        lat = e.get("latitude")
-        lon = e.get("longitude")
-        t_str = e.get("time", "")
-        if lat is None or lon is None:
-            continue
-        t = _parse_event_time(t_str) if isinstance(t_str, str) else float(t_str)
-        parsed.append((e, t))
+    """Filter events by spatial radius and time window.
 
-    if not parsed:
+    Parsing the catalog times is cached per event-list (it was re-parsed on every call,
+    and _filter_events is called several times per sample -> millions of redundant
+    string parses). The time + haversine filter is vectorized. Identical result.
+    """
+    evs, lats, lons, eps = _parsed_catalog_arrays(events)
+    if len(evs) == 0:
         return []
-
-    # Determine reference epoch
     if ref_epoch is None:
-        ref_epoch = max(t for _, t in parsed)
-
+        ref_epoch = float(eps.max())
     t_min = ref_epoch - time_window_days * 86400.0
+    idx = np.where((eps >= t_min) & (eps <= ref_epoch))[0]
+    if idx.size == 0:
+        return []
+    dist = _haversine_km_arrays(center_lat, center_lon, lats[idx], lons[idx])
+    keep = idx[dist <= radius_km]
+    return [evs[i] for i in keep]
 
-    filtered: list[dict] = []
-    for e, t in parsed:
-        if t < t_min or t > ref_epoch:
-            continue
-        dist = _haversine_km(center_lat, center_lon, e["latitude"], e["longitude"])
-        if dist <= radius_km:
-            filtered.append(e)
 
-    return filtered
+_PARSED_CATALOG_CACHE: dict = {}
+
+
+def _parsed_catalog_arrays(events):
+    """Parse an event list to (events, lat[], lon[], epoch[]) ONCE; cache by list id."""
+    key = id(events)
+    cached = _PARSED_CATALOG_CACHE.get(key)
+    if cached is None:
+        evs, lats, lons, eps = [], [], [], []
+        for e in events:
+            lat = e.get("latitude"); lon = e.get("longitude")
+            if lat is None or lon is None:
+                continue
+            t_str = e.get("time", "")
+            t = _parse_event_time(t_str) if isinstance(t_str, str) else float(t_str)
+            evs.append(e); lats.append(lat); lons.append(lon); eps.append(t)
+        _PARSED_CATALOG_CACHE.clear()       # keep only the latest list (bounded memory)
+        cached = (evs, np.asarray(lats, float), np.asarray(lons, float), np.asarray(eps, float))
+        _PARSED_CATALOG_CACHE[key] = cached
+    return cached
 
 
 # ---------------------------------------------------------------------------
