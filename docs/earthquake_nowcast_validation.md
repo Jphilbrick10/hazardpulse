@@ -108,21 +108,34 @@ hand-crafted GBT, but the edge over persistence *strengthens* (+0.087, CI [0.064
 RAW event sequence (no hand-crafted features) SCALES with data where hand-crafting
 plateaus:
 
-| | persistence | hand-crafted GBT | deep (raw events) |
-|---|---|---|---|
-| M6 (3.1k train) | 0.67 | 0.751 | 0.730 |
-| M5.5 (7.3k) | 0.67 | 0.762 | 0.752 |
-| **M5.0 (15k)** | **0.646** | ~0.77 (confirming) | **0.815** |
+| | persistence | hand-crafted GBT | deep (raw events) | pos-rate |
+|---|---|---|---|---|
+| M6 (3.1k train) | 0.67 | 0.751 | 0.730 | ~33% (balanced) |
+| M5.5 (7.3k) | 0.67 | 0.762 | 0.752 | ~33% |
+| **M5.0 (15k)** | **0.646** | ~0.77 (confirming) | **0.815** | ~33% (PEAK) |
+| M4.5 (36k) | -- | -- | 0.750 | **77% (controls collapse)** |
 
 At M5.0 the deep model reaches **0.815, beating persistence by +0.17** -- and the
 persistence baseline stayed ~0.65 at every magnitude, so this is NOT an easier task; it
 is real signal. Representation learning on the raw event stream, given enough data, found
 precursory structure (likely foreshock-sequence timing) the engineered features miss.
 This is the genuine lever: **lower magnitude (more data) + let-the-ML-discover (deep
-learning), together** -- neither worked alone. Caveats: single-config result with a
-val>test gap (multi-seed stability under test); the fair GBT-at-M5.0 comparison is
-running; and it is still NOWCAST skill (the operational forecast limit of 0.51 is
-separate physics).
+learning), together** -- neither worked alone.
+
+**The climb is bounded -- M5.0 is the empirical sweet spot, and we found the floor.**
+Pushing *lower* to M4.5 (36k train, 2.4x more data) did NOT continue the climb -- it
+**reversed to 0.750**. The reason is diagnostic, not noise: at M4.5 the label "an M4.5+
+within 300 km / 365 days forward" is almost always TRUE at any active location, so
+`generate_control_samples` can no longer find quiet-time controls -- the train/test sets
+go **77% / 74% positive** and the case-control contrast degenerates. So the user's
+instinct (train below M6) paid off all the way down to M5.0 and then hit a hard physical
+floor: below M5.0 there is no such thing as a "quiet" control at 300 km / 1 yr. **M5.0 is
+the deployable model** (`results/models/eq_deep_nowcast_m5.0.pt`, 0.81, 5-seed stable);
+M4.5 is past the optimum. Remaining caveat: the M5.0 result carries a val>test gap
+(val ~0.93 vs test ~0.81) -- era-shift overfitting -- so the honest deployable number is
+~0.81 on the post-2018 holdout, not the optimistic validation figure. The fair
+GBT-at-M5.0 comparison is the last confirming run; it is still NOWCAST skill (the
+operational forecast limit of 0.51 is separate physics).
 
 **External forces** (tidal/celestial/moon, +0.007; teleseismic; seasonality) are all
 non-significant nulls. The catalog seismicity is the signal; the hand-crafted nowcast
