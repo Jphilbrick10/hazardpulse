@@ -297,6 +297,32 @@ def load_eq_forest(directory=None):
     return scorer
 
 
+DEEP_EQ_SERVE_NPZ = (
+    Path(__file__).resolve().parents[1] / "results" / "models" /
+    "eq_deep_nowcast_m5.0_2025_K192.serve.npz"
+)
+
+
+def load_deep_eq_scorer_model():
+    """Load the deep GRU nowcast champion for torch-free serving (pure-numpy forward).
+
+    Served RAW (uncalibrated): the static val-period isotonic/temperature calibrator did
+    not transfer to the test period (raw test ECE 0.085 < temp-calibrated 0.092), so raw
+    probabilities are the honest choice; periodic recalibration is the right fix. Returns
+    a DeepEQScorer or None.
+    """
+    try:
+        from hazardpulse.earthquake.deep_serve import load_deep_eq_scorer
+    except Exception as exc:  # pragma: no cover - numpy-only, should import
+        print(f"  WARNING: deep_serve import failed ({exc}); deep tier disabled.")
+        return None
+    scorer = load_deep_eq_scorer(DEEP_EQ_SERVE_NPZ, calib_path=None)
+    if scorer is not None:
+        print(f"  Loaded deep GRU nowcast champion (K={scorer.K}, radius={scorer.radius_km:.0f}km) "
+              f"from {DEEP_EQ_SERVE_NPZ.name}")
+    return scorer
+
+
 def _predict_eq_with_gbt(
     gbt: dict,
     raw_features_ordered: "np.ndarray",
@@ -1564,14 +1590,15 @@ def score_grid_cells(
     now: dt.datetime | None = None,
     pretrained_gbt: dict | None = None,
     eq_forest=None,
+    deep_scorer=None,
 ) -> list[dict]:
     """Score active grid cells using causal history and recent activity.
 
-    The per-cell probability comes from the ML tier when available: the exported
-    VerifiableForest champion (``eq_forest``, raw enhanced features) takes
-    precedence over the incumbent GBT (``pretrained_gbt``, z-scored). Either uses
-    the same 73 Block S + C features (plus_cft variant). Otherwise falls back to the
-    singularity-count heuristic.
+    Per-cell probability precedence: the deep GRU nowcast (``deep_scorer``, raw event
+    sequence, AUC ~0.86 / operational ~0.60 -- the measured champion) > the exported
+    VerifiableForest champion (``eq_forest``) > the incumbent GBT (``pretrained_gbt``).
+    The deep tier reads the raw K most-recent events per cell; the forest/GBT use the 73
+    Block S + C features. Otherwise falls back to the singularity-count heuristic.
     """
     if now is None:
         now = dt.datetime.now(dt.timezone.utc)
@@ -1580,17 +1607,21 @@ def score_grid_cells(
     if candidate_events is None:
         candidate_events = history_events
 
-    # Build CatalogArrays once per run if EITHER ML model is active.
+    # Build CatalogArrays once per run if ANY ML model is active (deep/forest/GBT).
     cat_arrays = None
-    if (pretrained_gbt is not None or eq_forest is not None) and HAS_EQ_ML:
+    if (pretrained_gbt is not None or eq_forest is not None or deep_scorer is not None) and HAS_EQ_ML:
         try:
             cat_arrays = CatalogArrays(history_events, verbose=False)
-            print(f"  ML tier active: CatalogArrays built from {len(history_events)} events")
+            tiers = [n for n, on in (("deep", deep_scorer is not None),
+                                     ("forest", eq_forest is not None),
+                                     ("gbt", pretrained_gbt is not None)) if on]
+            print(f"  ML tier active ({'+'.join(tiers)}): CatalogArrays built from {len(history_events)} events")
         except Exception as exc:
             print(f"  WARNING: CatalogArrays build failed ({exc}); disabling ML tier.")
             cat_arrays = None
             pretrained_gbt = None
             eq_forest = None
+            deep_scorer = None
 
     cell_bins = bin_events_to_grid(candidate_events)
     scored_cells: list[dict] = []
@@ -1615,7 +1646,21 @@ def score_grid_cells(
         prob = None
         cell_tier = "tier2_heuristic"
         model_id = None
-        if (pretrained_gbt is not None or eq_forest is not None) and cat_arrays is not None:
+        # Tier 1a: deep GRU nowcast (champion). Reads the raw event sequence directly --
+        # no Block S/C needed. P(M5+ within radius/365d) precursory-state score.
+        if deep_scorer is not None and cat_arrays is not None:
+            try:
+                dp = deep_scorer.score(cat_arrays, lat, lon, ref_epoch)
+                if dp is not None:
+                    prob = float(dp)
+                    model_id = "deep_gru_k192"
+                    cell_tier = "tier1_deep"
+                    n_ml += 1
+            except Exception as exc:
+                print(f"  WARNING: deep scoring failed for cell ({row},{col}): {exc}")
+                prob = None
+        # Tier 1b: forest / GBT on the 73 Block S + C features (fallback if deep absent/empty).
+        if prob is None and (pretrained_gbt is not None or eq_forest is not None) and cat_arrays is not None:
             try:
                 block_s = compute_block_s(lat, lon, ref_epoch, cat_arrays)
                 if block_s is not None:
@@ -2058,6 +2103,7 @@ def run_pipeline(
     print("Step 3: Scoring active grid cells...")
     pretrained_eq_gbt = load_pretrained_eq_gbt()
     eq_forest = load_eq_forest()        # deployable champion; precedence over the GBT when present
+    deep_eq_scorer = load_deep_eq_scorer_model()   # deep GRU nowcast; precedence over forest/GBT
     scored = score_grid_cells(
         history_events,
         candidate_events=recent_events,
@@ -2065,6 +2111,7 @@ def run_pipeline(
         now=now,
         pretrained_gbt=pretrained_eq_gbt,
         eq_forest=eq_forest,
+        deep_scorer=deep_eq_scorer,
     )
     print(f"  {len(scored)} cells scored")
 
