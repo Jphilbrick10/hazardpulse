@@ -105,12 +105,12 @@ test, declustered forward labels:
 | model | pooled operational AUC (M6+) | M5+ |
 |---|---|---|
 | hand-crafted GBT (`backtest_operational_grid.py`, 3 ref times) | **0.509** (random) | -- |
-| **deep GRU (`backtest_operational_deep.py`, 8 ref times, 1440 forecasts)** | **0.595** | 0.626 |
+| **deep GRU K=192 (`backtest_operational_deep.py`, 8 ref times, 1440 forecasts)** | **0.602** | 0.655 |
 
-The GBT had **no** operational skill (0.509). The deep model has **weak but real** skill
-(0.595 over 8 snapshots 2021-2024, +0.086 over the GBT, above random) -- but it is **highly
-variable** across time: per-snapshot M6+ ranges 0.47 -> 0.79, and in some periods (0.468,
-0.475) it is no better than chance. So the deep model partially localizes the next rupture
+The GBT had **no** operational skill (0.509). The deployed deep model (K=192) has **weak
+but real** skill (0.602 over 8 snapshots 2021-2024, +0.09 over the GBT, above random) -- but
+it is **variable** across time: per-snapshot M6+ ranges 0.52 -> 0.78 (the worst snapshot is
+0.518, no longer below chance as the smaller K=48 model was). So the deep model partially localizes the next rupture
 where the hand-crafted model could not, but it is **not a reliable operational forecaster**
 -- operational earthquake forecasting remains fundamentally hard. The strong number is the
 case-control NOWCAST (~0.81-0.83, scoring positives AT the mainshock moment where precursors
