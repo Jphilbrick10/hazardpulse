@@ -139,9 +139,9 @@ go **77% / 74% positive** and the case-control contrast degenerates. So the user
 instinct (train below M6) paid off all the way down to M5.0 and then hit a hard physical
 floor: below M5.0 there is no such thing as a "quiet" control at 300 km / 1 yr. **M5.0 is
 the deployable model** (`results/models/eq_deep_nowcast_m5.0.pt`, 0.81, 5-seed stable);
-M4.5 is past the optimum. Remaining caveat: the M5.0 result carries a val>test gap
-(val ~0.93 vs test ~0.81) -- era-shift overfitting -- so the honest deployable number is
-~0.81 on the post-2018 holdout, not the optimistic validation figure. The fair
+M4.5 is past the optimum. Remaining caveat: the M5.0 result carries a modest val>test gap
+(val ~0.875 vs test ~0.81) -- mild era-shift overfitting -- so the honest deployable number
+is ~0.81 on the post-2018 holdout, not the validation figure. The fair
 GBT-at-M5.0 comparison is the last confirming run; it is still NOWCAST skill (the
 operational forecast limit of 0.51 is separate physics).
 
@@ -167,6 +167,25 @@ closing the era-overfit gap -- but that did not convert to test skill.) The harn
 behind `--pretrain-anchors` for reproducibility; the deployable model stays from-scratch.
 The remaining *direct* lever (feed MORE of the stream: larger K / longer lookback) is the
 honest next experiment.
+
+**Reverse transfer (M5.0 encoder -> M4.5 task) -- helps a little, can't break the ceiling.**
+The symmetric test: warm-start the M4.5 model (`--init-from`) from the trained M5.0 encoder.
+
+| M4.5 task | test AUC | val AUC |
+|---|---|---|
+| from scratch | 0.750 | 0.94 |
+| **warm-started from M5.0 encoder** | **0.759 +/- 0.003** | 0.94 |
+
+A real, consistent +0.009 (all 5 seeds 0.757-0.763) -- the strong representation *does*
+transfer down. But it is a nudge, not a breakthrough, and the **0.94 val vs 0.76 test gap**
+is decisive: the M4.5 task has no generalizable quiet-vs-critical contrast (77% positive),
+so a better encoder lifts you a hair toward the ceiling but cannot raise the ceiling. The
+ceiling is the *label definition* (year-ahead/300 km M4.5 is trivially almost-always-yes),
+not the model. **To make M4.5 genuinely better, change the question** -- shrink the target
+to a short window / small radius (e.g. M4.5+ within ~50 km / 7-30 days). That restores
+label rarity and contrast, is where abundant small-quake data is most predictable
+(aftershock/swarm clustering), and is where this transfer would actually pay off -- but it
+is a *different product* (short-term local nowcast), not the year-ahead regional one.
 
 **External forces** (tidal/celestial/moon, +0.007; teleseismic; seasonality) are all
 non-significant nulls. The catalog seismicity is the signal; the hand-crafted nowcast

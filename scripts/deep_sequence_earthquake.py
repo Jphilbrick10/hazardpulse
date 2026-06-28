@@ -245,6 +245,9 @@ def main(argv=None) -> int:
                     help="fine-tune learning rate (lower when warm-starting from a pretrained encoder)")
     ap.add_argument("--freeze-epochs", type=int, default=0,
                     help="when pretrained: keep the encoder frozen for the first N epochs (discriminative FT)")
+    ap.add_argument("--init-from", default="",
+                    help="warm-start the encoder (proj/gru/att) from a saved .pt model "
+                         "(e.g. transfer the M5.0 encoder onto the M4.5 task -- the reverse transfer)")
     ap.add_argument("--out", default="results/calibration/earthquake_deep_sequence.json")
     args = ap.parse_args(argv)
 
@@ -370,6 +373,18 @@ def main(argv=None) -> int:
         print("  encoder pretrained -> transferring proj/gru/att into supervised models", flush=True)
     elif args.pretrain_anchors > 0:
         print("  [warn] --pretrain-anchors only supported for --arch gru; ignoring", flush=True)
+
+    # --- reverse transfer: warm-start from an already-trained model (e.g. M5.0 -> M4.5) --- #
+    if args.init_from and pre_enc is None and args.arch == "gru":
+        import torch as _t
+        sd = _t.load(REPO / args.init_from, map_location="cpu", weights_only=False)["state_dict"]
+        def _sub(prefix):
+            return {k[len(prefix) + 1:]: v.clone() for k, v in sd.items() if k.startswith(prefix + ".")}
+        pre_enc = {"proj": _sub("proj"), "gru": _sub("gru"), "att": _sub("att")}
+        pretrain_info = {"init_from": args.init_from}
+        print(f"  reverse transfer: warm-start proj/gru/att from {args.init_from}", flush=True)
+    elif args.init_from and args.arch != "gru":
+        print("  [warn] --init-from only supported for --arch gru; ignoring", flush=True)
 
     pos_w = torch.tensor([(ytr == 0).sum() / max((ytr == 1).sum(), 1)], device=dev, dtype=torch.float32)
     lossf = nn.BCEWithLogitsLoss(pos_weight=pos_w)
