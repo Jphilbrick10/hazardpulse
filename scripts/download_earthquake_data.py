@@ -308,7 +308,9 @@ def download_plate_boundaries() -> tuple[Path, Path]:
 # 4.  Nevada Geodetic Lab GPS Time Series
 # ===================================================================
 
-NGL_BASE = "https://geodesy.unr.edu/gps_timeseries/tenv3/IGS14"
+# Correct NGL layout (verified 2026-06): /gps_timeseries/IGS14/tenv3/IGS14/<SSSS>.tenv3
+# (the old /gps_timeseries/tenv3/IGS14/ path 404s -- that was the bug behind 99/99 fails).
+NGL_BASE = "https://geodesy.unr.edu/gps_timeseries/IGS14/tenv3/IGS14"
 NGL_STATION_LIST = "https://geodesy.unr.edu/NGLStationPages/llh.out"
 
 # Hand-curated stations near major fault zones.

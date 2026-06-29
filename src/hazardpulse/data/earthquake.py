@@ -115,12 +115,22 @@ def load_usgs_catalog(
     max_year: int = 2025,
     min_mag: float = 2.5,
 ) -> list[dict]:
-    """Load cached USGS earthquake catalog, auto-bootstrapping missing years."""
-    bootstrap_usgs_catalog(min_year=min_year, max_year=max_year)
+    """Load cached USGS earthquake catalog, auto-bootstrapping missing years.
+
+    HAZARDPULSE_USGS_FULL=1 reads the fuller M2.0+ catalog (usgs_full/, ~1.0M events,
+    2.5x more foreshocks) instead of the M2.5 set -- for the more-foreshocks experiment.
+    """
+    import os as _os
+    full = _os.environ.get("HAZARDPULSE_USGS_FULL") == "1"
+    if not full:
+        bootstrap_usgs_catalog(min_year=min_year, max_year=max_year)
 
     events: list[dict] = []
     for year in range(min_year, max_year + 1):
-        path = USGS_DIR / f"usgs_catalog_{year}.csv"
+        if full:
+            path = USGS_DIR.parent / "usgs_full" / f"usgs_M2.0_{year}.csv"
+        else:
+            path = USGS_DIR / f"usgs_catalog_{year}.csv"
         if not path.exists():
             continue
         with path.open("r", encoding="utf-8", errors="replace") as fh:

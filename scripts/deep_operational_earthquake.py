@@ -78,30 +78,51 @@ def _build_one(arg):
     lat, lon, ref = arg
     cat, ms, cfg = _CAT, _MS, _CFG
     K = cfg["K"]; R = cfg["input_radius"]
-    X = np.zeros((K, 9), np.float32); m = np.zeros(K, np.float32)
+    NCH = 20
+    X = np.zeros((K, NCH), np.float32); m = np.zeros(K, np.float32)
+    # --- MULTI-SCALE cross-location context: catch quiescence (a drop) + the regional field
+    # + stress transfer -- the tells a local-active-only model misses. Broad query first. ---
+    bsel = ((cat.times < ref) & (np.abs(cat.lats - lat) < 10) & (np.abs(cat.lons - lon) < 10))
+    bi = np.where(bsel)[0]
+    if bi.size == 0:
+        return None
+    bd = _haz(lat, lon, cat.lats[bi], cat.lons[bi])[0]
+    bdays = (ref - cat.times[bi]) / SEC_DAY
+    ctx = [lat / 90.0, lon / 180.0]
+    for rad, rec_n, base_n in [(100, 5.0, 8.0), (300, 6.0, 9.0), (500, 7.0, 10.0)]:
+        inr = bd < rad
+        rec = float(((bdays < 180) & inr).sum())            # recent (180d) rate at this scale
+        base = float(((bdays >= 365) & (bdays < 5 * 365) & inr).sum()) / 4.0 / 2.0  # 180d-equiv baseline
+        ctx.append(np.log1p(rec) / rec_n)
+        ctx.append(np.log1p(((bdays < 5 * 365) & inr).sum()) / base_n)
+        ctx.append(np.clip(np.log1p(rec) - np.log1p(base), -3, 3) / 3.0)  # anomaly: <0 quiescence, >0 ramp
+    maxmag = float(cat.mags[bi[bd < 300]].max()) if (bd < 300).any() else 0.0
+    ctx.append(maxmag / 9.0)
+    big = (bd < 1000) & (cat.mags[bi] >= 6.5) & (bdays < 2 * 365)   # stress transfer from a recent big quake
+    if big.any():
+        nb = np.argmin(bdays[big]); ctx.append((1000 - bd[big][nb]) / 1000.0)
+        ctx.append(max(0.0, 1 - bdays[big][nb] / 730.0))
+    else:
+        ctx.append(0.0); ctx.append(0.0)
+    # --- per-event local sequence (most-recent K within R / 5yr) ---
     t0 = ref - 5 * 365 * SEC_DAY
     sel = ((cat.times >= t0) & (cat.times < ref)
            & (np.abs(cat.lats - lat) < 6) & (np.abs(cat.lons - lon) < 6))
     idx = np.where(sel)[0]
-    if idx.size == 0:
-        return None
-    dist, az = _haz(lat, lon, cat.lats[idx], cat.lons[idx])
-    near = dist < R
-    idx, dist, az = idx[near], dist[near], az[near]
-    if idx.size == 0:
-        return None
-    order = np.argsort(cat.times[idx])[-K:]
-    idx, dist, az = idx[order], dist[order], az[order]
-    dd = (ref - cat.times[idx]) / SEC_DAY
-    # 6 per-event channels + 3 cross-location context (abs location + recent rate)
-    n_1yr = float(((ref - cat.times[idx]) < 365 * SEC_DAY).sum())
-    loc_lat = lat / 90.0; loc_lon = lon / 180.0; rate = np.log1p(n_1yr) / 6.0
-    seq = np.stack([np.log1p(dd), cat.mags[idx], dist / R,
-                    np.clip(cat.depths[idx], 0, 700) / 700.0, np.sin(az), np.cos(az),
-                    np.full(len(idx), loc_lat, np.float32),
-                    np.full(len(idx), loc_lon, np.float32),
-                    np.full(len(idx), rate, np.float32)], axis=1)
-    X[K - len(idx):] = seq; m[K - len(idx):] = 1.0
+    if idx.size:
+        dist, az = _haz(lat, lon, cat.lats[idx], cat.lons[idx])
+        near = dist < R
+        idx, dist, az = idx[near], dist[near], az[near]
+    if idx.size:
+        order = np.argsort(cat.times[idx])[-K:]
+        idx, dist, az = idx[order], dist[order], az[order]
+        dd = (ref - cat.times[idx]) / SEC_DAY
+        seq = np.stack([np.log1p(dd), cat.mags[idx], dist / R,
+                        np.clip(cat.depths[idx], 0, 700) / 700.0, np.sin(az), np.cos(az)]
+                       + [np.full(len(idx), c, np.float32) for c in ctx], axis=1)
+        X[K - len(idx):] = seq; m[K - len(idx):] = 1.0
+    else:
+        X[K - 1] = np.array([0, 0, 0, 0, 0, 0] + ctx, np.float32); m[K - 1] = 1.0  # context-only (quiescent cell)
     # forward label
     lab = 0
     if len(ms):
@@ -148,7 +169,7 @@ def main(argv=None) -> int:
 
     cfg = dict(K=args.K, input_radius=args.input_radius, label_mag=args.label_mag,
                label_radius=args.label_radius, label_days=args.label_days)
-    tag = f"op_my{args.max_year}_m{args.label_mag}_lr{args.label_radius:.0f}_ld{args.label_days:.0f}_K{args.K}_ir{args.input_radius:.0f}"
+    tag = f"op_v3_my{args.max_year}_m{args.label_mag}_lr{args.label_radius:.0f}_ld{args.label_days:.0f}_K{args.K}_ir{args.input_radius:.0f}_am{args.active_min_ev}_g{args.grid:.0f}"
     cache = REPO / ".cache" / "earthquake" / f"deep{tag}.npz"
     if cache.exists() and os.environ.get("HAZARDPULSE_OP_REBUILD") != "1":
         z = np.load(cache)
@@ -191,7 +212,23 @@ def main(argv=None) -> int:
         np.savez_compressed(cache, X=X, M=M, Y=Y, T=T)
         print(f"  [cache] saved {len(Y)} samples -> {cache.name}")
 
-    tr = T < _VAL0; va = (T >= _VAL0) & (T < _TEST0); te = T >= _TEST0
+    # walk-forward: --test-start-year re-splits the SAME cached samples (no rebuild) so we
+    # can confirm the result holds across multiple temporal splits, not one lucky cut.
+    tsy = int(os.environ.get("HAZARDPULSE_TEST_START_YEAR", "0"))
+    if tsy:
+        import datetime as _dt
+        test0 = _dt.datetime(tsy, 1, 1, tzinfo=_dt.timezone.utc).timestamp()
+        val0 = _dt.datetime(tsy - 2, 1, 1, tzinfo=_dt.timezone.utc).timestamp()
+        print(f"  [walk-forward] split @ test-start {tsy}: train<{tsy-2} val[{tsy-2},{tsy}) test>={tsy}")
+    else:
+        val0, test0 = _VAL0, _TEST0
+    tr = T < val0; va = (T >= val0) & (T < test0); te = T >= test0
+    if os.environ.get("HAZARDPULSE_SHUFFLE_LABELS") == "1":
+        # NULL TEST: break the input->label link by permuting train+val labels. A real
+        # signal must collapse to ~0.5 here; if it doesn't, the model is exploiting a leak.
+        Y = Y.copy(); rng = np.random.RandomState(0)
+        Y[tr] = rng.permutation(Y[tr]); Y[va] = rng.permutation(Y[va])
+        print("  [NULL TEST] train+val labels SHUFFLED -- test AUC must collapse to ~0.5")
     print(f"  train {tr.sum()} ({Y[tr].sum()} pos, {Y[tr].mean():.3%}) | "
           f"val {va.sum()} ({Y[va].sum()} pos) | test {te.sum()} ({Y[te].sum()} pos, {Y[te].mean():.3%})")
     if Y[te].sum() == 0:
