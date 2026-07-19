@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-07-19T00:32:25Z",
-  "score_as_of": "2026-07-19T00:31:55Z",
+  "generated_at": "2026-07-19T01:10:36Z",
+  "score_as_of": "2026-07-19T01:00:00Z",
   "system": {
-    "frozen_forecasts": 1619,
-    "matured_forecasts": 1485,
-    "scored_forecasts": 304,
-    "matured_unscored_backlog": 1181,
-    "raw_chain_rows": 1644,
+    "frozen_forecasts": 1620,
+    "matured_forecasts": 1486,
+    "scored_forecasts": 306,
+    "matured_unscored_backlog": 1180,
+    "raw_chain_rows": 1645,
     "hash_chain_mismatches": 0,
     "exact_model_benchmarks": 1,
     "alerts": [
-      "1181 matured forecast windows are waiting for scoring.",
+      "1180 matured forecast windows are waiting for scoring.",
       "Tornado: no exact benchmark is attached to the current live model version."
     ]
   },
@@ -24,33 +24,33 @@
       "verification_status_label": "Prospective live scoring is active for matured earthquake windows.",
       "metric_source": "prospective_live",
       "metric_source_label": "Computed from matured live forecasts.",
-      "auc": 0.7094402052798975,
-      "brier": 0.0024397271133800046,
-      "homepage_line": "304 matured windows scored",
+      "auc": 0.709582091235973,
+      "brier": 0.0024420147451985922,
+      "homepage_line": "306 matured windows scored",
       "forecast_storage": {
-        "n_replay_artifacts": 427,
-        "n_matured_forecasts": 306,
-        "n_scored_forecasts": 304,
-        "n_backlog": 2,
+        "n_replay_artifacts": 428,
+        "n_matured_forecasts": 307,
+        "n_scored_forecasts": 306,
+        "n_backlog": 1,
         "first_issued_at": "2026-03-13T03:00:00Z",
-        "last_issued_at": "2026-07-18T18:00:00Z",
-        "last_forecast_id": "eq_fcst_20260718_1800",
-        "latest_replay_artifact": "/data/replay/eq_fcst_20260718_1800.json",
+        "last_issued_at": "2026-07-19T01:00:00Z",
+        "last_forecast_id": "eq_fcst_20260719_0100",
+        "latest_replay_artifact": "/data/replay/eq_fcst_20260719_0100.json",
         "forecast_horizon": "30 days",
-        "next_mature_at": "2026-07-19T01:00:00Z"
+        "next_mature_at": "2026-07-19T08:00:00Z"
       },
       "ledger": {
         "supported": true,
         "path": "/data/earthquake-ledger.jsonl",
-        "n_rows": 438,
+        "n_rows": 439,
         "prev_hash_mismatches": 0
       },
       "prospective": {
         "summary_path": "results/earthquake_prospective/prospective_summary.json",
         "status": "ok",
-        "scored_as_of": "2026-07-18T12:24:10Z",
+        "scored_as_of": "2026-07-19T00:35:30Z",
         "message": null,
-        "top_5_hit_rate": 0.019736842105263157
+        "top_5_hit_rate": 0.0196078431372549
       },
       "exact_model_benchmark": null,
       "related_benchmark": {
