@@ -1,73 +1,17 @@
 {
-  "disclaimer": "Independent hazard intelligence platform. Always follow official NWS/USGS guidance.",
-  "updated_at": "2026-07-22T00:29:59.768322Z",
   "forecast_id": "to_fcst_20260722_0029",
+  "hazard": "tornado",
+  "issued_at": "2026-07-22T00:29:59Z",
   "model_version": "tornado_storm_v1_0",
+  "forecast_horizon_hours": 24,
   "scoring_tier": "tier1_ml",
   "scoring_tier_label": "ML (pre-trained gradient-boosted trees)",
   "coherence_source": "hrrr",
   "n_active_storms": 377,
-  "recent_predictions": [
-    {
-      "timestamp": "2026-07-21T22:19:46.220082Z",
-      "n_storms": 454,
-      "max_prob": 0.0276,
-      "hash": "727b5cc6604d609f..."
-    },
-    {
-      "timestamp": "2026-07-21T20:28:05.650112Z",
-      "n_storms": 368,
-      "max_prob": 0.0486,
-      "hash": "ab832cb093b63fb9..."
-    },
-    {
-      "timestamp": "2026-07-21T18:29:37.155393Z",
-      "n_storms": 311,
-      "max_prob": 0.0276,
-      "hash": "74a0196b5d63231e..."
-    },
-    {
-      "timestamp": "2026-07-21T16:31:22.912964Z",
-      "n_storms": 192,
-      "max_prob": 0.024,
-      "hash": "e165cfd67bdc074f..."
-    },
-    {
-      "timestamp": "2026-07-21T14:42:17.790866Z",
-      "n_storms": 147,
-      "max_prob": 0.024,
-      "hash": "42bc6512e051b263..."
-    },
-    {
-      "timestamp": "2026-07-21T10:43:44.549343Z",
-      "n_storms": 143,
-      "max_prob": 0.0203,
-      "hash": "6b002ca8fa6372a1..."
-    },
-    {
-      "timestamp": "2026-07-21T08:54:56.335352Z",
-      "n_storms": 140,
-      "max_prob": 0.0205,
-      "hash": "4eeaaec902cdf627..."
-    },
-    {
-      "timestamp": "2026-07-21T06:52:55.207437Z",
-      "n_storms": 122,
-      "max_prob": 0.024,
-      "hash": "1567a3b0f53ae08c..."
-    },
-    {
-      "timestamp": "2026-07-21T05:04:40.406833Z",
-      "n_storms": 119,
-      "max_prob": 0.0177,
-      "hash": "b6ec4c950027618e..."
-    },
-    {
-      "timestamp": "2026-07-21T03:04:24.776807Z",
-      "n_storms": 155,
-      "max_prob": 0.024,
-      "hash": "31850648c9eff890..."
-    }
+  "top_probability": 0.0486,
+  "source_artifacts": [
+    "/data/live-tornadoes.json",
+    "/data/tornado-storms.geojson"
   ],
   "storms": [
     {
