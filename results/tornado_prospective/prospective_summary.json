@@ -1,30 +1,30 @@
 {
-  "scored_as_of": "2026-07-22T12:39:56Z",
+  "scored_as_of": "2026-07-23T00:36:17Z",
   "replay_dir": "/home/runner/work/hazardpulse/hazardpulse/dist/data/replay",
-  "n_replay_artifacts": 1178,
-  "n_matured_forecasts": 1167,
+  "n_replay_artifacts": 1184,
+  "n_matured_forecasts": 1173,
   "forecast_horizon_hours": 24,
   "match_radius_km": 40.0,
   "match_window_hours": 4.0,
   "outcome_source": "SPC filtered tornado reports",
   "status": "ok",
   "calibration_dataset": "/home/runner/work/hazardpulse/hazardpulse/results/tornado_prospective/calibration_dataset.json",
-  "calibration_n": 144160,
+  "calibration_n": 146009,
   "observed_window": {
     "start": "2026-03-13T03:00:00Z",
-    "end": "2026-07-22T10:43:44Z",
-    "n_tornado_reports": 1010
+    "end": "2026-07-23T00:29:59Z",
+    "n_tornado_reports": 1023
   },
-  "total_storms_scored": 144160,
-  "total_matched_storms": 357,
-  "total_tornado_reports_in_windows": 9971,
+  "total_storms_scored": 146009,
+  "total_matched_storms": 369,
+  "total_tornado_reports_in_windows": 10149,
   "overall_match_rate": 0.0025,
-  "mean_auc": 0.6742,
-  "median_auc": 0.7712,
-  "mean_brier": 0.0456,
-  "mean_brier_skill_score": -0.5367,
-  "n_forecasts_with_valid_auc": 127,
-  "n_forecasts_without_matches": 1040,
+  "mean_auc": 0.677,
+  "median_auc": 0.7721,
+  "mean_brier": 0.0454,
+  "mean_brier_skill_score": -0.5339,
+  "n_forecasts_with_valid_auc": 131,
+  "n_forecasts_without_matches": 1042,
   "by_tier": {
     "unknown": {
       "n_forecasts": 2,
@@ -49,15 +49,15 @@
       "mean_brier_skill_score": -0.078
     },
     "tier1_ml": {
-      "n_forecasts": 980,
-      "n_forecasts_with_valid_auc": 112,
-      "total_storms_scored": 133198,
-      "total_matched_storms": 314,
+      "n_forecasts": 986,
+      "n_forecasts_with_valid_auc": 116,
+      "total_storms_scored": 135047,
+      "total_matched_storms": 326,
       "match_rate": 0.0024,
-      "mean_auc": 0.6712,
-      "median_auc": 0.7698,
-      "mean_brier": 0.0493,
-      "mean_brier_skill_score": -0.6233
+      "mean_auc": 0.6745,
+      "median_auc": 0.7729,
+      "mean_brier": 0.0491,
+      "mean_brier_skill_score": -0.6195
     }
   },
   "by_tier_recovery": {
@@ -113,18 +113,18 @@
       },
       "last_3d": {
         "n_forecasts": 22,
-        "mean_auc": 0.9793,
-        "mean_brier": 0.0004
+        "mean_auc": 0.838,
+        "mean_brier": 0.0026
       },
       "last_7d": {
         "n_forecasts": 66,
-        "mean_auc": 0.9262,
-        "mean_brier": 0.0004
+        "mean_auc": 0.8556,
+        "mean_brier": 0.0012
       },
       "last_14d": {
         "n_forecasts": 143,
-        "mean_auc": 0.6657,
-        "mean_brier": 0.0005
+        "mean_auc": 0.6947,
+        "mean_brier": 0.0009
       }
     }
   },
