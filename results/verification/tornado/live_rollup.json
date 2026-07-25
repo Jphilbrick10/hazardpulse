@@ -1,31 +1,31 @@
 {
   "key": "to",
   "hazard": "tornado",
-  "model_version": null,
-  "verification_status": "no_live_artifacts",
-  "status_badge": "Missing",
-  "verification_status_label": "No live tornado replay artifacts are present.",
+  "model_version": "tornado_storm_v1_0",
+  "verification_status": "matured_unscored_no_evaluator",
+  "status_badge": "Backlog",
+  "verification_status_label": "Matured tornado storm-object forecasts exist, but no live outcome scorer is wired yet.",
   "metric_source": "no_exact_model_benchmark",
   "metric_source_label": "No exact benchmark is currently bound to the live tornado storm-object model version in this repo.",
   "auc": null,
   "brier": null,
-  "homepage_line": "0 frozen forecasts \u00b7 0 matured backlog",
+  "homepage_line": "881 frozen forecasts \u00b7 868 matured backlog",
   "forecast_storage": {
-    "n_replay_artifacts": 0,
-    "n_matured_forecasts": 0,
+    "n_replay_artifacts": 881,
+    "n_matured_forecasts": 868,
     "n_scored_forecasts": 0,
-    "n_backlog": 0,
-    "first_issued_at": null,
-    "last_issued_at": null,
-    "last_forecast_id": null,
-    "latest_replay_artifact": null,
+    "n_backlog": 868,
+    "first_issued_at": "2026-03-13T03:00:00Z",
+    "last_issued_at": "2026-06-25T20:41:30Z",
+    "last_forecast_id": "to_fcst_20260625_2041",
+    "latest_replay_artifact": "/data/replay/to_fcst_20260625_2041.json",
     "forecast_horizon": "24 hours",
-    "next_mature_at": null
+    "next_mature_at": "2026-06-25T22:29:45Z"
   },
   "ledger": {
     "supported": true,
     "path": "/data/tornado-ledger.jsonl",
-    "n_rows": 0,
+    "n_rows": 947,
     "prev_hash_mismatches": 0
   },
   "prospective": {
@@ -35,6 +35,17 @@
     "message": "Live tornado storm-object forecasts are stored, but the repo does not yet score them against matched outcomes."
   },
   "exact_model_benchmark": null,
-  "related_benchmark": null,
+  "related_benchmark": {
+    "availability": "related_research_benchmark",
+    "label": "A historical 2024 holdout benchmark exists for a related tornado GBT family, but not yet as an exact score for the live storm-object model.",
+    "model_version": "hazardpulse_tornado_definitive_v1",
+    "source_updated_at": "2026-03-31T04:07:24Z",
+    "auc": 0.8942990839158551,
+    "brier": 0.1143939459213997,
+    "brier_skill_score": 0.17636358936592222,
+    "source_files": [
+      "results/definitive/definitive_results.json"
+    ]
+  },
   "recommended_action": "Bind each frozen tornado storm-object forecast to a matched outcome definition and write a 24-hour scorer before using the live model for calibration or threshold changes."
 }

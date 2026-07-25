@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-06-28T23:54:49Z",
-  "score_as_of": "2026-06-28T23:00:00Z",
+  "generated_at": "2026-07-25T17:39:43Z",
+  "score_as_of": "2026-06-25T20:41:30Z",
   "system": {
-    "frozen_forecasts": 2,
-    "matured_forecasts": 0,
-    "scored_forecasts": 0,
-    "matured_unscored_backlog": 0,
-    "raw_chain_rows": 2,
+    "frozen_forecasts": 1268,
+    "matured_forecasts": 1133,
+    "scored_forecasts": 213,
+    "matured_unscored_backlog": 920,
+    "raw_chain_rows": 1293,
     "hash_chain_mismatches": 0,
     "exact_model_benchmarks": 1,
     "alerts": [
-      "Earthquake: no exact benchmark is attached to the current live model version.",
+      "920 matured forecast windows are waiting for scoring.",
       "Tornado: no exact benchmark is attached to the current live model version."
     ]
   },
@@ -18,66 +18,78 @@
     {
       "key": "eq",
       "hazard": "earthquake",
-      "model_version": null,
-      "verification_status": "logging_waiting_maturity",
-      "status_badge": "Waiting",
-      "verification_status_label": "Prospective earthquake logging is live; the 30-day windows have not matured yet.",
-      "metric_source": "no_exact_model_benchmark",
-      "metric_source_label": "The current live earthquake model does not yet have an exact benchmark in this repo.",
-      "auc": null,
-      "brier": null,
-      "homepage_line": "2 frozen forecasts \u00b7 0 matured backlog",
+      "model_version": "eq_coherence_v1_0",
+      "verification_status": "prospective_scored",
+      "status_badge": "Scored",
+      "verification_status_label": "Prospective live scoring is active for matured earthquake windows.",
+      "metric_source": "prospective_live",
+      "metric_source_label": "Computed from matured live forecasts.",
+      "auc": 0.7317185564214207,
+      "brier": 0.002253911831704185,
+      "homepage_line": "213 matured windows scored",
       "forecast_storage": {
-        "n_replay_artifacts": 2,
-        "n_matured_forecasts": 0,
-        "n_scored_forecasts": 0,
-        "n_backlog": 0,
-        "first_issued_at": "2026-06-28T19:00:00Z",
-        "last_issued_at": "2026-06-28T23:00:00Z",
-        "last_forecast_id": "eq_fcst_20260628_2300",
-        "latest_replay_artifact": "/data/replay/eq_fcst_20260628_2300.json",
+        "n_replay_artifacts": 335,
+        "n_matured_forecasts": 214,
+        "n_scored_forecasts": 213,
+        "n_backlog": 1,
+        "first_issued_at": "2026-03-13T03:00:00Z",
+        "last_issued_at": "2026-06-25T19:00:00Z",
+        "last_forecast_id": "eq_fcst_20260625_1900",
+        "latest_replay_artifact": "/data/replay/eq_fcst_20260625_1900.json",
         "forecast_horizon": "30 days",
-        "next_mature_at": "2026-07-28T19:00:00Z"
+        "next_mature_at": "2026-06-26T01:00:00Z"
       },
       "ledger": {
         "supported": true,
         "path": "/data/earthquake-ledger.jsonl",
-        "n_rows": 2,
+        "n_rows": 346,
         "prev_hash_mismatches": 0
       },
       "prospective": {
         "summary_path": "results/earthquake_prospective/prospective_summary.json",
-        "status": "not_run",
-        "scored_as_of": null,
+        "status": "ok",
+        "scored_as_of": "2026-06-25T16:49:21Z",
         "message": null,
-        "top_5_hit_rate": null
+        "top_5_hit_rate": 0.0
       },
       "exact_model_benchmark": null,
-      "related_benchmark": null,
+      "related_benchmark": {
+        "availability": "related_research_benchmark",
+        "label": "Related research benchmark exists, but it is not yet bound to the current live model version.",
+        "model_version": "earthquake_honest_regional_suite",
+        "source_updated_at": null,
+        "global_auc": 0.9074433326526443,
+        "global_brier": 0.11605939643081976,
+        "same_location_auc": 0.797277556440903,
+        "source_files": [
+          "results/earthquake_honest/v4_regional_honest_results.json",
+          "results/earthquake_honest/same_location_auc.json"
+        ]
+      },
       "recommended_action": "Keep freezing every earthquake forecast. Once the first 30-day windows mature, run the prospective scorer and use those scores to tune thresholds and calibration."
     },
     {
       "key": "hu",
       "hazard": "hurricane",
-      "model_version": null,
-      "verification_status": "no_live_artifacts",
-      "status_badge": "Missing",
-      "verification_status_label": "No live hurricane replay artifacts are present.",
+      "model_version": "hurricane_ri_v8_1",
+      "verification_status": "matured_unscored_no_evaluator",
+      "status_badge": "Backlog",
+      "verification_status_label": "Matured hurricane forecasts exist, but no live advisory-to-outcome scorer is wired yet.",
       "metric_source": "retrospective_holdout_exact_model",
       "metric_source_label": "Exact-model retrospective benchmark is available.",
-      "auc": null,
-      "brier": null,
-      "brier_skill_score": null,
-      "homepage_line": "0 frozen forecasts \u00b7 scorer pending",
+      "auc": 0.938,
+      "brier": 0.034,
+      "brier_skill_score": 0.29,
+      "homepage_line": "AUC 0.938 retrospective holdout",
       "forecast_storage": {
-        "n_replay_artifacts": 0,
-        "n_matured_forecasts": 0,
+        "n_replay_artifacts": 52,
+        "n_matured_forecasts": 51,
         "n_scored_forecasts": 0,
-        "n_backlog": 0,
-        "first_issued_at": null,
-        "last_issued_at": null,
-        "last_forecast_id": null,
-        "latest_replay_artifact": null,
+        "n_backlog": 51,
+        "first_issued_at": "2026-03-13T03:00:00Z",
+        "last_issued_at": "2026-05-26T12:50:43Z",
+        "last_forecast_id": "hu_fcst_20260526_1250",
+        "latest_replay_artifact": "/data/replay/hu_fcst_20260526_1250.json",
         "forecast_horizon": "24 hours",
         "next_mature_at": null
       },
@@ -96,13 +108,13 @@
       "exact_model_benchmark": {
         "availability": "exact_model_benchmark",
         "label": "Retrospective benchmark available for the current live model version.",
-        "model_version": null,
-        "source_updated_at": null,
-        "auc": null,
-        "brier": null,
-        "brier_skill_score": null,
-        "reliability_slope": null,
-        "n_cases": null
+        "model_version": "hurricane_ri_v8_1",
+        "source_updated_at": "2026-03-13T03:00:00Z",
+        "auc": 0.938,
+        "brier": 0.034,
+        "brier_skill_score": 0.29,
+        "reliability_slope": 0.976,
+        "n_cases": 9714
       },
       "related_benchmark": null,
       "recommended_action": "Implement an advisory-to-outcome scorer that joins frozen hurricane forecasts to realized 24-hour intensity change before using the model for calibration or promotion decisions."
@@ -110,31 +122,31 @@
     {
       "key": "to",
       "hazard": "tornado",
-      "model_version": null,
-      "verification_status": "no_live_artifacts",
-      "status_badge": "Missing",
-      "verification_status_label": "No live tornado replay artifacts are present.",
+      "model_version": "tornado_storm_v1_0",
+      "verification_status": "matured_unscored_no_evaluator",
+      "status_badge": "Backlog",
+      "verification_status_label": "Matured tornado storm-object forecasts exist, but no live outcome scorer is wired yet.",
       "metric_source": "no_exact_model_benchmark",
       "metric_source_label": "No exact benchmark is currently bound to the live tornado storm-object model version in this repo.",
       "auc": null,
       "brier": null,
-      "homepage_line": "0 frozen forecasts \u00b7 0 matured backlog",
+      "homepage_line": "881 frozen forecasts \u00b7 868 matured backlog",
       "forecast_storage": {
-        "n_replay_artifacts": 0,
-        "n_matured_forecasts": 0,
+        "n_replay_artifacts": 881,
+        "n_matured_forecasts": 868,
         "n_scored_forecasts": 0,
-        "n_backlog": 0,
-        "first_issued_at": null,
-        "last_issued_at": null,
-        "last_forecast_id": null,
-        "latest_replay_artifact": null,
+        "n_backlog": 868,
+        "first_issued_at": "2026-03-13T03:00:00Z",
+        "last_issued_at": "2026-06-25T20:41:30Z",
+        "last_forecast_id": "to_fcst_20260625_2041",
+        "latest_replay_artifact": "/data/replay/to_fcst_20260625_2041.json",
         "forecast_horizon": "24 hours",
-        "next_mature_at": null
+        "next_mature_at": "2026-06-25T22:29:45Z"
       },
       "ledger": {
         "supported": true,
         "path": "/data/tornado-ledger.jsonl",
-        "n_rows": 0,
+        "n_rows": 947,
         "prev_hash_mismatches": 0
       },
       "prospective": {
@@ -144,7 +156,18 @@
         "message": "Live tornado storm-object forecasts are stored, but the repo does not yet score them against matched outcomes."
       },
       "exact_model_benchmark": null,
-      "related_benchmark": null,
+      "related_benchmark": {
+        "availability": "related_research_benchmark",
+        "label": "A historical 2024 holdout benchmark exists for a related tornado GBT family, but not yet as an exact score for the live storm-object model.",
+        "model_version": "hazardpulse_tornado_definitive_v1",
+        "source_updated_at": "2026-03-31T04:07:24Z",
+        "auc": 0.8942990839158551,
+        "brier": 0.1143939459213997,
+        "brier_skill_score": 0.17636358936592222,
+        "source_files": [
+          "results/definitive/definitive_results.json"
+        ]
+      },
       "recommended_action": "Bind each frozen tornado storm-object forecast to a matched outcome definition and write a 24-hour scorer before using the live model for calibration or threshold changes."
     }
   ]

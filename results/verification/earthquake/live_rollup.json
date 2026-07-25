@@ -1,41 +1,53 @@
 {
   "key": "eq",
   "hazard": "earthquake",
-  "model_version": null,
-  "verification_status": "logging_waiting_maturity",
-  "status_badge": "Waiting",
-  "verification_status_label": "Prospective earthquake logging is live; the 30-day windows have not matured yet.",
-  "metric_source": "no_exact_model_benchmark",
-  "metric_source_label": "The current live earthquake model does not yet have an exact benchmark in this repo.",
-  "auc": null,
-  "brier": null,
-  "homepage_line": "2 frozen forecasts \u00b7 0 matured backlog",
+  "model_version": "eq_coherence_v1_0",
+  "verification_status": "prospective_scored",
+  "status_badge": "Scored",
+  "verification_status_label": "Prospective live scoring is active for matured earthquake windows.",
+  "metric_source": "prospective_live",
+  "metric_source_label": "Computed from matured live forecasts.",
+  "auc": 0.7317185564214207,
+  "brier": 0.002253911831704185,
+  "homepage_line": "213 matured windows scored",
   "forecast_storage": {
-    "n_replay_artifacts": 2,
-    "n_matured_forecasts": 0,
-    "n_scored_forecasts": 0,
-    "n_backlog": 0,
-    "first_issued_at": "2026-06-28T19:00:00Z",
-    "last_issued_at": "2026-06-28T23:00:00Z",
-    "last_forecast_id": "eq_fcst_20260628_2300",
-    "latest_replay_artifact": "/data/replay/eq_fcst_20260628_2300.json",
+    "n_replay_artifacts": 335,
+    "n_matured_forecasts": 214,
+    "n_scored_forecasts": 213,
+    "n_backlog": 1,
+    "first_issued_at": "2026-03-13T03:00:00Z",
+    "last_issued_at": "2026-06-25T19:00:00Z",
+    "last_forecast_id": "eq_fcst_20260625_1900",
+    "latest_replay_artifact": "/data/replay/eq_fcst_20260625_1900.json",
     "forecast_horizon": "30 days",
-    "next_mature_at": "2026-07-28T19:00:00Z"
+    "next_mature_at": "2026-06-26T01:00:00Z"
   },
   "ledger": {
     "supported": true,
     "path": "/data/earthquake-ledger.jsonl",
-    "n_rows": 2,
+    "n_rows": 346,
     "prev_hash_mismatches": 0
   },
   "prospective": {
     "summary_path": "results/earthquake_prospective/prospective_summary.json",
-    "status": "not_run",
-    "scored_as_of": null,
+    "status": "ok",
+    "scored_as_of": "2026-06-25T16:49:21Z",
     "message": null,
-    "top_5_hit_rate": null
+    "top_5_hit_rate": 0.0
   },
   "exact_model_benchmark": null,
-  "related_benchmark": null,
+  "related_benchmark": {
+    "availability": "related_research_benchmark",
+    "label": "Related research benchmark exists, but it is not yet bound to the current live model version.",
+    "model_version": "earthquake_honest_regional_suite",
+    "source_updated_at": null,
+    "global_auc": 0.9074433326526443,
+    "global_brier": 0.11605939643081976,
+    "same_location_auc": 0.797277556440903,
+    "source_files": [
+      "results/earthquake_honest/v4_regional_honest_results.json",
+      "results/earthquake_honest/same_location_auc.json"
+    ]
+  },
   "recommended_action": "Keep freezing every earthquake forecast. Once the first 30-day windows mature, run the prospective scorer and use those scores to tune thresholds and calibration."
 }

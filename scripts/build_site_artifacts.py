@@ -223,6 +223,16 @@ def _upsert_replay_index_item(index: dict, forecast_id: str, replay_path: Path) 
 
 
 def _ensure_live_publish_artifacts() -> tuple[dict, dict]:
+    # FAIL CLOSED: live-pulse.json is a tracked, pipeline-accumulated artifact. If it is
+    # missing from disk the checkout is partial (e.g. sparse) -- fabricating an empty pulse
+    # here would silently clobber the deployed live surfaces on the next commit, which is
+    # exactly what happened in 71d56d53. Refuse instead of inventing state.
+    if not LIVE_PULSE_PATH.exists():
+        raise SystemExit(
+            f"{LIVE_PULSE_PATH} is missing. This tracked live artifact must exist before the "
+            "site can be rebuilt -- run from a full checkout (git sparse-checkout disable). "
+            "Refusing to fabricate an empty live pulse."
+        )
     pulse = _read_json(LIVE_PULSE_PATH, {"updated_at": None, "hazards": []})
     replay_index = _load_replay_index()
 

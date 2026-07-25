@@ -1186,16 +1186,18 @@ def render_earthquake_page(
     """
     updated_str = _format_time(now.isoformat() + "Z")
 
-    # Load base SVG map
+    # Load base SVG map. FAIL CLOSED: the base map is a tracked asset that carries the
+    # user-marker node the edge worker rewrites. If it is missing the checkout is partial
+    # (e.g. sparse) -- rendering the old silent fallback (an empty rectangle) produced a
+    # degraded page that clobbered the deployed one when committed (71d56d53).
     svg_path = DIST / "assets" / "world-map-base.svg"
-    if svg_path.exists():
-        svg_content = svg_path.read_text(encoding="utf-8")
-    else:
-        svg_content = (
-            '<svg class="world-map" viewBox="0 0 960 480" '
-            'xmlns="http://www.w3.org/2000/svg">'
-            '<rect width="960" height="480" fill="#e4eef8"/></svg>'
+    if not svg_path.exists():
+        raise SystemExit(
+            f"{svg_path} is missing. This tracked asset must exist to render the live page -- "
+            "run from a full checkout (git sparse-checkout disable). Refusing to render a "
+            "degraded map-less page."
         )
+    svg_content = svg_path.read_text(encoding="utf-8")
 
     # Inject grid heatmap and markers into the SVG
     if scored_cells:
@@ -1975,6 +1977,17 @@ def append_ledger(
     """Append prediction to the ledger without duplicate forecast ids."""
     from hazardpulse.earthquake.prospective import format_utc_z
 
+    # FAIL CLOSED on the tracked production ledger: it is a 340+-entry hash chain committed
+    # in git. If it is missing from disk the checkout is partial (e.g. sparse); appending
+    # would silently fork a fresh chain from genesis and clobber the real one on the next
+    # commit (71d56d53 shrank it 346 -> 2 entries this way). Explicit --ledger-path targets
+    # (tests, replays) may still start fresh ledgers.
+    if ledger_path == LEDGER_PATH and not ledger_path.exists():
+        raise SystemExit(
+            f"{ledger_path} is missing. The tracked prediction ledger must exist before "
+            "appending -- run from a full checkout (git sparse-checkout disable). Refusing "
+            "to fork a fresh chain from genesis."
+        )
     ledger_path.parent.mkdir(parents=True, exist_ok=True)
     existing_lines: list[str] = []
     prev_hash = "0" * 64
