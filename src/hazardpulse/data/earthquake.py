@@ -176,7 +176,7 @@ def load_gcmt_catalog() -> list[dict]:
     Returns
     -------
     list[dict]
-        Keys: event_id, lat, lon, depth, Mw, strike1, dip1, rake1,
+        Keys: event_id, time, lat, lon, depth, Mw, strike1, dip1, rake1,
         strike2, dip2, rake2, scalar_moment.
     """
     path = GCMT_DIR / "gcmt_catalog.csv"

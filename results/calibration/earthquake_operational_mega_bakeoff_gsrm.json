@@ -1,0 +1,142 @@
+{
+  "label": "M5.0+/100km/30d mega bakeoff",
+  "selection_rule": "Compare families by 2018-2019 validation AUC; 2020+ test is held out.",
+  "n_features": 307,
+  "n_train": 45925,
+  "n_val": 7044,
+  "n_test": 22248,
+  "test_pos": 1321,
+  "families": {
+    "lightgbm": [
+      {
+        "name": "lgb_cls_15",
+        "val_auc": 0.7306,
+        "test_auc": 0.7242,
+        "test_grouped_by_month_auc": 0.7256
+      },
+      {
+        "name": "lgb_cls_31",
+        "val_auc": 0.7311,
+        "test_auc": 0.725,
+        "test_grouped_by_month_auc": 0.7263
+      },
+      {
+        "name": "lgb_cls_63",
+        "val_auc": 0.7277,
+        "test_auc": 0.7222,
+        "test_grouped_by_month_auc": 0.7234
+      },
+      {
+        "name": "lgb_lambdarank_15",
+        "val_auc": 0.7262,
+        "test_auc": 0.7216,
+        "test_grouped_by_month_auc": 0.723
+      },
+      {
+        "name": "lgb_lambdarank_31",
+        "val_auc": 0.7193,
+        "test_auc": 0.7139,
+        "test_grouped_by_month_auc": 0.7147
+      },
+      {
+        "name": "lgb_lambdarank_63",
+        "val_auc": 0.724,
+        "test_auc": 0.7222,
+        "test_grouped_by_month_auc": 0.7237
+      }
+    ],
+    "xgboost_classifiers": [
+      {
+        "name": "xgb_cls_d3",
+        "val_auc": 0.7252,
+        "test_auc": 0.72,
+        "test_grouped_by_month_auc": 0.7204
+      },
+      {
+        "name": "xgb_cls_d4",
+        "val_auc": 0.7226,
+        "test_auc": 0.7093,
+        "test_grouped_by_month_auc": 0.71
+      },
+      {
+        "name": "xgb_cls_d5",
+        "val_auc": 0.7125,
+        "test_auc": 0.7052,
+        "test_grouped_by_month_auc": 0.7058
+      }
+    ],
+    "baggers": [
+      {
+        "name": "extra_trees",
+        "val_auc": 0.728,
+        "test_auc": 0.7276,
+        "test_grouped_by_month_auc": 0.7289
+      },
+      {
+        "name": "random_forest",
+        "val_auc": 0.726,
+        "test_auc": 0.7233,
+        "test_grouped_by_month_auc": 0.7241
+      }
+    ],
+    "etas_residual": [
+      {
+        "name": "etas_only_logistic",
+        "val_auc": 0.6602,
+        "test_auc": 0.6694,
+        "test_grouped_by_month_auc": 0.6718
+      },
+      {
+        "name": "etas_plus_hgb_residual",
+        "val_auc": 0.7221,
+        "test_auc": 0.7174,
+        "test_grouped_by_month_auc": 0.7181
+      }
+    ],
+    "regime_experts": [
+      {
+        "name": "hard_regime_catboost_experts",
+        "val_auc": 0.7067,
+        "test_auc": 0.7112,
+        "test_grouped_by_month_auc": 0.7124,
+        "experts": {
+          "high_lat_remote": {
+            "status": "fallback",
+            "n_train": 9
+          },
+          "historic_m6": {
+            "status": "trained",
+            "n_train": 9980,
+            "pos_train": 324
+          },
+          "plate_other": {
+            "status": "trained",
+            "n_train": 11260,
+            "pos_train": 511
+          },
+          "remote": {
+            "status": "fallback",
+            "n_train": 900
+          },
+          "subduction": {
+            "status": "trained",
+            "n_train": 23776,
+            "pos_train": 1754
+          }
+        }
+      }
+    ]
+  },
+  "best_by_validation": {
+    "name": "lgb_cls_31",
+    "val_auc": 0.7311,
+    "test_auc": 0.725,
+    "test_grouped_by_month_auc": 0.7263
+  },
+  "best_by_test_audit_not_for_selection": {
+    "name": "extra_trees",
+    "val_auc": 0.728,
+    "test_auc": 0.7276,
+    "test_grouped_by_month_auc": 0.7289
+  }
+}

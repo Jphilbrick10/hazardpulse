@@ -46,20 +46,100 @@ def _auc(y, s):
 _CAT = None
 _MS = None
 _CFG = None
+_GLA = _GLO = _GM0 = _GT = None   # causal GCMT arrays (lat, lon, scalar moment, epoch)
+
+
+def _extra_feats(lat, lon, ref, cat, bi, bd, bdays):
+    """The 4 levers that showed real operational signal (ETAS intensity +0.011, b-value,
+    AMR curvature, Coulomb-from-GCMT). Computed from the already-selected box events `bi`."""
+    mags = cat.mags[bi]
+    # ETAS conditional intensity (Ogata), 100 km, 30-day expected count
+    inr = bd < 100
+    if inr.any():
+        dd = np.maximum(bdays[inr], 0.0); mg = mags[inr]
+        aft = (0.018 * 10 ** (0.9 * (mg - 2.5)) / ((dd + 0.01) ** 1.10)).sum()
+        bg = ((bdays >= 365) & (bdays < 5 * 365) & inr).sum() / (4 * 365.0)
+        etas = np.log1p((bg + aft) * 30.0)
+    else:
+        etas = 0.0
+    # Gutenberg-Richter b-value (Aki MLE), 150 km / 5 yr
+    sb = (bd < 150) & (bdays < 5 * 365); mm = mags[sb]
+    bval = (np.log10(np.e) / (mm.mean() - (mm.min() - 0.05))) if (mm.size >= 25 and mm.mean() > mm.min()) else 1.0
+    # accelerating moment release (Benioff strain curvature), 250 km / 3 yr
+    sa = (bd < 250) & (bdays < 3 * 365)
+    if sa.sum() >= 15:
+        ee = np.sqrt(10.0 ** (1.5 * mags[sa] + 4.8)); tt = bdays[sa]
+        o = np.argsort(-tt); S = np.cumsum(ee[o]); x = -tt[o]
+        A = np.vstack([x, np.ones_like(x)]).T
+        cf = np.linalg.lstsq(A, S, rcond=None)[0]; resid = S - A @ cf
+        amr = float(resid[-1] / (S[-1] + 1e-9))
+    else:
+        amr = 0.0
+    # Coulomb stress proxy from prior nearby GCMT M6+ events (sum of M0 / r^3), 500 km.
+    # Rows without origin time are excluded at load time; using the full GCMT catalog here would
+    # leak future focal mechanisms into old forecasts.
+    if _GLA is not None and _GLA.size:
+        causal = _GT < ref
+        gm0 = _GM0[causal]
+        gd = _haz(lat, lon, _GLA[causal], _GLO[causal])[0] if causal.any() else np.array([])
+        ing = gd < 500
+        coul = float(np.log1p((gm0[ing] / np.maximum(gd[ing] * 1000.0, 5000.0) ** 3).sum())) if ing.any() else 0.0
+    else:
+        coul = 0.0
+    return [float(etas) / 5.0, float(bval) / 2.0, float(np.clip(amr, -1, 1)), coul / 5.0]
+
+
+def _epoch_from_iso_z(value):
+    if not value:
+        return None
+    import datetime as dt
+    try:
+        return dt.datetime.fromisoformat(str(value).replace("Z", "+00:00")).timestamp()
+    except ValueError:
+        return None
 
 
 def _winit(max_year, cfg):
     global _CAT, _MS, _CFG
     from hazardpulse.earthquake.definitive_model import (
         load_usgs_catalog, CatalogArrays, decluster_gardner_knopoff)
-    cl = load_usgs_catalog(min_year=2000, max_year=max_year, min_mag=2.5)
+    mim = cfg.get("min_input_mag", 2.5)
+    # input feature catalog at min_input_mag (M2.0 = richer foreshock detail). Labels are
+    # declustered M5+ mainshocks, identical for M2.0 vs M2.5 input (GK breaks at M<5), so we
+    # decluster a M2.5-filtered view to keep that step cheap and the label set comparable.
+    cl = load_usgs_catalog(min_year=2000, max_year=max_year, min_mag=mim)
     _CAT = CatalogArrays(cl, verbose=False)
-    ms, _ = decluster_gardner_knopoff(cl)
+    cl_dec = [e for e in cl if (e.get("mag") or 0) >= 2.5] if mim < 2.5 else cl
+    ms, _ = decluster_gardner_knopoff(cl_dec)
     import datetime as dt
     _MS = np.array([[e["latitude"], e["longitude"],
                      dt.datetime.fromisoformat(e["time"].replace("Z", "+00:00")).timestamp()]
                     for e in ms if e.get("mag", 0) >= cfg["label_mag"]])
     _CFG = cfg
+    global _GLA, _GLO, _GM0, _GT
+    _GLA = _GLO = _GM0 = _GT = None
+    if cfg.get("extra_features"):
+        try:
+            from hazardpulse.data.earthquake import load_gcmt_catalog
+            gla, glo, gm0, gt = [], [], [], []
+            for r in load_gcmt_catalog():
+                try:
+                    la = float(r["lat"]); lo = float(r["lon"]); mw = float(r["Mw"])
+                except Exception:
+                    continue
+                if mw < 6.0:
+                    continue
+                epoch = _epoch_from_iso_z(r.get("time"))
+                if epoch is None:
+                    continue
+                try:
+                    moment = float(r.get("scalar_moment") or 10.0 ** (1.5 * mw + 9.1))
+                except Exception:
+                    moment = 10.0 ** (1.5 * mw + 9.1)
+                gla.append(la); glo.append(lo); gm0.append(moment); gt.append(epoch)
+            _GLA = np.array(gla); _GLO = np.array(glo); _GM0 = np.array(gm0); _GT = np.array(gt)
+        except Exception:
+            _GLA = np.array([]); _GLO = np.array([]); _GM0 = np.array([]); _GT = np.array([])
 
 
 def _haz(lat, lon, lats, lons):
@@ -78,8 +158,6 @@ def _build_one(arg):
     lat, lon, ref = arg
     cat, ms, cfg = _CAT, _MS, _CFG
     K = cfg["K"]; R = cfg["input_radius"]
-    NCH = 20
-    X = np.zeros((K, NCH), np.float32); m = np.zeros(K, np.float32)
     # --- MULTI-SCALE cross-location context: catch quiescence (a drop) + the regional field
     # + stress transfer -- the tells a local-active-only model misses. Broad query first. ---
     bsel = ((cat.times < ref) & (np.abs(cat.lats - lat) < 10) & (np.abs(cat.lons - lon) < 10))
@@ -104,6 +182,10 @@ def _build_one(arg):
         ctx.append(max(0.0, 1 - bdays[big][nb] / 730.0))
     else:
         ctx.append(0.0); ctx.append(0.0)
+    if cfg.get("extra_features"):
+        ctx = ctx + _extra_feats(lat, lon, ref, cat, bi, bd, bdays)
+    NCH = 6 + len(ctx)
+    X = np.zeros((K, NCH), np.float32); m = np.zeros(K, np.float32)
     # --- per-event local sequence (most-recent K within R / 5yr) ---
     t0 = ref - 5 * 365 * SEC_DAY
     sel = ((cat.times >= t0) & (cat.times < ref)
@@ -153,6 +235,12 @@ def main(argv=None) -> int:
     ap.add_argument("--active-min-ev", type=int, default=8)
     ap.add_argument("--active-days", type=float, default=180.0)
     ap.add_argument("--grid", type=float, default=2.0)
+    ap.add_argument("--min-input-mag", type=float, default=2.5,
+                    help="min magnitude for the INPUT feature catalog (2.0 w/ HAZARDPULSE_USGS_FULL=1 "
+                         "= richer foreshock sequences; labels/active-cells stay M2.5-comparable)")
+    ap.add_argument("--extra-features", action="store_true",
+                    help="append 4 physics channels (ETAS intensity, b-value, AMR curvature, "
+                         "Coulomb-from-GCMT) that showed real operational signal")
     ap.add_argument("--epochs", type=int, default=30)
     ap.add_argument("--seeds", type=int, default=3)
     ap.add_argument("--workers", type=int, default=8)
@@ -168,8 +256,11 @@ def main(argv=None) -> int:
     print(f"device: {dev}")
 
     cfg = dict(K=args.K, input_radius=args.input_radius, label_mag=args.label_mag,
-               label_radius=args.label_radius, label_days=args.label_days)
-    tag = f"op_v3_my{args.max_year}_m{args.label_mag}_lr{args.label_radius:.0f}_ld{args.label_days:.0f}_K{args.K}_ir{args.input_radius:.0f}_am{args.active_min_ev}_g{args.grid:.0f}"
+               label_radius=args.label_radius, label_days=args.label_days,
+               min_input_mag=args.min_input_mag, extra_features=args.extra_features)
+    _mimtag = "" if args.min_input_mag == 2.5 else f"_mim{args.min_input_mag}"
+    _xftag = "_xf" if args.extra_features else ""
+    tag = f"op_v3_my{args.max_year}_m{args.label_mag}_lr{args.label_radius:.0f}_ld{args.label_days:.0f}_K{args.K}_ir{args.input_radius:.0f}_am{args.active_min_ev}_g{args.grid:.0f}{_mimtag}{_xftag}"
     cache = REPO / ".cache" / "earthquake" / f"deep{tag}.npz"
     if cache.exists() and os.environ.get("HAZARDPULSE_OP_REBUILD") != "1":
         z = np.load(cache)
@@ -270,7 +361,7 @@ def main(argv=None) -> int:
     pos_w = T_(np.array([(Y[tr] == 0).sum() / max((Y[tr] == 1).sum(), 1)], np.float32))
     lossf = nn.BCEWithLogitsLoss(pos_weight=pos_w)
     seed_aucs = []; ens = np.zeros(te.sum())
-    best_overall = (None, 0.0)
+    best_overall = (None, -1.0, float("nan"))
     for seed in range(args.seeds):
         torch.manual_seed(seed)
         model = OpModel().to(dev)
@@ -289,18 +380,20 @@ def main(argv=None) -> int:
         model.load_state_dict(best_state); model.eval()
         p = predict(model, Xte, Mte)
         au = _auc(yte, p); seed_aucs.append(au); ens += p
-        if au >= max(seed_aucs):
-            best_overall = ({k: v.cpu().clone() for k, v in best_state.items()}, au)
+        if best_va > best_overall[1]:
+            best_overall = ({k: v.cpu().clone() for k, v in best_state.items()}, best_va, au)
         print(f"  seed {seed}: TEST operational AUC {au:.4f} (best val {best_va:.4f})")
     if args.save_model:
         mp = REPO / args.save_model
         mp.parent.mkdir(parents=True, exist_ok=True)
-        torch.save({"state_dict": best_overall[0], "test_op_auc": best_overall[1],
+        torch.save({"state_dict": best_overall[0], "val_op_auc": best_overall[1],
+                    "test_op_auc": best_overall[2],
                     "norm_mu": mu, "norm_sd": sd, "K": args.K, "radius_km": args.input_radius,
                     "n_channels": int(X.shape[-1]), "label_mag": args.label_mag,
                     "label_radius_km": args.label_radius, "label_days": args.label_days,
                     "spec": "hazardpulse/eq-operational-forecaster/v1"}, mp)
-        print(f"  saved operational forecaster ({best_overall[1]:.4f}) -> {mp}")
+        print(f"  saved operational forecaster (val {best_overall[1]:.4f}, "
+              f"test {best_overall[2]:.4f}) -> {mp}")
     import json
     op_auc = float(np.mean(seed_aucs)); ens_auc = _auc(yte, ens / args.seeds)
     print(f"\n  OPERATIONAL deep model (cross-location ranking, +location context): "

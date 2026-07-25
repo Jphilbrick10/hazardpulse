@@ -1,0 +1,548 @@
+{
+  "label": "M5.0+/100km/30d nextwave ensemble audit",
+  "selection_rule": "Rank-average candidate selected by 2018-2019 validation AUC; 2020+ test held out.",
+  "n_old_models": 14,
+  "n_nextwave_models": 6,
+  "n_total_models": 20,
+  "rows": [
+    {
+      "name": "cat5_s501",
+      "val_auc": 0.733249,
+      "test_auc": 0.730042,
+      "test_grouped_by_month_auc": 0.731287
+    },
+    {
+      "name": "cat5_s502",
+      "val_auc": 0.731983,
+      "test_auc": 0.730914,
+      "test_grouped_by_month_auc": 0.731966
+    },
+    {
+      "name": "cat5_s503",
+      "val_auc": 0.73163,
+      "test_auc": 0.731719,
+      "test_grouped_by_month_auc": 0.732776
+    },
+    {
+      "name": "cat6_s511",
+      "val_auc": 0.734469,
+      "test_auc": 0.729737,
+      "test_grouped_by_month_auc": 0.730626
+    },
+    {
+      "name": "cat6_s512",
+      "val_auc": 0.732337,
+      "test_auc": 0.731901,
+      "test_grouped_by_month_auc": 0.732901
+    },
+    {
+      "name": "cat6_s513",
+      "val_auc": 0.732049,
+      "test_auc": 0.729057,
+      "test_grouped_by_month_auc": 0.730263
+    },
+    {
+      "name": "cat4_s521",
+      "val_auc": 0.732256,
+      "test_auc": 0.730047,
+      "test_grouped_by_month_auc": 0.730898
+    },
+    {
+      "name": "cat4_s522",
+      "val_auc": 0.731536,
+      "test_auc": 0.728356,
+      "test_grouped_by_month_auc": 0.729628
+    },
+    {
+      "name": "lgb15",
+      "val_auc": 0.732054,
+      "test_auc": 0.727017,
+      "test_grouped_by_month_auc": 0.72833
+    },
+    {
+      "name": "lgb31",
+      "val_auc": 0.731462,
+      "test_auc": 0.726694,
+      "test_grouped_by_month_auc": 0.727978
+    },
+    {
+      "name": "lgb63",
+      "val_auc": 0.731631,
+      "test_auc": 0.719994,
+      "test_grouped_by_month_auc": 0.721226
+    },
+    {
+      "name": "hgb",
+      "val_auc": 0.726105,
+      "test_auc": 0.722039,
+      "test_grouped_by_month_auc": 0.723122
+    },
+    {
+      "name": "extra",
+      "val_auc": 0.726417,
+      "test_auc": 0.727041,
+      "test_grouped_by_month_auc": 0.728346
+    },
+    {
+      "name": "rf",
+      "val_auc": 0.727027,
+      "test_auc": 0.721767,
+      "test_grouped_by_month_auc": 0.722793
+    },
+    {
+      "name": "nw_tremor_d7",
+      "val_auc": 0.735127,
+      "test_auc": 0.731442,
+      "test_grouped_by_month_auc": 0.732655
+    },
+    {
+      "name": "nw_gnss_d7",
+      "val_auc": 0.732612,
+      "test_auc": 0.731886,
+      "test_grouped_by_month_auc": 0.732491
+    },
+    {
+      "name": "nw_regional_d7",
+      "val_auc": 0.732687,
+      "test_auc": 0.731228,
+      "test_grouped_by_month_auc": 0.732196
+    },
+    {
+      "name": "nw_slab2_d7",
+      "val_auc": 0.734446,
+      "test_auc": 0.732134,
+      "test_grouped_by_month_auc": 0.732794
+    },
+    {
+      "name": "nw_tremor_regional_d7",
+      "val_auc": 0.73241,
+      "test_auc": 0.730582,
+      "test_grouped_by_month_auc": 0.731744
+    },
+    {
+      "name": "nw_all_d6",
+      "val_auc": 0.732753,
+      "test_auc": 0.732055,
+      "test_grouped_by_month_auc": 0.733199
+    },
+    {
+      "name": "rank_avg_top1_by_val",
+      "val_auc": 0.735127,
+      "test_auc": 0.731442,
+      "test_grouped_by_month_auc": 0.732655,
+      "members": [
+        "nw_tremor_d7"
+      ]
+    },
+    {
+      "name": "rank_avg_top2_by_val",
+      "val_auc": 0.736689,
+      "test_auc": 0.732523,
+      "test_grouped_by_month_auc": 0.733363,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511"
+      ]
+    },
+    {
+      "name": "rank_avg_top3_by_val",
+      "val_auc": 0.736504,
+      "test_auc": 0.732928,
+      "test_grouped_by_month_auc": 0.733844,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7"
+      ]
+    },
+    {
+      "name": "rank_avg_top4_by_val",
+      "val_auc": 0.736205,
+      "test_auc": 0.732693,
+      "test_grouped_by_month_auc": 0.733752,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501"
+      ]
+    },
+    {
+      "name": "rank_avg_top5_by_val",
+      "val_auc": 0.735796,
+      "test_auc": 0.732851,
+      "test_grouped_by_month_auc": 0.733849,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6"
+      ]
+    },
+    {
+      "name": "rank_avg_top6_by_val",
+      "val_auc": 0.73543,
+      "test_auc": 0.732735,
+      "test_grouped_by_month_auc": 0.733611,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7"
+      ]
+    },
+    {
+      "name": "rank_avg_top7_by_val",
+      "val_auc": 0.735239,
+      "test_auc": 0.732891,
+      "test_grouped_by_month_auc": 0.733954,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7"
+      ]
+    },
+    {
+      "name": "rank_avg_top8_by_val",
+      "val_auc": 0.735045,
+      "test_auc": 0.732709,
+      "test_grouped_by_month_auc": 0.733653,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7"
+      ]
+    },
+    {
+      "name": "rank_avg_top9_by_val",
+      "val_auc": 0.734823,
+      "test_auc": 0.732728,
+      "test_grouped_by_month_auc": 0.733651,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7",
+        "cat6_s512"
+      ]
+    },
+    {
+      "name": "rank_avg_top10_by_val",
+      "val_auc": 0.734676,
+      "test_auc": 0.732588,
+      "test_grouped_by_month_auc": 0.733515,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7",
+        "cat6_s512",
+        "cat4_s521"
+      ]
+    },
+    {
+      "name": "rank_avg_top11_by_val",
+      "val_auc": 0.734773,
+      "test_auc": 0.732471,
+      "test_grouped_by_month_auc": 0.733489,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15"
+      ]
+    },
+    {
+      "name": "rank_avg_top12_by_val",
+      "val_auc": 0.734703,
+      "test_auc": 0.732283,
+      "test_grouped_by_month_auc": 0.733301,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513"
+      ]
+    },
+    {
+      "name": "rank_avg_top13_by_val",
+      "val_auc": 0.734657,
+      "test_auc": 0.732311,
+      "test_grouped_by_month_auc": 0.733421,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502"
+      ]
+    },
+    {
+      "name": "rank_avg_top14_by_val",
+      "val_auc": 0.735146,
+      "test_auc": 0.732107,
+      "test_grouped_by_month_auc": 0.733165,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63"
+      ]
+    },
+    {
+      "name": "rank_avg_top15_by_val",
+      "val_auc": 0.735104,
+      "test_auc": 0.732236,
+      "test_grouped_by_month_auc": 0.733212,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63",
+        "cat5_s503"
+      ]
+    },
+    {
+      "name": "rank_avg_top16_by_val",
+      "val_auc": 0.734935,
+      "test_auc": 0.732115,
+      "test_grouped_by_month_auc": 0.733144,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63",
+        "cat5_s503",
+        "cat4_s522"
+      ]
+    },
+    {
+      "name": "rank_avg_top17_by_val",
+      "val_auc": 0.735146,
+      "test_auc": 0.732139,
+      "test_grouped_by_month_auc": 0.733191,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63",
+        "cat5_s503",
+        "cat4_s522",
+        "lgb31"
+      ]
+    },
+    {
+      "name": "rank_avg_top18_by_val",
+      "val_auc": 0.73522,
+      "test_auc": 0.732205,
+      "test_grouped_by_month_auc": 0.733366,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63",
+        "cat5_s503",
+        "cat4_s522",
+        "lgb31",
+        "rf"
+      ]
+    },
+    {
+      "name": "rank_avg_top19_by_val",
+      "val_auc": 0.73512,
+      "test_auc": 0.732309,
+      "test_grouped_by_month_auc": 0.733421,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63",
+        "cat5_s503",
+        "cat4_s522",
+        "lgb31",
+        "rf",
+        "extra"
+      ]
+    },
+    {
+      "name": "rank_avg_top20_by_val",
+      "val_auc": 0.735208,
+      "test_auc": 0.732356,
+      "test_grouped_by_month_auc": 0.733614,
+      "members": [
+        "nw_tremor_d7",
+        "cat6_s511",
+        "nw_slab2_d7",
+        "cat5_s501",
+        "nw_all_d6",
+        "nw_regional_d7",
+        "nw_gnss_d7",
+        "nw_tremor_regional_d7",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63",
+        "cat5_s503",
+        "cat4_s522",
+        "lgb31",
+        "rf",
+        "extra",
+        "hgb"
+      ]
+    },
+    {
+      "name": "rank_avg_all_old_plus_nextwave",
+      "val_auc": 0.735208,
+      "test_auc": 0.732356,
+      "test_grouped_by_month_auc": 0.733617,
+      "members": [
+        "cat5_s501",
+        "cat5_s502",
+        "cat5_s503",
+        "cat6_s511",
+        "cat6_s512",
+        "cat6_s513",
+        "cat4_s521",
+        "cat4_s522",
+        "lgb15",
+        "lgb31",
+        "lgb63",
+        "hgb",
+        "extra",
+        "rf",
+        "nw_tremor_d7",
+        "nw_gnss_d7",
+        "nw_regional_d7",
+        "nw_slab2_d7",
+        "nw_tremor_regional_d7",
+        "nw_all_d6"
+      ]
+    }
+  ],
+  "selected_by_validation": {
+    "name": "rank_avg_top2_by_val",
+    "val_auc": 0.736689,
+    "test_auc": 0.732523,
+    "test_grouped_by_month_auc": 0.733363,
+    "members": [
+      "nw_tremor_d7",
+      "cat6_s511"
+    ]
+  },
+  "best_by_test_audit_not_for_selection": {
+    "name": "rank_avg_top3_by_val",
+    "val_auc": 0.736504,
+    "test_auc": 0.732928,
+    "test_grouped_by_month_auc": 0.733844,
+    "members": [
+      "nw_tremor_d7",
+      "cat6_s511",
+      "nw_slab2_d7"
+    ]
+  }
+}

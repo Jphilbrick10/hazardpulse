@@ -1,0 +1,134 @@
+{
+  "label": "M5.0+/100km/30d mega bakeoff",
+  "selection_rule": "Compare families by 2018-2019 validation AUC; 2020+ test is held out.",
+  "n_features": 298,
+  "n_train": 45925,
+  "n_val": 7044,
+  "n_test": 22248,
+  "test_pos": 1321,
+  "families": {
+    "lightgbm": [
+      {
+        "name": "lgb_cls_15",
+        "val_auc": 0.7306,
+        "test_auc": 0.7254,
+        "test_grouped_by_month_auc": 0.7269
+      },
+      {
+        "name": "lgb_cls_31",
+        "val_auc": 0.7327,
+        "test_auc": 0.7256,
+        "test_grouped_by_month_auc": 0.7272
+      },
+      {
+        "name": "lgb_cls_63",
+        "val_auc": 0.7306,
+        "test_auc": 0.7191,
+        "test_grouped_by_month_auc": 0.7199
+      },
+      {
+        "name": "lgb_lambdarank_15",
+        "val_auc": 0.7258,
+        "test_auc": 0.7201,
+        "test_grouped_by_month_auc": 0.7216
+      },
+      {
+        "name": "lgb_lambdarank_31",
+        "val_auc": 0.7275,
+        "test_auc": 0.7193,
+        "test_grouped_by_month_auc": 0.7203
+      },
+      {
+        "name": "lgb_lambdarank_63",
+        "val_auc": 0.7216,
+        "test_auc": 0.7148,
+        "test_grouped_by_month_auc": 0.7165
+      }
+    ],
+    "baggers": [
+      {
+        "name": "extra_trees",
+        "val_auc": 0.7273,
+        "test_auc": 0.7272,
+        "test_grouped_by_month_auc": 0.7289
+      },
+      {
+        "name": "random_forest",
+        "val_auc": 0.727,
+        "test_auc": 0.7227,
+        "test_grouped_by_month_auc": 0.7233
+      }
+    ],
+    "etas_residual": [
+      {
+        "name": "etas_only_logistic",
+        "val_auc": 0.6602,
+        "test_auc": 0.6694,
+        "test_grouped_by_month_auc": 0.6718
+      },
+      {
+        "name": "etas_plus_hgb_residual",
+        "val_auc": 0.7225,
+        "test_auc": 0.7185,
+        "test_grouped_by_month_auc": 0.7197
+      }
+    ],
+    "regime_experts": [
+      {
+        "name": "hard_regime_catboost_experts",
+        "val_auc": 0.7095,
+        "test_auc": 0.7058,
+        "test_grouped_by_month_auc": 0.7076,
+        "experts": {
+          "high_lat_remote": {
+            "status": "fallback",
+            "n_train": 9
+          },
+          "historic_m6": {
+            "status": "trained",
+            "n_train": 9980,
+            "pos_train": 324
+          },
+          "plate_other": {
+            "status": "trained",
+            "n_train": 11260,
+            "pos_train": 511
+          },
+          "remote": {
+            "status": "fallback",
+            "n_train": 900
+          },
+          "subduction": {
+            "status": "trained",
+            "n_train": 23776,
+            "pos_train": 1754
+          }
+        }
+      }
+    ],
+    "neural_mlp": [
+      {
+        "name": "torch_mlp_bce",
+        "val_auc": 0.728,
+        "test_auc": 0.7292,
+        "test_grouped_by_month_auc": 0.7302,
+        "device": "cuda",
+        "epochs": 6
+      }
+    ]
+  },
+  "best_by_validation": {
+    "name": "lgb_cls_31",
+    "val_auc": 0.7327,
+    "test_auc": 0.7256,
+    "test_grouped_by_month_auc": 0.7272
+  },
+  "best_by_test_audit_not_for_selection": {
+    "name": "torch_mlp_bce",
+    "val_auc": 0.728,
+    "test_auc": 0.7292,
+    "test_grouped_by_month_auc": 0.7302,
+    "device": "cuda",
+    "epochs": 6
+  }
+}

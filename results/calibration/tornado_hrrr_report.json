@@ -1,36 +1,36 @@
 {
-  "n": 3693,
-  "n_pos": 573,
+  "n": 11662,
+  "n_pos": 1384,
   "n_features": 26,
-  "split_cut": 20240624,
-  "n_test": 904,
+  "split_cut": 20240426,
+  "n_test": 3085,
   "live_ceiling": 0.64,
   "xgboost": {
-    "auc": 0.8111778846153856,
-    "brier": 0.07987639221958105
+    "auc": 0.882212529738316,
+    "brier": 0.088812062273852
   },
   "verifiable_forest": {
-    "auc": 0.8112379807692317,
-    "brier": 0.08922255557106328,
+    "auc": 0.8830824742268162,
+    "brier": 0.10107090746878741,
     "booster": "xgboost",
     "self_reproduce": 1.0,
     "bit_exact": true,
     "n_trees": 400
   },
   "best_tabular": {
-    "auc": 0.8498437500000049,
-    "brier": 0.07743405166280998
+    "auc": 0.8894226804123886,
+    "brier": 0.08972379767443801
   },
-  "best_auc": 0.8498437500000049,
+  "best_auc": 0.8894226804123886,
   "beats_live_ceiling": true,
   "deployed": true,
-  "deployed_n": 3693,
-  "model_sha256": "c475ec4db49dd24a04c8eaf43c3feb5ae91cb30afd77898cadb3489fd369dca0",
+  "deployed_n": 11662,
+  "model_sha256": "6732b00f07d518e07505b8671b915c71f633d8f139821a828b255e71a73081b1",
   "n_trees": 400,
   "calibration": {
-    "ece_before": 0.0618,
-    "ece_after": 0.0145,
-    "brier_before": 0.0892,
-    "brier_after": 0.0749
+    "ece_before": 0.1044,
+    "ece_after": 0.0075,
+    "brier_before": 0.1011,
+    "brier_after": 0.0805
   }
 }

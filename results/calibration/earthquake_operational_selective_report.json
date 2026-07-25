@@ -1,0 +1,371 @@
+{
+  "label": "M5.0+/100km/30d selective/extreme-score audit",
+  "contract": "Selective forecaster: keep only score extremes; abstain on ambiguous middle. This is not the broad all-active-cell operational AUC.",
+  "test_period": "2020-01-01 through cached 2025 endpoint",
+  "n_test": 22248,
+  "test_pos": 1321,
+  "rows": [
+    {
+      "score": "cat5_s501",
+      "broad_auc": 0.73,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 190,
+        "positive_rate": 0.0854,
+        "auc": 0.7925
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 37,
+        "positive_rate": 0.083,
+        "auc": 0.7653
+      }
+    },
+    {
+      "score": "cat5_s502",
+      "broad_auc": 0.7309,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 197,
+        "positive_rate": 0.0885,
+        "auc": 0.8033
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 48,
+        "positive_rate": 0.1076,
+        "auc": 0.7968
+      }
+    },
+    {
+      "score": "cat5_s503",
+      "broad_auc": 0.7317,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 197,
+        "positive_rate": 0.0885,
+        "auc": 0.7859
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 41,
+        "positive_rate": 0.0919,
+        "auc": 0.7878
+      }
+    },
+    {
+      "score": "cat6_s511",
+      "broad_auc": 0.7297,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 202,
+        "positive_rate": 0.0907,
+        "auc": 0.788
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 39,
+        "positive_rate": 0.0874,
+        "auc": 0.8031
+      }
+    },
+    {
+      "score": "cat6_s512",
+      "broad_auc": 0.7319,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 208,
+        "positive_rate": 0.0934,
+        "auc": 0.7808
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 40,
+        "positive_rate": 0.0897,
+        "auc": 0.799
+      }
+    },
+    {
+      "score": "cat6_s513",
+      "broad_auc": 0.7291,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 212,
+        "positive_rate": 0.0952,
+        "auc": 0.7682
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 37,
+        "positive_rate": 0.083,
+        "auc": 0.7793
+      }
+    },
+    {
+      "score": "cat4_s521",
+      "broad_auc": 0.73,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 204,
+        "positive_rate": 0.0916,
+        "auc": 0.7804
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 39,
+        "positive_rate": 0.0874,
+        "auc": 0.7837
+      }
+    },
+    {
+      "score": "cat4_s522",
+      "broad_auc": 0.7284,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 203,
+        "positive_rate": 0.0912,
+        "auc": 0.7735
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 39,
+        "positive_rate": 0.0874,
+        "auc": 0.7557
+      }
+    },
+    {
+      "score": "lgb15",
+      "broad_auc": 0.727,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 187,
+        "positive_rate": 0.084,
+        "auc": 0.7616
+      },
+      "selective_2pct": {
+        "coverage": 0.0201,
+        "n": 447,
+        "positives": 35,
+        "positive_rate": 0.0783,
+        "auc": 0.8041
+      }
+    },
+    {
+      "score": "lgb31",
+      "broad_auc": 0.7267,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 192,
+        "positive_rate": 0.0863,
+        "auc": 0.7688
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 40,
+        "positive_rate": 0.0897,
+        "auc": 0.7694
+      }
+    },
+    {
+      "score": "lgb63",
+      "broad_auc": 0.72,
+      "selective_10pct": {
+        "coverage": 0.1002,
+        "n": 2229,
+        "positives": 190,
+        "positive_rate": 0.0852,
+        "auc": 0.7645
+      },
+      "selective_2pct": {
+        "coverage": 0.0353,
+        "n": 785,
+        "positives": 38,
+        "positive_rate": 0.0484,
+        "auc": 0.8742
+      }
+    },
+    {
+      "score": "hgb",
+      "broad_auc": 0.722,
+      "selective_10pct": {
+        "coverage": 0.1002,
+        "n": 2229,
+        "positives": 183,
+        "positive_rate": 0.0821,
+        "auc": 0.758
+      },
+      "selective_2pct": {
+        "coverage": 0.0306,
+        "n": 680,
+        "positives": 41,
+        "positive_rate": 0.0603,
+        "auc": 0.8337
+      }
+    },
+    {
+      "score": "extra",
+      "broad_auc": 0.727,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 191,
+        "positive_rate": 0.0858,
+        "auc": 0.7878
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 46,
+        "positive_rate": 0.1031,
+        "auc": 0.7969
+      }
+    },
+    {
+      "score": "rf",
+      "broad_auc": 0.7218,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 182,
+        "positive_rate": 0.0818,
+        "auc": 0.7986
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 46,
+        "positive_rate": 0.1031,
+        "auc": 0.7859
+      }
+    },
+    {
+      "score": "avg_all_models",
+      "broad_auc": 0.7317,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 198,
+        "positive_rate": 0.0889,
+        "auc": 0.7967
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 45,
+        "positive_rate": 0.1009,
+        "auc": 0.7671
+      }
+    }
+  ],
+  "target_hitting_examples": [
+    {
+      "score": "cat5_s502",
+      "broad_auc": 0.7309,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 197,
+        "positive_rate": 0.0885,
+        "auc": 0.8033
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 48,
+        "positive_rate": 0.1076,
+        "auc": 0.7968
+      }
+    },
+    {
+      "score": "cat6_s511",
+      "broad_auc": 0.7297,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 202,
+        "positive_rate": 0.0907,
+        "auc": 0.788
+      },
+      "selective_2pct": {
+        "coverage": 0.02,
+        "n": 446,
+        "positives": 39,
+        "positive_rate": 0.0874,
+        "auc": 0.8031
+      }
+    },
+    {
+      "score": "lgb15",
+      "broad_auc": 0.727,
+      "selective_10pct": {
+        "coverage": 0.1001,
+        "n": 2226,
+        "positives": 187,
+        "positive_rate": 0.084,
+        "auc": 0.7616
+      },
+      "selective_2pct": {
+        "coverage": 0.0201,
+        "n": 447,
+        "positives": 35,
+        "positive_rate": 0.0783,
+        "auc": 0.8041
+      }
+    },
+    {
+      "score": "lgb63",
+      "broad_auc": 0.72,
+      "selective_10pct": {
+        "coverage": 0.1002,
+        "n": 2229,
+        "positives": 190,
+        "positive_rate": 0.0852,
+        "auc": 0.7645
+      },
+      "selective_2pct": {
+        "coverage": 0.0353,
+        "n": 785,
+        "positives": 38,
+        "positive_rate": 0.0484,
+        "auc": 0.8742
+      }
+    },
+    {
+      "score": "hgb",
+      "broad_auc": 0.722,
+      "selective_10pct": {
+        "coverage": 0.1002,
+        "n": 2229,
+        "positives": 183,
+        "positive_rate": 0.0821,
+        "auc": 0.758
+      },
+      "selective_2pct": {
+        "coverage": 0.0306,
+        "n": 680,
+        "positives": 41,
+        "positive_rate": 0.0603,
+        "auc": 0.8337
+      }
+    }
+  ]
+}

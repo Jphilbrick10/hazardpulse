@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import datetime as dt
 import io
 import json
 import math
@@ -144,6 +145,7 @@ def _parse_ndk_block(lines: list[str]) -> dict | None:
     try:
         # Line 1: hypocenter
         h = lines[0]
+        origin_time = _parse_ndk_origin_time(h)
         # Line 3: centroid -- lat, lon, depth
         c = lines[2].split()
         lat = float(c[3])
@@ -156,8 +158,9 @@ def _parse_ndk_block(lines: list[str]) -> dict | None:
 
         # Line 5: nodal planes
         p = lines[4].split()
-        # event id from line 2
-        event_id = lines[1].split()[-1] if lines[1].split() else ""
+        # event id from line 2 (e.g. M010176A/C010576A). The trailing tokens are quality
+        # metadata, not identifiers.
+        event_id = lines[1].split()[0] if lines[1].split() else ""
 
         # Scalar moment from line 4 (last value * 10^exponent)
         # Actually the scalar moment isn't directly on line 4; we compute
@@ -180,6 +183,7 @@ def _parse_ndk_block(lines: list[str]) -> dict | None:
 
         return {
             "event_id": event_id,
+            "time": origin_time,
             "lat": lat,
             "lon": lon,
             "depth": depth,
@@ -194,6 +198,25 @@ def _parse_ndk_block(lines: list[str]) -> dict | None:
         }
     except (IndexError, ValueError):
         return None
+
+
+def _parse_ndk_origin_time(line: str) -> str:
+    """Parse the hypocenter date/time on NDK line 1 into an ISO-8601 UTC string."""
+    parts = line.split()
+    if len(parts) < 3:
+        raise ValueError("NDK hypocenter line missing date/time")
+    year, month, day = [int(x) for x in parts[1].split("/")]
+    hour_s, minute_s, second_s = parts[2].split(":")
+    base = dt.datetime(
+        year,
+        month,
+        day,
+        int(hour_s),
+        int(minute_s),
+        tzinfo=dt.timezone.utc,
+    )
+    origin = base + dt.timedelta(seconds=float(second_s))
+    return origin.isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
 
 def _is_float(s: str) -> bool:
@@ -222,8 +245,11 @@ def download_gcmt_catalog() -> Path:
     dest = GCMT_DIR / "gcmt_catalog.csv"
 
     if dest.exists():
-        print(f"  [GCMT] cached ({dest.stat().st_size:,} bytes)")
-        return dest
+        header = dest.read_text(encoding="utf-8", errors="replace").splitlines()[0]
+        if "time" in {h.strip() for h in header.split(",")}:
+            print(f"  [GCMT] cached ({dest.stat().st_size:,} bytes)")
+            return dest
+        print("  [GCMT] cached catalog is legacy/no-time; rebuilding from NDK sources")
 
     all_records: list[dict] = []
     for url in GCMT_NDK_URLS:
@@ -252,7 +278,7 @@ def download_gcmt_catalog() -> Path:
 
     # Write CSV
     fieldnames = [
-        "event_id", "lat", "lon", "depth", "Mw",
+        "event_id", "time", "lat", "lon", "depth", "Mw",
         "strike1", "dip1", "rake1", "strike2", "dip2", "rake2",
         "scalar_moment",
     ]

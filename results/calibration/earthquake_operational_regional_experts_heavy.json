@@ -1,0 +1,147 @@
+{
+  "label": "M5.0+/100km/30d validation-gated regional experts",
+  "selection_rule": "Experts replace global model only when regional 2018-2019 validation AUC improves.",
+  "features": 586,
+  "include_heavy_data": true,
+  "n_train": 45925,
+  "n_val": 7044,
+  "n_test": 22248,
+  "expert_rows": [
+    {
+      "name": "california",
+      "status": "skipped_sparse",
+      "train_n": 2108,
+      "train_pos": 19,
+      "val_n": 318,
+      "val_pos": 2,
+      "test_n": 991,
+      "test_pos": 9
+    },
+    {
+      "name": "cascadia",
+      "status": "skipped_sparse",
+      "train_n": 1249,
+      "train_pos": 37,
+      "val_n": 169,
+      "val_pos": 5,
+      "test_n": 600,
+      "test_pos": 15
+    },
+    {
+      "name": "alaska",
+      "status": "trained",
+      "train_n": 5044,
+      "train_pos": 118,
+      "val_n": 990,
+      "val_pos": 23,
+      "test_n": 2872,
+      "test_pos": 64,
+      "global_region_val_auc": 0.710714,
+      "expert_region_val_auc": 0.709366,
+      "global_region_test_auc": 0.706981,
+      "expert_region_test_auc": 0.70189,
+      "selected_by_validation": false
+    },
+    {
+      "name": "hawaii",
+      "status": "skipped_sparse",
+      "train_n": 176,
+      "train_pos": 1,
+      "val_n": 53,
+      "val_pos": 1,
+      "test_n": 137,
+      "test_pos": 1
+    },
+    {
+      "name": "puerto_rico",
+      "status": "skipped_sparse",
+      "train_n": 1037,
+      "train_pos": 14,
+      "val_n": 148,
+      "val_pos": 1,
+      "test_n": 442,
+      "test_pos": 6
+    },
+    {
+      "name": "japan_kuril",
+      "status": "trained",
+      "train_n": 2504,
+      "train_pos": 185,
+      "val_n": 370,
+      "val_pos": 35,
+      "test_n": 1190,
+      "test_pos": 89,
+      "global_region_val_auc": 0.627804,
+      "expert_region_val_auc": 0.601365,
+      "global_region_test_auc": 0.633571,
+      "expert_region_test_auc": 0.606711,
+      "selected_by_validation": false
+    },
+    {
+      "name": "chile",
+      "status": "trained",
+      "train_n": 2553,
+      "train_pos": 176,
+      "val_n": 360,
+      "val_pos": 32,
+      "test_n": 1161,
+      "test_pos": 77,
+      "global_region_val_auc": 0.648723,
+      "expert_region_val_auc": 0.639672,
+      "global_region_test_auc": 0.649974,
+      "expert_region_test_auc": 0.588058,
+      "selected_by_validation": false
+    },
+    {
+      "name": "new_zealand",
+      "status": "skipped_sparse",
+      "train_n": 842,
+      "train_pos": 45,
+      "val_n": 37,
+      "val_pos": 0,
+      "test_n": 123,
+      "test_pos": 9
+    },
+    {
+      "name": "slab2_within300km",
+      "status": "trained",
+      "train_n": 40136,
+      "train_pos": 2527,
+      "val_n": 6082,
+      "val_pos": 401,
+      "test_n": 19297,
+      "test_pos": 1279,
+      "global_region_val_auc": 0.703858,
+      "expert_region_val_auc": 0.704228,
+      "global_region_test_auc": 0.705324,
+      "expert_region_test_auc": 0.706454,
+      "selected_by_validation": true
+    }
+  ],
+  "rows": [
+    {
+      "name": "global_cat_d5",
+      "val_auc": 0.731766,
+      "test_auc": 0.728956,
+      "test_grouped_by_month_auc": 0.730545
+    },
+    {
+      "name": "validation_gated_regional_experts",
+      "val_auc": 0.731981,
+      "test_auc": 0.730012,
+      "test_grouped_by_month_auc": 0.731389,
+      "selected_regions": [
+        "slab2_within300km"
+      ]
+    }
+  ],
+  "selected_by_validation": {
+    "name": "validation_gated_regional_experts",
+    "val_auc": 0.731981,
+    "test_auc": 0.730012,
+    "test_grouped_by_month_auc": 0.731389,
+    "selected_regions": [
+      "slab2_within300km"
+    ]
+  }
+}

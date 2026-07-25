@@ -1,0 +1,41 @@
+{
+  "label": "M5.0+/100km/30d",
+  "model_family": "catboost",
+  "selection_rule": "highest validation AUC on 2018-2019; test reported for selected model",
+  "n_features": 331,
+  "n_train": 45925,
+  "n_val": 7044,
+  "n_test": 22248,
+  "test_pos": 1321,
+  "test_pos_rate": 0.0594,
+  "candidates": [
+    {
+      "name": "cat_d5",
+      "val_auc": 0.7345,
+      "test_auc": 0.7287,
+      "test_grouped_by_month_auc": 0.7296
+    },
+    {
+      "name": "cat_d6",
+      "val_auc": 0.7332,
+      "test_auc": 0.73,
+      "test_grouped_by_month_auc": 0.731
+    },
+    {
+      "name": "cat_d7",
+      "val_auc": 0.7327,
+      "test_auc": 0.7311,
+      "test_grouped_by_month_auc": 0.7321
+    }
+  ],
+  "selected": {
+    "name": "cat_d5",
+    "val_auc": 0.7345,
+    "test_auc": 0.7287,
+    "test_grouped_by_month_auc": 0.7296
+  },
+  "feature_count_by_family": {
+    "context": 14,
+    "total": 331
+  }
+}

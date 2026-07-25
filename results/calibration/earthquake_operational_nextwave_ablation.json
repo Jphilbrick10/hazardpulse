@@ -1,0 +1,189 @@
+{
+  "label": "nextwave family ablation",
+  "rows": [
+    {
+      "family": "tremor",
+      "model": "d5",
+      "n_new": 48,
+      "val_auc": 0.73543,
+      "test_auc": 0.73057,
+      "test_grouped_by_month_auc": 0.73175
+    },
+    {
+      "family": "tremor",
+      "model": "d6",
+      "n_new": 48,
+      "val_auc": 0.73241,
+      "test_auc": 0.7313,
+      "test_grouped_by_month_auc": 0.7323
+    },
+    {
+      "family": "tremor",
+      "model": "d7",
+      "n_new": 48,
+      "val_auc": 0.73589,
+      "test_auc": 0.7307,
+      "test_grouped_by_month_auc": 0.73205
+    },
+    {
+      "family": "gnss_tenv3",
+      "model": "d5",
+      "n_new": 15,
+      "val_auc": 0.73016,
+      "test_auc": 0.73079,
+      "test_grouped_by_month_auc": 0.73127
+    },
+    {
+      "family": "gnss_tenv3",
+      "model": "d6",
+      "n_new": 15,
+      "val_auc": 0.73236,
+      "test_auc": 0.72999,
+      "test_grouped_by_month_auc": 0.73112
+    },
+    {
+      "family": "gnss_tenv3",
+      "model": "d7",
+      "n_new": 15,
+      "val_auc": 0.73554,
+      "test_auc": 0.73159,
+      "test_grouped_by_month_auc": 0.73264
+    },
+    {
+      "family": "station_inventory",
+      "model": "d5",
+      "n_new": 12,
+      "val_auc": 0.73241,
+      "test_auc": 0.72953,
+      "test_grouped_by_month_auc": 0.73044
+    },
+    {
+      "family": "station_inventory",
+      "model": "d6",
+      "n_new": 12,
+      "val_auc": 0.73377,
+      "test_auc": 0.72944,
+      "test_grouped_by_month_auc": 0.73055
+    },
+    {
+      "family": "station_inventory",
+      "model": "d7",
+      "n_new": 12,
+      "val_auc": 0.73328,
+      "test_auc": 0.73075,
+      "test_grouped_by_month_auc": 0.73161
+    },
+    {
+      "family": "regional_micro",
+      "model": "d5",
+      "n_new": 60,
+      "val_auc": 0.73319,
+      "test_auc": 0.73119,
+      "test_grouped_by_month_auc": 0.73229
+    },
+    {
+      "family": "regional_micro",
+      "model": "d6",
+      "n_new": 60,
+      "val_auc": 0.73325,
+      "test_auc": 0.7305,
+      "test_grouped_by_month_auc": 0.73135
+    },
+    {
+      "family": "regional_micro",
+      "model": "d7",
+      "n_new": 60,
+      "val_auc": 0.73324,
+      "test_auc": 0.73272,
+      "test_grouped_by_month_auc": 0.73341
+    },
+    {
+      "family": "tremor_regional",
+      "model": "d5",
+      "n_new": 108,
+      "val_auc": 0.73344,
+      "test_auc": 0.73149,
+      "test_grouped_by_month_auc": 0.73285
+    },
+    {
+      "family": "tremor_regional",
+      "model": "d6",
+      "n_new": 108,
+      "val_auc": 0.7343,
+      "test_auc": 0.73143,
+      "test_grouped_by_month_auc": 0.73225
+    },
+    {
+      "family": "tremor_regional",
+      "model": "d7",
+      "n_new": 108,
+      "val_auc": 0.73631,
+      "test_auc": 0.73081,
+      "test_grouped_by_month_auc": 0.73158
+    },
+    {
+      "family": "coverage_geodesy",
+      "model": "d5",
+      "n_new": 27,
+      "val_auc": 0.73206,
+      "test_auc": 0.72911,
+      "test_grouped_by_month_auc": 0.73
+    },
+    {
+      "family": "coverage_geodesy",
+      "model": "d6",
+      "n_new": 27,
+      "val_auc": 0.73293,
+      "test_auc": 0.73092,
+      "test_grouped_by_month_auc": 0.73228
+    },
+    {
+      "family": "coverage_geodesy",
+      "model": "d7",
+      "n_new": 27,
+      "val_auc": 0.73473,
+      "test_auc": 0.7319,
+      "test_grouped_by_month_auc": 0.73233
+    },
+    {
+      "family": "all",
+      "model": "d5",
+      "n_new": 135,
+      "val_auc": 0.73363,
+      "test_auc": 0.73077,
+      "test_grouped_by_month_auc": 0.73171
+    },
+    {
+      "family": "all",
+      "model": "d6",
+      "n_new": 135,
+      "val_auc": 0.73382,
+      "test_auc": 0.73203,
+      "test_grouped_by_month_auc": 0.73308
+    },
+    {
+      "family": "all",
+      "model": "d7",
+      "n_new": 135,
+      "val_auc": 0.73303,
+      "test_auc": 0.73188,
+      "test_grouped_by_month_auc": 0.7328
+    }
+  ],
+  "best_by_validation": {
+    "family": "tremor_regional",
+    "model": "d7",
+    "n_new": 108,
+    "val_auc": 0.73631,
+    "test_auc": 0.73081,
+    "test_grouped_by_month_auc": 0.73158
+  },
+  "best_by_test_audit_not_for_selection": {
+    "family": "regional_micro",
+    "model": "d7",
+    "n_new": 60,
+    "val_auc": 0.73324,
+    "test_auc": 0.73272,
+    "test_grouped_by_month_auc": 0.73341
+  }
+}

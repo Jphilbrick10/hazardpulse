@@ -137,6 +137,8 @@ class OperationalEQScorer(DeepEQScorer):
     rate) to the 6 per-event channels -- d=9. Forward is inherited (dim-agnostic)."""
 
     def build_sequence(self, cat, lat, lon, ref_epoch):
+        if self.Wp.shape[1] >= 20:
+            return self._build_multiscale(cat, lat, lon, ref_epoch)
         K, R = self.K, self.radius_km
         X = np.zeros((K, 9), np.float64); m = np.zeros(K, np.float64)
         t0 = ref_epoch - 5 * 365 * SEC_DAY
@@ -157,6 +159,53 @@ class OperationalEQScorer(DeepEQScorer):
                                 np.clip(cat.depths[idx], 0, 700) / 700.0, np.sin(az), np.cos(az)]
                                + [np.full(len(idx), c) for c in loc], axis=1)
                 X[K - len(idx):] = seq; m[K - len(idx):] = 1.0
+        return X, m
+
+    def _build_multiscale(self, cat, lat, lon, ref):
+        """20-channel multi-scale build (must MATCH deep_operational_earthquake._build_one v3):
+        6 per-event + lat/lon + per-radius[100,300,500]{recent, baseline, anomaly} + maxmag + 2 stress."""
+        K, R = self.K, self.radius_km
+        X = np.zeros((K, 20), np.float64); m = np.zeros(K, np.float64)
+        bsel = ((cat.times < ref) & (np.abs(cat.lats - lat) < 10) & (np.abs(cat.lons - lon) < 10))
+        bi = np.where(bsel)[0]
+        if bi.size == 0:
+            return X, m
+        bd = _hav_az(lat, lon, cat.lats[bi], cat.lons[bi])[0]
+        bdays = (ref - cat.times[bi]) / SEC_DAY
+        ctx = [lat / 90.0, lon / 180.0]
+        for rad, rec_n, base_n in [(100, 5.0, 8.0), (300, 6.0, 9.0), (500, 7.0, 10.0)]:
+            inr = bd < rad
+            rec = float(((bdays < 180) & inr).sum())
+            base = float(((bdays >= 365) & (bdays < 5 * 365) & inr).sum()) / 4.0 / 2.0
+            ctx.append(np.log1p(rec) / rec_n)
+            ctx.append(np.log1p(((bdays < 5 * 365) & inr).sum()) / base_n)
+            ctx.append(np.clip(np.log1p(rec) - np.log1p(base), -3, 3) / 3.0)
+        maxmag = float(cat.mags[bi[bd < 300]].max()) if (bd < 300).any() else 0.0
+        ctx.append(maxmag / 9.0)
+        big = (bd < 1000) & (cat.mags[bi] >= 6.5) & (bdays < 2 * 365)
+        if big.any():
+            nb = np.argmin(bdays[big]); ctx.append((1000 - bd[big][nb]) / 1000.0)
+            ctx.append(max(0.0, 1 - bdays[big][nb] / 730.0))
+        else:
+            ctx.append(0.0); ctx.append(0.0)
+        t0 = ref - 5 * 365 * SEC_DAY
+        sel = ((cat.times >= t0) & (cat.times < ref)
+               & (np.abs(cat.lats - lat) < 6) & (np.abs(cat.lons - lon) < 6))
+        idx = np.where(sel)[0]
+        if idx.size:
+            dist, az = _hav_az(lat, lon, cat.lats[idx], cat.lons[idx])
+            near = dist < R
+            idx, dist, az = idx[near], dist[near], az[near]
+        if idx.size:
+            order = np.argsort(cat.times[idx])[-K:]
+            idx, dist, az = idx[order], dist[order], az[order]
+            dd = (ref - cat.times[idx]) / SEC_DAY
+            seq = np.stack([np.log1p(dd), cat.mags[idx], dist / R,
+                            np.clip(cat.depths[idx], 0, 700) / 700.0, np.sin(az), np.cos(az)]
+                           + [np.full(len(idx), c) for c in ctx], axis=1)
+            X[K - len(idx):] = seq; m[K - len(idx):] = 1.0
+        else:
+            X[K - 1] = np.array([0, 0, 0, 0, 0, 0] + ctx, np.float64); m[K - 1] = 1.0
         return X, m
 
 

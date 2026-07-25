@@ -1,0 +1,526 @@
+{
+  "label": "M5.0+/100km/30d ensemble audit",
+  "contract": "Uses validation/test prediction cache only; no 2020+ labels are used for selection.",
+  "stack_npz": "C:\\Users\\Josh\\Projects\\hazardpulse\\.cache\\earthquake\\operational_stack_preds_hist_v1.npz",
+  "n_models": 14,
+  "n_val": 7044,
+  "n_test": 22248,
+  "test_pos": 1321,
+  "base_model_names": [
+    "cat5_s501",
+    "cat5_s502",
+    "cat5_s503",
+    "cat6_s511",
+    "cat6_s512",
+    "cat6_s513",
+    "cat4_s521",
+    "cat4_s522",
+    "lgb15",
+    "lgb31",
+    "lgb63",
+    "hgb",
+    "extra",
+    "rf"
+  ],
+  "rows": [
+    {
+      "name": "cat5_s501",
+      "val_auc": 0.733249,
+      "test_auc": 0.730042,
+      "test_grouped_by_month_auc": 0.731287
+    },
+    {
+      "name": "cat5_s502",
+      "val_auc": 0.731983,
+      "test_auc": 0.730914,
+      "test_grouped_by_month_auc": 0.731966
+    },
+    {
+      "name": "cat5_s503",
+      "val_auc": 0.73163,
+      "test_auc": 0.731719,
+      "test_grouped_by_month_auc": 0.732776
+    },
+    {
+      "name": "cat6_s511",
+      "val_auc": 0.734469,
+      "test_auc": 0.729737,
+      "test_grouped_by_month_auc": 0.730626
+    },
+    {
+      "name": "cat6_s512",
+      "val_auc": 0.732337,
+      "test_auc": 0.731901,
+      "test_grouped_by_month_auc": 0.732901
+    },
+    {
+      "name": "cat6_s513",
+      "val_auc": 0.732049,
+      "test_auc": 0.729057,
+      "test_grouped_by_month_auc": 0.730263
+    },
+    {
+      "name": "cat4_s521",
+      "val_auc": 0.732256,
+      "test_auc": 0.730047,
+      "test_grouped_by_month_auc": 0.730898
+    },
+    {
+      "name": "cat4_s522",
+      "val_auc": 0.731536,
+      "test_auc": 0.728356,
+      "test_grouped_by_month_auc": 0.729628
+    },
+    {
+      "name": "lgb15",
+      "val_auc": 0.732054,
+      "test_auc": 0.727017,
+      "test_grouped_by_month_auc": 0.72833
+    },
+    {
+      "name": "lgb31",
+      "val_auc": 0.731462,
+      "test_auc": 0.726694,
+      "test_grouped_by_month_auc": 0.727978
+    },
+    {
+      "name": "lgb63",
+      "val_auc": 0.731631,
+      "test_auc": 0.719994,
+      "test_grouped_by_month_auc": 0.721226
+    },
+    {
+      "name": "hgb",
+      "val_auc": 0.726105,
+      "test_auc": 0.722039,
+      "test_grouped_by_month_auc": 0.723122
+    },
+    {
+      "name": "extra",
+      "val_auc": 0.726417,
+      "test_auc": 0.727041,
+      "test_grouped_by_month_auc": 0.728346
+    },
+    {
+      "name": "rf",
+      "val_auc": 0.727027,
+      "test_auc": 0.721767,
+      "test_grouped_by_month_auc": 0.722793
+    },
+    {
+      "name": "avg_top1_by_val",
+      "val_auc": 0.734469,
+      "test_auc": 0.729737,
+      "test_grouped_by_month_auc": 0.730626,
+      "members": [
+        "cat6_s511"
+      ]
+    },
+    {
+      "name": "avg_top2_by_val",
+      "val_auc": 0.734106,
+      "test_auc": 0.730261,
+      "test_grouped_by_month_auc": 0.731407,
+      "members": [
+        "cat6_s511",
+        "cat5_s501"
+      ]
+    },
+    {
+      "name": "avg_top3_by_val",
+      "val_auc": 0.733894,
+      "test_auc": 0.731115,
+      "test_grouped_by_month_auc": 0.732198,
+      "members": [
+        "cat6_s511",
+        "cat5_s501",
+        "cat6_s512"
+      ]
+    },
+    {
+      "name": "avg_top4_by_val",
+      "val_auc": 0.733688,
+      "test_auc": 0.731069,
+      "test_grouped_by_month_auc": 0.731851,
+      "members": [
+        "cat6_s511",
+        "cat5_s501",
+        "cat6_s512",
+        "cat4_s521"
+      ]
+    },
+    {
+      "name": "avg_top5_by_val",
+      "val_auc": 0.734116,
+      "test_auc": 0.730984,
+      "test_grouped_by_month_auc": 0.732102,
+      "members": [
+        "cat6_s511",
+        "cat5_s501",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15"
+      ]
+    },
+    {
+      "name": "avg_top6_by_val",
+      "val_auc": 0.73388,
+      "test_auc": 0.730827,
+      "test_grouped_by_month_auc": 0.731767,
+      "members": [
+        "cat6_s511",
+        "cat5_s501",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513"
+      ]
+    },
+    {
+      "name": "avg_top7_by_val",
+      "val_auc": 0.733974,
+      "test_auc": 0.731153,
+      "test_grouped_by_month_auc": 0.732123,
+      "members": [
+        "cat6_s511",
+        "cat5_s501",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502"
+      ]
+    },
+    {
+      "name": "avg_top8_by_val",
+      "val_auc": 0.734497,
+      "test_auc": 0.730971,
+      "test_grouped_by_month_auc": 0.732073,
+      "members": [
+        "cat6_s511",
+        "cat5_s501",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63"
+      ]
+    },
+    {
+      "name": "avg_top9_by_val",
+      "val_auc": 0.734496,
+      "test_auc": 0.73138,
+      "test_grouped_by_month_auc": 0.732525,
+      "members": [
+        "cat6_s511",
+        "cat5_s501",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63",
+        "cat5_s503"
+      ]
+    },
+    {
+      "name": "avg_top10_by_val",
+      "val_auc": 0.734284,
+      "test_auc": 0.731226,
+      "test_grouped_by_month_auc": 0.732321,
+      "members": [
+        "cat6_s511",
+        "cat5_s501",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63",
+        "cat5_s503",
+        "cat4_s522"
+      ]
+    },
+    {
+      "name": "avg_top11_by_val",
+      "val_auc": 0.734634,
+      "test_auc": 0.731332,
+      "test_grouped_by_month_auc": 0.732483,
+      "members": [
+        "cat6_s511",
+        "cat5_s501",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63",
+        "cat5_s503",
+        "cat4_s522",
+        "lgb31"
+      ]
+    },
+    {
+      "name": "avg_top12_by_val",
+      "val_auc": 0.734771,
+      "test_auc": 0.731493,
+      "test_grouped_by_month_auc": 0.732616,
+      "members": [
+        "cat6_s511",
+        "cat5_s501",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63",
+        "cat5_s503",
+        "cat4_s522",
+        "lgb31",
+        "rf"
+      ]
+    },
+    {
+      "name": "avg_top13_by_val",
+      "val_auc": 0.734629,
+      "test_auc": 0.731718,
+      "test_grouped_by_month_auc": 0.732893,
+      "members": [
+        "cat6_s511",
+        "cat5_s501",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63",
+        "cat5_s503",
+        "cat4_s522",
+        "lgb31",
+        "rf",
+        "extra"
+      ]
+    },
+    {
+      "name": "avg_top14_by_val",
+      "val_auc": 0.734745,
+      "test_auc": 0.73174,
+      "test_grouped_by_month_auc": 0.732977,
+      "members": [
+        "cat6_s511",
+        "cat5_s501",
+        "cat6_s512",
+        "cat4_s521",
+        "lgb15",
+        "cat6_s513",
+        "cat5_s502",
+        "lgb63",
+        "cat5_s503",
+        "cat4_s522",
+        "lgb31",
+        "rf",
+        "extra",
+        "hgb"
+      ]
+    },
+    {
+      "name": "avg_all_models_fixed",
+      "val_auc": 0.734745,
+      "test_auc": 0.73174,
+      "test_grouped_by_month_auc": 0.732977,
+      "members": [
+        "cat5_s501",
+        "cat5_s502",
+        "cat5_s503",
+        "cat6_s511",
+        "cat6_s512",
+        "cat6_s513",
+        "cat4_s521",
+        "cat4_s522",
+        "lgb15",
+        "lgb31",
+        "lgb63",
+        "hgb",
+        "extra",
+        "rf"
+      ]
+    },
+    {
+      "name": "rank_avg_all_models_fixed",
+      "val_auc": 0.735024,
+      "test_auc": 0.731667,
+      "test_grouped_by_month_auc": 0.733003,
+      "members": [
+        "cat5_s501",
+        "cat5_s502",
+        "cat5_s503",
+        "cat6_s511",
+        "cat6_s512",
+        "cat6_s513",
+        "cat4_s521",
+        "cat4_s522",
+        "lgb15",
+        "lgb31",
+        "lgb63",
+        "hgb",
+        "extra",
+        "rf"
+      ]
+    },
+    {
+      "name": "meta_stack_refit_after_2019_selection",
+      "val_auc": 0.735094,
+      "test_auc": 0.731279,
+      "test_grouped_by_month_auc": 0.732465,
+      "meta_model": "logistic",
+      "selected_param": 0.001,
+      "selection_2019_auc": 0.735205,
+      "meta_fit_for_selection": "2018",
+      "meta_select": "2019",
+      "final_refit": "2018-2019 validation rows only",
+      "inputs": [
+        "cat5_s501",
+        "cat5_s502",
+        "cat5_s503",
+        "cat6_s511",
+        "cat6_s512",
+        "cat6_s513",
+        "cat4_s521",
+        "cat4_s522",
+        "lgb15",
+        "lgb31",
+        "lgb63",
+        "hgb",
+        "extra",
+        "rf"
+      ]
+    },
+    {
+      "name": "meta_stack_selection_candidates",
+      "candidates": [
+        {
+          "kind": "logistic",
+          "param": 0.001,
+          "selection_2019_auc": 0.735205
+        },
+        {
+          "kind": "logistic",
+          "param": 0.003,
+          "selection_2019_auc": 0.735115
+        },
+        {
+          "kind": "logistic",
+          "param": 0.01,
+          "selection_2019_auc": 0.734801
+        },
+        {
+          "kind": "logistic",
+          "param": 0.03,
+          "selection_2019_auc": 0.734051
+        },
+        {
+          "kind": "logistic",
+          "param": 0.1,
+          "selection_2019_auc": 0.73212
+        },
+        {
+          "kind": "logistic",
+          "param": 0.3,
+          "selection_2019_auc": 0.729576
+        },
+        {
+          "kind": "logistic",
+          "param": 1.0,
+          "selection_2019_auc": 0.726297
+        },
+        {
+          "kind": "ridge",
+          "param": 0.1,
+          "selection_2019_auc": 0.72313
+        },
+        {
+          "kind": "ridge",
+          "param": 0.3,
+          "selection_2019_auc": 0.723316
+        },
+        {
+          "kind": "ridge",
+          "param": 1.0,
+          "selection_2019_auc": 0.723992
+        },
+        {
+          "kind": "ridge",
+          "param": 3.0,
+          "selection_2019_auc": 0.725565
+        },
+        {
+          "kind": "ridge",
+          "param": 10.0,
+          "selection_2019_auc": 0.728299
+        },
+        {
+          "kind": "ridge",
+          "param": 30.0,
+          "selection_2019_auc": 0.731316
+        }
+      ]
+    }
+  ],
+  "selected_by_validation": {
+    "name": "rank_avg_all_models_fixed",
+    "val_auc": 0.735024,
+    "test_auc": 0.731667,
+    "test_grouped_by_month_auc": 0.733003,
+    "members": [
+      "cat5_s501",
+      "cat5_s502",
+      "cat5_s503",
+      "cat6_s511",
+      "cat6_s512",
+      "cat6_s513",
+      "cat4_s521",
+      "cat4_s522",
+      "lgb15",
+      "lgb31",
+      "lgb63",
+      "hgb",
+      "extra",
+      "rf"
+    ]
+  },
+  "meta_selected_by_2019_then_refit": {
+    "name": "meta_stack_refit_after_2019_selection",
+    "val_auc": 0.735094,
+    "test_auc": 0.731279,
+    "test_grouped_by_month_auc": 0.732465,
+    "meta_model": "logistic",
+    "selected_param": 0.001,
+    "selection_2019_auc": 0.735205,
+    "meta_fit_for_selection": "2018",
+    "meta_select": "2019",
+    "final_refit": "2018-2019 validation rows only",
+    "inputs": [
+      "cat5_s501",
+      "cat5_s502",
+      "cat5_s503",
+      "cat6_s511",
+      "cat6_s512",
+      "cat6_s513",
+      "cat4_s521",
+      "cat4_s522",
+      "lgb15",
+      "lgb31",
+      "lgb63",
+      "hgb",
+      "extra",
+      "rf"
+    ]
+  },
+  "best_by_test_audit_not_for_selection": {
+    "name": "cat6_s512",
+    "val_auc": 0.732337,
+    "test_auc": 0.731901,
+    "test_grouped_by_month_auc": 0.732901
+  }
+}

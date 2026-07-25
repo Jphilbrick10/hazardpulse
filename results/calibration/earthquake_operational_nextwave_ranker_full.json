@@ -1,0 +1,47 @@
+{
+  "label": "M5.0+/100km/30d nextwave data ranker",
+  "selection_rule": "highest validation AUC on 2018-2019; test reported for selected model",
+  "base_features": 307,
+  "nextwave_features": 217,
+  "total_features": 524,
+  "n_train": 45925,
+  "n_val": 7044,
+  "n_test": 22248,
+  "test_pos": 1321,
+  "feature_families": {
+    "tremor": 48,
+    "gnss_tenv3": 15,
+    "gnss_crescent": 15,
+    "station_inventory": 12,
+    "waveform_noise": 18,
+    "regional_micro": 60,
+    "slab2": 24,
+    "coupling_cloud": 25
+  },
+  "candidates": [
+    {
+      "name": "nextwave_cat_d5",
+      "val_auc": 0.7298,
+      "test_auc": 0.7305,
+      "test_grouped_by_month_auc": 0.7317
+    },
+    {
+      "name": "nextwave_cat_d6",
+      "val_auc": 0.7339,
+      "test_auc": 0.7291,
+      "test_grouped_by_month_auc": 0.7305
+    },
+    {
+      "name": "nextwave_cat_d7",
+      "val_auc": 0.7298,
+      "test_auc": 0.7324,
+      "test_grouped_by_month_auc": 0.7336
+    }
+  ],
+  "selected": {
+    "name": "nextwave_cat_d6",
+    "val_auc": 0.7339,
+    "test_auc": 0.7291,
+    "test_grouped_by_month_auc": 0.7305
+  }
+}

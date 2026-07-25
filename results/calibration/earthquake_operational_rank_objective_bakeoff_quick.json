@@ -1,0 +1,95 @@
+{
+  "label": "M5.0+/100km/30d rank-objective bakeoff",
+  "selection_rule": "Highest validation AUC on 2018-2019; 2020+ test is held out.",
+  "n_features": 307,
+  "n_train": 45925,
+  "n_val": 7044,
+  "n_test": 22248,
+  "test_pos": 1321,
+  "families": {
+    "xgboost_rankers": [
+      {
+        "name": "xgb_rank_pairwise_d4",
+        "val_auc": 0.7229,
+        "test_auc": 0.7189,
+        "test_grouped_by_month_auc": 0.72
+      },
+      {
+        "name": "xgb_rank_pairwise_d6",
+        "val_auc": 0.7213,
+        "test_auc": 0.7178,
+        "test_grouped_by_month_auc": 0.7188
+      },
+      {
+        "name": "xgb_rank_ndcg_d4",
+        "val_auc": 0.7208,
+        "test_auc": 0.727,
+        "test_grouped_by_month_auc": 0.7287
+      },
+      {
+        "name": "xgb_rank_map_d4",
+        "val_auc": 0.7222,
+        "test_auc": 0.7241,
+        "test_grouped_by_month_auc": 0.7254
+      }
+    ],
+    "catboost_rankers": [
+      {
+        "name": "cat_rank_yetirank_d5",
+        "val_auc": 0.7283,
+        "test_auc": 0.7245,
+        "test_grouped_by_month_auc": 0.7258
+      },
+      {
+        "name": "cat_rank_pairlogit_d5",
+        "val_auc": 0.7295,
+        "test_auc": 0.725,
+        "test_grouped_by_month_auc": 0.7265
+      },
+      {
+        "name": "cat_rank_pairlogit_d6",
+        "val_auc": 0.7289,
+        "test_auc": 0.7243,
+        "test_grouped_by_month_auc": 0.7257
+      }
+    ],
+    "torch_point_process": [
+      {
+        "name": "torch_monthly_listwise",
+        "val_auc": 0.7305,
+        "test_auc": 0.7305,
+        "test_grouped_by_month_auc": 0.7317,
+        "device": "cuda",
+        "best_epoch": 4,
+        "best_train_loss": 5.255895
+      },
+      {
+        "name": "torch_pairwise_plus_bce",
+        "val_auc": 0.7223,
+        "test_auc": 0.7302,
+        "test_grouped_by_month_auc": 0.7318,
+        "device": "cuda",
+        "best_epoch": 1,
+        "best_train_loss": 0.825465
+      }
+    ]
+  },
+  "best_by_validation": {
+    "name": "torch_monthly_listwise",
+    "val_auc": 0.7305,
+    "test_auc": 0.7305,
+    "test_grouped_by_month_auc": 0.7317,
+    "device": "cuda",
+    "best_epoch": 4,
+    "best_train_loss": 5.255895
+  },
+  "best_by_test_audit_not_for_selection": {
+    "name": "torch_monthly_listwise",
+    "val_auc": 0.7305,
+    "test_auc": 0.7305,
+    "test_grouped_by_month_auc": 0.7317,
+    "device": "cuda",
+    "best_epoch": 4,
+    "best_train_loss": 5.255895
+  }
+}
