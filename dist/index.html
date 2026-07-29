@@ -96,8 +96,8 @@
           <span data-depth="technical">Static-first live dashboard</span>
         </h1>
         <p class="hero-subtitle" data-depth="simple">Real-time monitoring of earthquakes, hurricanes, and tornadoes worldwide.</p>
-        <p class="hero-subtitle" data-depth="technical">Highest current modeled probability: 3.7% for the earthquake pipeline.</p>
-        <p class="muted">Updated Wed, 29 Jul 2026 05:05:28 UTC</p>
+        <p class="hero-subtitle" data-depth="technical">Highest current modeled probability: 50.7% for the tornado pipeline.</p>
+        <p class="muted">Updated Wed, 29 Jul 2026 06:55:45 UTC</p>
       </div>
     </section>
 
@@ -106,7 +106,7 @@
         <div class="grid">
           <a href="/live/earthquake/" class="card card-link col-4 hazard-eq"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><h2 style="margin:0;">Earthquake</h2><span class="chip bad" style="margin-left:auto;">Significant risk detected</span></div><p data-depth="simple" style="margin:8px 0;font-size:15px;line-height:1.5;">81 seismic zones are being monitored globally. No unusual activity detected.</p><div data-depth="technical"><div class="metric">3.7%</div><div class="metric-label">P(M6+ in 30 days)</div><div class="kv"><span>Confidence</span><strong>3.7% - 3.7%</strong></div><div class="kv"><span>Trend</span><strong>up +1.9%</strong></div><div class="kv"><span>Forecast ID</span><strong>eq_fcst_20260729_0100</strong></div><div class="kv"><span>Active cells</span><strong>81</strong></div></div><span class="card-cta">View details &rarr;</span></a>
 <a href="/live/hurricane/" class="card card-link col-4 hazard-hu"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><h2 style="margin:0;">Hurricane</h2><span class="chip good" style="margin-left:auto;">No significant risk</span></div><p data-depth="simple" style="margin:8px 0;font-size:15px;line-height:1.5;">No active tropical storms anywhere in the world.</p><div data-depth="technical"><div class="metric">0.0%</div><div class="metric-label">Rapid intensification in 24h</div><div class="kv"><span>Trend</span><strong>up +2.4%</strong></div><div class="kv"><span>Active storms</span><strong>0</strong></div><div class="kv"><span>Status</span><strong>No active tropical cyclones</strong></div></div><span class="card-cta">View details &rarr;</span></a>
-<a href="/live/tornado/" class="card card-link col-4 hazard-to"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><h2 style="margin:0;">Tornado</h2><span class="chip bad" style="margin-left:auto;">Elevated risk detected</span></div><p data-depth="simple" style="margin:8px 0;font-size:15px;line-height:1.5;">135 storms tracked. No significant tornado signals at this time.</p><div data-depth="technical"><div class="metric">2.7%</div><div class="metric-label">Formation in 24h</div><div class="kv"><span>Confidence</span><strong>2.6% - 2.7%</strong></div><div class="kv"><span>Trend</span><strong>down 2.1%</strong></div><div class="kv"><span>Tracked storms</span><strong>135</strong></div><div class="kv"><span>Scoring</span><strong>ML (pre-trained gradient-boosted trees)</strong></div><div class="kv"><span>Top object</span><strong>Storm 193547 at 36.2381, -74.8438</strong></div></div><span class="card-cta">View details &rarr;</span></a>
+<a href="/live/tornado/" class="card card-link col-4 hazard-to"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><h2 style="margin:0;">Tornado</h2><span class="chip bad" style="margin-left:auto;">Elevated risk detected</span></div><p data-depth="simple" style="margin:8px 0;font-size:15px;line-height:1.5;">88 storms tracked. Some show strong rotation. Stay weather-aware and monitor NWS warnings.</p><div data-depth="technical"><div class="metric">50.7%</div><div class="metric-label">Formation in 24h</div><div class="kv"><span>Confidence</span><strong>2.6% - 100.0%</strong></div><div class="kv"><span>Trend</span><strong>down 2.1%</strong></div><div class="kv"><span>Tracked storms</span><strong>88</strong></div><div class="kv"><span>Scoring</span><strong>ML (pre-trained gradient-boosted trees)</strong></div><div class="kv"><span>Top object</span><strong>Storm 194669 at 36.7472, -73.6478</strong></div></div><span class="card-cta">View details &rarr;</span></a>
         </div>
       </div>
     </section>
@@ -567,75 +567,75 @@
         <text class="tooltip-text" x="36.0" y="90.7">Earthquake hotspot</text>
         <text class="tooltip-sub" x="36.0" y="99.7">3.7% - M6+ in 30 days</text></g>
     </a>
-    <a href="/live/tornado/" aria-label="Storm 193547">
-      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="280.4" cy="143.4" r="6"/>
-      <circle class="hz-marker hz-marker-to" cx="280.4" cy="143.4" r="5" filter="url(#glow-to)"/>
-      <g class="map-tooltip"><rect class="tooltip-bg" x="290.4" y="125.4" width="124" height="22" rx="3"/>
-        <text class="tooltip-text" x="292.4" y="135.4">Storm 193547</text>
-        <text class="tooltip-sub" x="292.4" y="144.4">2.7% - Very High</text></g>
+    <a href="/live/tornado/" aria-label="Storm 194669">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="283.6" cy="142.0" r="6"/>
+      <circle class="hz-marker hz-marker-to" cx="283.6" cy="142.0" r="5" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="293.6" y="124.0" width="124" height="22" rx="3"/>
+        <text class="tooltip-text" x="295.6" y="134.0">Storm 194669</text>
+        <text class="tooltip-sub" x="295.6" y="143.0">50.7% - Very High</text></g>
     </a>
-    <a href="/live/tornado/" aria-label="Storm 193964">
-      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="279.8" cy="143.8" r="5"/>
-      <circle class="hz-marker hz-marker-to" cx="279.8" cy="143.8" r="4" filter="url(#glow-to)"/>
-      <g class="map-tooltip"><rect class="tooltip-bg" x="289.8" y="125.8" width="124" height="22" rx="3"/>
-        <text class="tooltip-text" x="291.8" y="135.8">Storm 193964</text>
-        <text class="tooltip-sub" x="291.8" y="144.8">2.7% - Very High</text></g>
+    <a href="/live/tornado/" aria-label="Storm 194625">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="282.0" cy="144.7" r="5"/>
+      <circle class="hz-marker hz-marker-to" cx="282.0" cy="144.7" r="4" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="292.0" y="126.7" width="124" height="22" rx="3"/>
+        <text class="tooltip-text" x="294.0" y="136.7">Storm 194625</text>
+        <text class="tooltip-sub" x="294.0" y="145.7">2.6% - Very High</text></g>
     </a>
-    <a href="/live/tornado/" aria-label="Storm 193878">
-      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="280.2" cy="144.1" r="5"/>
-      <circle class="hz-marker hz-marker-to" cx="280.2" cy="144.1" r="4" filter="url(#glow-to)"/>
-      <g class="map-tooltip"><rect class="tooltip-bg" x="290.2" y="126.1" width="124" height="22" rx="3"/>
-        <text class="tooltip-text" x="292.2" y="136.1">Storm 193878</text>
-        <text class="tooltip-sub" x="292.2" y="145.1">2.7% - Very High</text></g>
+    <a href="/live/tornado/" aria-label="Storm 194196">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="279.6" cy="144.6" r="5"/>
+      <circle class="hz-marker hz-marker-to" cx="279.6" cy="144.6" r="4" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="289.6" y="126.6" width="124" height="22" rx="3"/>
+        <text class="tooltip-text" x="291.6" y="136.6">Storm 194196</text>
+        <text class="tooltip-sub" x="291.6" y="145.6">2.6% - Very High</text></g>
     </a>
-    <a href="/live/tornado/" aria-label="Storm 193920">
-      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="284.9" cy="139.5" r="5"/>
-      <circle class="hz-marker hz-marker-to" cx="284.9" cy="139.5" r="4" filter="url(#glow-to)"/>
-      <g class="map-tooltip"><rect class="tooltip-bg" x="294.9" y="121.5" width="124" height="22" rx="3"/>
-        <text class="tooltip-text" x="296.9" y="131.5">Storm 193920</text>
-        <text class="tooltip-sub" x="296.9" y="140.5">2.6% - Very High</text></g>
+    <a href="/live/tornado/" aria-label="Storm 194703">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="283.0" cy="145.5" r="5"/>
+      <circle class="hz-marker hz-marker-to" cx="283.0" cy="145.5" r="4" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="293.0" y="127.5" width="124" height="22" rx="3"/>
+        <text class="tooltip-text" x="295.0" y="137.5">Storm 194703</text>
+        <text class="tooltip-sub" x="295.0" y="146.5">2.6% - Very High</text></g>
     </a>
-    <a href="/live/tornado/" aria-label="Storm 193866">
-      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="266.1" cy="148.7" r="5"/>
-      <circle class="hz-marker hz-marker-to" cx="266.1" cy="148.7" r="4" filter="url(#glow-to)"/>
-      <g class="map-tooltip"><rect class="tooltip-bg" x="276.1" y="130.7" width="124" height="22" rx="3"/>
-        <text class="tooltip-text" x="278.1" y="140.7">Storm 193866</text>
-        <text class="tooltip-sub" x="278.1" y="149.7">2.2% - Very High</text></g>
+    <a href="/live/tornado/" aria-label="Storm 194704">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="279.8" cy="145.7" r="5"/>
+      <circle class="hz-marker hz-marker-to" cx="279.8" cy="145.7" r="4" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="289.8" y="127.7" width="124" height="22" rx="3"/>
+        <text class="tooltip-text" x="291.8" y="137.7">Storm 194704</text>
+        <text class="tooltip-sub" x="291.8" y="146.7">2.6% - Very High</text></g>
     </a>
-    <a href="/live/tornado/" aria-label="Storm 193958">
-      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="284.5" cy="138.5" r="5"/>
-      <circle class="hz-marker hz-marker-to" cx="284.5" cy="138.5" r="4" filter="url(#glow-to)"/>
-      <g class="map-tooltip"><rect class="tooltip-bg" x="294.5" y="120.5" width="124" height="22" rx="3"/>
-        <text class="tooltip-text" x="296.5" y="130.5">Storm 193958</text>
-        <text class="tooltip-sub" x="296.5" y="139.5">2.0% - Very High</text></g>
+    <a href="/live/tornado/" aria-label="Storm 194107">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="278.0" cy="145.5" r="5"/>
+      <circle class="hz-marker hz-marker-to" cx="278.0" cy="145.5" r="4" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="288.0" y="127.5" width="124" height="22" rx="3"/>
+        <text class="tooltip-text" x="290.0" y="137.5">Storm 194107</text>
+        <text class="tooltip-sub" x="290.0" y="146.5">2.0% - Very High</text></g>
     </a>
-    <a href="/live/tornado/" aria-label="Storm 193842">
-      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="284.7" cy="140.4" r="5"/>
-      <circle class="hz-marker hz-marker-to" cx="284.7" cy="140.4" r="4" filter="url(#glow-to)"/>
-      <g class="map-tooltip"><rect class="tooltip-bg" x="294.7" y="122.4" width="124" height="22" rx="3"/>
-        <text class="tooltip-text" x="296.7" y="132.4">Storm 193842</text>
-        <text class="tooltip-sub" x="296.7" y="141.4">2.0% - Very High</text></g>
+    <a href="/live/tornado/" aria-label="Storm 194488">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="279.3" cy="145.2" r="5"/>
+      <circle class="hz-marker hz-marker-to" cx="279.3" cy="145.2" r="4" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="289.3" y="127.2" width="124" height="22" rx="3"/>
+        <text class="tooltip-text" x="291.3" y="137.2">Storm 194488</text>
+        <text class="tooltip-sub" x="291.3" y="146.2">2.0% - Very High</text></g>
     </a>
-    <a href="/live/tornado/" aria-label="Storm 193640">
-      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="282.9" cy="139.6" r="5"/>
-      <circle class="hz-marker hz-marker-to" cx="282.9" cy="139.6" r="4" filter="url(#glow-to)"/>
-      <g class="map-tooltip"><rect class="tooltip-bg" x="292.9" y="121.6" width="124" height="22" rx="3"/>
-        <text class="tooltip-text" x="294.9" y="131.6">Storm 193640</text>
-        <text class="tooltip-sub" x="294.9" y="140.6">2.0% - Very High</text></g>
+    <a href="/live/tornado/" aria-label="Storm 194589">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="285.3" cy="142.9" r="5"/>
+      <circle class="hz-marker hz-marker-to" cx="285.3" cy="142.9" r="4" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="295.3" y="124.9" width="124" height="22" rx="3"/>
+        <text class="tooltip-text" x="297.3" y="134.9">Storm 194589</text>
+        <text class="tooltip-sub" x="297.3" y="143.9">2.0% - Very High</text></g>
     </a>
-    <a href="/live/tornado/" aria-label="Storm 193924">
-      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="283.4" cy="140.3" r="5"/>
-      <circle class="hz-marker hz-marker-to" cx="283.4" cy="140.3" r="4" filter="url(#glow-to)"/>
-      <g class="map-tooltip"><rect class="tooltip-bg" x="293.4" y="122.3" width="124" height="22" rx="3"/>
-        <text class="tooltip-text" x="295.4" y="132.3">Storm 193924</text>
-        <text class="tooltip-sub" x="295.4" y="141.3">2.0% - Very High</text></g>
+    <a href="/live/tornado/" aria-label="Storm 194685">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="282.8" cy="146.2" r="5"/>
+      <circle class="hz-marker hz-marker-to" cx="282.8" cy="146.2" r="4" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="292.8" y="128.2" width="124" height="22" rx="3"/>
+        <text class="tooltip-text" x="294.8" y="138.2">Storm 194685</text>
+        <text class="tooltip-sub" x="294.8" y="147.2">1.4% - Very High</text></g>
     </a>
-    <a href="/live/tornado/" aria-label="Storm 193833">
-      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="269.8" cy="147.4" r="5"/>
-      <circle class="hz-marker hz-marker-to" cx="269.8" cy="147.4" r="4" filter="url(#glow-to)"/>
-      <g class="map-tooltip"><rect class="tooltip-bg" x="279.8" y="129.4" width="124" height="22" rx="3"/>
-        <text class="tooltip-text" x="281.8" y="139.4">Storm 193833</text>
-        <text class="tooltip-sub" x="281.8" y="148.4">1.9% - Very High</text></g>
+    <a href="/live/tornado/" aria-label="Storm 194657">
+      <circle class="hz-pulse hz-pulse-to hz-pulse-delay-1" cx="277.9" cy="146.7" r="5"/>
+      <circle class="hz-marker hz-marker-to" cx="277.9" cy="146.7" r="4" filter="url(#glow-to)"/>
+      <g class="map-tooltip"><rect class="tooltip-bg" x="287.9" y="128.7" width="124" height="22" rx="3"/>
+        <text class="tooltip-text" x="289.9" y="138.7">Storm 194657</text>
+        <text class="tooltip-sub" x="289.9" y="147.7">1.4% - Very High</text></g>
     </a>
   </g>
 
@@ -656,14 +656,14 @@
             <h2 style="margin-top:0;">What changed</h2>
             <div class="kv"><span>Earthquake</span><strong>3.7% in the current 30-day artifact. Confidence: 3.7% - 3.7%</strong></div>
             <div class="kv"><span>Hurricane</span><strong>0 active storms in the current feed.</strong></div>
-            <div class="kv"><span>Tornado</span><strong>135 active storm objects scored with ML (pre-trained gradient-boosted trees).</strong></div>
+            <div class="kv"><span>Tornado</span><strong>88 active storm objects scored with ML (pre-trained gradient-boosted trees).</strong></div>
           </div>
           <div class="card col-4">
             <h2 style="margin-top:0;">System health</h2>
-            <div class="kv"><span>Last update</span><strong>Wed, 29 Jul 2026 05:05:28 UTC</strong></div>
+            <div class="kv"><span>Last update</span><strong>Wed, 29 Jul 2026 06:55:45 UTC</strong></div>
             <div class="kv"><span>Earthquake cells</span><strong>81</strong></div>
             <div class="kv"><span>Hurricane storms</span><strong>0</strong></div>
-            <div class="kv"><span>Tornado objects</span><strong>135</strong></div>
+            <div class="kv"><span>Tornado objects</span><strong>88</strong></div>
           </div>
         </div>
       </div>
@@ -688,7 +688,7 @@
         <div class="grid">
           <div class="card col-4"><h3>Earthquake</h3><div class="metric">AUC 0.704 | Brier 0.002</div><div class="metric-label">Computed from matured live forecasts.</div></div>
 <div class="card col-4"><h3>Hurricane</h3><div class="metric">AUC 0.938 | Brier 0.034</div><div class="metric-label">Exact-model retrospective benchmark is available.</div></div>
-<div class="card col-4"><h3>Tornado</h3><div class="metric">1251 frozen forecasts · 1239 matured backlog</div><div class="metric-label">No exact benchmark is currently bound to the live tornado storm-object model version in this repo.</div></div>
+<div class="card col-4"><h3>Tornado</h3><div class="metric">1252 frozen forecasts · 1240 matured backlog</div><div class="metric-label">No exact benchmark is currently bound to the live tornado storm-object model version in this repo.</div></div>
         </div>
         <p class="muted" style="margin-top:16px;">See <a href="/verification/">verification</a> and <a href="/evidence/">evidence</a> for the underlying artifacts.</p>
       </div>
