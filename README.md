@@ -6,7 +6,7 @@
 
 All models are pure Python + NumPy. Every algorithm — logistic regression, gradient boosted trees, ensemble stacking, bootstrap confidence intervals — implemented from scratch. No sklearn. No TensorFlow. No PyTorch.
 
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10+-green.svg)](https://python.org)
 
 ---
@@ -209,7 +209,10 @@ The hurricane model is genuinely strong. The earthquake model extracts real sign
 
 ## License
 
-Apache License 2.0. See [LICENSE](LICENSE) for details.
+Dual-licensed:
+
+- **AGPL-3.0** for open-source use — see [LICENSE](LICENSE). If you run a modified HazardPulse as a network service, the AGPL requires you to publish your modifications.
+- **Commercial license** for closed-source or proprietary-service use — see [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md) or contact [info@coherenceenergylabs.com](mailto:info@coherenceenergylabs.com).
 
 ---
 
