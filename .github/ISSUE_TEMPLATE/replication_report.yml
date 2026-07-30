@@ -1,0 +1,61 @@
+name: Replication report
+description: >-
+  Report the result of independently running a HazardPulse model or verifying a
+  forecast receipt — pass or fail, both are valuable.
+title: "[replication] "
+labels: ["replication"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you — independent replication is the most valuable contribution this
+        project can receive. **A failed replication is treated as a defect in us, not in you.**
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      options:
+        - Reproduced (matches published result)
+        - Did NOT reproduce (differs from published result)
+        - Could not run (setup/command failure)
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Commit SHA you ran
+      description: Output of `git rev-parse HEAD`
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command(s) run
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Published result you compared against
+      description: The number/artifact and where it is published (README line, artifact path, receipt hash).
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What you got
+      description: Paste the actual output, metric, or verifier verdict.
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: OS, Python version, NumPy version, hardware.
+      placeholder: |
+        OS: Ubuntu 24.04
+        Python: 3.12.4
+        NumPy: 2.1.0
+    validations:
+      required: true

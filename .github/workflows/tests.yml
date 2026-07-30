@@ -18,10 +18,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
 
@@ -44,6 +44,22 @@ jobs:
             tests/test_fit_calibration.py \
             tests/test_scoring_integration.py \
             tests/test_external_verify.py
+
+      - name: Determinism gate — identical training regardless of global RNG
+        run: python -m pytest -q tests/test_determinism.py
+
+      - name: Smoke-test every documented CLI entry point
+        run: |
+          hazardpulse --help
+          hazardpulse earthquake-v4 --help
+          python -c "from hazardpulse.earthquake.v4_regional import main"
+
+      - name: Verify committed forecast receipts (integrity, zero-trust verifier)
+        run: |
+          pip install cryptography
+          ARTIFACT=$(ls dist/data/replay/eq_fcst_*.json | tail -n 1)
+          echo "verifying $ARTIFACT"
+          python scripts/verify_forecast.py --artifact "$ARTIFACT"
 
       - name: Run site integrity checks
         run: python -m pytest tests/test_site_integrity.py -q

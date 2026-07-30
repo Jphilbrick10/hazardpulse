@@ -326,6 +326,8 @@ class GradientBoostedTrees:
         self.gamma = gamma
         self.trees: list[dict] = []
         self.init_pred: float = 0.0
+        # Seeded in fit(); _build_tree must never touch global RNG state.
+        self._rng: np.random.RandomState | None = None
 
     def _build_tree(
         self,
@@ -370,7 +372,8 @@ class GradientBoostedTrees:
 
         D = X.shape[1]
         n_try = max(5, int(D * self.colsample))
-        feat_idx = np.random.choice(D, size=min(n_try, D), replace=False)
+        rng = self._rng if self._rng is not None else np.random.RandomState(0)
+        feat_idx = rng.choice(D, size=min(n_try, D), replace=False)
 
         best_gain = -1e30
         best_feat = 0
@@ -515,6 +518,7 @@ class GradientBoostedTrees:
             F_val = np.full(len(y_val), self.init_pred, dtype=np.float32)
 
         rng = np.random.RandomState(42)
+        self._rng = rng
         self.trees = []
 
         for t in range(self.n_trees):

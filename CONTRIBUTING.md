@@ -13,7 +13,7 @@ Thank you for your interest in contributing to hazardpulse.
 
 ### Replication Reports
 
-The most valuable contribution is running the models and reporting your results. Use the [Replication Report issue template](https://github.com/Jphilbrick10/hazardpulse/issues/new?template=replication_report.yml).
+The most valuable contribution is running the models and reporting your results. Use the [Replication Report issue template](https://github.com/coherence-energy-labs/hazardpulse/issues/new?template=replication_report.yml).
 
 ### Bug Reports
 
