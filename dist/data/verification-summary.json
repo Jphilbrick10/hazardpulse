@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-07-30T21:57:56Z",
-  "score_as_of": "2026-07-30T18:00:00Z",
+  "generated_at": "2026-07-31T04:45:24Z",
+  "score_as_of": "2026-07-31T03:00:00Z",
   "system": {
-    "frozen_forecasts": 1796,
-    "matured_forecasts": 1661,
-    "scored_forecasts": 353,
-    "matured_unscored_backlog": 1308,
-    "raw_chain_rows": 1821,
+    "frozen_forecasts": 1800,
+    "matured_forecasts": 1667,
+    "scored_forecasts": 356,
+    "matured_unscored_backlog": 1311,
+    "raw_chain_rows": 1825,
     "hash_chain_mismatches": 0,
     "exact_model_benchmarks": 1,
     "alerts": [
-      "1308 matured forecast windows are waiting for scoring.",
+      "1311 matured forecast windows are waiting for scoring.",
       "Tornado: no exact benchmark is attached to the current live model version."
     ]
   },
@@ -24,33 +24,33 @@
       "verification_status_label": "Prospective live scoring is active for matured earthquake windows.",
       "metric_source": "prospective_live",
       "metric_source_label": "Computed from matured live forecasts.",
-      "auc": 0.7031925817624187,
-      "brier": 0.0024188716925716085,
-      "homepage_line": "353 matured windows scored",
+      "auc": 0.7027016134949513,
+      "brier": 0.0024062225786060693,
+      "homepage_line": "356 matured windows scored",
       "forecast_storage": {
-        "n_replay_artifacts": 475,
-        "n_matured_forecasts": 354,
-        "n_scored_forecasts": 353,
-        "n_backlog": 1,
+        "n_replay_artifacts": 476,
+        "n_matured_forecasts": 356,
+        "n_scored_forecasts": 356,
+        "n_backlog": 0,
         "first_issued_at": "2026-03-13T03:00:00Z",
-        "last_issued_at": "2026-07-30T18:00:00Z",
-        "last_forecast_id": "eq_fcst_20260730_1800",
-        "latest_replay_artifact": "/data/replay/eq_fcst_20260730_1800.json",
+        "last_issued_at": "2026-07-31T03:00:00Z",
+        "last_forecast_id": "eq_fcst_20260731_0300",
+        "latest_replay_artifact": "/data/replay/eq_fcst_20260731_0300.json",
         "forecast_horizon": "30 days",
-        "next_mature_at": "2026-07-30T19:00:00Z"
+        "next_mature_at": "2026-07-31T07:00:00Z"
       },
       "ledger": {
         "supported": true,
         "path": "/data/earthquake-ledger.jsonl",
-        "n_rows": 486,
+        "n_rows": 487,
         "prev_hash_mismatches": 0
       },
       "prospective": {
         "summary_path": "results/earthquake_prospective/prospective_summary.json",
         "status": "ok",
-        "scored_as_of": "2026-07-30T12:40:14Z",
+        "scored_as_of": "2026-07-31T02:37:10Z",
         "message": null,
-        "top_5_hit_rate": 0.0169971671388102
+        "top_5_hit_rate": 0.016853932584269662
       },
       "exact_model_benchmark": null,
       "related_benchmark": {
@@ -130,23 +130,23 @@
       "metric_source_label": "No exact benchmark is currently bound to the live tornado storm-object model version in this repo.",
       "auc": null,
       "brier": null,
-      "homepage_line": "1269 frozen forecasts \u00b7 1256 matured backlog",
+      "homepage_line": "1272 frozen forecasts \u00b7 1260 matured backlog",
       "forecast_storage": {
-        "n_replay_artifacts": 1269,
-        "n_matured_forecasts": 1256,
+        "n_replay_artifacts": 1272,
+        "n_matured_forecasts": 1260,
         "n_scored_forecasts": 0,
-        "n_backlog": 1256,
+        "n_backlog": 1260,
         "first_issued_at": "2026-03-13T03:00:00Z",
-        "last_issued_at": "2026-07-30T18:31:37Z",
-        "last_forecast_id": "to_fcst_20260730_1831",
-        "latest_replay_artifact": "/data/replay/to_fcst_20260730_1831.json",
+        "last_issued_at": "2026-07-31T02:25:25Z",
+        "last_forecast_id": "to_fcst_20260731_0225",
+        "latest_replay_artifact": "/data/replay/to_fcst_20260731_0225.json",
         "forecast_horizon": "24 hours",
-        "next_mature_at": "2026-07-30T18:21:59Z"
+        "next_mature_at": "2026-07-31T03:04:11Z"
       },
       "ledger": {
         "supported": true,
         "path": "/data/tornado-ledger.jsonl",
-        "n_rows": 1335,
+        "n_rows": 1338,
         "prev_hash_mismatches": 0
       },
       "prospective": {
