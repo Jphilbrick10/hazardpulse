@@ -13,8 +13,13 @@ echo "HazardPulse accumulator started (PID $$)"
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_DIR"
 
-export HAZARDPULSE_HRRR_CACHE="C:/Users/Josh/Projects/Coherence_Energy_Labs_Website/data/evidence/labs/hazard_prediction_lab/cache/hrrr"
-export HAZARDPULSE_PROBSEVERE_CACHE="C:/Users/Josh/Projects/Coherence_Energy_Labs_Website/data/evidence/labs/hazard_prediction_lab/cache/probsevere"
+# Cache locations. Override either in your environment to point at an existing
+# archive; otherwise they default inside the repo, so a fresh clone just works.
+# (These were hardcoded to one operator's workstation, which both broke every
+# other checkout and published that machine's directory layout from a public repo.)
+export HAZARDPULSE_HRRR_CACHE="${HAZARDPULSE_HRRR_CACHE:-$REPO_DIR/.cache/hrrr}"
+export HAZARDPULSE_PROBSEVERE_CACHE="${HAZARDPULSE_PROBSEVERE_CACHE:-$REPO_DIR/.cache/probsevere}"
+mkdir -p "$HAZARDPULSE_HRRR_CACHE" "$HAZARDPULSE_PROBSEVERE_CACHE"
 
 while true; do
     HOUR=$(date -u +%H)

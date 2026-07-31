@@ -9,9 +9,16 @@ We rank active cells by the 30-day expected count and report operational AUC vs 
 import sys, os, time, datetime as dt
 import numpy as np
 from concurrent.futures import ProcessPoolExecutor
-sys.path.insert(0, r"C:\Users\Josh\Projects\hazardpulse\src")
+# Resolve the repo from this file's own location: the previous hardcoded
+# workstation path broke every other checkout and published the operator's
+# directory layout from a public repository.
+_REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(_REPO, "src"))
 SEC_DAY=86400.0
-NPZ=r"C:\Users\Josh\Projects\hazardpulse\.cache\earthquake\deepop_v3_my2025_m5.0_lr100_ld30_K192_ir100_am8_g2.npz"
+NPZ = os.environ.get(
+    "HAZARDPULSE_EQ_NPZ",
+    os.path.join(_REPO, ".cache", "earthquake",
+                 "deepop_v3_my2025_m5.0_lr100_ld30_K192_ir100_am8_g2.npz"))
 VAL0=dt.datetime(2018,1,1,tzinfo=dt.timezone.utc).timestamp()
 TEST0=dt.datetime(2020,1,1,tzinfo=dt.timezone.utc).timestamp()
 # Ogata ETAS params (typical global-ish values; M0=completeness)

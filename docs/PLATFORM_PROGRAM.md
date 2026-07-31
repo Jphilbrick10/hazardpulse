@@ -186,7 +186,10 @@ verified) the original three now hold. Deepen before widen.
   `src/hazardpulse/gates/engine.py`, `scripts/vendor_omega_trust.py`, `scripts/run_local.py`.
 - Verification: `scripts/score_*_prospective.py`, `results/verification/*/live_rollup.json`.
 - Worker/UX: `src/worker.js`, `dist/` pages + `dist/data/evidence/*`.
-- omega_one source of truth: `C:\Users\Josh\Projects\Coherence\omega_one\omega\`.
+- omega_one source of truth: the `omega/` package of the private `omega_one` repository. The
+  exact commit the vendored copy was taken from is recorded in
+  `src/hazardpulse/trust/_vendor_omega/VENDOR_MANIFEST.json`; re-vendor with
+  `scripts/vendor_omega_trust.py`, which takes the source location as an argument.
 
 ## Honest caveats
 

@@ -152,7 +152,10 @@ def vendor() -> int:
 
     manifest = {
         "vendored_from": "omega_one",
-        "source_path": str(src_root),
+        # Deliberately NOT the absolute source path. This repo is public; the operator's
+        # directory layout is not provenance, and nothing reads this field. What actually
+        # pins the vendored copy is source_commit plus the per-file sha256 map below,
+        # both of which a third party can check.
         "source_commit": commit,
         "vendored_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "modules": MODULES,
