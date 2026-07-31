@@ -33,9 +33,20 @@ import ssl
 import time
 import warnings
 import hashlib
+import os
+import pathlib as _pathlib
+# Output/cache roots resolve from THIS repo and are overridable via
+# $HAZARDPULSE_OUT / $HAZARDPULSE_CACHE. They used to be absolute paths on one
+# workstation, which made this file unrunnable anywhere else and published that
+# machine's layout -- plus the name of a PRIVATE sibling repository -- from a
+# PUBLIC repo.
+_REPO = _pathlib.Path(__file__).resolve().parents[1]
+_OUT_ROOT = _pathlib.Path(os.environ.get('HAZARDPULSE_OUT', _REPO / 'figures' / 'hazards'))
+_CACHE_ROOT = _pathlib.Path(os.environ.get('HAZARDPULSE_CACHE', _REPO / '.cache' / 'legacy'))
+
 warnings.filterwarnings('ignore')
 
-OUT = Path(r"c:\Users\Josh\Projects\hazardpulse\figures\hazards")
+OUT = _OUT_ROOT / "hazards"
 OUT.mkdir(parents=True, exist_ok=True)
 
 # Colors
@@ -69,7 +80,7 @@ def fetch_url(url, timeout=300):
         print(f"    Fetch error: {e}")
         return None
 
-CACHE_DIR = Path(r"c:\Users\Josh\Projects\hazardpulse\legacy\.cache")
+CACHE_DIR = _CACHE_ROOT
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 def fetch_cached(url, timeout=300):

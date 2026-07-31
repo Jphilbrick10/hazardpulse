@@ -55,10 +55,21 @@ from pathlib import Path
 import urllib.request
 import ssl
 import warnings
+import os
+import pathlib as _pathlib
+# Output/cache roots resolve from THIS repo and are overridable via
+# $HAZARDPULSE_OUT / $HAZARDPULSE_CACHE. They used to be absolute paths on one
+# workstation, which made this file unrunnable anywhere else and published that
+# machine's layout -- plus the name of a PRIVATE sibling repository -- from a
+# PUBLIC repo.
+_REPO = _pathlib.Path(__file__).resolve().parents[1]
+_OUT_ROOT = _pathlib.Path(os.environ.get('HAZARDPULSE_OUT', _REPO / 'figures' / 'hazards'))
+_CACHE_ROOT = _pathlib.Path(os.environ.get('HAZARDPULSE_CACHE', _REPO / '.cache' / 'legacy'))
+
 warnings.filterwarnings('ignore')
 
-OUT = Path(r"c:\Users\Josh\Projects\Coherence_Energy_Labs_Website\data\evidence\coherence_field_results")
-OUT.mkdir(exist_ok=True)
+OUT = _OUT_ROOT / "coherence_field_results"
+OUT.mkdir(parents=True, exist_ok=True)
 
 DARK = '#1a1a2e'
 GOLD = '#D4AF37'
