@@ -1958,7 +1958,7 @@ def render_tornado_page(
           <h4>Science</h4>
           <a href="/methods/">Methodology</a>
           <a href="/registry/">Model Registry</a>
-          <a href="https://github.com/Jphilbrick10/hazardpulse">Open Source</a>
+          <a href="https://github.com/coherence-energy-labs/hazardpulse">Open Source</a>
         </div>
         <div class="col-3 footer-col">
           <h4>Resources</h4>
@@ -1969,7 +1969,7 @@ def render_tornado_page(
         </div>
         <div class="col-3 footer-col">
           <h4>About</h4>
-          <a href="https://github.com/Jphilbrick10/hazardpulse">Open Source</a>
+          <a href="https://github.com/coherence-energy-labs/hazardpulse">Open Source</a>
           <a href="mailto:{SITE_CONTACT_EMAIL}">Contact</a>
           <a href="/legal/disclaimer/">Terms &amp; Disclaimer</a>
           <a href="/COMMERCIAL_LICENSE.md">Commercial License</a>
@@ -2621,7 +2621,7 @@ def _legacy_render_homepage_cards(
           <h4>Science</h4>
           <a href="/methods/">Methodology</a>
           <a href="/registry/">Model Registry</a>
-          <a href="https://github.com/Jphilbrick10/hazardpulse">Open Source</a>
+          <a href="https://github.com/coherence-energy-labs/hazardpulse">Open Source</a>
         </div>
         <div class="col-3 footer-col">
           <h4>Resources</h4>
@@ -2632,7 +2632,7 @@ def _legacy_render_homepage_cards(
         </div>
         <div class="col-3 footer-col">
           <h4>About</h4>
-          <a href="https://github.com/Jphilbrick10/hazardpulse">Open Source</a>
+          <a href="https://github.com/coherence-energy-labs/hazardpulse">Open Source</a>
           <a href="mailto:{SITE_CONTACT_EMAIL}">Contact</a>
           <a href="/legal/disclaimer/">Terms &amp; Disclaimer</a>
           <a href="/COMMERCIAL_LICENSE.md">Commercial License</a>
@@ -3466,7 +3466,7 @@ def render_homepage_cards(
           <h4>Science</h4>
           <a href="/methods/">Methodology</a>
           <a href="/registry/">Model Registry</a>
-          <a href="https://github.com/Jphilbrick10/hazardpulse">Open Source</a>
+          <a href="https://github.com/coherence-energy-labs/hazardpulse">Open Source</a>
         </div>
         <div class="col-3 footer-col">
           <h4>Resources</h4>
@@ -3477,7 +3477,7 @@ def render_homepage_cards(
         </div>
         <div class="col-3 footer-col">
           <h4>About</h4>
-          <a href="https://github.com/Jphilbrick10/hazardpulse">Open Source</a>
+          <a href="https://github.com/coherence-energy-labs/hazardpulse">Open Source</a>
           <a href="mailto:{SITE_CONTACT_EMAIL}">Contact</a>
           <a href="/legal/disclaimer/">Terms &amp; Disclaimer</a>
           <a href="/COMMERCIAL_LICENSE.md">Commercial License</a>

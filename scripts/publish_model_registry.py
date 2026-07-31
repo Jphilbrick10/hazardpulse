@@ -155,7 +155,7 @@ def main() -> int:
                 "domain": "[0, 1]",
                 "calibration": "logit-link via boosted trees, no Platt",
             },
-            paper_url="https://github.com/Jphilbrick10/hazardpulse",
+            paper_url="https://github.com/coherence-energy-labs/hazardpulse",
         ))
 
     # ----- Earthquake GBT v1 -----
@@ -197,7 +197,7 @@ def main() -> int:
                 "domain": "[0, 1]",
                 "calibration": "logit-link via boosted trees",
             },
-            paper_url="https://github.com/Jphilbrick10/hazardpulse",
+            paper_url="https://github.com/coherence-energy-labs/hazardpulse",
         ))
 
     # ----- Hurricane RI v8.1 -----
@@ -242,7 +242,7 @@ def main() -> int:
                 "domain": "[0, 1]",
                 "calibration": "Platt scaling (a, b fit on training)",
             },
-            paper_url="https://github.com/Jphilbrick10/hazardpulse",
+            paper_url="https://github.com/coherence-energy-labs/hazardpulse",
         ))
 
     payload = {

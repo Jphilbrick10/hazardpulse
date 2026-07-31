@@ -8,7 +8,7 @@ import time
 import urllib.request
 from pathlib import Path
 
-DEFAULT_USER_AGENT = "hazardpulse/0.1 (+https://github.com/Jphilbrick10/hazardpulse)"
+DEFAULT_USER_AGENT = "hazardpulse/0.1 (+https://github.com/coherence-energy-labs/hazardpulse)"
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 CACHE_ROOT = PROJECT_ROOT / ".cache" / "http"
 

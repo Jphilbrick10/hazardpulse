@@ -6,7 +6,7 @@
 
 All models are pure Python + NumPy. Every algorithm — logistic regression, gradient boosted trees, ensemble stacking, bootstrap confidence intervals — implemented from scratch. No sklearn. No TensorFlow. No PyTorch.
 
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10+-green.svg)](https://python.org)
 
 ---
@@ -25,6 +25,8 @@ All models are pure Python + NumPy. Every algorithm — logistic regression, gra
 
 All models use strict temporal train/test splits. No data leakage. No test-set peeking for ensemble selection or calibration. Bootstrap confidence intervals on every claim.
 
+> **Provenance:** the table above reports *retrospective* results from the research model line (v7/v4/v5 scripts, since superseded; preserved in git history). The primary evidence surface going forward is the **live prospective scorecard** — forecasts frozen, signed, and timestamped *before* outcomes, then scored as outcomes mature (see [Live Predictions](#live-predictions--operating-now) and `dist/data/`). Retrospective and prospective numbers are not comparable and are never mixed.
+
 ---
 
 ## The Equation
@@ -35,7 +37,7 @@ One partial differential equation, three hazard domains:
 D · ∇²(τ_c) - Γ · τ_c + S = 0
 ```
 
-The Helmholtz coherence PDE — a damped wave equation with source. Same structure, different physics:
+The screened-Poisson (static Helmholtz-type) coherence PDE — the steady state of damped diffusion with a source term. Same structure, different physics:
 
 | Parameter | Earthquake | Hurricane | Tornado |
 |---|---|---|---|
@@ -50,38 +52,49 @@ Each system follows the same pattern: coherence accumulates → precursors emerg
 
 ## Quick Start
 
+Not yet on PyPI — install from source:
+
 ```bash
-pip install hazardpulse
+git clone https://github.com/coherence-energy-labs/hazardpulse.git
+cd hazardpulse
+pip install -e .
 ```
 
-### Earthquake prediction (all M6+ events globally)
+### Earthquake model (regional v4, honest mode)
 ```bash
-hazardpulse earthquake evaluate --min-magnitude 6.0
+hazardpulse earthquake-v4 --honest
 ```
 
-### Hurricane rapid intensification
+### Hurricane operational-RI utilities
 ```bash
-hazardpulse hurricane evaluate --basin NA --threshold 30kt/24h
+hazardpulse hurricane build-operational-ri-dataset \
+    --start-year 2018 --end-year 2024 --out ri_cases.json
+hazardpulse hurricane benchmark-operational-ri \
+    --dataset ri_cases.json --test-start-year 2022
 ```
 
-### Tornado formation + severity
+### Verify a published forecast — with zero trust in our code
+Every live forecast carries an Ed25519-signed receipt. The verifier is
+self-contained (stdlib + `cryptography` only) and re-implements the published
+receipt spec, so it proves integrity and authenticity without running any
+HazardPulse code:
+
 ```bash
-hazardpulse tornado evaluate --mode formation
-hazardpulse tornado evaluate --mode severity --threshold EF3+
+python scripts/verify_forecast.py \
+    --artifact "$(ls dist/data/replay/eq_fcst_*.json | tail -n 1)"
 ```
+
+This checks receipt integrity (any tampered field is detected). Pass `--pubkey <hex>`
+with the published signing key to additionally verify authenticity.
 
 ### Python API
 ```python
-from hazardpulse.earthquake import model as eq_model
+from hazardpulse.earthquake.v4_regional import main as run_earthquake_v4
 
-# Train and evaluate on USGS catalog
-results = eq_model.train_and_evaluate(
-    train_years=(2005, 2014),
-    test_years=(2015, 2023),
-    min_magnitude=6.0
-)
-print(f"Test AUC: {results['test_auc']:.3f}")  # 0.733
+run_earthquake_v4(honest=True)  # M6+, 100 km, 90 days, 5:1 controls
 ```
+
+The CLI entry points and the receipt verifier above are exercised in CI on every push — if a documented command rots, the build goes red.
 
 ---
 
@@ -117,36 +130,27 @@ This is the weakest model because tornado prediction fundamentally requires real
 
 ## Replication
 
-Every result is reproducible:
+Reproducibility here is enforced, not promised:
 
-```bash
-git clone https://github.com/Jphilbrick10/hazardpulse.git
-cd hazardpulse
-pip install -e ".[viz]"
+- **Training is deterministic by construction.** Every stochastic operation in the model line draws from an explicitly seeded generator — never from NumPy's global stream. This is guarded by a CI gate ([`tests/test_determinism.py`](tests/test_determinism.py)) that trains every model twice under *different* global RNG states and fails unless the resulting trees are identical, value for value. The gate was proven against the bug it prevents: it goes red on the pre-fix code.
+- **Live forecasts are replayable.** Each forecast cycle freezes its full input snapshot and model fingerprint into a replay artifact (`dist/data/replay/`), and its decision is bound into an Ed25519-signed receipt you can verify independently with [`scripts/verify_forecast.py`](scripts/verify_forecast.py) — no HazardPulse code in the loop.
+- **The current model line is in-tree.** The definitive training protocols live in `src/hazardpulse/earthquake/` and `src/hazardpulse/tornado/`; the retrospective research scripts behind the historical results table are superseded and preserved in git history, labeled as such above.
 
-# Reproduce all figures and AUC numbers
-python legacy/earthquake_model_v7_honest.py
-python legacy/hurricane_ri_model_v4_honest.py
-python legacy/tornado_model_v5_honest.py
-```
-
-The scripts download data directly from USGS, IBTrACS, and SPC (free, no API key needed). First run takes ~15-30 minutes to fetch catalogs and train models.
-
-**If you get a different AUC number, [open an issue](https://github.com/Jphilbrick10/hazardpulse/issues/new?template=replication_report.yml)**. Reproducibility is non-negotiable.
+**If anything fails to reproduce, [open an issue](https://github.com/coherence-energy-labs/hazardpulse/issues/new?template=replication_report.yml)**. Reproducibility is non-negotiable — a replication failure is treated as a defect in us, not in you.
 
 ---
 
-## Live Predictions (Coming Soon)
+## Live Predictions — operating now
 
-The public prediction platform at **hazardpulse.com** includes:
+The public platform at **[hazardpulse.com](https://hazardpulse.com)** runs prospective, timestamped forecasting on a schedule — this is the project's primary truth surface:
 
-- **Real-time earthquake risk map** — USGS data feed, predictions every 6 hours, 3° global grid
-- **Hurricane RI tracker** — NHC advisory data, RI probability for every active tropical cyclone
-- **Tornado risk grid** — atmospheric model data integration for genuine day-ahead prediction
-- **Public prediction ledger** — Every prediction SHA-256 hashed and timestamped before events occur
-- **Running accuracy scores** — AUC, Brier Score, reliability diagrams updated live
+- **Scheduled forecast cycles** (GitHub Actions) fetch live agency feeds, freeze each forecast *before* the outcome window, and score it when outcomes mature
+- **Publication gates** — every cycle passes a gate engine (schema validity, source freshness, model provenance, calibration health, spatiotemporal sanity, uncertainty, replayability) with **pass / degrade / block** authority: a failing gate really does stop publication
+- **Signed prediction ledger** — every forecast is SHA-256 hashed and committed before events occur (`dist/data/earthquake-ledger.jsonl`, `dist/data/evidence/`). Ed25519 signatures begin with cycles after 2026-07-31, when the signing key was provisioned; the public key is published at `dist/data/evidence/public-key.json`, and earlier receipts rely on integrity hashes plus git-history timestamps — we label the difference instead of blurring it
+- **Replay artifacts** — full input snapshots per cycle (`dist/data/replay/`), independently verifiable with `scripts/verify_forecast.py`
+- **Honest calibration** — Venn-Abers calibrated probabilities, reliability diagrams, distribution-drift monitoring, and abstention when the model shouldn't speak
 
-No hiding. No cherry-picking. Every prediction logged, every outcome tracked.
+No hiding. No cherry-picking. Every prediction logged, every outcome tracked — and the receipts are checkable by someone who doesn't trust us.
 
 [Platform architecture →](docs/live_platform.md)
 
@@ -173,7 +177,7 @@ We believe in transparency. Key limitations:
 3. **Tornado severity uses post-event data** (damage survey widths). These are nowcasting metrics, not real-time predictions.
 4. **Earthquake negatives are same-location controls** (same zone, different time). This is more honest than geographic negatives but may still understate the difficulty of real-world deployment.
 5. **EF4+ tornado severity** has only 20 test events — the AUC (0.987) is statistically unreliable.
-6. **All models are retrospective**. True validation requires prospective real-time testing with timestamped predictions — which is exactly what the live platform will provide.
+6. **The headline table is retrospective.** True validation requires prospective real-time testing with timestamped predictions — which the live platform now performs on every cycle. Prospective skill so far is materially weaker than the retrospective table (early prospective earthquake AUC ≈ 0.70 with calibrated Brier skill near climatology), which is exactly why the prospective scorecard, not the retrospective table, is the number that counts.
 7. **"Climatological estimates"** in hurricane Config B are parametric functions of lat/lon/month — they are NOT actual SST, ocean heat content, or wind shear observations.
 
 ---
@@ -197,7 +201,7 @@ The hurricane model is genuinely strong. The earthquake model extracts real sign
   author = {Philbrick, Josh},
   title = {HazardPulse: Unified Natural Hazard Prediction from Coherence Field Theory},
   year = {2026},
-  url = {https://github.com/Jphilbrick10/hazardpulse}
+  url = {https://github.com/coherence-energy-labs/hazardpulse}
 }
 ```
 
@@ -205,7 +209,10 @@ The hurricane model is genuinely strong. The earthquake model extracts real sign
 
 ## License
 
-Apache License 2.0. See [LICENSE](LICENSE) for details.
+Dual-licensed:
+
+- **AGPL-3.0** for open-source use — see [LICENSE](LICENSE). If you run a modified HazardPulse as a network service, the AGPL requires you to publish your modifications.
+- **Commercial license** for closed-source or proprietary-service use — see [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md) or contact [info@coherenceenergylabs.com](mailto:info@coherenceenergylabs.com).
 
 ---
 
