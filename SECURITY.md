@@ -7,7 +7,7 @@ Email **security@coherenceenergylabs.com**. We aim to acknowledge reports within
 forecast artifacts or receipts.
 
 Please do **not** open a public issue for a vulnerability before we have had a
-chance to respond — coordinated disclosure protects users of the live
+chance to respond - coordinated disclosure protects users of the live
 forecasting surfaces.
 
 ## Scope

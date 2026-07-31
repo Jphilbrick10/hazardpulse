@@ -1,4 +1,4 @@
-# Earthquake Prediction Model — Complete Verification Package
+# Earthquake Prediction Model - Complete Verification Package
 
 ## CLAIM
 
@@ -156,7 +156,7 @@ Bug fix applied: CatalogArrays now correctly converted to list[dict] for coheren
 
 **Block T: Tectonic context (5 features)**
 Tectonic type (3 one-hot), plate_boundary_dist, regional_m6_rate.
-Spatial features — contribute to global AUC but not same-location AUC.
+Spatial features - contribute to global AUC but not same-location AUC.
 
 ### Model
 
@@ -265,23 +265,23 @@ uses same-location controls with AUC. The problem definitions differ.
 
 From the global model (rest_of_world):
 
-1. **quiescence_7d** — Seismic quiescence in the 7 days before the reference
+1. **quiescence_7d** - Seismic quiescence in the 7 days before the reference
    time. High values = recent quiet period relative to annual average.
    Known precursor phenomenon (Mogi doughnut hypothesis).
 
-2. **rate_30d / rate_90d** — Seismicity rate acceleration in recent weeks/months.
+2. **rate_30d / rate_90d** - Seismicity rate acceleration in recent weeks/months.
    Foreshock sequences and rate increases before large events.
 
-3. **nn_change** — Change in nearest-neighbor distance. Decreasing NN distance
+3. **nn_change** - Change in nearest-neighbor distance. Decreasing NN distance
    = spatial clustering = stress concentration.
 
-4. **mom_accel** — Seismic moment release acceleration. Energy release
+4. **mom_accel** - Seismic moment release acceleration. Energy release
    increasing faster than background rate.
 
-5. **bath_ratio** — Ratio of largest to second-largest event in recent window.
+5. **bath_ratio** - Ratio of largest to second-largest event in recent window.
    Large Bath ratio = one dominant event = possible foreshock.
 
-6. **plate_boundary_dist** — Distance to nearest historical M6+. This is a
+6. **plate_boundary_dist** - Distance to nearest historical M6+. This is a
    SPATIAL feature, not temporal. Contributes to global AUC but not
    same-location AUC.
 

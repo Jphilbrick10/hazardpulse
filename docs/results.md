@@ -39,15 +39,15 @@ Multi-precursor Bayesian approach using USGS/ISC catalogs:
 ### Key Findings
 
 **Chile 2010 M8.8**:
-- b-value pre=0.920 vs bg=0.385 (p<0.0001) — dramatic decrease before rupture
-- CV pre=0.945 vs bg=0.501 (p<0.0001) — massive clustering increase
+- b-value pre=0.920 vs bg=0.385 (p<0.0001) - dramatic decrease before rupture
+- CV pre=0.945 vs bg=0.501 (p<0.0001) - massive clustering increase
 - Joint exceedance at 90th percentile: 5.96x (p<0.0001)
 - Discriminates at 3, 6, 12, 24-month windows
 
 **Tohoku 2011 M9.1**:
-- Regional analysis fails (AUC=0.388) — Japan's high background noise masks signal
+- Regional analysis fails (AUC=0.388) - Japan's high background noise masks signal
 - Focused analysis within 100km of epicenter: AUC=0.861
-- M7.3 foreshock at 44km, 0.4 days before — part of massive cluster (50+ events in final week)
+- M7.3 foreshock at 44km, 0.4 days before - part of massive cluster (50+ events in final week)
 - b-value slope strongest at 100-200km, weakens beyond 300km
 - Discriminates at all windows: 3mo (2.22x, p=0.015), 6mo (1.87x, p=0.003), 12mo (2.01x, p<0.0001)
 
@@ -58,18 +58,18 @@ Multi-precursor Bayesian approach using USGS/ISC catalogs:
 - 36-month window: ratio=1.80x, p=0.002
 
 **Ridgecrest 2019 M7.1**:
-- Intraplate event — focused epicentral analysis confirms NO precursory signal
-- Rate actually DECREASES pre-event (0.49x at 30km, 0.87x at 50km) — opposite of subduction events
+- Intraplate event - focused epicentral analysis confirms NO precursory signal
+- Rate actually DECREASES pre-event (0.49x at 30km, 0.87x at 50km) - opposite of subduction events
 - No significant foreshocks above M3.3 within 50km in last 90 days
-- M6.4 foreshock 34 hours before was the only warning — a sudden threshold crossing, not gradual approach
+- M6.4 foreshock 34 hours before was the only warning - a sudden threshold crossing, not gradual approach
 - This is a DIFFERENT regime: S/Gamma jumps rather than slowly approaching critical
 - The framework correctly identifies this as unpredictable by gradual precursor accumulation
 
 ### Coherence Interpretation
 Before major earthquakes, the coherence field approaches a critical point:
-- ℓ (correlation length) **diverges** — events become spatially correlated over larger distances
-- b-value **decreases** — energy preferentially stored in larger events
-- IET distribution shifts from exponential to **Lorentzian** — characteristic of damped resonance
+- ℓ (correlation length) **diverges** - events become spatially correlated over larger distances
+- b-value **decreases** - energy preferentially stored in larger events
+- IET distribution shifts from exponential to **Lorentzian** - characteristic of damped resonance
 - Signal is concentrated near the rupture zone and diluted at regional scale
 
 ---
@@ -163,7 +163,7 @@ Path Length ~ Width^0.973 ± 0.006  (R² = 0.431, p ≈ 0)
 ### Additional Findings
 - Width Spearman correlation with EF: ρ = 0.593 (p ≈ 0)
 - Classification accuracy: 65.9% exact, 95.9% within ±1 EF
-- Annual width trend: +3.8 m/year (p < 0.001) — tornadoes getting wider
+- Annual width trend: +3.8 m/year (p < 0.001) - tornadoes getting wider
 - November has highest % significant (19.9% EF2+), not peak tornado month (May, 10.9%)
 - Outbreak first-tornado width predicts count: ρ = 0.129, p < 10⁻⁸
 
@@ -172,7 +172,7 @@ Tornado width IS the coherence length ℓ:
 - Wider tornado = more organized mesoscale vortex = higher coherence
 - The near-linear scaling (L ~ W^0.97) means coherence duration scales directly with coherence size
 - This is distinct from both earthquakes (ℓ diverges = approaching instability) and hurricanes (ℓ contracts = concentrating energy)
-- Tornado coherence is a MAINTAINED state — the vortex holds its organization proportional to its size
+- Tornado coherence is a MAINTAINED state - the vortex holds its organization proportional to its size
 
 ---
 
@@ -208,9 +208,9 @@ All three hazards are governed by the same PDE but with fundamentally different 
 
 ## 5. Summary of Significant Results
 
-### Prediction Performance — HONEST Models (March 2026)
+### Prediction Performance - HONEST Models (March 2026)
 
-**Audited results — all methodology issues fixed:**
+**Audited results - all methodology issues fixed:**
 
 1. **Hurricane RI Config C (full): AUC = 0.967** [0.955, 0.977] (v4-honest, IBTrACS best-track, NA storms 2015+)
 2. **Hurricane RI Config A (met only): AUC = 0.956** [0.937, 0.971] (v4-honest, 15 standard features)
@@ -242,7 +242,7 @@ All three hazards are governed by the same PDE but with fundamentally different 
 - ENSO-hurricane coupling: p < 0.0001
 
 ### What This Means for Coherence Field Theory
-The Helmholtz coherence PDE is not just a curve-fitting exercise for galaxy rotation curves. The same mathematical framework — damped wave with source — describes:
+The Helmholtz coherence PDE is not just a curve-fitting exercise for galaxy rotation curves. The same mathematical framework - damped wave with source - describes:
 
 1. How earthquakes prepare (coherence diverges toward criticality)
 2. How hurricanes intensify (coherence concentrates into organized vortex)
@@ -257,25 +257,25 @@ Each system has different D, Γ, S parameters, but the STRUCTURE is identical. T
 
 ### Earthquake Precursor Emergence
 
-**Chile 2010 M8.8** — Gradual multi-precursor buildup:
+**Chile 2010 M8.8** - Gradual multi-precursor buildup:
 | Time Before Event | Signal | Strength | p-value |
 |---|---|---|---|
 | 48 months | Early composite hint | AUC = 0.753 | 0.019 |
-| 14.6 months | Composite first exceeds 90th percentile | — | — |
+| 14.6 months | Composite first exceeds 90th percentile | - | - |
 | 12 months | Strong discrimination | AUC = 0.898 | 0.010 |
-| 9-1 months | Sustained above 90th percentile | — | — |
+| 9-1 months | Sustained above 90th percentile | - | - |
 | **Earliest reliable warning: ~12-15 months** | | | |
 
-**Tohoku 2011 M9.1** — Foreshock cascade dominated:
+**Tohoku 2011 M9.1** - Foreshock cascade dominated:
 | Time Before Event | Signal | Strength | p-value |
 |---|---|---|---|
 | 36 months | Weak rate signal at 100km | AUC = 0.656 | 0.036 |
-| 3 months | Rate burst begins (46.65x) | — | — |
-| 2 days | M6.5 + M6.0 foreshock doublet | Unambiguous | — |
-| 0.4 days | M7.3 foreshock at 44km | — | — |
+| 3 months | Rate burst begins (46.65x) | - | - |
+| 2 days | M6.5 + M6.0 foreshock doublet | Unambiguous | - |
+| 0.4 days | M7.3 foreshock at 44km | - | - |
 | **Earliest reliable warning: ~2-3 years (weak), ~2 days (strong)** | | | |
 
-**Sumatra 2004 M9.1** — Extended low-level elevation:
+**Sumatra 2004 M9.1** - Extended low-level elevation:
 | Time Before Event | Signal | Strength | p-value |
 |---|---|---|---|
 | 36 months | Rate elevation at 500km | AUC = 0.746 | 0.002 |
@@ -299,7 +299,7 @@ Standard RI definition: ≥30 kt intensification.
 
 ### Tornado Width-Based Severity
 
-Tornado width prediction is **nowcasting**, not forecasting — width is measured in real-time after formation.
+Tornado width prediction is **nowcasting**, not forecasting - width is measured in real-time after formation.
 
 | Observable Change | Prediction | AUC | Effective Lead Time |
 |---|---|---|---|
@@ -340,7 +340,7 @@ Tornado width prediction is **nowcasting**, not forecasting — width is measure
 | **Our v4-honest: Config C (full)** | **Ensemble** | **0.967 [0.955, 0.977]** | **This work (v4-honest)** |
 | **Our v4-honest: Config A (met only)** | **Ensemble** | **0.956 [0.937, 0.971]** | **This work (v4-honest)** |
 
-**Assessment**: v4-honest achieves AUC = 0.967 on IBTrACS best-track for NA basin (storms 2015+). Ablation shows Config A (15 met features) at 0.956, demonstrating most signal comes from standard intensity/change/latitude features. Persistence baseline (dw_6h alone) gives AUC 0.940 — so our model adds +0.027 beyond simple persistence. Cross-basin generalization: NA→WP 0.939, WP→NA 0.949. **IMPORTANT**: Direct comparison to SHIPS-RII or other operational models has NOT been done — that requires evaluation on real-time data, not best-track reanalysis. Prior v3 claims were misleading in this regard.
+**Assessment**: v4-honest achieves AUC = 0.967 on IBTrACS best-track for NA basin (storms 2015+). Ablation shows Config A (15 met features) at 0.956, demonstrating most signal comes from standard intensity/change/latitude features. Persistence baseline (dw_6h alone) gives AUC 0.940 - so our model adds +0.027 beyond simple persistence. Cross-basin generalization: NA→WP 0.939, WP→NA 0.949. **IMPORTANT**: Direct comparison to SHIPS-RII or other operational models has NOT been done - that requires evaluation on real-time data, not best-track reanalysis. Prior v3 claims were misleading in this regard.
 
 ### Tornado Prediction
 
@@ -355,7 +355,7 @@ Tornado width prediction is **nowcasting**, not forecasting — width is measure
 | **Our v5-honest: EF2+ severity** | **Post-event** | **Nowcast** | **0.851 [0.843, 0.860]** |
 | **Our v5-honest: EF3+ severity** | **Post-event** | **Nowcast** | **0.917 [0.901, 0.934]** |
 
-**Assessment**: v5-honest formation model (AUC=0.644) uses ZERO same-day data (all lookbacks d_off≥1), no post-event features, no circular proxies. This is modest — continuation AUC 0.680, initiation AUC 0.578. The model captures outbreak propagation patterns but cannot compete with NWP-based systems without actual atmospheric data (CAPE, shear, helicity). Prior v4 (AUC 0.973) was critically inflated by same-day data leakage and circular features. Severity models use post-event damage survey widths — these are nowcasting, not real-time prediction. Direct comparison to SPC Day 1 outlooks has NOT been done on the same grid/period.
+**Assessment**: v5-honest formation model (AUC=0.644) uses ZERO same-day data (all lookbacks d_off≥1), no post-event features, no circular proxies. This is modest - continuation AUC 0.680, initiation AUC 0.578. The model captures outbreak propagation patterns but cannot compete with NWP-based systems without actual atmospheric data (CAPE, shear, helicity). Prior v4 (AUC 0.973) was critically inflated by same-day data leakage and circular features. Severity models use post-event damage survey widths - these are nowcasting, not real-time prediction. Direct comparison to SPC Day 1 outlooks has NOT been done on the same grid/period.
 
 ---
 
@@ -369,18 +369,18 @@ Tornado width prediction is **nowcasting**, not forecasting — width is measure
 - All honest models use proper temporal train/test splits, bootstrap CIs, and fair baselines on the same test set.
 
 ### What requires caution:
-1. **Hurricane model uses best-track data (retrospective)**, not real-time intensity estimates. Comparison to operational models (SHIPS-RII) has NOT been done — this requires real-time data evaluation.
+1. **Hurricane model uses best-track data (retrospective)**, not real-time intensity estimates. Comparison to operational models (SHIPS-RII) has NOT been done - this requires real-time data evaluation.
 2. **Tornado formation AUC 0.644 is modest.** Without real-time atmospheric data (CAPE, shear, helicity from NWP models), the model cannot compete with SPC outlooks. Negative BSS (-0.512) means the model is worse than climatology on calibration.
 3. **Tornado severity uses post-event data** (damage survey widths). These are nowcasting metrics, not predictions available before or during the event.
 4. **Earthquake AUC 0.733 is meaningful but not transformative.** Same-location controls are harder than geographic negatives, but still may not fully represent the difficulty of global deployment.
-5. **EF4+ tornado severity** has only 20 test events — the AUC is statistically unreliable.
+5. **EF4+ tornado severity** has only 20 test events - the AUC is statistically unreliable.
 6. **All models are retrospective**: True validation requires prospective real-time testing with timestamped predictions.
 7. **Prior versions (v3/v4/v6) had critical inflated claims** that were caught by audit. This underscores the importance of independent replication.
 
 ### What would make this definitive:
 1. **Live prospective testing**: Deploy models with timestamped, immutable prediction logging (see LIVE_PREDICTION_PLATFORM.md)
 2. **Identical test sets for hurricane comparison**: Rerun on exact same storms as SHIPS-RII benchmark
-3. **ERA5 environmental features**: Already approximated via proxies in tornado v4 — adding real reanalysis data could push further
+3. **ERA5 environmental features**: Already approximated via proxies in tornado v4 - adding real reanalysis data could push further
 4. **CSEP submission**: Submit earthquake model to Collaboratory for the Study of Earthquake Predictability for independent validation
 5. **Prospective earthquake test**: Apply fixed parameters to Cascadia, Nankai, or other locked zones and monitor
 
@@ -394,11 +394,11 @@ Tested on ALL M6+ earthquakes 2000-2023, not just 3-4 famous events. Proper temp
 
 **v3 (absolute features, random-location controls):**
 - Test AUC = 0.854 on 872 M6+ events
-- BUT: top features are absolute counts (n_bg_annual, n_pre_12m) — model partly learns "seismic zones exist"
+- BUT: top features are absolute counts (n_bg_annual, n_pre_12m) - model partly learns "seismic zones exist"
 - N-events-alone baseline: AUC = 0.843 (almost as good)
 
 **v3b (change-only features, same-location controls):**
-The honest test — same location at a time with no M6+, so the model must detect CHANGES, not just active zones.
+The honest test - same location at a time with no M6+, so the model must detect CHANGES, not just active zones.
 
 | Metric | Value |
 |---|---|
@@ -427,7 +427,7 @@ The honest test — same location at a time with no M6+, so the model must detec
 | b_change | +0.272 | b-value shift |
 | ell_change | +0.180 | Correlation length change |
 
-**Key insight**: The model genuinely detects precursory CHANGES, not just seismically active zones. Larger events (M7.5+) are MORE predictable (AUC = 0.799). The strongest signal is rising mean magnitude — a direct coherence field prediction (energy accumulation shifts magnitude distribution).
+**Key insight**: The model genuinely detects precursory CHANGES, not just seismically active zones. Larger events (M7.5+) are MORE predictable (AUC = 0.799). The strongest signal is rising mean magnitude - a direct coherence field prediction (energy accumulation shifts magnitude distribution).
 
 **Comparison to existing models:**
 
@@ -457,7 +457,7 @@ v1 failed because without environmental data, spatial-temporal patterns alone ca
 
 **v2 (synoptic propagation features):**
 
-The breakthrough: tornado outbreaks are frontal events. A tornado in a nearby cell in the past 1-3 days signals ongoing cold front passage. This is a direct Helmholtz prediction — coherence propagates spatially.
+The breakthrough: tornado outbreaks are frontal events. A tornado in a nearby cell in the past 1-3 days signals ongoing cold front passage. This is a direct Helmholtz prediction - coherence propagates spatially.
 
 | Metric | Value |
 |---|---|
@@ -479,7 +479,7 @@ The breakthrough: tornado outbreaks are frontal events. A tornado in a nearby ce
 | n_nearby_3d | 0.65 | Total nearby tornado count, past 3 days |
 | max_width_1d | 0.54 | Largest tornado width in same cell, past 1 day |
 
-**Why it works**: The dominant feature (max_nearby_width_3d) acts as a proxy for mesocyclone-favorable environments — a wide tornado nearby means strong shear/CAPE conditions are approaching. This captures the synoptic-scale coherence propagation without needing explicit atmospheric reanalysis data.
+**Why it works**: The dominant feature (max_nearby_width_3d) acts as a proxy for mesocyclone-favorable environments - a wide tornado nearby means strong shear/CAPE conditions are approaching. This captures the synoptic-scale coherence propagation without needing explicit atmospheric reanalysis data.
 
 **Severity prediction (v2 with outbreak context):**
 
@@ -521,7 +521,7 @@ v2 adds pressure dynamics, MPI deficit, eye formation, storm age, and quadratic/
 |---|---|---|---|
 | Features | 9 | 10 | 38 (26 base + 12 interactions) |
 | **NA AUC** | **0.925** | **0.948** | **0.963** |
-| Global AUC | 0.917 | — | 0.954 |
+| Global AUC | 0.917 | - | 0.954 |
 
 **v2 threshold sensitivity (NA basin):**
 
@@ -542,7 +542,7 @@ v2 adds pressure dynamics, MPI deficit, eye formation, storm age, and quadratic/
 | prior_ri | +0.453 | Storms that RI once tend to RI again |
 | eye_indicator | +0.389 | Eye formation signals organized vortex |
 
-**Why v2 exceeds deep learning (0.90-0.93)**: Feature interactions capture the physics explicitly — e.g., wind² encodes that intensification probability decreases nonlinearly at high wind speeds (approaching MPI). Deep learning must discover these relationships from data; we encode them from coherence theory (WISHE feedback saturation).
+**Why v2 exceeds deep learning (0.90-0.93)**: Feature interactions capture the physics explicitly - e.g., wind² encodes that intensification probability decreases nonlinearly at high wind speeds (approaching MPI). Deep learning must discover these relationships from data; we encode them from coherence theory (WISHE feedback saturation).
 
 ---
 
@@ -583,7 +583,7 @@ v6 adds seismic moment release tracking, Coulomb stress proxy, foreshock sequenc
 | 2019-2020 | 0.883 |
 | 2021-2023 | 0.917 |
 
-**95% CI (1000 bootstrap resamples): 0.880 — 0.907**
+**95% CI (1000 bootstrap resamples): 0.880 - 0.907**
 **Brier Skill Score: 0.462**
 
 **Key v6 features:**
@@ -602,7 +602,7 @@ v4 adds ERA5 proxies (CAPE, shear, SRH, moisture), synoptic pattern recognition,
 | Metric | v1 | v2 | v3 | **v4** |
 |---|---|---|---|---|
 | Formation AUC | 0.780 | 0.935 | 0.956 | **0.973** |
-| BSS vs climatology | — | +0.295 | +0.322 | **+0.459** |
+| BSS vs climatology | - | +0.295 | +0.322 | **+0.459** |
 | EF2+ AUC | 0.865 | 0.873 | 0.923 | **0.935** |
 | EF3+ AUC | 0.921 | 0.940 | 0.981 | **0.986** |
 | EF4+ AUC | 0.950 | 0.992 | 0.999 | **0.999** |
