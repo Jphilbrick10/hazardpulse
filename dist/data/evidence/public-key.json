@@ -1,7 +1,5 @@
 {
-  "algorithm": "Ed25519",
+  "alg": "ed25519",
   "public_key_hex": "c536bdfe6cbb4cf4e4b31c3e833530c5b3292146dcd7c81b79b33e8f632c5a66",
-  "spec": "hazardpulse/forecast/v1",
-  "signing_began": "2026-07-31",
-  "note": "Receipts issued before signing_began carry receipt_sha256 integrity hashes and git-history timestamps only; signatures begin with the first scoring cycle after this key was provisioned."
+  "verify": "verify_forecast_receipt(receipt, pubkey=load_ed25519_pubkey(bytes.fromhex(public_key_hex)))"
 }
