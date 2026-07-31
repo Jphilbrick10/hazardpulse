@@ -1,5 +1,8 @@
 name: Tornado Scoring (Severe Season)
 
+env:
+  HAZARDPULSE_SIGNING_KEY: ${{ secrets.HAZARDPULSE_SIGNING_KEY }}
+
 on:
   schedule:
     # Run every 2 hours for timely severe weather coverage.

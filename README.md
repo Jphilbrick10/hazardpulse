@@ -146,7 +146,7 @@ The public platform at **[hazardpulse.com](https://hazardpulse.com)** runs prosp
 
 - **Scheduled forecast cycles** (GitHub Actions) fetch live agency feeds, freeze each forecast *before* the outcome window, and score it when outcomes mature
 - **Publication gates** — every cycle passes a gate engine (schema validity, source freshness, model provenance, calibration health, spatiotemporal sanity, uncertainty, replayability) with **pass / degrade / block** authority: a failing gate really does stop publication
-- **Signed prediction ledger** — every forecast is SHA-256 hashed, Ed25519-signed, and committed before events occur (`dist/data/earthquake-ledger.jsonl`, `dist/data/evidence/`)
+- **Signed prediction ledger** — every forecast is SHA-256 hashed and committed before events occur (`dist/data/earthquake-ledger.jsonl`, `dist/data/evidence/`). Ed25519 signatures begin with cycles after 2026-07-31, when the signing key was provisioned; the public key is published at `dist/data/evidence/public-key.json`, and earlier receipts rely on integrity hashes plus git-history timestamps — we label the difference instead of blurring it
 - **Replay artifacts** — full input snapshots per cycle (`dist/data/replay/`), independently verifiable with `scripts/verify_forecast.py`
 - **Honest calibration** — Venn-Abers calibrated probabilities, reliability diagrams, distribution-drift monitoring, and abstention when the model shouldn't speak
 

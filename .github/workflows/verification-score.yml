@@ -1,5 +1,8 @@
 name: Verification Scoring
 
+env:
+  HAZARDPULSE_SIGNING_KEY: ${{ secrets.HAZARDPULSE_SIGNING_KEY }}
+
 on:
   schedule:
     # Every 4 hours so recovery from model fixes is visible same-day

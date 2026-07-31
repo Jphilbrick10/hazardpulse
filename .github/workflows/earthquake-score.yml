@@ -1,5 +1,8 @@
 name: Earthquake Scoring
 
+env:
+  HAZARDPULSE_SIGNING_KEY: ${{ secrets.HAZARDPULSE_SIGNING_KEY }}
+
 on:
   schedule:
     # Run every 6 hours to accumulate data while building the site.

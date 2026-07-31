@@ -1,5 +1,8 @@
 name: Hurricane Scoring (Daily)
 
+env:
+  HAZARDPULSE_SIGNING_KEY: ${{ secrets.HAZARDPULSE_SIGNING_KEY }}
+
 on:
   schedule:
     - cron: "0 12 * * *"
