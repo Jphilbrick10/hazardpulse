@@ -88,3 +88,55 @@ def test_cli_on_artifact(tmp_path):
     artifact["active_cells"][0]["receipt"]["probability"] = 0.99
     apath.write_text(json.dumps(artifact), encoding="utf-8")
     assert vf.main(["--artifact", str(apath)]) == 1
+
+
+# ------------------------------------------------------------------------------
+# A DISCOVERED key is a convenience. A SUPPLIED key is an assertion. The verifier
+# stopped distinguishing them and reported [FAIL] on every unsigned artifact,
+# purely because a published key sits in dist/. On a zero-trust verifier a
+# stranger runs to check our claims, FAIL reads as TAMPERED -- so this is a
+# credibility bug, not a usability one.
+
+def test_auto_discovered_key_does_not_fail_an_unsigned_receipt(tmp_path):
+    vf = _load_verifier()
+    tf = _forecaster()                                   # unsigned by construction
+    cells = enrich_cells([{"probability": 0.6, "lat": 35, "lon": -97}], tf,
+                         issued_at="2026-06-25T03:00:00Z")
+    receipt = cells[0]["receipt"]
+    assert not (receipt.get("signature") or {}).get("sig"), "fixture must be unsigned"
+
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+    key = Ed25519PrivateKey.generate().public_key().public_bytes_raw().hex()
+    ok, detail = vf.verify_receipt(receipt, key, key_is_explicit=False)
+    assert ok is True, detail
+    assert "integrity OK" in detail
+
+
+def test_an_EXPLICIT_key_still_requires_a_signature(tmp_path):
+    """The paired control. If the fallback above were applied unconditionally,
+    --pubkey would be silently ignored and an unsigned artifact would pass an
+    authenticity check it never underwent."""
+    vf = _load_verifier()
+    tf = _forecaster()
+    cells = enrich_cells([{"probability": 0.6, "lat": 35, "lon": -97}], tf,
+                         issued_at="2026-06-25T03:00:00Z")
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+    key = Ed25519PrivateKey.generate().public_key().public_bytes_raw().hex()
+    ok, detail = vf.verify_receipt(cells[0]["receipt"], key, key_is_explicit=True)
+    assert ok is False
+    assert "no signature present" in detail
+
+
+def test_tampering_still_fails_even_with_the_unsigned_fallback(tmp_path):
+    """The fallback must relax AUTHENTICITY only. Integrity is never optional."""
+    vf = _load_verifier()
+    tf = _forecaster()
+    cells = enrich_cells([{"probability": 0.6, "lat": 35, "lon": -97}], tf,
+                         issued_at="2026-06-25T03:00:00Z")
+    receipt = dict(cells[0]["receipt"])
+    receipt["probability"] = 0.99                        # claim no longer matches its hash
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+    key = Ed25519PrivateKey.generate().public_key().public_bytes_raw().hex()
+    ok, detail = vf.verify_receipt(receipt, key, key_is_explicit=False)
+    assert ok is False
+    assert "INTEGRITY FAIL" in detail
