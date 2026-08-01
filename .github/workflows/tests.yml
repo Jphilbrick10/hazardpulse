@@ -19,6 +19,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # The append-only gate compares this ref against origin/main, so it needs real history.
+          # The default shallow clone has no merge base and the check would silently pass.
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -57,6 +61,17 @@ jobs:
 
       - name: Run site integrity checks
         run: python -m pytest tests/test_site_integrity.py -q
+
+      # The product's claim is "this prediction was recorded before the event". An append-only
+      # evidence artifact that silently SHRINKS is indistinguishable from backdating. A long-lived
+      # branch that regenerated these files at its fork point would have destroyed 547 records in
+      # each of four ledgers, in a commit indistinguishable from a routine data update.
+      - name: Append-only evidence ledgers must never lose records
+        run: |
+          set -eu
+          python scripts/check_append_only_monotonic.py --self-test
+          git fetch --no-tags --depth=0 origin main 2>/dev/null || git fetch --no-tags origin main
+          python scripts/check_append_only_monotonic.py --base origin/main --head HEAD
 
       - name: Compile all scoring + training scripts
         run: |
