@@ -1,0 +1,20 @@
+# Byte-pinned artifacts must be byte-STABLE across platforms.
+#
+# The vendored omega_one trust subset is pinned by a per-file SHA-256 map in
+# VENDOR_MANIFEST.json. Git's line-ending normalisation rewrote all ten modules to CRLF on a
+# Windows checkout, so every pinned hash mismatched and `test_vendor_manifest_no_drift` failed --
+# on Windows only. In Linux CI the same commit was green. The vendored bytes were never wrong;
+# the checkout changed them underneath the pin.
+#
+# A drift detector that fires on the platform rather than on drift is worse than none: it trains
+# people to ignore it, and it did -- the failure was written off as pre-existing in a previous
+# session's commit message.
+#
+# `-text` means "never convert this file's line endings in either direction."
+src/hazardpulse/trust/_vendor_omega/** -text
+src/hazardpulse/trust/_vendor_omega/VENDOR_MANIFEST.json -text
+
+# Forecast receipts and evidence ledgers are hashed and signed. Same reasoning: a signature over
+# bytes is meaningless if the checkout is free to rewrite them.
+dist/data/evidence/** -text
+dist/data/replay/** -text

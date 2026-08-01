@@ -160,3 +160,24 @@ def test_signed_receipt_roundtrip_and_tamper():
     assert verify_trusted_receipt(tampered, pubkey=pubkey) is False
     # even without the pubkey, the self-consistent hash check catches the tamper
     assert verify_trusted_receipt(tampered) is False
+
+
+def test_pinned_vendor_bytes_contain_no_crlf():
+    """A byte-pin is only as good as the bytes surviving checkout.
+
+    Git's line-ending normalisation rewrote all ten vendored modules to CRLF on Windows, so every
+    SHA-256 in VENDOR_MANIFEST.json mismatched and the drift test above failed -- on Windows only,
+    while Linux CI stayed green on the same commit. The vendored bytes were never wrong; the
+    checkout changed them underneath the pin.
+
+    `.gitattributes` marks these paths `-text`; this asserts the bytes actually are what that
+    promises, so a drift detector cannot go back to firing on the platform instead of on drift.
+    A detector that cries wolf gets written off as pre-existing -- and this one was.
+    """
+    crlf = bytes([13, 10])                    # built by code point; heredocs eat escapes
+    pinned = sorted(VENDOR_DIR.glob("*.py")) + [VENDOR_DIR / "VENDOR_MANIFEST.json"]
+    assert len(pinned) > 1, "no pinned artifacts found -- this assertion would be vacuous"
+    offenders = [p.name for p in pinned if p.is_file() and crlf in p.read_bytes()]
+    assert not offenders, (
+        f"CRLF in byte-pinned vendor artifacts {offenders}; their manifest hashes cannot match "
+        f"after a checkout on this platform")
