@@ -1,0 +1,7732 @@
+{
+  "forecast_id": "to_fcst_20260629_1510",
+  "hazard": "tornado",
+  "issued_at": "2026-06-29T15:10:40Z",
+  "model_version": "tornado_storm_v1_0",
+  "forecast_horizon_hours": 24,
+  "scoring_tier": "tier1_ml",
+  "scoring_tier_label": "ML (pre-trained gradient-boosted trees)",
+  "coherence_source": "hrrr",
+  "n_active_storms": 46,
+  "top_probability": 0.0158,
+  "source_artifacts": [
+    "/data/live-tornadoes.json",
+    "/data/tornado-storms.geojson"
+  ],
+  "storms": [
+    {
+      "storm_id": "707220",
+      "lat": 44.9775,
+      "lon": -85.59,
+      "motion_east": 9.2,
+      "motion_south": 0.2,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0158,
+      "risk_band": "very_high",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2415.0,
+      "ebshear": 63.0,
+      "srh01": 237.0,
+      "maxllaz": 0.006,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 237.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 42.0758
+        },
+        {
+          "name": "alignment",
+          "value": -10.1618
+        },
+        {
+          "name": "tau",
+          "value": 0.782
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.006
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.6405
+      },
+      "coherence_score": 0.7820170521736145,
+      "coherence_diagnostics": {
+        "tau": 0.7820170521736145,
+        "grad_tau": 0.06989879161119461,
+        "torsion": 0.0,
+        "alignment": -10.161794662475586,
+        "S_field": 0.6185265183448792,
+        "Gamma_field": 2.110698938369751,
+        "S_over_Gamma": 0.29304346442222595,
+        "Da": 135.0005340576172,
+        "E_coh": 0.2787293791770935,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -85.61,
+              45.01
+            ],
+            [
+              -85.58,
+              45.01
+            ],
+            [
+              -85.56,
+              44.99
+            ],
+            [
+              -85.56,
+              44.98
+            ],
+            [
+              -85.54,
+              44.96
+            ],
+            [
+              -85.55,
+              44.96
+            ],
+            [
+              -85.58,
+              44.94
+            ],
+            [
+              -85.59,
+              44.96
+            ],
+            [
+              -85.62,
+              44.97
+            ],
+            [
+              -85.64,
+              44.95
+            ],
+            [
+              -85.64,
+              44.99
+            ],
+            [
+              -85.61,
+              45.01
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.6405,
+      "confidence_lo": 0.0136,
+      "confidence_hi": 0.0159,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "a16b4c2871de7b081ca189144a1f519333b7218a172895736a0e325adcae2312",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.6405,
+        "probability": 0.015837,
+        "confidence_lo": 0.013601,
+        "confidence_hi": 0.015873,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "87ecf67a4019aba1a23fd679fd049adb59fe68f196da4640d644bbfa15ed9686"
+      },
+      "receipt_sha256": "87ecf67a4019aba1a23fd679fd049adb59fe68f196da4640d644bbfa15ed9686"
+    },
+    {
+      "storm_id": "707199",
+      "lat": 46.79,
+      "lon": -96.079,
+      "motion_east": 14.9,
+      "motion_south": -10.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0142,
+      "risk_band": "very_high",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2691.0,
+      "ebshear": 69.0,
+      "srh01": 44.0,
+      "maxllaz": 0.006,
+      "mesh": 0.07,
+      "flash_rate": 2.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 44.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 37.8258
+        },
+        {
+          "name": "alignment",
+          "value": -6.1311
+        },
+        {
+          "name": "tau",
+          "value": 1.0658
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.006
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.6105
+      },
+      "coherence_score": 1.0658316612243652,
+      "coherence_diagnostics": {
+        "tau": 1.0658316612243652,
+        "grad_tau": 0.3483138978481293,
+        "torsion": 0.0,
+        "alignment": -6.131135940551758,
+        "S_field": 0.6390222311019897,
+        "Gamma_field": 0.31486573815345764,
+        "S_over_Gamma": 2.0295069217681885,
+        "Da": 19.408823013305664,
+        "E_coh": 0.5318037271499634,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.06,
+              46.83
+            ],
+            [
+              -96.03,
+              46.82
+            ],
+            [
+              -96.05,
+              46.74
+            ],
+            [
+              -96.06,
+              46.73
+            ],
+            [
+              -96.12,
+              46.73
+            ],
+            [
+              -96.13,
+              46.77
+            ],
+            [
+              -96.11,
+              46.81
+            ],
+            [
+              -96.1,
+              46.82
+            ],
+            [
+              -96.07,
+              46.82
+            ],
+            [
+              -96.06,
+              46.83
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.6105,
+      "confidence_lo": 0.0136,
+      "confidence_hi": 0.0142,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "21892b5a20373922f60dadc7d778e91846cc56a71762b12a5c8a8a9899868a7b",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.6105,
+        "probability": 0.014239,
+        "confidence_lo": 0.013601,
+        "confidence_hi": 0.014249,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "2c17f4f845900ec34d2f162e7a263e1d847cf05079e804fe23f5ef06cc0a887d"
+      },
+      "receipt_sha256": "2c17f4f845900ec34d2f162e7a263e1d847cf05079e804fe23f5ef06cc0a887d"
+    },
+    {
+      "storm_id": "705585",
+      "lat": 45.0378,
+      "lon": -85.1581,
+      "motion_east": 9.3,
+      "motion_south": 0.3,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0078,
+      "risk_band": "very_high",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 775.0,
+      "ebshear": 53.0,
+      "srh01": 132.0,
+      "maxllaz": 0.007,
+      "mesh": 0.68,
+      "flash_rate": 40.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 132.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 46.5758
+        },
+        {
+          "name": "alignment",
+          "value": 8.5181
+        },
+        {
+          "name": "tau",
+          "value": 1.0219
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.007
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.5361
+      },
+      "coherence_score": 1.021897554397583,
+      "coherence_diagnostics": {
+        "tau": 1.021897554397583,
+        "grad_tau": 0.13444830477237701,
+        "torsion": 0.0,
+        "alignment": 8.51809310913086,
+        "S_field": 0.5337726473808289,
+        "Gamma_field": 0.15569905936717987,
+        "S_over_Gamma": 3.4282329082489014,
+        "Da": 10.071176528930664,
+        "E_coh": 0.6573107838630676,
+        "singularity_count": 3.0,
+        "singularity_conditions_met": 3,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 14,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -85.11,
+              45.17
+            ],
+            [
+              -85.08,
+              45.17
+            ],
+            [
+              -85.06,
+              45.16
+            ],
+            [
+              -85.02,
+              45.12
+            ],
+            [
+              -85.01,
+              45.12
+            ],
+            [
+              -84.97,
+              45.09
+            ],
+            [
+              -84.96,
+              45.04
+            ],
+            [
+              -85.02,
+              44.98
+            ],
+            [
+              -85.03,
+              44.98
+            ],
+            [
+              -85.07,
+              44.95
+            ],
+            [
+              -85.15,
+              44.94
+            ],
+            [
+              -85.16,
+              44.93
+            ],
+            [
+              -85.2,
+              44.93
+            ],
+            [
+              -85.21,
+              44.94
+            ],
+            [
+              -85.24,
+              44.94
+            ],
+            [
+              -85.25,
+              44.95
+            ],
+            [
+              -85.32,
+              44.95
+            ],
+            [
+              -85.35,
+              44.97
+            ],
+            [
+              -85.35,
+              45.01
+            ],
+            [
+              -85.34,
+              45.02
+            ],
+            [
+              -85.31,
+              45.02
+            ],
+            [
+              -85.27,
+              45.04
+            ],
+            [
+              -85.25,
+              45.06
+            ],
+            [
+              -85.17,
+              45.09
+            ],
+            [
+              -85.13,
+              45.13
+            ],
+            [
+              -85.13,
+              45.15
+            ],
+            [
+              -85.11,
+              45.17
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.5361,
+      "confidence_lo": 0.0077,
+      "confidence_hi": 0.0078,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "bb96e3a95899b76107537e0371368e681544b81f9e445f7562027c582c1668c5",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.5361,
+        "probability": 0.007839,
+        "confidence_lo": 0.00769,
+        "confidence_hi": 0.00784,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "bc25ba4ffa5f99c77d70f6061a24bfb7471cad296310c559ea121ea0d4b74de6"
+      },
+      "receipt_sha256": "bc25ba4ffa5f99c77d70f6061a24bfb7471cad296310c559ea121ea0d4b74de6"
+    },
+    {
+      "storm_id": "706992",
+      "lat": 45.6495,
+      "lon": -85.6175,
+      "motion_east": 11.5,
+      "motion_south": 1.7,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0078,
+      "risk_band": "high",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 1897.0,
+      "ebshear": 47.0,
+      "srh01": 217.0,
+      "maxllaz": 0.005,
+      "mesh": 0.77,
+      "flash_rate": 36.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 217.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 52.4508
+        },
+        {
+          "name": "alignment",
+          "value": 2.9548
+        },
+        {
+          "name": "tau",
+          "value": 0.8916
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.005
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.4658
+      },
+      "coherence_score": 0.8916239738464355,
+      "coherence_diagnostics": {
+        "tau": 0.8916239738464355,
+        "grad_tau": 0.15576371550559998,
+        "torsion": 0.0,
+        "alignment": 2.9547572135925293,
+        "S_field": 0.36466819047927856,
+        "Gamma_field": 0.16403238475322723,
+        "S_over_Gamma": 2.2231476306915283,
+        "Da": 10.690113067626953,
+        "E_coh": 0.4763343930244446,
+        "singularity_count": 3.0,
+        "singularity_conditions_met": 3,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 3,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -85.55,
+              45.75
+            ],
+            [
+              -85.46,
+              45.75
+            ],
+            [
+              -85.43,
+              45.73
+            ],
+            [
+              -85.43,
+              45.69
+            ],
+            [
+              -85.46,
+              45.67
+            ],
+            [
+              -85.54,
+              45.68
+            ],
+            [
+              -85.56,
+              45.66
+            ],
+            [
+              -85.56,
+              45.63
+            ],
+            [
+              -85.57,
+              45.61
+            ],
+            [
+              -85.62,
+              45.56
+            ],
+            [
+              -85.64,
+              45.56
+            ],
+            [
+              -85.68,
+              45.54
+            ],
+            [
+              -85.8,
+              45.54
+            ],
+            [
+              -85.82,
+              45.56
+            ],
+            [
+              -85.82,
+              45.61
+            ],
+            [
+              -85.81,
+              45.61
+            ],
+            [
+              -85.74,
+              45.69
+            ],
+            [
+              -85.72,
+              45.7
+            ],
+            [
+              -85.59,
+              45.7
+            ],
+            [
+              -85.55,
+              45.75
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.4658,
+      "confidence_lo": 0.0077,
+      "confidence_hi": 0.0078,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "799a9080ce3f8873a97ddc3a8f80816a5e24b9dcdf2beeb0676b6c99836a1c8f",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.4658,
+        "probability": 0.007839,
+        "confidence_lo": 0.00769,
+        "confidence_hi": 0.00784,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "fd4861806b78ebdee0e5cb2c38817bc7b14f1c2edda224f27972ebea4ef6e1cb"
+      },
+      "receipt_sha256": "fd4861806b78ebdee0e5cb2c38817bc7b14f1c2edda224f27972ebea4ef6e1cb"
+    },
+    {
+      "storm_id": "707191",
+      "lat": 45.7815,
+      "lon": -86.2685,
+      "motion_east": 8.3,
+      "motion_south": 0.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0078,
+      "risk_band": "high",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2401.0,
+      "ebshear": 37.0,
+      "srh01": 202.0,
+      "maxllaz": 0.003,
+      "mesh": 0.05,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 202.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 52.4508
+        },
+        {
+          "name": "alignment",
+          "value": 2.9548
+        },
+        {
+          "name": "tau",
+          "value": 0.8916
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.003
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.4532
+      },
+      "coherence_score": 0.8916239738464355,
+      "coherence_diagnostics": {
+        "tau": 0.8916239738464355,
+        "grad_tau": 0.15576371550559998,
+        "torsion": 0.0,
+        "alignment": 2.9547572135925293,
+        "S_field": 0.36466819047927856,
+        "Gamma_field": 0.16403238475322723,
+        "S_over_Gamma": 2.2231476306915283,
+        "Da": 10.690113067626953,
+        "E_coh": 0.4763343930244446,
+        "singularity_count": 3.0,
+        "singularity_conditions_met": 3,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -86.27,
+              45.84
+            ],
+            [
+              -86.23,
+              45.84
+            ],
+            [
+              -86.23,
+              45.83
+            ],
+            [
+              -86.2,
+              45.81
+            ],
+            [
+              -86.2,
+              45.77
+            ],
+            [
+              -86.24,
+              45.73
+            ],
+            [
+              -86.28,
+              45.72
+            ],
+            [
+              -86.29,
+              45.73
+            ],
+            [
+              -86.31,
+              45.73
+            ],
+            [
+              -86.33,
+              45.75
+            ],
+            [
+              -86.32,
+              45.76
+            ],
+            [
+              -86.32,
+              45.81
+            ],
+            [
+              -86.27,
+              45.84
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.4532,
+      "confidence_lo": 0.0077,
+      "confidence_hi": 0.0078,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "40a04bfafd7024db4d1e01f21327c26d8dfa3ac8df5b49e80eb7a8f49e73d925",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.4532,
+        "probability": 0.007839,
+        "confidence_lo": 0.00769,
+        "confidence_hi": 0.00784,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "bec00078b736175cc2a132b52f05bff8c6e848680e9d855ce1d59554168abc0c"
+      },
+      "receipt_sha256": "bec00078b736175cc2a132b52f05bff8c6e848680e9d855ce1d59554168abc0c"
+    },
+    {
+      "storm_id": "704419",
+      "lat": 46.1494,
+      "lon": -96.4814,
+      "motion_east": 16.9,
+      "motion_south": -11.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.004,
+      "risk_band": "high",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 3581.0,
+      "ebshear": 74.0,
+      "srh01": 117.0,
+      "maxllaz": 0.0,
+      "mesh": 1.78,
+      "flash_rate": 59.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 117.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 42.8258
+        },
+        {
+          "name": "alignment",
+          "value": -3.0786
+        },
+        {
+          "name": "tau",
+          "value": 1.4672
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.0
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.3672
+      },
+      "coherence_score": 1.4671533107757568,
+      "coherence_diagnostics": {
+        "tau": 1.4671533107757568,
+        "grad_tau": 0.3700742721557617,
+        "torsion": 0.0,
+        "alignment": -3.07859468460083,
+        "S_field": 0.8799635171890259,
+        "Gamma_field": 0.2540324032306671,
+        "S_over_Gamma": 3.4639813899993896,
+        "Da": 16.00652503967285,
+        "E_coh": 0.7201254963874817,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 22,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.46,
+              46.33
+            ],
+            [
+              -96.35,
+              46.33
+            ],
+            [
+              -96.27,
+              46.29
+            ],
+            [
+              -96.22,
+              46.23
+            ],
+            [
+              -96.22,
+              46.19
+            ],
+            [
+              -96.26,
+              46.15
+            ],
+            [
+              -96.34,
+              46.11
+            ],
+            [
+              -96.41,
+              46.11
+            ],
+            [
+              -96.42,
+              46.1
+            ],
+            [
+              -96.48,
+              46.1
+            ],
+            [
+              -96.49,
+              46.09
+            ],
+            [
+              -96.49,
+              46.07
+            ],
+            [
+              -96.48,
+              46.06
+            ],
+            [
+              -96.44,
+              46.06
+            ],
+            [
+              -96.4,
+              46.03
+            ],
+            [
+              -96.39,
+              46.0
+            ],
+            [
+              -96.42,
+              45.96
+            ],
+            [
+              -96.44,
+              45.96
+            ],
+            [
+              -96.5,
+              45.99
+            ],
+            [
+              -96.51,
+              46.0
+            ],
+            [
+              -96.51,
+              46.04
+            ],
+            [
+              -96.53,
+              46.06
+            ],
+            [
+              -96.57,
+              46.06
+            ],
+            [
+              -96.6,
+              46.09
+            ],
+            [
+              -96.6,
+              46.1
+            ],
+            [
+              -96.68,
+              46.17
+            ],
+            [
+              -96.69,
+              46.19
+            ],
+            [
+              -96.69,
+              46.21
+            ],
+            [
+              -96.66,
+              46.25
+            ],
+            [
+              -96.64,
+              46.25
+            ],
+            [
+              -96.63,
+              46.26
+            ],
+            [
+              -96.59,
+              46.26
+            ],
+            [
+              -96.52,
+              46.31
+            ],
+            [
+              -96.5,
+              46.32
+            ],
+            [
+              -96.47,
+              46.32
+            ],
+            [
+              -96.46,
+              46.33
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.3672,
+      "confidence_lo": 0.0039,
+      "confidence_hi": 0.004,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "2e8a44799bcd9cbff6ffd987c79725e717506073b6ce9bf03f5ef3fa3557a0f8",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.3672,
+        "probability": 0.004016,
+        "confidence_lo": 0.003878,
+        "confidence_hi": 0.004017,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "144937e00713281710d08d02da0ac01aff0a2688866276f6c1623b111395fdd0"
+      },
+      "receipt_sha256": "144937e00713281710d08d02da0ac01aff0a2688866276f6c1623b111395fdd0"
+    },
+    {
+      "storm_id": "707046",
+      "lat": 45.5591,
+      "lon": -85.3097,
+      "motion_east": 11.4,
+      "motion_south": 0.6,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.004,
+      "risk_band": "high",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 914.0,
+      "ebshear": 51.0,
+      "srh01": 115.0,
+      "maxllaz": 0.006,
+      "mesh": 0.17,
+      "flash_rate": 4.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 115.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 47.3258
+        },
+        {
+          "name": "alignment",
+          "value": -3.9747
+        },
+        {
+          "name": "tau",
+          "value": 1.0125
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.006
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.3349
+      },
+      "coherence_score": 1.0124614238739014,
+      "coherence_diagnostics": {
+        "tau": 1.0124614238739014,
+        "grad_tau": 0.08182133734226227,
+        "torsion": 0.0,
+        "alignment": -3.974689245223999,
+        "S_field": 0.279889851808548,
+        "Gamma_field": 0.1681990623474121,
+        "S_over_Gamma": 1.6640392541885376,
+        "Da": 11.191730499267578,
+        "E_coh": 0.36056414246559143,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -85.3,
+              45.71
+            ],
+            [
+              -85.29,
+              45.7
+            ],
+            [
+              -85.26,
+              45.7
+            ],
+            [
+              -85.25,
+              45.69
+            ],
+            [
+              -85.25,
+              45.66
+            ],
+            [
+              -85.27,
+              45.65
+            ],
+            [
+              -85.31,
+              45.61
+            ],
+            [
+              -85.31,
+              45.54
+            ],
+            [
+              -85.27,
+              45.51
+            ],
+            [
+              -85.23,
+              45.51
+            ],
+            [
+              -85.2,
+              45.49
+            ],
+            [
+              -85.16,
+              45.48
+            ],
+            [
+              -85.15,
+              45.47
+            ],
+            [
+              -85.15,
+              45.42
+            ],
+            [
+              -85.17,
+              45.4
+            ],
+            [
+              -85.21,
+              45.4
+            ],
+            [
+              -85.29,
+              45.44
+            ],
+            [
+              -85.34,
+              45.44
+            ],
+            [
+              -85.36,
+              45.43
+            ],
+            [
+              -85.37,
+              45.44
+            ],
+            [
+              -85.36,
+              45.46
+            ],
+            [
+              -85.39,
+              45.5
+            ],
+            [
+              -85.46,
+              45.51
+            ],
+            [
+              -85.48,
+              45.53
+            ],
+            [
+              -85.48,
+              45.58
+            ],
+            [
+              -85.44,
+              45.6
+            ],
+            [
+              -85.42,
+              45.62
+            ],
+            [
+              -85.4,
+              45.62
+            ],
+            [
+              -85.37,
+              45.64
+            ],
+            [
+              -85.34,
+              45.64
+            ],
+            [
+              -85.32,
+              45.66
+            ],
+            [
+              -85.32,
+              45.69
+            ],
+            [
+              -85.3,
+              45.71
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.3349,
+      "confidence_lo": 0.0039,
+      "confidence_hi": 0.004,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "cfb3c0a286ac234a57f8c6507334094724f22a8b1348da550b4f0f7e89b47af1",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.3349,
+        "probability": 0.004016,
+        "confidence_lo": 0.003878,
+        "confidence_hi": 0.004017,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "c74928dd2a544011f59952f68c8b02be7f30a3eae0a3bc9e612a82bd14660084"
+      },
+      "receipt_sha256": "c74928dd2a544011f59952f68c8b02be7f30a3eae0a3bc9e612a82bd14660084"
+    },
+    {
+      "storm_id": "707111",
+      "lat": 46.6091,
+      "lon": -86.0718,
+      "motion_east": 6.7,
+      "motion_south": 0.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.004,
+      "risk_band": "high",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 1698.0,
+      "ebshear": 42.0,
+      "srh01": 121.0,
+      "maxllaz": 0.003,
+      "mesh": 0.08,
+      "flash_rate": 1.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 121.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 34.9508
+        },
+        {
+          "name": "alignment",
+          "value": -13.6324
+        },
+        {
+          "name": "tau",
+          "value": 0.7566
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.003
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.3104
+      },
+      "coherence_score": 0.756591260433197,
+      "coherence_diagnostics": {
+        "tau": 0.756591260433197,
+        "grad_tau": 0.13254372775554657,
+        "torsion": 0.0,
+        "alignment": -13.63238525390625,
+        "S_field": 0.2639755606651306,
+        "Gamma_field": 0.19986571371555328,
+        "S_over_Gamma": 1.3207646608352661,
+        "Da": 13.489522933959961,
+        "E_coh": 0.48411813378334045,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -86.12,
+              46.66
+            ],
+            [
+              -86.0,
+              46.66
+            ],
+            [
+              -85.96,
+              46.63
+            ],
+            [
+              -85.96,
+              46.59
+            ],
+            [
+              -85.99,
+              46.56
+            ],
+            [
+              -86.09,
+              46.56
+            ],
+            [
+              -86.1,
+              46.57
+            ],
+            [
+              -86.12,
+              46.57
+            ],
+            [
+              -86.17,
+              46.61
+            ],
+            [
+              -86.16,
+              46.63
+            ],
+            [
+              -86.12,
+              46.66
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.3104,
+      "confidence_lo": 0.0039,
+      "confidence_hi": 0.004,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "52a76f6a33c1e7554efbfb94cb62dfb3e55c1b2ef036300c81fab7e04d4250c6",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.3104,
+        "probability": 0.004016,
+        "confidence_lo": 0.003878,
+        "confidence_hi": 0.004017,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "264e66c5640633bb24ae77caeeaed51f9d2d9a673f9a9d987fd2cbc68a2f20e6"
+      },
+      "receipt_sha256": "264e66c5640633bb24ae77caeeaed51f9d2d9a673f9a9d987fd2cbc68a2f20e6"
+    },
+    {
+      "storm_id": "707219",
+      "lat": 46.636,
+      "lon": -86.2713,
+      "motion_east": 6.7,
+      "motion_south": 0.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.004,
+      "risk_band": "high",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 1823.0,
+      "ebshear": 41.0,
+      "srh01": 186.0,
+      "maxllaz": 0.004,
+      "mesh": 0.05,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 186.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 34.9508
+        },
+        {
+          "name": "alignment",
+          "value": -13.6324
+        },
+        {
+          "name": "tau",
+          "value": 0.7566
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.004
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.3104
+      },
+      "coherence_score": 0.756591260433197,
+      "coherence_diagnostics": {
+        "tau": 0.756591260433197,
+        "grad_tau": 0.13254372775554657,
+        "torsion": 0.0,
+        "alignment": -13.63238525390625,
+        "S_field": 0.2639755606651306,
+        "Gamma_field": 0.19986571371555328,
+        "S_over_Gamma": 1.3207646608352661,
+        "Da": 13.489522933959961,
+        "E_coh": 0.48411813378334045,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -86.34,
+              46.68
+            ],
+            [
+              -86.32,
+              46.68
+            ],
+            [
+              -86.29,
+              46.66
+            ],
+            [
+              -86.24,
+              46.66
+            ],
+            [
+              -86.23,
+              46.65
+            ],
+            [
+              -86.21,
+              46.65
+            ],
+            [
+              -86.19,
+              46.61
+            ],
+            [
+              -86.2,
+              46.6
+            ],
+            [
+              -86.23,
+              46.6
+            ],
+            [
+              -86.24,
+              46.59
+            ],
+            [
+              -86.28,
+              46.6
+            ],
+            [
+              -86.3,
+              46.62
+            ],
+            [
+              -86.32,
+              46.62
+            ],
+            [
+              -86.34,
+              46.64
+            ],
+            [
+              -86.34,
+              46.68
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.3104,
+      "confidence_lo": 0.0039,
+      "confidence_hi": 0.004,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "52a76f6a33c1e7554efbfb94cb62dfb3e55c1b2ef036300c81fab7e04d4250c6",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.3104,
+        "probability": 0.004016,
+        "confidence_lo": 0.003878,
+        "confidence_hi": 0.004017,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "264e66c5640633bb24ae77caeeaed51f9d2d9a673f9a9d987fd2cbc68a2f20e6"
+      },
+      "receipt_sha256": "264e66c5640633bb24ae77caeeaed51f9d2d9a673f9a9d987fd2cbc68a2f20e6"
+    },
+    {
+      "storm_id": "707126",
+      "lat": 47.145,
+      "lon": -90.355,
+      "motion_east": 8.7,
+      "motion_south": -4.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.004,
+      "risk_band": "high",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2714.0,
+      "ebshear": 34.0,
+      "srh01": 178.0,
+      "maxllaz": 0.005,
+      "mesh": 0.06,
+      "flash_rate": 1.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 178.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 36.3258
+        },
+        {
+          "name": "alignment",
+          "value": -2.2862
+        },
+        {
+          "name": "tau",
+          "value": 0.5545
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.005
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.3103
+      },
+      "coherence_score": 0.5545485019683838,
+      "coherence_diagnostics": {
+        "tau": 0.5545485019683838,
+        "grad_tau": 0.14987336099147797,
+        "torsion": 0.0,
+        "alignment": -2.2861738204956055,
+        "S_field": 0.20418763160705566,
+        "Gamma_field": 0.20569905638694763,
+        "S_over_Gamma": 0.9926522374153137,
+        "Da": 13.164933204650879,
+        "E_coh": 0.3382352590560913,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90.36,
+              47.17
+            ],
+            [
+              -90.33,
+              47.17
+            ],
+            [
+              -90.32,
+              47.16
+            ],
+            [
+              -90.32,
+              47.12
+            ],
+            [
+              -90.33,
+              47.11
+            ],
+            [
+              -90.38,
+              47.11
+            ],
+            [
+              -90.39,
+              47.12
+            ],
+            [
+              -90.39,
+              47.16
+            ],
+            [
+              -90.37,
+              47.16
+            ],
+            [
+              -90.36,
+              47.17
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.3103,
+      "confidence_lo": 0.0039,
+      "confidence_hi": 0.004,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "b86b5188ff6f2a8136277367cf68e1a3ceb0d730f32d7b4c0f80c5ef8d539ec3",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.3103,
+        "probability": 0.004016,
+        "confidence_lo": 0.003878,
+        "confidence_hi": 0.004017,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "29631bdc7b2192e364f509fbb277c1e9bf80affe596721db75777fb66ec70647"
+      },
+      "receipt_sha256": "29631bdc7b2192e364f509fbb277c1e9bf80affe596721db75777fb66ec70647"
+    },
+    {
+      "storm_id": "706883",
+      "lat": 47.1069,
+      "lon": -90.0238,
+      "motion_east": 9.3,
+      "motion_south": -5.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.004,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2587.0,
+      "ebshear": 38.0,
+      "srh01": 183.0,
+      "maxllaz": 0.005,
+      "mesh": 0.62,
+      "flash_rate": 20.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 183.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 37.7008
+        },
+        {
+          "name": "alignment",
+          "value": -1.7239
+        },
+        {
+          "name": "tau",
+          "value": 0.6101
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.005
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2939
+      },
+      "coherence_score": 0.610112726688385,
+      "coherence_diagnostics": {
+        "tau": 0.610112726688385,
+        "grad_tau": 0.0610506646335125,
+        "torsion": 0.0,
+        "alignment": -1.7238967418670654,
+        "S_field": 0.2708283066749573,
+        "Gamma_field": 0.16236571967601776,
+        "S_over_Gamma": 1.6680140495300293,
+        "Da": 10.496332168579102,
+        "E_coh": 0.39538395404815674,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 4,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90.02,
+              47.18
+            ],
+            [
+              -89.98,
+              47.18
+            ],
+            [
+              -89.93,
+              47.14
+            ],
+            [
+              -89.92,
+              47.12
+            ],
+            [
+              -89.93,
+              47.08
+            ],
+            [
+              -89.98,
+              47.04
+            ],
+            [
+              -90.06,
+              47.04
+            ],
+            [
+              -90.07,
+              47.05
+            ],
+            [
+              -90.1,
+              47.05
+            ],
+            [
+              -90.12,
+              47.07
+            ],
+            [
+              -90.12,
+              47.1
+            ],
+            [
+              -90.06,
+              47.16
+            ],
+            [
+              -90.02,
+              47.18
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2939,
+      "confidence_lo": 0.0028,
+      "confidence_hi": 0.004,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "58378111db97aebfac04effe736eba1b98d0855212467de8b1c43e21daa1bb8b",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2939,
+        "probability": 0.004012,
+        "confidence_lo": 0.002809,
+        "confidence_hi": 0.004017,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "40a6e62932d07751eb0494032077a1b7e03d4f62f574a05a2e2b54df98b716d8"
+      },
+      "receipt_sha256": "40a6e62932d07751eb0494032077a1b7e03d4f62f574a05a2e2b54df98b716d8"
+    },
+    {
+      "storm_id": "707163",
+      "lat": 46.8814,
+      "lon": -90.6686,
+      "motion_east": 6.8,
+      "motion_south": -3.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0029,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2561.0,
+      "ebshear": 26.0,
+      "srh01": 187.0,
+      "maxllaz": 0.003,
+      "mesh": 0.04,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 187.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 36.3258
+        },
+        {
+          "name": "alignment",
+          "value": -2.2862
+        },
+        {
+          "name": "tau",
+          "value": 0.5545
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.003
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2862
+      },
+      "coherence_score": 0.5545485019683838,
+      "coherence_diagnostics": {
+        "tau": 0.5545485019683838,
+        "grad_tau": 0.14987336099147797,
+        "torsion": 0.0,
+        "alignment": -2.2861738204956055,
+        "S_field": 0.20418763160705566,
+        "Gamma_field": 0.20569905638694763,
+        "S_over_Gamma": 0.9926522374153137,
+        "Da": 13.164933204650879,
+        "E_coh": 0.3382352590560913,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90.62,
+              46.95
+            ],
+            [
+              -90.59,
+              46.95
+            ],
+            [
+              -90.56,
+              46.92
+            ],
+            [
+              -90.56,
+              46.89
+            ],
+            [
+              -90.58,
+              46.87
+            ],
+            [
+              -90.63,
+              46.87
+            ],
+            [
+              -90.64,
+              46.86
+            ],
+            [
+              -90.66,
+              46.86
+            ],
+            [
+              -90.67,
+              46.84
+            ],
+            [
+              -90.74,
+              46.8
+            ],
+            [
+              -90.78,
+              46.8
+            ],
+            [
+              -90.79,
+              46.81
+            ],
+            [
+              -90.79,
+              46.84
+            ],
+            [
+              -90.78,
+              46.84
+            ],
+            [
+              -90.73,
+              46.88
+            ],
+            [
+              -90.69,
+              46.89
+            ],
+            [
+              -90.67,
+              46.91
+            ],
+            [
+              -90.66,
+              46.91
+            ],
+            [
+              -90.64,
+              46.93
+            ],
+            [
+              -90.64,
+              46.94
+            ],
+            [
+              -90.62,
+              46.95
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2862,
+      "confidence_lo": 0.0028,
+      "confidence_hi": 0.0029,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "e18aa9d6a36938a41314e3edcf7111590fcb4e07677b3504dbe0b7eeca2b91e8",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2862,
+        "probability": 0.002949,
+        "confidence_lo": 0.002809,
+        "confidence_hi": 0.002949,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "37f728a2d09735c5fc9341dad1af9fecb2121f20d4fc1b8d6be7ff97f365ebad"
+      },
+      "receipt_sha256": "37f728a2d09735c5fc9341dad1af9fecb2121f20d4fc1b8d6be7ff97f365ebad"
+    },
+    {
+      "storm_id": "707138",
+      "lat": 50.047,
+      "lon": -98.9352,
+      "motion_east": 6.6,
+      "motion_south": -8.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0029,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 782.0,
+      "ebshear": 40.0,
+      "srh01": 196.0,
+      "maxllaz": 0.002,
+      "mesh": 0.12,
+      "flash_rate": 1.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 196.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 27.5758
+        },
+        {
+          "name": "alignment",
+          "value": -2.7494
+        },
+        {
+          "name": "tau",
+          "value": 0.0
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.002
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2745
+      },
+      "coherence_score": 0.0,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.41781747341156006,
+        "torsion": 0.0,
+        "alignment": -2.749378204345703,
+        "S_field": 0.20148514211177826,
+        "Gamma_field": 0.1606990545988083,
+        "S_over_Gamma": 1.2538042068481445,
+        "Da": 9.715062141418457,
+        "E_coh": 0.46217209100723267,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": false
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -98.9,
+              50.14
+            ],
+            [
+              -98.83,
+              50.14
+            ],
+            [
+              -98.81,
+              50.12
+            ],
+            [
+              -98.83,
+              50.08
+            ],
+            [
+              -98.83,
+              50.06
+            ],
+            [
+              -98.84,
+              50.05
+            ],
+            [
+              -98.87,
+              50.04
+            ],
+            [
+              -98.89,
+              50.02
+            ],
+            [
+              -98.89,
+              50.01
+            ],
+            [
+              -98.93,
+              50.0
+            ],
+            [
+              -98.94,
+              49.99
+            ],
+            [
+              -98.96,
+              49.99
+            ],
+            [
+              -98.97,
+              49.98
+            ],
+            [
+              -99.0,
+              49.98
+            ],
+            [
+              -99.01,
+              49.97
+            ],
+            [
+              -99.05,
+              49.97
+            ],
+            [
+              -99.07,
+              49.98
+            ],
+            [
+              -99.07,
+              50.03
+            ],
+            [
+              -99.03,
+              50.08
+            ],
+            [
+              -98.99,
+              50.09
+            ],
+            [
+              -98.96,
+              50.11
+            ],
+            [
+              -98.94,
+              50.11
+            ],
+            [
+              -98.9,
+              50.14
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2745,
+      "confidence_lo": 0.0028,
+      "confidence_hi": 0.0029,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "815396e8b1b347090ecde4298ba69d05ee600d63d26426904af7a4385e9686bb",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2745,
+        "probability": 0.002949,
+        "confidence_lo": 0.002809,
+        "confidence_hi": 0.002949,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "f2b41422c193eceb8d78415dfbed036a35d32108b710d455710a589c68a0e6d4"
+      },
+      "receipt_sha256": "f2b41422c193eceb8d78415dfbed036a35d32108b710d455710a589c68a0e6d4"
+    },
+    {
+      "storm_id": "707215",
+      "lat": 50.6593,
+      "lon": -97.7107,
+      "motion_east": 6.1,
+      "motion_south": -8.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0029,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 255.0,
+      "ebshear": 48.0,
+      "srh01": 149.0,
+      "maxllaz": 0.003,
+      "mesh": 0.19,
+      "flash_rate": 1.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 149.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 21.9508
+        },
+        {
+          "name": "alignment",
+          "value": -3.7494
+        },
+        {
+          "name": "tau",
+          "value": 0.0
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.003
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2729
+      },
+      "coherence_score": 0.0,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.42011696100234985,
+        "torsion": 0.0,
+        "alignment": -3.749378204345703,
+        "S_field": 0.39654988050460815,
+        "Gamma_field": 0.5148656964302063,
+        "S_over_Gamma": 0.7702006101608276,
+        "Da": 31.542509078979492,
+        "E_coh": 0.14228102564811707,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -97.68,
+              50.73
+            ],
+            [
+              -97.67,
+              50.72
+            ],
+            [
+              -97.63,
+              50.72
+            ],
+            [
+              -97.61,
+              50.7
+            ],
+            [
+              -97.61,
+              50.68
+            ],
+            [
+              -97.65,
+              50.64
+            ],
+            [
+              -97.71,
+              50.63
+            ],
+            [
+              -97.75,
+              50.58
+            ],
+            [
+              -97.79,
+              50.57
+            ],
+            [
+              -97.82,
+              50.6
+            ],
+            [
+              -97.82,
+              50.62
+            ],
+            [
+              -97.79,
+              50.65
+            ],
+            [
+              -97.74,
+              50.66
+            ],
+            [
+              -97.68,
+              50.73
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2729,
+      "confidence_lo": 0.0028,
+      "confidence_hi": 0.0029,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "d670603354b8345775a30d65fe0c20c31fa7f935af9abe5f46da777e6cc5d64a",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2729,
+        "probability": 0.002949,
+        "confidence_lo": 0.002809,
+        "confidence_hi": 0.002949,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "53ed11af36df4826ce0259c2b6a115b118bc7fcb0bb382870daeb5fe359ada24"
+      },
+      "receipt_sha256": "53ed11af36df4826ce0259c2b6a115b118bc7fcb0bb382870daeb5fe359ada24"
+    },
+    {
+      "storm_id": "707161",
+      "lat": 46.8267,
+      "lon": -86.1593,
+      "motion_east": 6.7,
+      "motion_south": 0.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0029,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 1706.0,
+      "ebshear": 37.0,
+      "srh01": 151.0,
+      "maxllaz": 0.002,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 151.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 34.9508
+        },
+        {
+          "name": "alignment",
+          "value": -13.6324
+        },
+        {
+          "name": "tau",
+          "value": 0.7566
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.002
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2593
+      },
+      "coherence_score": 0.756591260433197,
+      "coherence_diagnostics": {
+        "tau": 0.756591260433197,
+        "grad_tau": 0.13254372775554657,
+        "torsion": 0.0,
+        "alignment": -13.63238525390625,
+        "S_field": 0.2639755606651306,
+        "Gamma_field": 0.19986571371555328,
+        "S_over_Gamma": 1.3207646608352661,
+        "Da": 13.489522933959961,
+        "E_coh": 0.48411813378334045,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -86.23,
+              46.88
+            ],
+            [
+              -86.19,
+              46.88
+            ],
+            [
+              -86.13,
+              46.85
+            ],
+            [
+              -86.05,
+              46.85
+            ],
+            [
+              -86.02,
+              46.83
+            ],
+            [
+              -86.02,
+              46.79
+            ],
+            [
+              -86.03,
+              46.78
+            ],
+            [
+              -86.14,
+              46.78
+            ],
+            [
+              -86.15,
+              46.79
+            ],
+            [
+              -86.2,
+              46.79
+            ],
+            [
+              -86.23,
+              46.81
+            ],
+            [
+              -86.25,
+              46.81
+            ],
+            [
+              -86.26,
+              46.82
+            ],
+            [
+              -86.26,
+              46.86
+            ],
+            [
+              -86.23,
+              46.88
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2593,
+      "confidence_lo": 0.0028,
+      "confidence_hi": 0.0029,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "088bb1a705bc6c646e50aaa119167c1df29f31e0036c6ae4df61c3a8bbdf91a3",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2593,
+        "probability": 0.002949,
+        "confidence_lo": 0.002809,
+        "confidence_hi": 0.002949,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "12a8b97d8ae77a01a6a911c57941fdc4f3416b6f9b827e06eb7e29ea8838f32c"
+      },
+      "receipt_sha256": "12a8b97d8ae77a01a6a911c57941fdc4f3416b6f9b827e06eb7e29ea8838f32c"
+    },
+    {
+      "storm_id": "707207",
+      "lat": 50.6222,
+      "lon": -97.5233,
+      "motion_east": 6.1,
+      "motion_south": -8.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0029,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 208.0,
+      "ebshear": 43.0,
+      "srh01": 102.0,
+      "maxllaz": 0.002,
+      "mesh": 0.5,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 102.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 21.9508
+        },
+        {
+          "name": "alignment",
+          "value": -3.7494
+        },
+        {
+          "name": "tau",
+          "value": 0.0
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.002
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.258
+      },
+      "coherence_score": 0.0,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.42011696100234985,
+        "torsion": 0.0,
+        "alignment": -3.749378204345703,
+        "S_field": 0.39654988050460815,
+        "Gamma_field": 0.5148656964302063,
+        "S_over_Gamma": 0.7702006101608276,
+        "Da": 31.542509078979492,
+        "E_coh": 0.14228102564811707,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -97.54,
+              50.65
+            ],
+            [
+              -97.5,
+              50.65
+            ],
+            [
+              -97.49,
+              50.64
+            ],
+            [
+              -97.49,
+              50.6
+            ],
+            [
+              -97.51,
+              50.59
+            ],
+            [
+              -97.54,
+              50.59
+            ],
+            [
+              -97.55,
+              50.6
+            ],
+            [
+              -97.55,
+              50.63
+            ],
+            [
+              -97.54,
+              50.65
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.258,
+      "confidence_lo": 0.0028,
+      "confidence_hi": 0.0029,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "aa5558c6a04c12e0e18fca87dd938170d9433c128c4b0d490ad8e47230fd2abe",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.258,
+        "probability": 0.002949,
+        "confidence_lo": 0.002809,
+        "confidence_hi": 0.002949,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "a065a29199f5992000177ad800651401e078d32b453ebc07f987c78fe3ed0e1e"
+      },
+      "receipt_sha256": "a065a29199f5992000177ad800651401e078d32b453ebc07f987c78fe3ed0e1e"
+    },
+    {
+      "storm_id": "707162",
+      "lat": 46.9186,
+      "lon": -91.2406,
+      "motion_east": 8.7,
+      "motion_south": -4.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0029,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2368.0,
+      "ebshear": 24.0,
+      "srh01": 217.0,
+      "maxllaz": 0.006,
+      "mesh": 0.54,
+      "flash_rate": 29.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 217.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 34.4508
+        },
+        {
+          "name": "alignment",
+          "value": 0.3454
+        },
+        {
+          "name": "tau",
+          "value": 0.4381
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.006
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2423
+      },
+      "coherence_score": 0.438073992729187,
+      "coherence_diagnostics": {
+        "tau": 0.438073992729187,
+        "grad_tau": 0.20504546165466309,
+        "torsion": 0.0,
+        "alignment": 0.3454267382621765,
+        "S_field": 0.24069049954414368,
+        "Gamma_field": 1.6890323162078857,
+        "S_over_Gamma": 0.14250200986862183,
+        "Da": 103.85521697998047,
+        "E_coh": 0.2890211343765259,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -91.08,
+              47.04
+            ],
+            [
+              -91.07,
+              47.03
+            ],
+            [
+              -91.05,
+              47.03
+            ],
+            [
+              -91.04,
+              47.04
+            ],
+            [
+              -90.99,
+              47.04
+            ],
+            [
+              -90.97,
+              47.02
+            ],
+            [
+              -90.97,
+              46.99
+            ],
+            [
+              -91.0,
+              46.96
+            ],
+            [
+              -91.02,
+              46.96
+            ],
+            [
+              -91.06,
+              46.94
+            ],
+            [
+              -91.09,
+              46.91
+            ],
+            [
+              -91.09,
+              46.89
+            ],
+            [
+              -91.11,
+              46.87
+            ],
+            [
+              -91.17,
+              46.87
+            ],
+            [
+              -91.19,
+              46.85
+            ],
+            [
+              -91.25,
+              46.82
+            ],
+            [
+              -91.32,
+              46.82
+            ],
+            [
+              -91.33,
+              46.81
+            ],
+            [
+              -91.36,
+              46.81
+            ],
+            [
+              -91.37,
+              46.82
+            ],
+            [
+              -91.47,
+              46.82
+            ],
+            [
+              -91.51,
+              46.8
+            ],
+            [
+              -91.56,
+              46.8
+            ],
+            [
+              -91.56,
+              46.85
+            ],
+            [
+              -91.54,
+              46.87
+            ],
+            [
+              -91.51,
+              46.87
+            ],
+            [
+              -91.5,
+              46.88
+            ],
+            [
+              -91.43,
+              46.89
+            ],
+            [
+              -91.38,
+              46.94
+            ],
+            [
+              -91.37,
+              46.96
+            ],
+            [
+              -91.35,
+              46.97
+            ],
+            [
+              -91.25,
+              46.96
+            ],
+            [
+              -91.2,
+              46.99
+            ],
+            [
+              -91.18,
+              46.99
+            ],
+            [
+              -91.08,
+              47.04
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2423,
+      "confidence_lo": 0.0028,
+      "confidence_hi": 0.0029,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "d50bfb49f1d9ca3e5d479656d5313ec82d16eb0d6f013a7613e309d8935cf9bd",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2423,
+        "probability": 0.002949,
+        "confidence_lo": 0.002809,
+        "confidence_hi": 0.002949,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "14bc0dcbf673dae843f58459d623ab3d9c33f471dd0b22af9968212fb2d172c2"
+      },
+      "receipt_sha256": "14bc0dcbf673dae843f58459d623ab3d9c33f471dd0b22af9968212fb2d172c2"
+    },
+    {
+      "storm_id": "707205",
+      "lat": 47.1295,
+      "lon": -91.6337,
+      "motion_east": 8.4,
+      "motion_south": -4.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0029,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2560.0,
+      "ebshear": 24.0,
+      "srh01": 190.0,
+      "maxllaz": 0.005,
+      "mesh": 0.06,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 190.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 34.4508
+        },
+        {
+          "name": "alignment",
+          "value": 0.3454
+        },
+        {
+          "name": "tau",
+          "value": 0.4381
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.005
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2348
+      },
+      "coherence_score": 0.438073992729187,
+      "coherence_diagnostics": {
+        "tau": 0.438073992729187,
+        "grad_tau": 0.20504546165466309,
+        "torsion": 0.0,
+        "alignment": 0.3454267382621765,
+        "S_field": 0.24069049954414368,
+        "Gamma_field": 1.6890323162078857,
+        "S_over_Gamma": 0.14250200986862183,
+        "Da": 103.85521697998047,
+        "E_coh": 0.2890211343765259,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -91.67,
+              47.21
+            ],
+            [
+              -91.64,
+              47.2
+            ],
+            [
+              -91.64,
+              47.19
+            ],
+            [
+              -91.62,
+              47.17
+            ],
+            [
+              -91.63,
+              47.13
+            ],
+            [
+              -91.61,
+              47.11
+            ],
+            [
+              -91.57,
+              47.11
+            ],
+            [
+              -91.57,
+              47.06
+            ],
+            [
+              -91.58,
+              47.05
+            ],
+            [
+              -91.6,
+              47.05
+            ],
+            [
+              -91.6,
+              47.08
+            ],
+            [
+              -91.62,
+              47.1
+            ],
+            [
+              -91.63,
+              47.1
+            ],
+            [
+              -91.64,
+              47.12
+            ],
+            [
+              -91.66,
+              47.12
+            ],
+            [
+              -91.67,
+              47.13
+            ],
+            [
+              -91.71,
+              47.13
+            ],
+            [
+              -91.71,
+              47.19
+            ],
+            [
+              -91.67,
+              47.21
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2348,
+      "confidence_lo": 0.0028,
+      "confidence_hi": 0.0029,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "3cbc49eb24dc98dc8d6bd66754b64f9ba18563ab33e30d759773bd6da0cc1282",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2348,
+        "probability": 0.002949,
+        "confidence_lo": 0.002809,
+        "confidence_hi": 0.002949,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "dbe7728b4e03524e2d3f200e802639d2624c9d0e4e2bc837cc11b1e6573a51dc"
+      },
+      "receipt_sha256": "dbe7728b4e03524e2d3f200e802639d2624c9d0e4e2bc837cc11b1e6573a51dc"
+    },
+    {
+      "storm_id": "707216",
+      "lat": 47.623,
+      "lon": -91.345,
+      "motion_east": 9.2,
+      "motion_south": -7.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2500.0,
+      "ebshear": 31.0,
+      "srh01": 165.0,
+      "maxllaz": 0.002,
+      "mesh": 0.12,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 165.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 34.4508
+        },
+        {
+          "name": "alignment",
+          "value": -0.475
+        },
+        {
+          "name": "tau",
+          "value": 0.2641
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.002
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2217
+      },
+      "coherence_score": 0.26409658789634705,
+      "coherence_diagnostics": {
+        "tau": 0.26409658789634705,
+        "grad_tau": 0.1503671109676361,
+        "torsion": 2.862375669820949e-09,
+        "alignment": -0.474963903427124,
+        "S_field": 0.19783511757850647,
+        "Gamma_field": 1.9865323305130005,
+        "S_over_Gamma": 0.09958817064762115,
+        "Da": 123.47010803222656,
+        "E_coh": 0.32380542159080505,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -91.36,
+              47.65
+            ],
+            [
+              -91.34,
+              47.65
+            ],
+            [
+              -91.32,
+              47.63
+            ],
+            [
+              -91.31,
+              47.63
+            ],
+            [
+              -91.3,
+              47.61
+            ],
+            [
+              -91.33,
+              47.59
+            ],
+            [
+              -91.37,
+              47.59
+            ],
+            [
+              -91.38,
+              47.6
+            ],
+            [
+              -91.38,
+              47.63
+            ],
+            [
+              -91.36,
+              47.65
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2217,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "62d21f297c0eebf86a7e481faf2731b3f6e0944a5f3fe76ae1a05035d4d4def8",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2217,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "3939e3ad13fd36e155dfbb45b2c8b4734315ec89ca4366146a2efabfb5712fdb"
+      },
+      "receipt_sha256": "3939e3ad13fd36e155dfbb45b2c8b4734315ec89ca4366146a2efabfb5712fdb"
+    },
+    {
+      "storm_id": "707103",
+      "lat": 46.353,
+      "lon": -85.8717,
+      "motion_east": 6.8,
+      "motion_south": 0.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 1484.0,
+      "ebshear": 42.0,
+      "srh01": 98.0,
+      "maxllaz": 0.005,
+      "mesh": 0.17,
+      "flash_rate": 9.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 98.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 46.2008
+        },
+        {
+          "name": "alignment",
+          "value": 2.7278
+        },
+        {
+          "name": "tau",
+          "value": 0.8492
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.005
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2207
+      },
+      "coherence_score": 0.8492189049720764,
+      "coherence_diagnostics": {
+        "tau": 0.8492189049720764,
+        "grad_tau": 0.20624838769435883,
+        "torsion": 0.0,
+        "alignment": 2.7278263568878174,
+        "S_field": 0.31614577770233154,
+        "Gamma_field": 0.15069906413555145,
+        "S_over_Gamma": 2.0978615283966064,
+        "Da": 9.94601058959961,
+        "E_coh": 0.5827624797821045,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": false
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -85.92,
+              46.43
+            ],
+            [
+              -85.89,
+              46.43
+            ],
+            [
+              -85.81,
+              46.39
+            ],
+            [
+              -85.76,
+              46.39
+            ],
+            [
+              -85.74,
+              46.37
+            ],
+            [
+              -85.71,
+              46.36
+            ],
+            [
+              -85.68,
+              46.33
+            ],
+            [
+              -85.68,
+              46.29
+            ],
+            [
+              -85.69,
+              46.28
+            ],
+            [
+              -85.72,
+              46.28
+            ],
+            [
+              -85.76,
+              46.3
+            ],
+            [
+              -85.84,
+              46.26
+            ],
+            [
+              -85.87,
+              46.28
+            ],
+            [
+              -85.95,
+              46.29
+            ],
+            [
+              -85.99,
+              46.31
+            ],
+            [
+              -86.1,
+              46.32
+            ],
+            [
+              -86.1,
+              46.33
+            ],
+            [
+              -86.04,
+              46.39
+            ],
+            [
+              -86.0,
+              46.41
+            ],
+            [
+              -85.98,
+              46.41
+            ],
+            [
+              -85.97,
+              46.42
+            ],
+            [
+              -85.93,
+              46.42
+            ],
+            [
+              -85.92,
+              46.43
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2207,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "6a1bac29054c76fe5f93a6d576e94c871ee249a2396dc9c4e796cf1a459511fe",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2207,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "062c8fb2b3b334e7cb7866fcbb000544e94388162bd02e98541143aeae4e995e"
+      },
+      "receipt_sha256": "062c8fb2b3b334e7cb7866fcbb000544e94388162bd02e98541143aeae4e995e"
+    },
+    {
+      "storm_id": "706962",
+      "lat": 46.9582,
+      "lon": -92.0306,
+      "motion_east": 10.3,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2707.0,
+      "ebshear": 24.0,
+      "srh01": 176.0,
+      "maxllaz": 0.004,
+      "mesh": 0.16,
+      "flash_rate": 2.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 176.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 34.4508
+        },
+        {
+          "name": "alignment",
+          "value": 0.3454
+        },
+        {
+          "name": "tau",
+          "value": 0.4381
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.004
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2119
+      },
+      "coherence_score": 0.438073992729187,
+      "coherence_diagnostics": {
+        "tau": 0.438073992729187,
+        "grad_tau": 0.20504546165466309,
+        "torsion": 0.0,
+        "alignment": 0.3454267382621765,
+        "S_field": 0.24069049954414368,
+        "Gamma_field": 1.6890323162078857,
+        "S_over_Gamma": 0.14250200986862183,
+        "Da": 103.85521697998047,
+        "E_coh": 0.2890211343765259,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 3,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -92.1,
+              47.04
+            ],
+            [
+              -92.04,
+              47.03
+            ],
+            [
+              -92.02,
+              47.01
+            ],
+            [
+              -91.99,
+              47.0
+            ],
+            [
+              -91.96,
+              46.97
+            ],
+            [
+              -91.93,
+              46.97
+            ],
+            [
+              -91.92,
+              46.96
+            ],
+            [
+              -91.92,
+              46.89
+            ],
+            [
+              -91.95,
+              46.85
+            ],
+            [
+              -91.99,
+              46.85
+            ],
+            [
+              -92.03,
+              46.89
+            ],
+            [
+              -92.06,
+              46.89
+            ],
+            [
+              -92.11,
+              46.92
+            ],
+            [
+              -92.14,
+              46.98
+            ],
+            [
+              -92.13,
+              46.99
+            ],
+            [
+              -92.13,
+              47.01
+            ],
+            [
+              -92.1,
+              47.04
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2119,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "6eaea93292e579784f35078aba1c172b89d1e6fee1e49c51f9396179cc58b942",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2119,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "acd967bb9d7c8f71ac3b34cc0810cf1489ea2a85916183cdeb575bacc8c5bc8c"
+      },
+      "receipt_sha256": "acd967bb9d7c8f71ac3b34cc0810cf1489ea2a85916183cdeb575bacc8c5bc8c"
+    },
+    {
+      "storm_id": "707125",
+      "lat": 47.3169,
+      "lon": -91.47,
+      "motion_east": 8.3,
+      "motion_south": -4.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2419.0,
+      "ebshear": 27.0,
+      "srh01": 188.0,
+      "maxllaz": 0.004,
+      "mesh": 0.07,
+      "flash_rate": 1.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 188.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 34.4508
+        },
+        {
+          "name": "alignment",
+          "value": 0.3454
+        },
+        {
+          "name": "tau",
+          "value": 0.4381
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.004
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2066
+      },
+      "coherence_score": 0.438073992729187,
+      "coherence_diagnostics": {
+        "tau": 0.438073992729187,
+        "grad_tau": 0.20504546165466309,
+        "torsion": 0.0,
+        "alignment": 0.3454267382621765,
+        "S_field": 0.24069049954414368,
+        "Gamma_field": 1.6890323162078857,
+        "S_over_Gamma": 0.14250200986862183,
+        "Da": 103.85521697998047,
+        "E_coh": 0.2890211343765259,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -91.48,
+              47.36
+            ],
+            [
+              -91.4,
+              47.36
+            ],
+            [
+              -91.38,
+              47.34
+            ],
+            [
+              -91.38,
+              47.29
+            ],
+            [
+              -91.42,
+              47.27
+            ],
+            [
+              -91.49,
+              47.27
+            ],
+            [
+              -91.5,
+              47.28
+            ],
+            [
+              -91.52,
+              47.28
+            ],
+            [
+              -91.53,
+              47.29
+            ],
+            [
+              -91.53,
+              47.32
+            ],
+            [
+              -91.51,
+              47.35
+            ],
+            [
+              -91.49,
+              47.35
+            ],
+            [
+              -91.48,
+              47.36
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2066,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "7264143f082de30c7db68d5a4aad37acdd0be933a5ad312b133ca79e4a7c5110",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2066,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "b727ba01f902ffbfd9f6e2e8e6ad1925e3cbb6b898e249195bf25ba52d9f71f5"
+      },
+      "receipt_sha256": "b727ba01f902ffbfd9f6e2e8e6ad1925e3cbb6b898e249195bf25ba52d9f71f5"
+    },
+    {
+      "storm_id": "707196",
+      "lat": 47.1986,
+      "lon": -100.7057,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 689.0,
+      "ebshear": 50.0,
+      "srh01": 84.0,
+      "maxllaz": 0.003,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 84.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 13.7008
+        },
+        {
+          "name": "alignment",
+          "value": -5.2239
+        },
+        {
+          "name": "tau",
+          "value": 0.9129
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.003
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2054
+      },
+      "coherence_score": 0.9128705859184265,
+      "coherence_diagnostics": {
+        "tau": 0.9128705859184265,
+        "grad_tau": 0.19399091601371765,
+        "torsion": 0.0,
+        "alignment": -5.223937511444092,
+        "S_field": 0.2224513590335846,
+        "Gamma_field": 0.15903238952159882,
+        "S_over_Gamma": 1.3987802267074585,
+        "Da": 9.381245613098145,
+        "E_coh": 0.4532659947872162,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": false
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -100.7,
+              47.23
+            ],
+            [
+              -100.67,
+              47.22
+            ],
+            [
+              -100.67,
+              47.16
+            ],
+            [
+              -100.72,
+              47.16
+            ],
+            [
+              -100.74,
+              47.18
+            ],
+            [
+              -100.74,
+              47.21
+            ],
+            [
+              -100.7,
+              47.23
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2054,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "389c8e084876a01e283789bb7d514947fb0827bb0009ab89d1f2d09dbf48ae49",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2054,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "ea254ae4971814cadef85f6d9cc73a9b5a88ce77c7bdfd33e60e3f0649de2521"
+      },
+      "receipt_sha256": "ea254ae4971814cadef85f6d9cc73a9b5a88ce77c7bdfd33e60e3f0649de2521"
+    },
+    {
+      "storm_id": "706746",
+      "lat": 47.29,
+      "lon": -91.8233,
+      "motion_east": 8.5,
+      "motion_south": -4.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2433.0,
+      "ebshear": 26.0,
+      "srh01": 158.0,
+      "maxllaz": 0.003,
+      "mesh": 0.43,
+      "flash_rate": 4.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 158.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 34.4508
+        },
+        {
+          "name": "alignment",
+          "value": 0.3454
+        },
+        {
+          "name": "tau",
+          "value": 0.4381
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.003
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.2011
+      },
+      "coherence_score": 0.438073992729187,
+      "coherence_diagnostics": {
+        "tau": 0.438073992729187,
+        "grad_tau": 0.20504546165466309,
+        "torsion": 0.0,
+        "alignment": 0.3454267382621765,
+        "S_field": 0.24069049954414368,
+        "Gamma_field": 1.6890323162078857,
+        "S_over_Gamma": 0.14250200986862183,
+        "Da": 103.85521697998047,
+        "E_coh": 0.2890211343765259,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 5,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -91.82,
+              47.37
+            ],
+            [
+              -91.74,
+              47.37
+            ],
+            [
+              -91.71,
+              47.34
+            ],
+            [
+              -91.71,
+              47.31
+            ],
+            [
+              -91.72,
+              47.29
+            ],
+            [
+              -91.77,
+              47.27
+            ],
+            [
+              -91.8,
+              47.24
+            ],
+            [
+              -91.8,
+              47.23
+            ],
+            [
+              -91.84,
+              47.2
+            ],
+            [
+              -91.92,
+              47.2
+            ],
+            [
+              -91.95,
+              47.24
+            ],
+            [
+              -91.95,
+              47.28
+            ],
+            [
+              -91.91,
+              47.32
+            ],
+            [
+              -91.89,
+              47.32
+            ],
+            [
+              -91.82,
+              47.37
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.2011,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "b0e89cd13ec7fac1dc3acf8325722273ded5656ea20f7ef3dbd3a4d624fc37bc",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.2011,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "6684c4f35f40211f5786d5598ef2d6bcd07731c0e98ef73cce11198e6c082cc0"
+      },
+      "receipt_sha256": "6684c4f35f40211f5786d5598ef2d6bcd07731c0e98ef73cce11198e6c082cc0"
+    },
+    {
+      "storm_id": "707141",
+      "lat": 47.6817,
+      "lon": -91.1908,
+      "motion_east": 9.3,
+      "motion_south": -7.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2229.0,
+      "ebshear": 32.0,
+      "srh01": 162.0,
+      "maxllaz": 0.004,
+      "mesh": 0.97,
+      "flash_rate": 21.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 162.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 34.4508
+        },
+        {
+          "name": "alignment",
+          "value": -0.475
+        },
+        {
+          "name": "tau",
+          "value": 0.2641
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.004
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.1996
+      },
+      "coherence_score": 0.26409658789634705,
+      "coherence_diagnostics": {
+        "tau": 0.26409658789634705,
+        "grad_tau": 0.1503671109676361,
+        "torsion": 2.862375669820949e-09,
+        "alignment": -0.474963903427124,
+        "S_field": 0.19783511757850647,
+        "Gamma_field": 1.9865323305130005,
+        "S_over_Gamma": 0.09958817064762115,
+        "Da": 123.47010803222656,
+        "E_coh": 0.32380542159080505,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -91.24,
+              47.74
+            ],
+            [
+              -91.12,
+              47.74
+            ],
+            [
+              -91.09,
+              47.72
+            ],
+            [
+              -91.08,
+              47.68
+            ],
+            [
+              -91.13,
+              47.64
+            ],
+            [
+              -91.16,
+              47.64
+            ],
+            [
+              -91.17,
+              47.63
+            ],
+            [
+              -91.25,
+              47.61
+            ],
+            [
+              -91.27,
+              47.64
+            ],
+            [
+              -91.28,
+              47.68
+            ],
+            [
+              -91.26,
+              47.72
+            ],
+            [
+              -91.24,
+              47.74
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.1996,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "3a781be93bbd7e2663d26e25a97c91a1e2f1158b64bd9150ba814419a80d2610",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.1996,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "b9482cc75f5e6033a691c6cd844618d997dbc56fbd5bf2e13c6ea0b4c46717ae"
+      },
+      "receipt_sha256": "b9482cc75f5e6033a691c6cd844618d997dbc56fbd5bf2e13c6ea0b4c46717ae"
+    },
+    {
+      "storm_id": "707042",
+      "lat": 47.1233,
+      "lon": -86.6544,
+      "motion_east": 6.2,
+      "motion_south": -1.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 1856.0,
+      "ebshear": 44.0,
+      "srh01": 271.0,
+      "maxllaz": 0.001,
+      "mesh": 0.1,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 271.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 38.7008
+        },
+        {
+          "name": "alignment",
+          "value": -2.781
+        },
+        {
+          "name": "tau",
+          "value": 0.6734
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.001
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.1904
+      },
+      "coherence_score": 0.6734405159950256,
+      "coherence_diagnostics": {
+        "tau": 0.6734405159950256,
+        "grad_tau": 0.03639145940542221,
+        "torsion": 0.0,
+        "alignment": -2.780989170074463,
+        "S_field": 0.1989566683769226,
+        "Gamma_field": 0.17653238773345947,
+        "S_over_Gamma": 1.1270264387130737,
+        "Da": 11.859670639038086,
+        "E_coh": 0.38134416937828064,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -86.72,
+              47.15
+            ],
+            [
+              -86.65,
+              47.15
+            ],
+            [
+              -86.64,
+              47.14
+            ],
+            [
+              -86.6,
+              47.14
+            ],
+            [
+              -86.6,
+              47.12
+            ],
+            [
+              -86.55,
+              47.08
+            ],
+            [
+              -86.69,
+              47.08
+            ],
+            [
+              -86.72,
+              47.1
+            ],
+            [
+              -86.72,
+              47.15
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.1904,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "979c52f6583442d024bac5a918cd3a9e51fc09501491a66fe57b6a2aecefa1b8",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.1904,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "1e7db593629d4b2086cb23db585116037a1cbb9fe16f88f22b9144451f9822de"
+      },
+      "receipt_sha256": "1e7db593629d4b2086cb23db585116037a1cbb9fe16f88f22b9144451f9822de"
+    },
+    {
+      "storm_id": "707210",
+      "lat": 32.82,
+      "lon": -74.879,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2658.0,
+      "ebshear": 25.0,
+      "srh01": 50.0,
+      "maxllaz": 0.001,
+      "mesh": 0.19,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 50.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 54.4508
+        },
+        {
+          "name": "alignment",
+          "value": 2.7908
+        },
+        {
+          "name": "tau",
+          "value": 3.9574
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.001
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.1877
+      },
+      "coherence_score": 3.9573910236358643,
+      "coherence_diagnostics": {
+        "tau": 3.9573910236358643,
+        "grad_tau": 0.3091306984424591,
+        "torsion": 0.0,
+        "alignment": 2.7908225059509277,
+        "S_field": 1.218639850616455,
+        "Gamma_field": 0.24069906771183014,
+        "S_over_Gamma": 5.062918663024902,
+        "Da": 16.11612892150879,
+        "E_coh": 0.9182751178741455,
+        "singularity_count": 3.0,
+        "singularity_conditions_met": 3,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -74.86,
+              32.86
+            ],
+            [
+              -74.84,
+              32.86
+            ],
+            [
+              -74.83,
+              32.85
+            ],
+            [
+              -74.86,
+              32.82
+            ],
+            [
+              -74.86,
+              32.8
+            ],
+            [
+              -74.91,
+              32.75
+            ],
+            [
+              -74.94,
+              32.76
+            ],
+            [
+              -74.94,
+              32.81
+            ],
+            [
+              -74.89,
+              32.83
+            ],
+            [
+              -74.86,
+              32.86
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.1877,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "14facf3ea457d91ac01a3ab83889435b0e01c6a50465fa17148c2829b2a0d50c",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.1877,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "c46e2e9c1c969bd844c621caa3fdf40829bc130cb5b5b8130e744efec6352950"
+      },
+      "receipt_sha256": "c46e2e9c1c969bd844c621caa3fdf40829bc130cb5b5b8130e744efec6352950"
+    },
+    {
+      "storm_id": "707039",
+      "lat": 50.6115,
+      "lon": -114.81,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 110.0,
+      "ebshear": 27.0,
+      "srh01": 178.0,
+      "maxllaz": 0.013,
+      "mesh": 0.07,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 178.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 16.7008
+        },
+        {
+          "name": "alignment",
+          "value": 4.7506
+        },
+        {
+          "name": "tau",
+          "value": 0.0
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.013
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.1866
+      },
+      "coherence_score": 0.0,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.36005181074142456,
+        "torsion": 0.0,
+        "alignment": 4.750621795654297,
+        "S_field": 0.052864737808704376,
+        "Gamma_field": 0.17319905757904053,
+        "S_over_Gamma": 0.30522531270980835,
+        "Da": 10.206852912902832,
+        "E_coh": 0.5769292116165161,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -114.84,
+              50.66
+            ],
+            [
+              -114.81,
+              50.66
+            ],
+            [
+              -114.79,
+              50.64
+            ],
+            [
+              -114.78,
+              50.61
+            ],
+            [
+              -114.76,
+              50.6
+            ],
+            [
+              -114.75,
+              50.56
+            ],
+            [
+              -114.79,
+              50.58
+            ],
+            [
+              -114.81,
+              50.57
+            ],
+            [
+              -114.82,
+              50.58
+            ],
+            [
+              -114.84,
+              50.58
+            ],
+            [
+              -114.84,
+              50.61
+            ],
+            [
+              -114.86,
+              50.64
+            ],
+            [
+              -114.84,
+              50.66
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.1866,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "0950cd2d6074799aa74249cdab285bbb39bc03059ab9edb32430c93cde3da9e8",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.1866,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "afdaec8d3b58e6ef524feb4874dd995cb029ff484b7f14e27400def6da0d81b5"
+      },
+      "receipt_sha256": "afdaec8d3b58e6ef524feb4874dd995cb029ff484b7f14e27400def6da0d81b5"
+    },
+    {
+      "storm_id": "707158",
+      "lat": 49.6035,
+      "lon": -97.8365,
+      "motion_east": 6.1,
+      "motion_south": -8.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 587.0,
+      "ebshear": 41.0,
+      "srh01": 98.0,
+      "maxllaz": 0.003,
+      "mesh": 0.23,
+      "flash_rate": 1.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 98.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 22.3258
+        },
+        {
+          "name": "alignment",
+          "value": -2.9994
+        },
+        {
+          "name": "tau",
+          "value": 0.0
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.003
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.184
+      },
+      "coherence_score": 0.0,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.45005765557289124,
+        "torsion": 0.0,
+        "alignment": -2.999378204345703,
+        "S_field": 0.16169215738773346,
+        "Gamma_field": 0.4765323996543884,
+        "S_over_Gamma": 0.3393099009990692,
+        "Da": 28.997426986694336,
+        "E_coh": 0.23296132683753967,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -97.79,
+              49.66
+            ],
+            [
+              -97.76,
+              49.66
+            ],
+            [
+              -97.74,
+              49.64
+            ],
+            [
+              -97.74,
+              49.6
+            ],
+            [
+              -97.78,
+              49.56
+            ],
+            [
+              -97.82,
+              49.54
+            ],
+            [
+              -97.87,
+              49.54
+            ],
+            [
+              -97.88,
+              49.53
+            ],
+            [
+              -97.95,
+              49.53
+            ],
+            [
+              -97.95,
+              49.59
+            ],
+            [
+              -97.91,
+              49.6
+            ],
+            [
+              -97.9,
+              49.61
+            ],
+            [
+              -97.88,
+              49.61
+            ],
+            [
+              -97.84,
+              49.63
+            ],
+            [
+              -97.82,
+              49.65
+            ],
+            [
+              -97.8,
+              49.65
+            ],
+            [
+              -97.79,
+              49.66
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.184,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "660f7d45f5c55c5ee0d58e856b2ad5999252203c85bdd0e86768f90b4d325176",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.184,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "5703172d3bc47f922f1732b36fa3d269c163f9bb884e1fffc14b7af84c720b2e"
+      },
+      "receipt_sha256": "5703172d3bc47f922f1732b36fa3d269c163f9bb884e1fffc14b7af84c720b2e"
+    },
+    {
+      "storm_id": "707093",
+      "lat": 49.4286,
+      "lon": -98.235,
+      "motion_east": 6.0,
+      "motion_south": -8.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 706.0,
+      "ebshear": 37.0,
+      "srh01": 72.0,
+      "maxllaz": 0.005,
+      "mesh": 0.54,
+      "flash_rate": 8.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 72.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 22.3258
+        },
+        {
+          "name": "alignment",
+          "value": -2.9994
+        },
+        {
+          "name": "tau",
+          "value": 0.0
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.005
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.1822
+      },
+      "coherence_score": 0.0,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.45005765557289124,
+        "torsion": 0.0,
+        "alignment": -2.999378204345703,
+        "S_field": 0.16169215738773346,
+        "Gamma_field": 0.4765323996543884,
+        "S_over_Gamma": 0.3393099009990692,
+        "Da": 28.997426986694336,
+        "E_coh": 0.23296132683753967,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -98.22,
+              49.59
+            ],
+            [
+              -98.19,
+              49.59
+            ],
+            [
+              -98.14,
+              49.55
+            ],
+            [
+              -98.13,
+              49.51
+            ],
+            [
+              -98.08,
+              49.46
+            ],
+            [
+              -98.08,
+              49.42
+            ],
+            [
+              -98.11,
+              49.4
+            ],
+            [
+              -98.17,
+              49.4
+            ],
+            [
+              -98.2,
+              49.37
+            ],
+            [
+              -98.23,
+              49.3
+            ],
+            [
+              -98.3,
+              49.24
+            ],
+            [
+              -98.33,
+              49.24
+            ],
+            [
+              -98.35,
+              49.26
+            ],
+            [
+              -98.35,
+              49.29
+            ],
+            [
+              -98.34,
+              49.3
+            ],
+            [
+              -98.34,
+              49.39
+            ],
+            [
+              -98.28,
+              49.44
+            ],
+            [
+              -98.28,
+              49.48
+            ],
+            [
+              -98.29,
+              49.49
+            ],
+            [
+              -98.28,
+              49.55
+            ],
+            [
+              -98.26,
+              49.57
+            ],
+            [
+              -98.22,
+              49.59
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.1822,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "60b37a1fe014a045d50d0548024700754ae4b59bb81c510fda27df9987a14a6a",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.1822,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "b3f4f600058455b9ebb347f1e90416411586380a0850ba3776a476ea0056e001"
+      },
+      "receipt_sha256": "b3f4f600058455b9ebb347f1e90416411586380a0850ba3776a476ea0056e001"
+    },
+    {
+      "storm_id": "706958",
+      "lat": 47.3678,
+      "lon": -90.57,
+      "motion_east": 5.9,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2490.0,
+      "ebshear": 36.0,
+      "srh01": 134.0,
+      "maxllaz": 0.004,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 134.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 34.3258
+        },
+        {
+          "name": "alignment",
+          "value": -1.8002
+        },
+        {
+          "name": "tau",
+          "value": 0.4167
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.004
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.1789
+      },
+      "coherence_score": 0.41667306423187256,
+      "coherence_diagnostics": {
+        "tau": 0.41667306423187256,
+        "grad_tau": 0.18347491323947906,
+        "torsion": -2.8759097325803396e-09,
+        "alignment": -1.80018949508667,
+        "S_field": 0.1674492359161377,
+        "Gamma_field": 0.20319905877113342,
+        "S_over_Gamma": 0.8240650296211243,
+        "Da": 12.683595657348633,
+        "E_coh": 0.3680141568183899,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 3,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90.58,
+              47.4
+            ],
+            [
+              -90.55,
+              47.4
+            ],
+            [
+              -90.53,
+              47.38
+            ],
+            [
+              -90.53,
+              47.35
+            ],
+            [
+              -90.54,
+              47.33
+            ],
+            [
+              -90.6,
+              47.33
+            ],
+            [
+              -90.61,
+              47.34
+            ],
+            [
+              -90.61,
+              47.38
+            ],
+            [
+              -90.58,
+              47.4
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.1789,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "5e2da80bbc18ac285813d760754a4d5140c5cd65451db910871ee769db5b2411",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.1789,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "910b89e7a49cc6d14494ea68061eb10f843bef3074f333f434a0b1e12f967660"
+      },
+      "receipt_sha256": "910b89e7a49cc6d14494ea68061eb10f843bef3074f333f434a0b1e12f967660"
+    },
+    {
+      "storm_id": "707190",
+      "lat": 46.6875,
+      "lon": -102.4875,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "moderate",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 126.0,
+      "ebshear": 28.0,
+      "srh01": 81.0,
+      "maxllaz": 0.002,
+      "mesh": 0.27,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 81.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 19.0758
+        },
+        {
+          "name": "alignment",
+          "value": -7.0955
+        },
+        {
+          "name": "tau",
+          "value": 0.7936
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.002
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.1547
+      },
+      "coherence_score": 0.7936214208602905,
+      "coherence_diagnostics": {
+        "tau": 0.7936214208602905,
+        "grad_tau": 0.1733754277229309,
+        "torsion": 0.0,
+        "alignment": -7.095529079437256,
+        "S_field": 0.16524852812290192,
+        "Gamma_field": 0.17069905996322632,
+        "S_over_Gamma": 0.9680693745613098,
+        "Da": 10.441486358642578,
+        "E_coh": 0.6379090547561646,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -102.49,
+              46.72
+            ],
+            [
+              -102.47,
+              46.72
+            ],
+            [
+              -102.46,
+              46.71
+            ],
+            [
+              -102.45,
+              46.67
+            ],
+            [
+              -102.48,
+              46.64
+            ],
+            [
+              -102.53,
+              46.64
+            ],
+            [
+              -102.53,
+              46.68
+            ],
+            [
+              -102.49,
+              46.72
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.1547,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "86a9a8a7c384c926365e28d56c3ef32ff255c9ada775bd9f542430947b73e5d4",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.1547,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "6d46e12f629c4ecb6499c7786d39be055b2a229cd55a4e7842b9f693ef4f91ce"
+      },
+      "receipt_sha256": "6d46e12f629c4ecb6499c7786d39be055b2a229cd55a4e7842b9f693ef4f91ce"
+    },
+    {
+      "storm_id": "707185",
+      "lat": 49.1923,
+      "lon": -98.0785,
+      "motion_east": 5.0,
+      "motion_south": -8.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 805.0,
+      "ebshear": 39.0,
+      "srh01": 50.0,
+      "maxllaz": 0.001,
+      "mesh": 0.16,
+      "flash_rate": 2.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 50.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 22.3258
+        },
+        {
+          "name": "alignment",
+          "value": -2.9994
+        },
+        {
+          "name": "tau",
+          "value": 0.0
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.001
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.1491
+      },
+      "coherence_score": 0.0,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.45005765557289124,
+        "torsion": 0.0,
+        "alignment": -2.999378204345703,
+        "S_field": 0.16169215738773346,
+        "Gamma_field": 0.4765323996543884,
+        "S_over_Gamma": 0.3393099009990692,
+        "Da": 28.997426986694336,
+        "E_coh": 0.23296132683753967,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -98.07,
+              49.26
+            ],
+            [
+              -98.06,
+              49.25
+            ],
+            [
+              -98.03,
+              49.25
+            ],
+            [
+              -97.99,
+              49.21
+            ],
+            [
+              -97.99,
+              49.14
+            ],
+            [
+              -98.02,
+              49.11
+            ],
+            [
+              -98.12,
+              49.1
+            ],
+            [
+              -98.15,
+              49.12
+            ],
+            [
+              -98.15,
+              49.17
+            ],
+            [
+              -98.14,
+              49.18
+            ],
+            [
+              -98.14,
+              49.2
+            ],
+            [
+              -98.09,
+              49.25
+            ],
+            [
+              -98.07,
+              49.26
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.1491,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "75c8d2049769f92e6a931e6b010a6f284942f6b8e3cc1a4be35db884fef6456d",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.1491,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "eb8f43d889b6b24c0ba9a983572fb5b36868ae1e4261980c068bf5c9d89f444a"
+      },
+      "receipt_sha256": "eb8f43d889b6b24c0ba9a983572fb5b36868ae1e4261980c068bf5c9d89f444a"
+    },
+    {
+      "storm_id": "707218",
+      "lat": 47.0329,
+      "lon": -84.7714,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 1.0,
+      "ebshear": 2.0,
+      "srh01": 109.0,
+      "maxllaz": 0.001,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 109.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 32.2008
+        },
+        {
+          "name": "alignment",
+          "value": -10.1846
+        },
+        {
+          "name": "tau",
+          "value": 0.7827
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.001
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.1404
+      },
+      "coherence_score": 0.7827072739601135,
+      "coherence_diagnostics": {
+        "tau": 0.7827072739601135,
+        "grad_tau": 0.18604911863803864,
+        "torsion": 0.0,
+        "alignment": -10.184623718261719,
+        "S_field": 0.21592901647090912,
+        "Gamma_field": 0.23403237760066986,
+        "S_over_Gamma": 0.9226459264755249,
+        "Da": 15.70976448059082,
+        "E_coh": 0.3906479775905609,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.8,
+              47.06
+            ],
+            [
+              -84.76,
+              47.06
+            ],
+            [
+              -84.73,
+              47.03
+            ],
+            [
+              -84.73,
+              47.0
+            ],
+            [
+              -84.78,
+              47.0
+            ],
+            [
+              -84.8,
+              47.02
+            ],
+            [
+              -84.8,
+              47.06
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.1404,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "2511bf2249b38aeceb967fbbdda94bb9b08b6060d5e88b66ebbd3e7ab3a119fd",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.1404,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "11a8efaf9b35bb0e6e796fe2570e39bd4bbc170dda94737f8cd308e5915fc8a2"
+      },
+      "receipt_sha256": "11a8efaf9b35bb0e6e796fe2570e39bd4bbc170dda94737f8cd308e5915fc8a2"
+    },
+    {
+      "storm_id": "707184",
+      "lat": 50.4345,
+      "lon": -113.877,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0025,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 210.0,
+      "ebshear": 30.0,
+      "srh01": 140.0,
+      "maxllaz": 0.005,
+      "mesh": 0.07,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 140.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 30.3258
+        },
+        {
+          "name": "alignment",
+          "value": 1.0006
+        },
+        {
+          "name": "tau",
+          "value": 0.0
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.005
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.1391
+      },
+      "coherence_score": 0.0,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 0.4181833863258362,
+        "torsion": 0.0,
+        "alignment": 1.0006217956542969,
+        "S_field": 0.12910665571689606,
+        "Gamma_field": 0.2231990545988083,
+        "S_over_Gamma": 0.5784372687339783,
+        "Da": 13.388992309570312,
+        "E_coh": 0.5501524806022644,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -113.83,
+              50.55
+            ],
+            [
+              -113.81,
+              50.54
+            ],
+            [
+              -113.81,
+              50.45
+            ],
+            [
+              -113.82,
+              50.44
+            ],
+            [
+              -113.82,
+              50.42
+            ],
+            [
+              -113.83,
+              50.42
+            ],
+            [
+              -113.86,
+              50.39
+            ],
+            [
+              -113.88,
+              50.31
+            ],
+            [
+              -113.91,
+              50.28
+            ],
+            [
+              -113.95,
+              50.28
+            ],
+            [
+              -113.97,
+              50.31
+            ],
+            [
+              -113.96,
+              50.33
+            ],
+            [
+              -113.96,
+              50.37
+            ],
+            [
+              -113.91,
+              50.45
+            ],
+            [
+              -113.91,
+              50.48
+            ],
+            [
+              -113.89,
+              50.52
+            ],
+            [
+              -113.88,
+              50.52
+            ],
+            [
+              -113.87,
+              50.54
+            ],
+            [
+              -113.84,
+              50.54
+            ],
+            [
+              -113.83,
+              50.55
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.1391,
+      "confidence_lo": 0.0024,
+      "confidence_hi": 0.0025,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "b03790e0ddb6bd29922e361cadbbb5fa25eaa94296a794b62ac433b9edb31fa2",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.1391,
+        "probability": 0.002483,
+        "confidence_lo": 0.002445,
+        "confidence_hi": 0.002483,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "de3bc600f140fdee0e974f18d1f8f51c7bca63c34da0a6c6a7f54d3f32528845"
+      },
+      "receipt_sha256": "de3bc600f140fdee0e974f18d1f8f51c7bca63c34da0a6c6a7f54d3f32528845"
+    },
+    {
+      "storm_id": "707178",
+      "lat": 34.0498,
+      "lon": -75.2161,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0016,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 1428.0,
+      "ebshear": 12.0,
+      "srh01": 31.0,
+      "maxllaz": 0.0,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 31.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 48.0758
+        },
+        {
+          "name": "alignment",
+          "value": 0.0164
+        },
+        {
+          "name": "tau",
+          "value": 2.5224
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.0
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.0949
+      },
+      "coherence_score": 2.5223512649536133,
+      "coherence_diagnostics": {
+        "tau": 2.5223512649536133,
+        "grad_tau": 0.7844057083129883,
+        "torsion": 0.0,
+        "alignment": 0.01635795831680298,
+        "S_field": 0.025766383856534958,
+        "Gamma_field": 0.1815323829650879,
+        "S_over_Gamma": 0.1419382244348526,
+        "Da": 11.198083877563477,
+        "E_coh": 0.18664270639419556,
+        "singularity_count": 3.0,
+        "singularity_conditions_met": 3,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": true,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -75.15,
+              34.1
+            ],
+            [
+              -75.14,
+              34.09
+            ],
+            [
+              -75.14,
+              34.08
+            ],
+            [
+              -75.14,
+              34.07
+            ],
+            [
+              -75.14,
+              34.06
+            ],
+            [
+              -75.15,
+              34.05
+            ],
+            [
+              -75.16,
+              34.05
+            ],
+            [
+              -75.17,
+              34.05
+            ],
+            [
+              -75.18,
+              34.06
+            ],
+            [
+              -75.19,
+              34.05
+            ],
+            [
+              -75.2,
+              34.05
+            ],
+            [
+              -75.21,
+              34.05
+            ],
+            [
+              -75.22,
+              34.05
+            ],
+            [
+              -75.23,
+              34.05
+            ],
+            [
+              -75.24,
+              34.04
+            ],
+            [
+              -75.23,
+              34.03
+            ],
+            [
+              -75.22,
+              34.03
+            ],
+            [
+              -75.21,
+              34.03
+            ],
+            [
+              -75.21,
+              34.02
+            ],
+            [
+              -75.21,
+              34.01
+            ],
+            [
+              -75.22,
+              34.02
+            ],
+            [
+              -75.23,
+              34.03
+            ],
+            [
+              -75.24,
+              34.03
+            ],
+            [
+              -75.25,
+              34.02
+            ],
+            [
+              -75.26,
+              34.02
+            ],
+            [
+              -75.27,
+              34.01
+            ],
+            [
+              -75.27,
+              34.0
+            ],
+            [
+              -75.28,
+              34.0
+            ],
+            [
+              -75.28,
+              34.01
+            ],
+            [
+              -75.29,
+              34.02
+            ],
+            [
+              -75.29,
+              34.03
+            ],
+            [
+              -75.29,
+              34.04
+            ],
+            [
+              -75.28,
+              34.05
+            ],
+            [
+              -75.27,
+              34.06
+            ],
+            [
+              -75.26,
+              34.05
+            ],
+            [
+              -75.25,
+              34.05
+            ],
+            [
+              -75.24,
+              34.05
+            ],
+            [
+              -75.23,
+              34.05
+            ],
+            [
+              -75.22,
+              34.06
+            ],
+            [
+              -75.22,
+              34.07
+            ],
+            [
+              -75.23,
+              34.08
+            ],
+            [
+              -75.22,
+              34.09
+            ],
+            [
+              -75.21,
+              34.08
+            ],
+            [
+              -75.2,
+              34.07
+            ],
+            [
+              -75.19,
+              34.07
+            ],
+            [
+              -75.18,
+              34.08
+            ],
+            [
+              -75.17,
+              34.09
+            ],
+            [
+              -75.16,
+              34.09
+            ],
+            [
+              -75.15,
+              34.1
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.0949,
+      "confidence_lo": 0.0015,
+      "confidence_hi": 0.0016,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "d3037b6fcd09d5cd0950e1d19488f7da240ae6a66abefa940f9a68444037bdef",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.0949,
+        "probability": 0.001568,
+        "confidence_lo": 0.001497,
+        "confidence_hi": 0.001568,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "f70a442950422e65204a06663ca63dd51e3cf59763089dc2933b835aa4ab38e4"
+      },
+      "receipt_sha256": "f70a442950422e65204a06663ca63dd51e3cf59763089dc2933b835aa4ab38e4"
+    },
+    {
+      "storm_id": "707186",
+      "lat": 48.3871,
+      "lon": -97.15,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0016,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2299.0,
+      "ebshear": 50.0,
+      "srh01": 55.0,
+      "maxllaz": 0.011,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 55.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 25.0758
+        },
+        {
+          "name": "alignment",
+          "value": -0.2112
+        },
+        {
+          "name": "tau",
+          "value": 0.4201
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.011
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.0912
+      },
+      "coherence_score": 0.42011696100234985,
+      "coherence_diagnostics": {
+        "tau": 0.42011696100234985,
+        "grad_tau": 0.3765065371990204,
+        "torsion": 0.0,
+        "alignment": -0.2112075239419937,
+        "S_field": 0.28260597586631775,
+        "Gamma_field": 0.6056990623474121,
+        "S_over_Gamma": 0.4665781855583191,
+        "Da": 38.27585220336914,
+        "E_coh": 0.17846964299678802,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -97.19,
+              48.45
+            ],
+            [
+              -97.16,
+              48.45
+            ],
+            [
+              -97.13,
+              48.42
+            ],
+            [
+              -97.12,
+              48.42
+            ],
+            [
+              -97.11,
+              48.38
+            ],
+            [
+              -97.1,
+              48.37
+            ],
+            [
+              -97.1,
+              48.35
+            ],
+            [
+              -97.09,
+              48.34
+            ],
+            [
+              -97.09,
+              48.32
+            ],
+            [
+              -97.14,
+              48.32
+            ],
+            [
+              -97.16,
+              48.34
+            ],
+            [
+              -97.16,
+              48.35
+            ],
+            [
+              -97.2,
+              48.39
+            ],
+            [
+              -97.21,
+              48.39
+            ],
+            [
+              -97.21,
+              48.41
+            ],
+            [
+              -97.19,
+              48.43
+            ],
+            [
+              -97.19,
+              48.45
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.0912,
+      "confidence_lo": 0.0015,
+      "confidence_hi": 0.0016,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "1ae654140ae35bf8f0f5fc2f0624290de3918ae9c7717a2a9a69d80505bcb8f3",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.0912,
+        "probability": 0.001568,
+        "confidence_lo": 0.001497,
+        "confidence_hi": 0.001568,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "b0725ec11d7ad71554f2e40a1538bec923317c0606c85f9e45ebe5b82c75d933"
+      },
+      "receipt_sha256": "b0725ec11d7ad71554f2e40a1538bec923317c0606c85f9e45ebe5b82c75d933"
+    },
+    {
+      "storm_id": "707203",
+      "lat": 25.0645,
+      "lon": -82.0497,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0013,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 3626.0,
+      "ebshear": 5.0,
+      "srh01": 9.0,
+      "maxllaz": 0.001,
+      "mesh": 0.12,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 9.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 43.0758
+        },
+        {
+          "name": "alignment",
+          "value": 1.0619
+        },
+        {
+          "name": "tau",
+          "value": 0.0
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.001
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.0673
+      },
+      "coherence_score": 0.0,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 1.880446434020996,
+        "torsion": 0.0,
+        "alignment": 1.0618782043457031,
+        "S_field": 1.2833086252212524,
+        "Gamma_field": 0.20069904625415802,
+        "S_over_Gamma": 6.39419412612915,
+        "Da": 12.141002655029297,
+        "E_coh": 0.9649534821510315,
+        "singularity_count": 4.0,
+        "singularity_conditions_met": 4,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": true,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -82.12,
+              25.09
+            ],
+            [
+              -82.11,
+              25.09
+            ],
+            [
+              -82.1,
+              25.08
+            ],
+            [
+              -82.09,
+              25.08
+            ],
+            [
+              -82.08,
+              25.08
+            ],
+            [
+              -82.07,
+              25.08
+            ],
+            [
+              -82.06,
+              25.08
+            ],
+            [
+              -82.05,
+              25.08
+            ],
+            [
+              -82.04,
+              25.08
+            ],
+            [
+              -82.03,
+              25.07
+            ],
+            [
+              -82.02,
+              25.07
+            ],
+            [
+              -82.01,
+              25.06
+            ],
+            [
+              -82.0,
+              25.07
+            ],
+            [
+              -81.99,
+              25.07
+            ],
+            [
+              -81.99,
+              25.06
+            ],
+            [
+              -81.99,
+              25.05
+            ],
+            [
+              -81.99,
+              25.04
+            ],
+            [
+              -82.0,
+              25.03
+            ],
+            [
+              -82.0,
+              25.04
+            ],
+            [
+              -82.0,
+              25.05
+            ],
+            [
+              -82.01,
+              25.06
+            ],
+            [
+              -82.02,
+              25.05
+            ],
+            [
+              -82.03,
+              25.05
+            ],
+            [
+              -82.04,
+              25.04
+            ],
+            [
+              -82.05,
+              25.05
+            ],
+            [
+              -82.06,
+              25.05
+            ],
+            [
+              -82.07,
+              25.05
+            ],
+            [
+              -82.08,
+              25.06
+            ],
+            [
+              -82.09,
+              25.07
+            ],
+            [
+              -82.1,
+              25.06
+            ],
+            [
+              -82.11,
+              25.07
+            ],
+            [
+              -82.12,
+              25.08
+            ],
+            [
+              -82.12,
+              25.09
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.0673,
+      "confidence_lo": 0.0013,
+      "confidence_hi": 0.0013,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "9f089161db9c8206745601db3ab2b8fe44bcd5ea2658614470fa5e1840564ab7",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.0673,
+        "probability": 0.001313,
+        "confidence_lo": 0.00128,
+        "confidence_hi": 0.001313,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "2c02830816ffb8678752a6617303620ea76daa3990e1ae72cdf8e9817c6a996a"
+      },
+      "receipt_sha256": "2c02830816ffb8678752a6617303620ea76daa3990e1ae72cdf8e9817c6a996a"
+    },
+    {
+      "storm_id": "707180",
+      "lat": 26.948,
+      "lon": -84.497,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0013,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 3108.0,
+      "ebshear": 7.0,
+      "srh01": 9.0,
+      "maxllaz": 0.0,
+      "mesh": 0.16,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 9.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 47.5758
+        },
+        {
+          "name": "alignment",
+          "value": 0.4332
+        },
+        {
+          "name": "tau",
+          "value": 3.1825
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.0
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.0667
+      },
+      "coherence_score": 3.1824865341186523,
+      "coherence_diagnostics": {
+        "tau": 3.1824865341186523,
+        "grad_tau": 0.9570695757865906,
+        "torsion": 0.0,
+        "alignment": 0.4332180619239807,
+        "S_field": 1.3271445035934448,
+        "Gamma_field": 0.2048657238483429,
+        "S_over_Gamma": 6.478118896484375,
+        "Da": 12.122335433959961,
+        "E_coh": 0.9724993705749512,
+        "singularity_count": 4.0,
+        "singularity_conditions_met": 4,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": true,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.56,
+              26.99
+            ],
+            [
+              -84.55,
+              26.98
+            ],
+            [
+              -84.44,
+              26.98
+            ],
+            [
+              -84.43,
+              26.96
+            ],
+            [
+              -84.44,
+              26.94
+            ],
+            [
+              -84.46,
+              26.94
+            ],
+            [
+              -84.49,
+              26.92
+            ],
+            [
+              -84.48,
+              26.9
+            ],
+            [
+              -84.56,
+              26.88
+            ],
+            [
+              -84.56,
+              26.99
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.0667,
+      "confidence_lo": 0.0013,
+      "confidence_hi": 0.0013,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "c871ef2432e1db28bd5a9dba5769eefccacb7dc08a91386e64389d9febdb95ed",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.0667,
+        "probability": 0.001313,
+        "confidence_lo": 0.00128,
+        "confidence_hi": 0.001313,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "3ef4aa88485c416851cbfd3d2f2f4f28d19e6f928fa937d6b18c1d59e36d501d"
+      },
+      "receipt_sha256": "3ef4aa88485c416851cbfd3d2f2f4f28d19e6f928fa937d6b18c1d59e36d501d"
+    },
+    {
+      "storm_id": "707213",
+      "lat": 25.0156,
+      "lon": -81.9011,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0013,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 3775.0,
+      "ebshear": 4.0,
+      "srh01": 11.0,
+      "maxllaz": 0.0,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 11.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 43.0758
+        },
+        {
+          "name": "alignment",
+          "value": 1.0619
+        },
+        {
+          "name": "tau",
+          "value": 0.0
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.0
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.0643
+      },
+      "coherence_score": 0.0,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 1.880446434020996,
+        "torsion": 0.0,
+        "alignment": 1.0618782043457031,
+        "S_field": 1.2833086252212524,
+        "Gamma_field": 0.20069904625415802,
+        "S_over_Gamma": 6.39419412612915,
+        "Da": 12.141002655029297,
+        "E_coh": 0.9649534821510315,
+        "singularity_count": 4.0,
+        "singularity_conditions_met": 4,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": true,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -81.93,
+              25.06
+            ],
+            [
+              -81.83,
+              25.06
+            ],
+            [
+              -81.83,
+              24.97
+            ],
+            [
+              -81.91,
+              24.97
+            ],
+            [
+              -81.93,
+              24.98
+            ],
+            [
+              -81.93,
+              24.99
+            ],
+            [
+              -81.91,
+              25.0
+            ],
+            [
+              -81.91,
+              25.05
+            ],
+            [
+              -81.93,
+              25.06
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.0643,
+      "confidence_lo": 0.0013,
+      "confidence_hi": 0.0013,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "8394d16d465269ba1e85453b01123334c591b73226651d29d40dc7231684426e",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.0643,
+        "probability": 0.001313,
+        "confidence_lo": 0.00128,
+        "confidence_hi": 0.001313,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "2cf26cde0bcbbc21fa20628a3a924544b0dd35ae93dd26427727077b44f2b72c"
+      },
+      "receipt_sha256": "2cf26cde0bcbbc21fa20628a3a924544b0dd35ae93dd26427727077b44f2b72c"
+    },
+    {
+      "storm_id": "707222",
+      "lat": 26.4544,
+      "lon": -82.97,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0013,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2815.0,
+      "ebshear": 11.0,
+      "srh01": 6.0,
+      "maxllaz": 0.0,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 6.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 45.3258
+        },
+        {
+          "name": "alignment",
+          "value": 0.4904
+        },
+        {
+          "name": "tau",
+          "value": 3.1143
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.0
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.0596
+      },
+      "coherence_score": 3.1143226623535156,
+      "coherence_diagnostics": {
+        "tau": 3.1143226623535156,
+        "grad_tau": 0.9280903339385986,
+        "torsion": 0.0,
+        "alignment": 0.49038559198379517,
+        "S_field": 1.2366901636123657,
+        "Gamma_field": 0.2115323841571808,
+        "S_over_Gamma": 5.846339702606201,
+        "Da": 13.345881462097168,
+        "E_coh": 0.9789955615997314,
+        "singularity_count": 4.0,
+        "singularity_conditions_met": 4,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": true,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -82.99,
+              26.48
+            ],
+            [
+              -82.97,
+              26.46
+            ],
+            [
+              -82.93,
+              26.46
+            ],
+            [
+              -82.91,
+              26.44
+            ],
+            [
+              -82.92,
+              26.43
+            ],
+            [
+              -83.0,
+              26.43
+            ],
+            [
+              -83.01,
+              26.44
+            ],
+            [
+              -83.01,
+              26.47
+            ],
+            [
+              -82.99,
+              26.48
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.0596,
+      "confidence_lo": 0.0013,
+      "confidence_hi": 0.0013,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "4947d1553cfa041a7ca7281ab48753be91a714ba9e4ba7b0832c336937be4380",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.0596,
+        "probability": 0.001313,
+        "confidence_lo": 0.00128,
+        "confidence_hi": 0.001313,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "71a8c97f06554d09270d92b1d2adfe0e826e2fe8e3c8b589105b22e411c86880"
+      },
+      "receipt_sha256": "71a8c97f06554d09270d92b1d2adfe0e826e2fe8e3c8b589105b22e411c86880"
+    },
+    {
+      "storm_id": "707090",
+      "lat": 24.3036,
+      "lon": -82.1043,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0013,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 4026.0,
+      "ebshear": 4.0,
+      "srh01": 15.0,
+      "maxllaz": 0.002,
+      "mesh": 0.04,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 15.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 43.0758
+        },
+        {
+          "name": "alignment",
+          "value": 1.0619
+        },
+        {
+          "name": "tau",
+          "value": 0.0
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.002
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.0558
+      },
+      "coherence_score": 0.0,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 1.880446434020996,
+        "torsion": 0.0,
+        "alignment": 1.0618782043457031,
+        "S_field": 1.2833086252212524,
+        "Gamma_field": 0.20069904625415802,
+        "S_over_Gamma": 6.39419412612915,
+        "Da": 12.141002655029297,
+        "E_coh": 0.9649534821510315,
+        "singularity_count": 4.0,
+        "singularity_conditions_met": 4,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": true,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -82.12,
+              24.35
+            ],
+            [
+              -82.08,
+              24.35
+            ],
+            [
+              -82.05,
+              24.33
+            ],
+            [
+              -82.08,
+              24.3
+            ],
+            [
+              -82.07,
+              24.29
+            ],
+            [
+              -82.07,
+              24.27
+            ],
+            [
+              -82.08,
+              24.26
+            ],
+            [
+              -82.13,
+              24.26
+            ],
+            [
+              -82.14,
+              24.27
+            ],
+            [
+              -82.14,
+              24.28
+            ],
+            [
+              -82.12,
+              24.3
+            ],
+            [
+              -82.12,
+              24.31
+            ],
+            [
+              -82.14,
+              24.33
+            ],
+            [
+              -82.12,
+              24.35
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.0558,
+      "confidence_lo": 0.0013,
+      "confidence_hi": 0.0013,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "ae3b476197aa1bc551fd0c253ed8ca80440694c50eb67accd0a6d330e7039bca",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.0558,
+        "probability": 0.001313,
+        "confidence_lo": 0.00128,
+        "confidence_hi": 0.001313,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "45e6f1a15e8ccf09d1d67c1cf86b554b014d92fa5b0fdb9d4f76d8f95a81d431"
+      },
+      "receipt_sha256": "45e6f1a15e8ccf09d1d67c1cf86b554b014d92fa5b0fdb9d4f76d8f95a81d431"
+    },
+    {
+      "storm_id": "707124",
+      "lat": 26.56,
+      "lon": -82.8609,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0013,
+      "risk_band": "low",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2900.0,
+      "ebshear": 10.0,
+      "srh01": 5.0,
+      "maxllaz": 0.001,
+      "mesh": 0.17,
+      "flash_rate": 2.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 5.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 45.3258
+        },
+        {
+          "name": "alignment",
+          "value": 0.4904
+        },
+        {
+          "name": "tau",
+          "value": 3.1143
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.001
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.0553
+      },
+      "coherence_score": 3.1143226623535156,
+      "coherence_diagnostics": {
+        "tau": 3.1143226623535156,
+        "grad_tau": 0.9280903339385986,
+        "torsion": 0.0,
+        "alignment": 0.49038559198379517,
+        "S_field": 1.2366901636123657,
+        "Gamma_field": 0.2115323841571808,
+        "S_over_Gamma": 5.846339702606201,
+        "Da": 13.345881462097168,
+        "E_coh": 0.9789955615997314,
+        "singularity_count": 4.0,
+        "singularity_conditions_met": 4,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": true,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -82.85,
+              26.6
+            ],
+            [
+              -82.84,
+              26.59
+            ],
+            [
+              -82.84,
+              26.58
+            ],
+            [
+              -82.86,
+              26.56
+            ],
+            [
+              -82.86,
+              26.54
+            ],
+            [
+              -82.85,
+              26.53
+            ],
+            [
+              -82.86,
+              26.52
+            ],
+            [
+              -82.88,
+              26.52
+            ],
+            [
+              -82.89,
+              26.53
+            ],
+            [
+              -82.89,
+              26.59
+            ],
+            [
+              -82.85,
+              26.6
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.0553,
+      "confidence_lo": 0.0013,
+      "confidence_hi": 0.0013,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "3f3385ae2f31461d528352b6747473d53838c46c9b2c5e5167dd1931faca2c04",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.0553,
+        "probability": 0.001313,
+        "confidence_lo": 0.00128,
+        "confidence_hi": 0.001313,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "fcec0d14a2fb5b1980e9c38d76571524a0bc8ee9a450f38b20ef7dc201c789f9"
+      },
+      "receipt_sha256": "fcec0d14a2fb5b1980e9c38d76571524a0bc8ee9a450f38b20ef7dc201c789f9"
+    },
+    {
+      "storm_id": "707177",
+      "lat": 34.3891,
+      "lon": -76.4155,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0013,
+      "risk_band": "minimal",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2208.0,
+      "ebshear": 16.0,
+      "srh01": 25.0,
+      "maxllaz": 0.003,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 25.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 41.0758
+        },
+        {
+          "name": "alignment",
+          "value": 4.8793
+        },
+        {
+          "name": "tau",
+          "value": 1.7341
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.003
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.0455
+      },
+      "coherence_score": 1.734133243560791,
+      "coherence_diagnostics": {
+        "tau": 1.734133243560791,
+        "grad_tau": 0.34439271688461304,
+        "torsion": 0.0,
+        "alignment": 4.879306316375732,
+        "S_field": 0.22961220145225525,
+        "Gamma_field": 0.562365710735321,
+        "S_over_Gamma": 0.40829694271087646,
+        "Da": 33.2514762878418,
+        "E_coh": 0.49165472388267517,
+        "singularity_count": 2.0,
+        "singularity_conditions_met": 2,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -76.45,
+              34.45
+            ],
+            [
+              -76.4,
+              34.45
+            ],
+            [
+              -76.37,
+              34.42
+            ],
+            [
+              -76.37,
+              34.35
+            ],
+            [
+              -76.39,
+              34.35
+            ],
+            [
+              -76.4,
+              34.37
+            ],
+            [
+              -76.42,
+              34.37
+            ],
+            [
+              -76.43,
+              34.35
+            ],
+            [
+              -76.44,
+              34.35
+            ],
+            [
+              -76.45,
+              34.37
+            ],
+            [
+              -76.45,
+              34.45
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.0455,
+      "confidence_lo": 0.0013,
+      "confidence_hi": 0.0013,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "c50fbf592daea3965c29af2017b66f3ab2960dedb82c97c0a7778c93a0ad8fc9",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.0455,
+        "probability": 0.001313,
+        "confidence_lo": 0.00128,
+        "confidence_hi": 0.001313,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "a61b39b4d2468f9987e600133dcf82733b71bb1e0293ae3e6cf1fd944d6287af"
+      },
+      "receipt_sha256": "a61b39b4d2468f9987e600133dcf82733b71bb1e0293ae3e6cf1fd944d6287af"
+    },
+    {
+      "storm_id": "707212",
+      "lat": 25.5192,
+      "lon": -79.7692,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0013,
+      "risk_band": "minimal",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 2707.0,
+      "ebshear": 5.0,
+      "srh01": 0.0,
+      "maxllaz": 0.003,
+      "mesh": 0.0,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 0.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 34.5758
+        },
+        {
+          "name": "alignment",
+          "value": 0.0619
+        },
+        {
+          "name": "tau",
+          "value": 0.0
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.003
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.0452
+      },
+      "coherence_score": 0.0,
+      "coherence_diagnostics": {
+        "tau": 0.0,
+        "grad_tau": 1.9636907577514648,
+        "torsion": 0.0,
+        "alignment": 0.061878204345703125,
+        "S_field": 0.8085992932319641,
+        "Gamma_field": 0.2673657536506653,
+        "S_over_Gamma": 3.0243189334869385,
+        "Da": 14.74393367767334,
+        "E_coh": 0.9817159175872803,
+        "singularity_count": 4.0,
+        "singularity_conditions_met": 4,
+        "singularity_detail": {
+          "s_over_gamma": true,
+          "high_gradient": true,
+          "high_torsion": false,
+          "positive_alignment": true,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -79.72,
+              25.57
+            ],
+            [
+              -79.72,
+              25.48
+            ],
+            [
+              -79.74,
+              25.47
+            ],
+            [
+              -79.75,
+              25.48
+            ],
+            [
+              -79.77,
+              25.47
+            ],
+            [
+              -79.82,
+              25.47
+            ],
+            [
+              -79.81,
+              25.51
+            ],
+            [
+              -79.8,
+              25.52
+            ],
+            [
+              -79.8,
+              25.54
+            ],
+            [
+              -79.82,
+              25.55
+            ],
+            [
+              -79.8,
+              25.56
+            ],
+            [
+              -79.73,
+              25.56
+            ],
+            [
+              -79.72,
+              25.57
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.0452,
+      "confidence_lo": 0.0013,
+      "confidence_hi": 0.0013,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "7bb430b8414b97eebaa3a4d52da5fe93a6a5efe5097c27f7901c691c6abff615",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.0452,
+        "probability": 0.001313,
+        "confidence_lo": 0.00128,
+        "confidence_hi": 0.001313,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "aa20e18cc64b591b993ed1fe6d4c8cfab40091f009df4cb28f6c317137499853"
+      },
+      "receipt_sha256": "aa20e18cc64b591b993ed1fe6d4c8cfab40091f009df4cb28f6c317137499853"
+    },
+    {
+      "storm_id": "707221",
+      "lat": 42.12,
+      "lon": -76.7514,
+      "motion_east": 5.8,
+      "motion_south": -2.0,
+      "valid_time": "20260629_150036 UTC",
+      "tornado_probability": 0.0013,
+      "risk_band": "minimal",
+      "ps_tor": 0.0,
+      "ps": 0.0,
+      "mucape": 134.0,
+      "ebshear": 18.0,
+      "srh01": 0.0,
+      "maxllaz": 0.0,
+      "mesh": 0.18,
+      "flash_rate": 0.0,
+      "top_features": [
+        {
+          "name": "srh01",
+          "value": 0.0
+        },
+        {
+          "name": "hrrr_pwat",
+          "value": 36.7008
+        },
+        {
+          "name": "alignment",
+          "value": -0.197
+        },
+        {
+          "name": "tau",
+          "value": 0.771
+        },
+        {
+          "name": "maxllaz",
+          "value": 0.0
+        }
+      ],
+      "model_scores": {
+        "gbt_prob": 0.0391
+      },
+      "coherence_score": 0.7709723711013794,
+      "coherence_diagnostics": {
+        "tau": 0.7709723711013794,
+        "grad_tau": 0.06939886510372162,
+        "torsion": 0.0,
+        "alignment": -0.19704614579677582,
+        "S_field": 0.16022677719593048,
+        "Gamma_field": 0.2190323919057846,
+        "S_over_Gamma": 0.73152095079422,
+        "Da": 13.074542999267578,
+        "E_coh": 0.3413984775543213,
+        "singularity_count": 1.0,
+        "singularity_conditions_met": 1,
+        "singularity_detail": {
+          "s_over_gamma": false,
+          "high_gradient": false,
+          "high_torsion": false,
+          "positive_alignment": false,
+          "high_damkohler": true
+        }
+      },
+      "scoring_tier": "tier1_ml",
+      "coherence_source": "hrrr",
+      "model_version": "tornado_storm_v1_0",
+      "track_length": 1,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -76.81,
+              42.17
+            ],
+            [
+              -76.64,
+              42.16
+            ],
+            [
+              -76.64,
+              42.08
+            ],
+            [
+              -76.77,
+              42.08
+            ],
+            [
+              -76.78,
+              42.09
+            ],
+            [
+              -76.81,
+              42.09
+            ],
+            [
+              -76.81,
+              42.17
+            ]
+          ]
+        ]
+      },
+      "raw_probability": 0.0391,
+      "confidence_lo": 0.0013,
+      "confidence_hi": 0.0013,
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "abstain_reason": null,
+      "gateway_mode": "NORMAL",
+      "calibrated": true,
+      "receipt": {
+        "spec": "hazardpulse/forecast/v1",
+        "model_version": "tornado_storm_v1_0",
+        "model_sha256": "9e6bbf83417b1d91d385c66083c7ed0baa2a660f8197c02960a5133263a3b84c",
+        "input_sha256": "e065b09cb26a52a10a637e6c1dc4593f80b91ba4751471dfe46a097adf9d7492",
+        "issued_at": "2026-06-29T15:10:40Z",
+        "raw_probability": 0.0391,
+        "probability": 0.001313,
+        "confidence_lo": 0.00128,
+        "confidence_hi": 0.001313,
+        "uncertainty_class": "tight",
+        "ood_score": null,
+        "ood_flag": false,
+        "abstained": false,
+        "abstain_reason": null,
+        "gateway_mode": "NORMAL",
+        "coverage_target": 0.9,
+        "receipt_sha256": "b99f50bbc2af16404a55f119b5336b4c4bcfedfb8060d35ebbf2c30a4ed980c2"
+      },
+      "receipt_sha256": "b99f50bbc2af16404a55f119b5336b4c4bcfedfb8060d35ebbf2c30a4ed980c2"
+    }
+  ]
+}

@@ -1,17 +1,20 @@
 {
-  "updated_at": "2026-06-25T20:41:30.036213Z",
+  "updated_at": "2026-08-01T06:24:44.341854Z",
   "hazards": [
     {
       "key": "eq",
       "hazard": "earthquake",
-      "probability": 0.8622,
-      "conf_lo": null,
-      "conf_hi": null,
+      "probability": 0.5095,
+      "conf_lo": 0.0372,
+      "conf_hi": 1.0,
       "delta": 0.019,
       "risk_band": "critical",
       "gate_status": "pass",
-      "forecast_id": "eq_fcst_20260625_1900",
-      "model_version": "eq_coherence_v1_0"
+      "forecast_id": "eq_fcst_20260801_0300",
+      "model_version": "eq_coherence_v1_0",
+      "uncertainty_class": "wide",
+      "abstained": false,
+      "receipt_sha256": "a6650c5baffefd724d3aa62a6bfb9b7b10d89d9c2936ddf4226da7fe33b6e2f1"
     },
     {
       "key": "hu",
@@ -32,17 +35,20 @@
     {
       "key": "to",
       "hazard": "tornado",
-      "probability": 0.7701,
-      "conf_lo": null,
-      "conf_hi": null,
+      "probability": 0.0256,
+      "conf_lo": 0.0251,
+      "conf_hi": 0.0257,
       "delta": -0.021,
       "risk_band": "very_high",
       "gate_status": "pass",
-      "forecast_id": "to_fcst_20260625_2041",
+      "forecast_id": "to_fcst_20260801_0624",
       "model_version": "tornado_storm_v1_0",
-      "n_active_storms": 426,
-      "coherence_score": 2.151540994644165,
-      "coherence_source": "hrrr"
+      "n_active_storms": 107,
+      "coherence_score": 1.3728607892990112,
+      "coherence_source": "hrrr",
+      "uncertainty_class": "tight",
+      "abstained": false,
+      "receipt_sha256": "b3251fddc6d965941fbc29a7916eab4abd1b806433edb72c3aa2fda6c4cc93f4"
     }
   ]
 }

@@ -87,11 +87,18 @@ def _receipts_from(obj: dict) -> list[dict]:
     return out
 
 
+DEFAULT_PUBKEY_FILE = Path(__file__).resolve().parents[1] / "dist" / "data" / "evidence" / "public-key.json"
+
+
 def _load_pubkey_hex(args) -> str | None:
     if args.pubkey:
         return args.pubkey.strip()
     if args.pubkey_file:
         rec = json.loads(Path(args.pubkey_file).read_text(encoding="utf-8"))
+        return rec.get("public_key_hex")
+    if DEFAULT_PUBKEY_FILE.exists():
+        rec = json.loads(DEFAULT_PUBKEY_FILE.read_text(encoding="utf-8"))
+        print(f"using published signing key from {DEFAULT_PUBKEY_FILE}")
         return rec.get("public_key_hex")
     return None
 

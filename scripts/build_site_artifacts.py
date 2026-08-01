@@ -1956,8 +1956,38 @@ def build_site_artifacts() -> dict:
     }
 
 
+def sync_homepage_forecast_refs() -> bool:
+    """Rewrite the homepage's earthquake forecast references from live-pulse.json.
+
+    The homepage is fully rendered only by the hurricane scoring cycle, so an
+    earthquake cycle used to advance live-pulse.json (and the replay ledger)
+    while dist/index.html kept pointing at the previous forecast id. Because
+    every scoring workflow runs this builder before committing dist/, doing the
+    sync here makes cross-file forecast identity consistent in EVERY commit,
+    whichever hazard's cycle produced it (guarded by test_site_integrity).
+    """
+    import re
+
+    index_path = DIST / "index.html"
+    if not (index_path.exists() and LIVE_PULSE_PATH.exists()):
+        return False
+    pulse = json.loads(LIVE_PULSE_PATH.read_text(encoding="utf-8"))
+    eq = next((h for h in pulse.get("hazards", []) if h.get("key") == "eq"), None)
+    forecast_id = (eq or {}).get("forecast_id")
+    if not forecast_id or not re.fullmatch(r"eq_fcst_\d{8}_\d{4}", forecast_id):
+        return False
+    page = index_path.read_text(encoding="utf-8")
+    synced = re.sub(r"eq_fcst_\d{8}_\d{4}", forecast_id, page)
+    if synced != page:
+        index_path.write_text(synced, encoding="utf-8")
+        return True
+    return False
+
+
 def main() -> None:
     build_site_artifacts()
+    if sync_homepage_forecast_refs():
+        print("Synced homepage earthquake forecast references to live-pulse.json.")
     print("Built HazardPulse evidence, replay, sitemap, and feed artifacts.")
 
 

@@ -41,7 +41,7 @@ GCMT_DIR = CACHE_ROOT / "gcmt"
 PLATES_DIR = CACHE_ROOT / "plates"
 GNSS_DIR = CACHE_ROOT / "gnss"
 
-USER_AGENT = "hazardpulse/0.1 (+https://github.com/Jphilbrick10/hazardpulse)"
+USER_AGENT = "hazardpulse/0.1 (+https://github.com/coherence-energy-labs/hazardpulse)"
 
 # ---------------------------------------------------------------------------
 # HTTP helpers

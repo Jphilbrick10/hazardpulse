@@ -1,11 +1,11 @@
-# Live Natural Hazard Prediction Platform — Architecture
+# Live Natural Hazard Prediction Platform - Architecture
 
 ## Real-Time Data Feeds
 
-### Earthquakes (USGS — no API key needed)
-- `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_hour.geojson` — M4.5+ last hour, updated every minute
-- `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson` — M2.5+ last day, every 15 min
-- `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson` — M4.5+ last 7 days
+### Earthquakes (USGS - no API key needed)
+- `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_hour.geojson` - M4.5+ last hour, updated every minute
+- `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson` - M2.5+ last day, every 15 min
+- `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson` - M4.5+ last 7 days
 - FDSN historical: `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=...&minmagnitude=4.0`
 
 ### Hurricanes (NHC/NOAA)
@@ -162,7 +162,7 @@ CREATE TABLE verifications (
 - Never use "warning," "alert," or "imminent" (reserved for NWS under 18 U.S.C. §1038)
 - Frame as "elevated probability" not "prediction of event"
 - Always show uncertainty bounds and comparison to base rate
-- Earthquake cells ≥ 3° (~300km), tornado cells ≥ 2° (~200km) — no neighborhood-level claims
+- Earthquake cells ≥ 3° (~300km), tornado cells ≥ 2° (~200km) - no neighborhood-level claims
 
 ---
 

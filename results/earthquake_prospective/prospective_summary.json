@@ -1,25 +1,27 @@
 {
-  "scored_as_of": "2026-06-25T16:49:21Z",
+  "scored_as_of": "2026-08-01T06:27:20Z",
   "replay_dir": "/home/runner/work/hazardpulse/hazardpulse/dist/data/replay",
-  "n_replay_artifacts": 334,
-  "n_matured_forecasts": 213,
+  "n_replay_artifacts": 481,
+  "n_matured_forecasts": 360,
   "forecast_horizon_days": 30,
   "target_magnitude_min": 6.0,
   "status": "ok",
+  "calibration_dataset": "/home/runner/work/hazardpulse/hazardpulse/results/earthquake_prospective/calibration_dataset.json",
+  "calibration_n": 4212000,
   "observed_catalog_window": {
     "start": "2026-04-02T00:00:00Z",
-    "end": "2026-06-25T13:00:00Z",
-    "n_events": 33
+    "end": "2026-08-01T01:00:00Z",
+    "n_events": 46
   },
-  "total_observed_events": 2206,
-  "mean_auc": 0.7317185564214207,
-  "median_auc": 0.7336668376945477,
-  "mean_pr_auc": 0.012823490329444716,
-  "mean_brier": 0.002253911831704185,
-  "mean_information_gain_per_event": -15.43373163210229,
-  "event_weighted_information_gain_per_event": -17.817291049826455,
+  "total_observed_events": 4550,
+  "mean_auc": 0.7027048502767288,
+  "median_auc": 0.6955612375898446,
+  "mean_pr_auc": 0.014910626747112727,
+  "mean_brier": 0.0023883946363437796,
+  "mean_information_gain_per_event": -15.04644042214626,
+  "event_weighted_information_gain_per_event": -16.24149495032769,
   "top_1_hit_rate": 0.0,
-  "top_5_hit_rate": 0.0,
-  "top_10_hit_rate": 0.03286384976525822,
-  "top_20_hit_rate": 0.24413145539906103
+  "top_5_hit_rate": 0.016666666666666666,
+  "top_10_hit_rate": 0.08611111111111111,
+  "top_20_hit_rate": 0.36944444444444446
 }
