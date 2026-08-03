@@ -7,33 +7,33 @@
   "verification_status_label": "Prospective live scoring is active for matured earthquake windows.",
   "metric_source": "prospective_live",
   "metric_source_label": "Computed from matured live forecasts.",
-  "auc": 0.7035755857924098,
-  "brier": 0.0023515752783328688,
-  "homepage_line": "368 matured windows scored",
+  "auc": 0.7035952933304613,
+  "brier": 0.0023421704892677294,
+  "homepage_line": "370 matured windows scored",
   "forecast_storage": {
-    "n_replay_artifacts": 490,
+    "n_replay_artifacts": 491,
     "n_matured_forecasts": 370,
-    "n_scored_forecasts": 368,
-    "n_backlog": 2,
+    "n_scored_forecasts": 370,
+    "n_backlog": 0,
     "first_issued_at": "2026-03-13T03:00:00Z",
-    "last_issued_at": "2026-08-03T10:00:00Z",
-    "last_forecast_id": "eq_fcst_20260803_1000",
-    "latest_replay_artifact": "/data/replay/eq_fcst_20260803_1000.json",
+    "last_issued_at": "2026-08-03T15:00:00Z",
+    "last_forecast_id": "eq_fcst_20260803_1500",
+    "latest_replay_artifact": "/data/replay/eq_fcst_20260803_1500.json",
     "forecast_horizon": "30 days",
     "next_mature_at": "2026-08-03T18:00:00Z"
   },
   "ledger": {
     "supported": true,
     "path": "/data/earthquake-ledger.jsonl",
-    "n_rows": 501,
+    "n_rows": 502,
     "prev_hash_mismatches": 0
   },
   "prospective": {
     "summary_path": "results/earthquake_prospective/prospective_summary.json",
     "status": "ok",
-    "scored_as_of": "2026-08-03T02:36:35Z",
+    "scored_as_of": "2026-08-03T14:34:13Z",
     "message": null,
-    "top_5_hit_rate": 0.016304347826086956
+    "top_5_hit_rate": 0.016216216216216217
   },
   "exact_model_benchmark": null,
   "related_benchmark": {
