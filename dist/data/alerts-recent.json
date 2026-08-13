@@ -1,8 +1,23 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-08-12T22:36:58.711347Z",
+  "updated_at": "2026-08-13T01:39:24.663605Z",
   "n_alerts": 50,
   "alerts": [
+    {
+      "rule_name": "eq_critical_probability",
+      "severity": "critical",
+      "hazard": "eq",
+      "forecast_id": "eq_fcst_20260812_1900",
+      "probability": 0.509,
+      "issued_at": "2026-08-13T01:38:48.213642Z",
+      "triggered_at": "2026-08-13T01:39:24.663204Z",
+      "message": "Earthquake critical: 50.9% (forecast eq_fcst_20260812_1900)",
+      "coincidence": null,
+      "sinks_notified": [
+        "file"
+      ],
+      "sink_failures": {}
+    },
     {
       "rule_name": "eq_critical_probability",
       "severity": "critical",
@@ -731,21 +746,6 @@
       "probability": 0.5093,
       "issued_at": "2026-08-09T22:26:00.809410Z",
       "triggered_at": "2026-08-09T22:26:50.648310Z",
-      "message": "Earthquake critical: 50.9% (forecast eq_fcst_20260809_1900)",
-      "coincidence": null,
-      "sinks_notified": [
-        "file"
-      ],
-      "sink_failures": {}
-    },
-    {
-      "rule_name": "eq_critical_probability",
-      "severity": "critical",
-      "hazard": "eq",
-      "forecast_id": "eq_fcst_20260809_1900",
-      "probability": 0.5093,
-      "issued_at": "2026-08-09T20:27:09.850093Z",
-      "triggered_at": "2026-08-09T20:28:10.557521Z",
       "message": "Earthquake critical: 50.9% (forecast eq_fcst_20260809_1900)",
       "coincidence": null,
       "sinks_notified": [
