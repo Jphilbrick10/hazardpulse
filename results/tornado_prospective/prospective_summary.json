@@ -1,30 +1,30 @@
 {
-  "scored_as_of": "2026-08-15T20:20:58Z",
+  "scored_as_of": "2026-08-16T01:10:57Z",
   "replay_dir": "/home/runner/work/hazardpulse/hazardpulse/dist/data/replay",
-  "n_replay_artifacts": 1432,
-  "n_matured_forecasts": 1419,
+  "n_replay_artifacts": 1434,
+  "n_matured_forecasts": 1422,
   "forecast_horizon_hours": 24,
   "match_radius_km": 40.0,
   "match_window_hours": 4.0,
   "outcome_source": "SPC filtered tornado reports",
   "status": "ok",
   "calibration_dataset": "/home/runner/work/hazardpulse/hazardpulse/results/tornado_prospective/calibration_dataset.json",
-  "calibration_n": 186893,
+  "calibration_n": 187740,
   "observed_window": {
     "start": "2026-03-13T03:00:00Z",
-    "end": "2026-08-15T18:47:07Z",
+    "end": "2026-08-16T00:59:24Z",
     "n_tornado_reports": 1132
   },
-  "total_storms_scored": 186893,
+  "total_storms_scored": 187740,
   "total_matched_storms": 430,
-  "total_tornado_reports_in_windows": 11352,
+  "total_tornado_reports_in_windows": 11353,
   "overall_match_rate": 0.0023,
   "mean_auc": 0.6917,
   "median_auc": 0.7931,
-  "mean_brier": 0.0377,
-  "mean_brier_skill_score": -0.44,
+  "mean_brier": 0.0376,
+  "mean_brier_skill_score": -0.4391,
   "n_forecasts_with_valid_auc": 155,
-  "n_forecasts_without_matches": 1264,
+  "n_forecasts_without_matches": 1267,
   "by_tier": {
     "unknown": {
       "n_forecasts": 2,
@@ -49,15 +49,15 @@
       "mean_brier_skill_score": -0.078
     },
     "tier1_ml": {
-      "n_forecasts": 1232,
+      "n_forecasts": 1235,
       "n_forecasts_with_valid_auc": 140,
-      "total_storms_scored": 175931,
+      "total_storms_scored": 176778,
       "total_matched_storms": 387,
       "match_rate": 0.0022,
       "mean_auc": 0.6912,
       "median_auc": 0.8024,
-      "mean_brier": 0.0395,
-      "mean_brier_skill_score": -0.4944
+      "mean_brier": 0.0394,
+      "mean_brier_skill_score": -0.4932
     }
   },
   "by_tier_recovery": {
@@ -112,19 +112,19 @@
         "mean_brier": null
       },
       "last_3d": {
-        "n_forecasts": 22,
-        "mean_auc": 0.6276,
-        "mean_brier": 0.0001
+        "n_forecasts": 23,
+        "mean_auc": null,
+        "mean_brier": 0.0
       },
       "last_7d": {
-        "n_forecasts": 69,
+        "n_forecasts": 70,
         "mean_auc": 0.7951,
         "mean_brier": 0.0012
       },
       "last_14d": {
-        "n_forecasts": 131,
-        "mean_auc": 0.7335,
-        "mean_brier": 0.001
+        "n_forecasts": 132,
+        "mean_auc": 0.729,
+        "mean_brier": 0.0007
       }
     }
   },
