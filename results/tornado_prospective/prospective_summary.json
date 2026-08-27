@@ -1,30 +1,30 @@
 {
-  "scored_as_of": "2026-08-26T12:48:18Z",
+  "scored_as_of": "2026-08-27T07:20:20Z",
   "replay_dir": "/home/runner/work/hazardpulse/hazardpulse/dist/data/replay",
-  "n_replay_artifacts": 1560,
-  "n_matured_forecasts": 1548,
+  "n_replay_artifacts": 1565,
+  "n_matured_forecasts": 1557,
   "forecast_horizon_hours": 24,
   "match_radius_km": 40.0,
   "match_window_hours": 4.0,
   "outcome_source": "SPC filtered tornado reports",
   "status": "ok",
   "calibration_dataset": "/home/runner/work/hazardpulse/hazardpulse/results/tornado_prospective/calibration_dataset.json",
-  "calibration_n": 205296,
+  "calibration_n": 206541,
   "observed_window": {
     "start": "2026-03-13T03:00:00Z",
-    "end": "2026-08-26T12:39:24Z",
+    "end": "2026-08-27T06:40:42Z",
     "n_tornado_reports": 1173
   },
-  "total_storms_scored": 205296,
+  "total_storms_scored": 206541,
   "total_matched_storms": 454,
   "total_tornado_reports_in_windows": 11844,
   "overall_match_rate": 0.0022,
   "mean_auc": 0.6911,
   "median_auc": 0.7931,
-  "mean_brier": 0.0346,
-  "mean_brier_skill_score": -0.4033,
+  "mean_brier": 0.0344,
+  "mean_brier_skill_score": -0.401,
   "n_forecasts_with_valid_auc": 163,
-  "n_forecasts_without_matches": 1385,
+  "n_forecasts_without_matches": 1394,
   "by_tier": {
     "unknown": {
       "n_forecasts": 2,
@@ -49,15 +49,15 @@
       "mean_brier_skill_score": -0.078
     },
     "tier1_ml": {
-      "n_forecasts": 1361,
+      "n_forecasts": 1370,
       "n_forecasts_with_valid_auc": 148,
-      "total_storms_scored": 194334,
+      "total_storms_scored": 195579,
       "total_matched_storms": 411,
       "match_rate": 0.0021,
       "mean_auc": 0.6906,
       "median_auc": 0.8024,
-      "mean_brier": 0.0358,
-      "mean_brier_skill_score": -0.4475
+      "mean_brier": 0.0356,
+      "mean_brier_skill_score": -0.4446
     }
   },
   "by_tier_recovery": {
@@ -123,8 +123,8 @@
       },
       "last_14d": {
         "n_forecasts": 155,
-        "mean_auc": 0.7034,
-        "mean_brier": 0.0008
+        "mean_auc": 0.6793,
+        "mean_brier": 0.0007
       }
     }
   },
